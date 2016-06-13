@@ -20,6 +20,11 @@ import perldoop.modelo.arbol.asignacion.*;
 import perldoop.modelo.arbol.constante.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.coleccion.*;
+import perldoop.modelo.arbol.acceso.*;
+import perldoop.modelo.arbol.funcion.*;
+import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.abrirbloque.*;
+import perldoop.modelo.arbol.bloque.*;
 %}
 
 /*Tokens etiquetas del preprocesador, nunca deben llegar al analizador*/
@@ -135,8 +140,8 @@ constante	:	ENTERO									{$$=set(new Entero(s($1)));}
 			|	CADENA_DOBLE							{$$=set(new CadenaDoble(s($1)));}
 			|	CADENA_COMANDO 							{$$=set(new CadenaComando(s($1)));}  
 
-variable	:	VAR										{$$=set(new VarExistente(s($1)));} 
-			|	paquete VAR								{$$=set(new VarPaquete(s($1),s($2)));} 
+variable	:	VAR										{$$=set(new VarExistente(null, s($1)));} 
+			|	paquete VAR								{$$=set(new VarExistente(s($1),s($2)));} 
 			|	MY VAR									{$$=set(new VarMy(s($1),s($2)));} 
 			|	OUR VAR									{$$=set(new VarOur(s($1),s($2)));} 
 
@@ -150,20 +155,20 @@ coleccion	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
 			|	MY '(' lista ')'						{$$=set(new ColMy(s($1),s($2),s($3),s($4)));}
 			|	OUR '(' lista ')'						{$$=set(new ColOur(s($1),s($2),s($3),s($4)));}
 
-acceso		:	expresion '{' lista '}'					{}
-			|	expresion '[' lista ']'					{}
-			|	expresion FLECHA '{' lista '}'			{}
-			|	expresion FLECHA '[' lista ']'			{}
-			|	'$' expresion %prec UNITARIO			{}
-			|	'@' expresion %prec UNITARIO			{}
-			|	'%' expresion %prec UNITARIO			{}
+acceso		:	expresion '{' lista '}'					{$$=set(new AccesoMap(s($1),s($2),s($3),s($4)));}
+			|	expresion '[' lista ']'					{$$=set(new AccesoArray(s($1),s($2),s($3),s($4)));}
+			|	expresion FLECHA '{' lista '}'			{$$=set(new AccesoMapRef(s($1),s($2),s($3),s($4),s($5)));}
+			|	expresion FLECHA '[' lista ']'			{$$=set(new AccesoArrayRef(s($1),s($2),s($3),s($4),s($5)));}
+			|	'$' expresion %prec UNITARIO			{$$=set(new AccesoRefEscalar(s($1),s($2)));} 
+			|	'@' expresion %prec UNITARIO			{$$=set(new AccesoRefArray(s($1),s($2)));} 
+			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 
 
-funcion		:	paquete ID expresion					{}
-			|	paquete ID								{}
-			|	ID expresion							{}
-			|	ID										{}
+funcion		:	paquete ID expresion					{$$=set(new Funcion(s($1),s($2),s($3)));}
+			|	paquete ID								{$$=set(new Funcion(s($1),s($2),null));}
+			|	ID expresion							{$$=set(new Funcion(null,s($2),s($3)));}
+			|	ID										{$$=set(new Funcion(null,s($2),null));}
 
-paquete		:	ID CONTEXTO								{}
+paquete		:	ID CONTEXTO								{$$=set(new Paquete(s($1),s($2)));}
 
 regulares	:	expresion STR_NO_REX M_REGEX			{}
 			|	expresion STR_REX M_REGEX				{}
@@ -217,9 +222,9 @@ aritmetica	:	expresion '+' expresion					{}
 			|	expresion MAS_MAS						{}
 			|	expresion MENOS_MENOS					{}
 
-abrirBloque :											{}
+abrirBloque :											{$$=set(new AbrirBloque());}
 
-bloque		:	bloqueIf elsif																	{}
+bloque		:	bloqueIf elsif																	{$$=set(new BloqueCondicional(s($1),s($2)));}
 			|	WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'								{}
 			|	UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'								{}
 			|	DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'						{}

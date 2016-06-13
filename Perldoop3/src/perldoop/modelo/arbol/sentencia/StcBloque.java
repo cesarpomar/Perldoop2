@@ -16,7 +16,7 @@ public final class StcBloque extends Sentencia {
     /**
      * Único contructor de la clase
      *
-     * @param bloque
+     * @param bloque Bloque
      */
     public StcBloque(Bloque bloque) {
         setBloque(bloque);
