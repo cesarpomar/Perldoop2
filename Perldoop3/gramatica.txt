@@ -83,6 +83,8 @@ coleccion   : '(' lista ')'
             | '{' lista '}'
             | '{' '}'
             | expresion DOS_PUNTOS expresion
+            | MY '(' lista ')'
+            | OUR '(' lista ')'
 
 acceso      : expresion '{' lista '}'
             | expresion '[' lista ']'

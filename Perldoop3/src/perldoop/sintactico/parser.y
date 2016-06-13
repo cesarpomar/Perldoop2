@@ -147,6 +147,8 @@ coleccion	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
 			|	'{' lista '}'							{$$=set(new ColLlave(s($1),s($2),s($3)));}
 			|	'{' '}'									{$$=set(new ColLlave(s($1),new Lista(),s($2)));}
 			|	expresion DOS_PUNTOS expresion			{$$=set(new ColGenerador(s($1),s($2),s($3)));}
+			|	MY '(' lista ')'						{$$=set(new ColMy(s($1),s($2),s($3),s($4)));}
+			|	OUR '(' lista ')'						{$$=set(new ColOur(s($1),s($2),s($3),s($4)));}
 
 acceso		:	expresion '{' lista '}'					{}
 			|	expresion '[' lista ']'					{}
