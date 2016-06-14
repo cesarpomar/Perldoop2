@@ -155,7 +155,7 @@ aritmetica  : expresion '+' expresion
 
 abrirBloque :
 
-bloque      : bloqueIf elsif
+bloque      : condicional elsif
             | WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'
             | UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'
             | DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'
@@ -164,7 +164,7 @@ bloque      : bloqueIf elsif
             | FOR abrirBloque expresion '(' expresion ')' '{' cuerpo '}'
             | FOR abrirBloque '(' lista ')' '{' cuerpo '}'
 
-bloqueIf    : IF abrirBloque '(' expresion ')' '{' cuerpo '}'
+condicional : IF abrirBloque '(' expresion ')' '{' cuerpo '}'
             | UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'
 
 elsif       :

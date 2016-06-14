@@ -25,6 +25,9 @@ import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.abrirbloque.*;
 import perldoop.modelo.arbol.bloque.*;
+import perldoop.modelo.arbol.condicional.*;
+import perldoop.modelo.arbol.elsif.*;
+import perldoop.modelo.arbol.bloqueelsif.*;
 %}
 
 /*Tokens etiquetas del preprocesador, nunca deben llegar al analizador*/
@@ -165,8 +168,8 @@ acceso		:	expresion '{' lista '}'					{$$=set(new AccesoMap(s($1),s($2),s($3),s(
 
 funcion		:	paquete ID expresion					{$$=set(new Funcion(s($1),s($2),s($3)));}
 			|	paquete ID								{$$=set(new Funcion(s($1),s($2),null));}
-			|	ID expresion							{$$=set(new Funcion(null,s($2),s($3)));}
-			|	ID										{$$=set(new Funcion(null,s($2),null));}
+			|	ID expresion							{$$=set(new Funcion(null,s($1),s($2)));}
+			|	ID										{$$=set(new Funcion(null,s($1),null));}
 
 paquete		:	ID CONTEXTO								{$$=set(new Paquete(s($1),s($2)));}
 
@@ -224,23 +227,23 @@ aritmetica	:	expresion '+' expresion					{}
 
 abrirBloque :											{$$=set(new AbrirBloque());}
 
-bloque		:	bloqueIf elsif																	{$$=set(new BloqueCondicional(s($1),s($2)));}
-			|	WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'								{}
-			|	UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'								{}
-			|	DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'						{}
-			|	DO abrirBloque '{' cuerpo '}' UNTIL '(' expresion ')' ';'						{}
-			|	FOR abrirBloque '(' expresion ';' expresion ';' expresion ')' '{' cuerpo '}'	{}
-			|	FOR abrirBloque expresion '(' expresion ')' '{' cuerpo '}'						{}
-			|	FOR abrirBloque '(' lista ')' '{' cuerpo '}'									{}
+bloque		:	condicional elsif																{$$=set(new BloqueCondicional(s($1),s($2)));}
+			|	WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+			|	UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+			|	DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'						{$$=set(new BloqueDoWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
+			|	DO abrirBloque '{' cuerpo '}' UNTIL '(' expresion ')' ';'						{$$=set(new BloqueDoUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
+			|	FOR abrirBloque '(' expresion ';' expresion ';' expresion ')' '{' cuerpo '}'	{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11),s($12)));}
+			|	FOR abrirBloque expresion '(' expresion ')' '{' cuerpo '}'						{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			|	FOR abrirBloque '(' lista ')' '{' cuerpo '}'									{$$=set(new BloqueForeach(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
 
-bloqueIf	:	IF abrirBloque '(' expresion ')' '{' cuerpo '}'									{}
-			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'								{}
+condicional	:	IF abrirBloque '(' expresion ')' '{' cuerpo '}'									{$$=set(new CondicionalIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new CondicionalUnless(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
 	
-elsif		:
-			|	bloqueElsif elsif																{}
-			|	ELSE abrirBloque '{' cuerpo '}'													{}
+elsif		:																					{$$=set(new ElsIfNada());}
+			|	bloqueElsif elsif																{$$=set(new ElsIfElsIf(s($1),s($2)));}
+			|	ELSE abrirBloque '{' cuerpo '}'													{$$=set(new ElsIfElse(s($1),s($2),s($3),s($4),s($5)));}
 
-bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{}
+bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueElsIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
 
 
 %%

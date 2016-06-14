@@ -2,47 +2,47 @@ package perldoop.modelo.arbol.bloque;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.bloqueif.BloqueIf;
+import perldoop.modelo.arbol.condicional.Condicional;
 import perldoop.modelo.arbol.elsif.ElsIf;
 
 /**
- * Clase que representa la reduccion -> bloque : bloqueIf elsif
+ * Clase que representa la reduccion -> bloque : condicional elsif
  *
  * @author César Pomar
  */
 public final class BloqueCondicional extends Simbolo {
 
-    private BloqueIf bloqueIf;
+    private Condicional condicional;
     private ElsIf elsIf;
 
     /**
      * Único contructor de la clase
      *
-     * @param bloqueIf Bloque if
+     * @param condicional Condicional
      * @param elsIf Bloque elsIf
      */
-    public BloqueCondicional(BloqueIf bloqueIf, ElsIf elsIf) {
-        setBloqueIf(bloqueIf);
+    public BloqueCondicional(Condicional condicional, ElsIf elsIf) {
+        setCondicional(condicional);
         setElsIf(elsIf);
     }
 
     /**
-     * Obtiene el bloque if
+     * Obtiene el condicional
      *
-     * @return Bloque if
+     * @return Condicional
      */
-    public BloqueIf getBloqueIf() {
-        return bloqueIf;
+    public Condicional getCondicional() {
+        return condicional;
     }
 
     /**
-     * Establece el bloque if
+     * Establece el condicional
      *
-     * @param bloqueIf Bloque if
+     * @param condicional Condicional
      */
-    public void setBloqueIf(BloqueIf bloqueIf) {
-        bloqueIf.setPadre(this);
-        this.bloqueIf = bloqueIf;
+    public void setCondicional(Condicional condicional) {
+        condicional.setPadre(this);
+        this.condicional = condicional;
     }
 
     /**
@@ -71,7 +71,7 @@ public final class BloqueCondicional extends Simbolo {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{bloqueIf, elsIf};
+        return new Simbolo[]{condicional, elsIf};
     }
 
 }
