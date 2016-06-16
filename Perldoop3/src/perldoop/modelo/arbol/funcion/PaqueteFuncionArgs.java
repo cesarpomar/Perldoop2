@@ -12,19 +12,63 @@ import perldoop.modelo.arbol.expresion.Expresion;
  *
  * @author César Pomar
  */
-public final class FuncionArgs extends Funcion {
+public final class PaqueteFuncionArgs extends Funcion {
 
+    private Terminal paquete;
+    private Terminal ambito;
     private Expresion expresion;
 
     /**
      * Único contructor de la clase
      *
+     * @param paquete Paquete
+     * @param ambito Ambito
      * @param identificador Identificador
      * @param expresion Expresión
      */
-    public FuncionArgs(Terminal identificador, Expresion expresion) {
+    public PaqueteFuncionArgs(Terminal paquete, Terminal ambito, Terminal identificador, Expresion expresion) {
         super(identificador);
+        setPaquete(paquete);
+        setAmbito(ambito);
         setExpresion(expresion);
+    }
+
+    /**
+     * Obtiene el paquete
+     *
+     * @return Paquete
+     */
+    public Terminal getPaquete() {
+        return paquete;
+    }
+
+    /**
+     * Establece el paquete
+     *
+     * @param paquete Paquete
+     */
+    public void setPaquete(Terminal paquete) {
+        paquete.setPadre(this);
+        this.paquete = paquete;
+    }
+
+    /**
+     * Obtiene el ambito
+     *
+     * @return Ambito
+     */
+    public Terminal getAmbito() {
+        return ambito;
+    }
+
+    /**
+     * Establece el ambito
+     *
+     * @param ambito Ambito
+     */
+    public void setAmbito(Terminal ambito) {
+        ambito.setPadre(this);
+        this.ambito = ambito;
     }
 
     /**
@@ -53,7 +97,7 @@ public final class FuncionArgs extends Funcion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{identificador, expresion};
+        return new Simbolo[]{paquete, ambito, identificador, expresion};
     }
 
 }

@@ -3,49 +3,24 @@ package perldoop.modelo.arbol.variable;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.paquete.Paquete;
 
 /**
- * Clase que representa la reduccion -> <br>
- * variable : VAR<br>
- * | paquete VAR
+ * Clase que representa la reduccion -> <br>variable : '$' ID<br>
+ * '@' ID<br>
+ * '%' ID
  *
  * @author César Pomar
  */
 public final class VarExistente extends Variable {
 
-    private Paquete paquete;
-    
     /**
      * Único contructor de la clase
      *
-     * @param paquete Paquete
+     * @param contexto Contexto
      * @param var Variable
      */
-    public VarExistente(Paquete paquete, Terminal var) {
-        super(var);
-        if (paquete != null) {
-            setPaquete(paquete);
-        }
-    }
-
-    /**
-     * Obtiene el paquete
-     *
-     * @return Paquete
-     */
-    public Paquete getPaquete() {
-        return paquete;
-    }
-
-    /**
-     * Establece el paquete
-     *
-     * @param paquete Paquete
-     */
-    public void setPaquete(Paquete paquete) {
-        paquete.setPadre(this);
-        this.paquete = paquete;
+    public VarExistente(Terminal contexto, Terminal var) {
+        super(contexto, var);
     }
 
     @Override
@@ -55,11 +30,7 @@ public final class VarExistente extends Variable {
 
     @Override
     public Simbolo[] getHijos() {
-        if (paquete != null) {
-            return new Simbolo[]{paquete, var};
-        } else {
-            return new Simbolo[]{var};
-        }
+        return new Simbolo[]{var};
     }
 
 }

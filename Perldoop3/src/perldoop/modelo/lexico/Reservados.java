@@ -1,6 +1,5 @@
-package perldoop.modelo.simbolos;
+package perldoop.modelo.lexico;
 
-import perldoop.modelo.lexico.Token;
 import perldoop.sintactico.Parser;
 
 /**

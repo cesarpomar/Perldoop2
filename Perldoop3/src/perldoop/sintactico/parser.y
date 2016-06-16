@@ -2,6 +2,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import perldoop.modelo.Opciones;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.sintactico.ParserVal;
@@ -22,7 +23,6 @@ import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.funcion.*;
-import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.abrirbloque.*;
 import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.arbol.condicional.*;
@@ -40,7 +40,7 @@ import perldoop.modelo.arbol.aritmetica.*;
 
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
-%token ID VAR
+%token ID SIGIL
 %token ENTERO DECIMAL CADENA_SIMPLE CADENA_DOBLE CADENA_COMANDO M_REGEX S_REGEX Y_REGEX STDIN STDOUT STDERR
 
 /*Palabras reservadas*/
@@ -71,7 +71,7 @@ import perldoop.modelo.arbol.aritmetica.*;
 %nonassoc MAS_MAS MENOS_MENOS
 %left FLECHA
 %right '(' ')' '[' ']' '{' '}'
-%left CONTEXTO
+%left AMBITO
 
 
 %%
@@ -107,6 +107,7 @@ expresion	:	constante								{$$=set(new ExpConstante(s($1)));}
 			|	coleccion								{$$=set(new ExpColeccion(s($1)));} 
 			|	acceso									{$$=set(new ExpAcceso(s($1)));} 
 			|	funcion									{$$=set(new ExpFuncion(s($1)));} 
+			|	'&' funcion %prec UNITARIO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
 			|	regulares								{$$=set(new ExpRegulares(s($1)));} 
 
 lista		:	expresion ',' lista						{$$=set(Lista.add(s($1), s($2), s($3)));}
@@ -148,10 +149,18 @@ constante	:	ENTERO									{$$=set(new Entero(s($1)));}
 			|	CADENA_DOBLE							{$$=set(new CadenaDoble(s($1)));}
 			|	CADENA_COMANDO 							{$$=set(new CadenaComando(s($1)));}  
 
-variable	:	VAR										{$$=set(new VarExistente(null, s($1)));} 
-			|	paquete VAR								{$$=set(new VarExistente(s($1),s($2)));} 
-			|	MY VAR									{$$=set(new VarMy(s($1),s($2)));} 
-			|	OUR VAR									{$$=set(new VarOur(s($1),s($2)));} 
+variable	:	'$' ID									{$$=set(new VarExistente(s($1),s($2)));} 
+			|	'@' ID									{$$=set(new VarExistente(s($1),s($2)));} 
+			|	'%' ID									{$$=set(new VarExistente(s($1),s($2)));} 
+			|	'$' ID AMBITO ID						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
+			|	'@' ID AMBITO ID						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
+			|	'%' ID AMBITO ID						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
+			|	MY '$' ID								{$$=set(new VarMy(s($1),s($2),s($3)));} 
+			|	MY '@' ID								{$$=set(new VarMy(s($1),s($2),s($3)));} 
+			|	MY '%' ID								{$$=set(new VarMy(s($1),s($2),s($3)));} 
+			|	OUR '$' ID								{$$=set(new VarOur(s($1),s($2),s($3)));} 
+			|	OUR '@' ID								{$$=set(new VarOur(s($1),s($2),s($3)));} 
+			|	OUR '%' ID								{$$=set(new VarOur(s($1),s($2),s($3)));} 
 
 coleccion	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
 			|	'('  ')'								{$$=set(new ColParentesis(s($1),new Lista(),s($2)));}
@@ -170,13 +179,12 @@ acceso		:	expresion '{' lista '}'					{$$=set(new AccesoMap(s($1),s($2),s($3),s(
 			|	'$' expresion %prec UNITARIO			{$$=set(new AccesoRefEscalar(s($1),s($2)));} 
 			|	'@' expresion %prec UNITARIO			{$$=set(new AccesoRefArray(s($1),s($2)));} 
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 
+			|	'$' '#' expresion						{$$=set(new AccesoSigil(s($1),s($2),s($3)));} 
 
-funcion		:	paquete ID expresion					{$$=set(new FuncionArgs(s($1),s($2),s($3)));}
-			|	paquete ID								{$$=set(new FuncionNoArgs(s($1),s($2)));}
-			|	ID expresion							{$$=set(new FuncionArgs(null,s($1),s($2)));}
-			|	ID										{$$=set(new FuncionNoArgs(null,s($1)));}
-
-paquete		:	ID CONTEXTO								{$$=set(new Paquete(s($1),s($2)));}
+funcion		:	ID AMBITO ID expresion					{$$=set(new PaqueteFuncionArgs(s($1),s($2),s($3),s($4)));}
+			|	ID AMBITO ID							{$$=set(new PaqueteFuncionNoArgs(s($1),s($2),s($3)));}
+			|	ID expresion							{$$=set(new FuncionArgs(s($1),s($2)));}
+			|	ID										{$$=set(new FuncionNoArgs(s($1)));}
 
 regulares	:	expresion STR_NO_REX M_REGEX			{$$=set(new RegularNoMatch(s($1),s($2),s($3)));}
 			|	expresion STR_REX M_REGEX				{$$=set(new RegularMatch(s($1),s($2),s($3)));}
@@ -256,18 +264,21 @@ bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(
 	private List<Simbolo> simbolos;
 	private List<Token> tokens;
 	private Iterator<Token> iterator;
+	private Opciones opciones;
 	private GestorErrores gestorErrores;
 	private int errores;
 	
 	/**
 	 * Constructor del analizador sintactico
 	 * @param tokens Tokens lexicos
+	 * @param opciones Opciones
 	 * @param gestorErrores Gestor de errores
 	 */
-	public Parser(List<Token> tokens, GestorErrores gestorErrores) {
+	public Parser(List<Token> tokens, Opciones opciones,GestorErrores gestorErrores) {
 		this.tokens = tokens;
 		simbolos = new ArrayList<>(tokens.size()*10);
 		iterator = tokens.iterator();
+		this.opciones = opciones;
 		this.gestorErrores = gestorErrores;
 		errores = 0;
 	}
@@ -286,6 +297,22 @@ bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(
 	 */
 	public GestorErrores getGestorErrores(){
 		return gestorErrores;
+	}
+
+	/**
+	 * Obtiene las opciones
+	 * @return Opciones
+	 */
+	public Opciones getOpciones() {
+		return opciones;
+	}
+
+	/**
+	 * Establece las opciones
+	 * @param opciones Opciones
+	 */
+	public void setOpciones(Opciones opciones) {
+		this.opciones = opciones;
 	}
 
 	/**

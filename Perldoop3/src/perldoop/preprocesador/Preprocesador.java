@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import perldoop.error.GestorErrores;
 import perldoop.internacionalizacion.Errores;
+import perldoop.modelo.Opciones;
 import perldoop.modelo.lexico.Token;
 import perldoop.sintactico.Parser;
 
@@ -17,6 +18,7 @@ public class Preprocesador {
 
     private List<Token> tokens;
     private int index;
+    private Opciones opciones;
     private GestorErrores gestorErrores;
     private int errores;
 
@@ -24,10 +26,12 @@ public class Preprocesador {
      * Crea un preprocesador
      *
      * @param tokens Lista de tokens a analizar
+     * @param opciones Opciones
      * @param gestorErrores Gestor de errores
      */
-    public Preprocesador(List<Token> tokens, GestorErrores gestorErrores) {
+    public Preprocesador(List<Token> tokens, Opciones opciones, GestorErrores gestorErrores) {
         this.tokens = tokens;
+        this.opciones = opciones;
         this.gestorErrores = gestorErrores;
     }
 
@@ -41,8 +45,36 @@ public class Preprocesador {
     }
 
     /**
-     * Obtiene el número de errores, si no hay errores el analisis
-     * se ha realizado correctamente.
+     * Obtiene el gestor de errores
+     *
+     * @return Gestor de errores
+     */
+    public GestorErrores getGestorErrores() {
+        return gestorErrores;
+    }
+
+    /**
+     * Obtiene las opciones
+     *
+     * @return Opciones
+     */
+    public Opciones getOpciones() {
+        return opciones;
+    }
+
+    /**
+     * Establece las opciones
+     *
+     * @param opciones Opciones
+     */
+    public void setOpciones(Opciones opciones) {
+        this.opciones = opciones;
+    }
+
+    /**
+     * Obtiene el número de errores, si no hay errores el analisis se ha
+     * realizado correctamente.
+     *
      * @return Número de errores
      */
     public int getErrores() {
@@ -50,8 +82,8 @@ public class Preprocesador {
     }
 
     /**
-     * Inicia el procesado de tokens, el analizador procesa las etiquetas
-     * en la lista de tokens y luego las elimina.
+     * Inicia el procesado de tokens, el analizador procesa las etiquetas en la
+     * lista de tokens y luego las elimina.
      *
      * @return Lista de token con la que se contruyo la clase.
      */
@@ -98,7 +130,7 @@ public class Preprocesador {
                 token.setComentarios(new ArrayList<>(2));
             }
             token.getComentarios().add(comentario);
-        }else{
+        } else {
             tokens.get(index).setEtiqueta(false);
         }
     }

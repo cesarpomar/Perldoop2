@@ -67,8 +67,6 @@ public class ParserError {
         switch (tipo) {
             case Parser.ID:
                 return "ID";
-            case Parser.VAR:
-                return "VAR";
             case Parser.ENTERO:
             case Parser.DECIMAL:
             case Parser.CADENA_SIMPLE:
@@ -173,7 +171,7 @@ public class ParserError {
                 return "--";
             case Parser.FLECHA:
                 return "->";
-            case Parser.CONTEXTO:
+            case Parser.AMBITO:
                 return "::";
         }
         if (tipo < 256) {

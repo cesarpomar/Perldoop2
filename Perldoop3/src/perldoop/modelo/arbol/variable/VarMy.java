@@ -5,7 +5,9 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> variable : MY VAR
+ * Clase que representa la reduccion -> <br>variable : MY '$' ID<br>
+ * MY '@' ID<br>
+ * MY '%' ID
  *
  * @author César Pomar
  */
@@ -16,11 +18,12 @@ public final class VarMy extends Variable {
     /**
      * Único contructor de la clase
      *
+     * @param contexto Contexto
      * @param my My
      * @param var Var
      */
-    public VarMy(Terminal my, Terminal var) {
-        super(var);
+    public VarMy(Terminal contexto, Terminal my, Terminal var) {
+        super(contexto, var);
         setMy(my);
     }
 

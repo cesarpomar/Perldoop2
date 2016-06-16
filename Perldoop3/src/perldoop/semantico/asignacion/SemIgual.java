@@ -1,7 +1,7 @@
 package perldoop.semantico.asignacion;
 
 import java.util.List;
-import perldoop.excepciones.ExcepcionSemantica;
+import perldoop.semantico.excepciones.ExcepcionSemantica;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;

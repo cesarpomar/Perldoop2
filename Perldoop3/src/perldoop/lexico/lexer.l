@@ -3,12 +3,11 @@ package perldoop.lexico;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-import perldoop.modelo.lexico.Token;
+import perldoop.modelo.lexico.*;
 import perldoop.sintactico.Parser;
-import perldoop.modelo.simbolos.Reservados;
 import perldoop.error.GestorErrores;
 import perldoop.internacionalizacion.Errores;
-
+import perldoop.modelo.Opciones;
 %%
 
 %byaccj
@@ -17,22 +16,25 @@ import perldoop.internacionalizacion.Errores;
 %unicode
 %line
 %column
-%state PD
+%state VAR PD
 
 %{
 	private StringBuilder comentario;
-    private Token yyval;
+	private Token yyval;
+	private Opciones opciones;
 	private GestorErrores gestorErrores;
 	private int errores;
 
 	/**
 	 * Constructor del analizador léxico
 	 * @param in Sistema de entrada
+	 * @param opciones Opciones
 	 * @param gestorErrores Gestor de errores
 	 */
-	public Lexer(java.io.Reader in, GestorErrores gestorErrores){
+	public Lexer(java.io.Reader in, Opciones opciones, GestorErrores gestorErrores){
 		this(in);
 		errores = 0;
+		this.opciones = opciones;
 		this.gestorErrores = gestorErrores;
 	}
 
@@ -50,6 +52,22 @@ import perldoop.internacionalizacion.Errores;
 	 */
 	public GestorErrores getGestorErrores(){
 		return gestorErrores;
+	}
+
+	/**
+	 * Obtiene las opciones
+	 * @return Opciones
+	 */
+	public Opciones getOpciones() {
+		return opciones;
+	}
+
+	/**
+	 * Establece las opciones
+	 * @param opciones Opciones
+	 */
+	public void setOpciones(Opciones opciones) {
+		this.opciones = opciones;
 	}
 
 	/**
@@ -143,15 +161,25 @@ PD_NUM			=	<{ENTERO}>
 %%
 
 	/*----Variables----*/
+<VAR>{
+	{ID}				{return token(Parser.ID);}
+	"::"				{return token(Parser.AMBITO);}
+	"\#"				{return token(Parser.SIGIL);}
+	.					{yypushback(1);yybegin(YYINITIAL);}
+}
+
 <YYINITIAL>{
-	{ID}				{String t = yytext(); return token(t, Reservados.buscarId(t, Parser.ID));}
-	"\$"				{return token('$');}
-	"@"					{return token('@');}
-	"%"					{return token('%');}
-	(\$|@|%){ID}		{return token(Parser.VAR);}
+		/*----Identificador----*/
+	"\$"				{yybegin(VAR);return token('$');}
+	"@"					{yybegin(VAR);return token('@');}
+	"%"					{yybegin(VAR);return token('%');}
+	"&"					{yybegin(VAR);return token('&');} 
+	{ID}				{String txt = yytext(); 
+						 int tipo = Reservados.buscarId(txt, Parser.ID);
+						 if(tipo==Parser.SUB) yybegin(VAR);
+						 return token(txt, tipo);}
 
 		/*----Constantes----*/
-
 	{ENTERO}			{return token(Parser.ENTERO);}
 	{DECIMAL}			{return token(Parser.DECIMAL);}
 	{CADENA_SIMPLE}		{return token(Parser.CADENA_SIMPLE);}
@@ -166,16 +194,15 @@ PD_NUM			=	<{ENTERO}>
 	"\*"				{return token('*');}
 	"/"					{return token('/');}
 	"\*\*"				{return token(Parser.POW);}
-	"\."				{return token('.');} //Concatenar
-	"\|"				{return token('|');} //Or binario
-	"&"					{return token('&');} //And binario
+	"\."				{return token('.');} 
+	"\|"				{return token('|');} 
 	"~"					{return token('~');} //Not binario
 	"\^"				{return token('^');} //Xor binario
 	"<<"				{return token(Parser.DESP_I);}
 	">>"				{return token(Parser.DESP_D);}
-	"\|\|"				{return token(Parser.LOR);}  //Or logico
-	"&&"				{return token(Parser.LAND);} //And logico
-	"!"					{return token('!');}         //Not logico
+	"\|\|"				{return token(Parser.LOR);}
+	"&&"				{return token(Parser.LAND);}
+	"!"					{return token('!');}   
 	"<"					{return token('<');}
 	">"					{return token('>');}
 	"<="				{return token(Parser.NUM_LE);}
@@ -217,7 +244,7 @@ PD_NUM			=	<{ENTERO}>
 	"\?"				{return token('?');}
 	";"					{return token(';');}
 	":"					{return token(':');}
-	"::"				{return token(Parser.CONTEXTO);}
+	"::"				{return token(Parser.AMBITO);}
 	"\\"				{return token(Parser.SUELO);}
 	"->"				{return token(Parser.FLECHA);}
 

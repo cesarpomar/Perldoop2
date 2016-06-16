@@ -30,6 +30,7 @@ expresion   : constante
             | coleccion
             | acceso
             | funcion
+            | '&' funcion
             | regulares
 
 lista       : expresion ',' lista
@@ -71,10 +72,18 @@ constante   : ENTERO
             | CADENA_DOBLE
             | CADENA_COMANDO
 
-variable    : VAR
-            | paquete VAR
-            | MY VAR
-            | OUR VAR
+variable    : '$' ID
+            | '@' ID
+            | '%' ID
+            | '$' ID AMBITO ID
+            | '@' ID AMBITO ID
+            | '%' ID AMBITO ID 
+            | MY '$' ID
+            | MY '@' ID
+            | MY '%' ID
+            | OUR '$' ID 
+            | OUR '@' ID
+            | OUR '%' ID
 
 coleccion   : '(' lista ')'
             | '(' ')'
@@ -94,12 +103,10 @@ acceso      : expresion '{' lista '}'
             | '@' expresion
             | '%' expresion
 
-funcion     : paquete ID expresion
-            | paquete ID
+funcion     : ID AMBITO ID expresion
+            | ID AMBITO ID
             | ID expresion
             | ID
-
-paquete     : ID CONTEXTO
 
 regulares   : expresion STR_NO_REX M_REGEX
             | expresion STR_REX M_REGEX

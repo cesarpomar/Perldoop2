@@ -10,14 +10,18 @@ import perldoop.modelo.arbol.Terminal;
  */
 public abstract class Variable extends Simbolo {
 
+    protected Terminal contexto;
     protected Terminal var;
+    protected String alias;
 
     /**
      * Único contructor de la clase
      *
+     * @param contexto Contexto
      * @param var Var
      */
-    public Variable(Terminal var) {
+    public Variable(Terminal contexto, Terminal var) {
+        setContexto(contexto);
         setVar(var);
     }
 
@@ -39,4 +43,42 @@ public abstract class Variable extends Simbolo {
         var.setPadre(this);
         this.var = var;
     }
+
+    /**
+     * Obtiene el contexo
+     *
+     * @return Contexto
+     */
+    public final Terminal getContexto() {
+        return contexto;
+    }
+
+    /**
+     * Establece el contexto
+     *
+     * @param contexto Contexto
+     */
+    public final void setContexto(Terminal contexto) {
+        contexto.setPadre(this);
+        this.contexto = contexto;
+    }
+
+    /**
+     * Obtiene el alias de la variable
+     *
+     * @return Alias de la variable
+     */
+    public final String getAlias() {
+        return alias;
+    }
+
+    /**
+     * Establece el alias de la variable
+     *
+     * @param alias Alias de la variable
+     */
+    public final void setAlias(String alias) {
+        this.alias = alias;
+    }
+
 }

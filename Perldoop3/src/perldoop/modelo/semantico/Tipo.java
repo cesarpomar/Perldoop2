@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author César
  */
-public class Tipo {
+public final class Tipo {
 
     public static final int BOOLEAN = 1;
     public static final int INTEGER = 2;
