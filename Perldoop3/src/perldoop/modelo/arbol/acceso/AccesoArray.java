@@ -13,7 +13,6 @@ import perldoop.modelo.arbol.lista.Lista;
  */
 public final class AccesoArray extends Acceso {
 
-    private Expresion expresion;
     private Terminal corcheteI;
     private Lista lista;
     private Terminal corcheteD;
@@ -27,30 +26,13 @@ public final class AccesoArray extends Acceso {
      * @param corcheteD Corchete derecho
      */
     public AccesoArray(Expresion expresion, Terminal corcheteI, Lista lista, Terminal corcheteD) {
-        setExpresion(expresion);
+        super(expresion);
         setCorcheteI(corcheteI);
         setLista(lista);
         setCorcheteD(corcheteD);
     }
 
-    /**
-     * Obtiene la expresión
-     *
-     * @return Expresión
-     */
-    public Expresion getExpresion() {
-        return expresion;
-    }
 
-    /**
-     * Establece la expresión
-     *
-     * @param expresion Expresión
-     */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
-    }
 
     /**
      * Obtiene el corchete izquierdo

@@ -13,7 +13,6 @@ import perldoop.modelo.arbol.lista.Lista;
  */
 public final class AccesoMapRef extends Acceso {
 
-    private Expresion expresion;
     private Terminal flecha;
     private Terminal llaveI;
     private Lista lista;
@@ -29,30 +28,11 @@ public final class AccesoMapRef extends Acceso {
      * @param llaveD Llave derecha
      */
     public AccesoMapRef(Expresion expresion, Terminal flecha, Terminal llaveI, Lista lista, Terminal llaveD) {
-        setExpresion(expresion);
+        super(expresion);
         setFlecha(flecha);
         setLlaveI(llaveI);
         setLista(lista);
         setLlaveD(llaveD);
-    }
-
-    /**
-     * Obtiene la expresión
-     *
-     * @return Expresión
-     */
-    public Expresion getExpresion() {
-        return expresion;
-    }
-
-    /**
-     * Establece la expresión
-     *
-     * @param expresion Expresión
-     */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
     }
 
     /**

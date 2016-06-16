@@ -7,35 +7,26 @@ import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.paquete.Paquete;
 
 /**
- * Clase que representa la reduccion -> <br>
- * variable : paquete ID expresion<br>
- * | paquete ID<br>
- * | ID expresion<br>
- * | ID<br>
+ * Clase abtracta que representa todas las reduciones de funcion
  *
  * @author César Pomar
  */
-public final class Funcion extends Simbolo {
+public abstract class Funcion extends Simbolo {
 
-    private Paquete paquete;
-    private Terminal identificador;
-    private Expresion expresion;
+    protected Paquete paquete;
+    protected Terminal identificador;
 
     /**
      * Único contructor de la clase
      *
      * @param paquete Paquete
      * @param identificador Identificador
-     * @param expresion Expresión
      */
-    public Funcion(Paquete paquete, Terminal identificador, Expresion expresion) {
+    public Funcion(Paquete paquete, Terminal identificador) {
         if (paquete != null) {
             setPaquete(paquete);
         }
         setIdentificador(identificador);
-        if (expresion != null) {
-            setExpresion(expresion);
-        }
     }
 
     /**
@@ -43,7 +34,7 @@ public final class Funcion extends Simbolo {
      *
      * @return Paquete
      */
-    public Paquete getPaquete() {
+    public final Paquete getPaquete() {
         return paquete;
     }
 
@@ -52,7 +43,7 @@ public final class Funcion extends Simbolo {
      *
      * @param paquete Paquete
      */
-    public void setPaquete(Paquete paquete) {
+    public final void setPaquete(Paquete paquete) {
         paquete.setPadre(this);
         this.paquete = paquete;
     }
@@ -62,7 +53,7 @@ public final class Funcion extends Simbolo {
      *
      * @return Identificador
      */
-    public Terminal getIdentificador() {
+    public final Terminal getIdentificador() {
         return identificador;
     }
 
@@ -71,48 +62,9 @@ public final class Funcion extends Simbolo {
      *
      * @param identificador Identificador
      */
-    public void setIdentificador(Terminal identificador) {
+    public final void setIdentificador(Terminal identificador) {
         identificador.setPadre(this);
         this.identificador = identificador;
-    }
-
-    /**
-     * Obtiene la expresión
-     *
-     * @return Expresión
-     */
-    public Expresion getExpresion() {
-        return expresion;
-    }
-
-    /**
-     * Establece la expresión
-     *
-     * @param expresion Expresión
-     */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
-    }
-
-    @Override
-    public void aceptar(Visitante v) {
-        v.visitar(this);
-    }
-
-    @Override
-    public Simbolo[] getHijos() {
-        if (paquete == null) {
-            if (expresion == null) {
-                return new Simbolo[]{identificador};
-            } else {
-                return new Simbolo[]{identificador, expresion};
-            }
-        } else if (expresion == null) {
-            return new Simbolo[]{paquete, identificador};
-        } else {
-            return new Simbolo[]{paquete, identificador, expresion};
-        }
     }
 
 }

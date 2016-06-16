@@ -13,7 +13,6 @@ import perldoop.modelo.arbol.expresion.Expresion;
 public final class AccesoRefEscalar extends Acceso {
 
     private Terminal dolar;
-    private Expresion expresion;
 
     /**
      * Único contructor de la clase
@@ -22,8 +21,8 @@ public final class AccesoRefEscalar extends Acceso {
      * @param expresion Expresión
      */
     public AccesoRefEscalar(Terminal dolar, Expresion expresion) {
+        super(expresion);
         setDolar(dolar);
-        setExpresion(expresion);
     }
 
     /**
@@ -43,25 +42,6 @@ public final class AccesoRefEscalar extends Acceso {
     public void setDolar(Terminal dolar) {
         dolar.setPadre(padre);
         this.dolar = dolar;
-    }
-
-    /**
-     * Obtiene la expresión
-     *
-     * @return Expresión
-     */
-    public Expresion getExpresion() {
-        return expresion;
-    }
-
-    /**
-     * Establece la expresión
-     *
-     * @param expresion Expresión
-     */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
     }
 
     @Override

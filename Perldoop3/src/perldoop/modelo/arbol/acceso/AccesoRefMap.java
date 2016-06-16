@@ -10,10 +10,9 @@ import perldoop.modelo.arbol.expresion.Expresion;
  *
  * @author César Pomar
  */
-public final class AccesoRefMap extends Acceso{
-    
+public final class AccesoRefMap extends Acceso {
+
     private Terminal porcentaje;
-    private Expresion expresion;
 
     /**
      * Único contructor de la clase
@@ -22,8 +21,8 @@ public final class AccesoRefMap extends Acceso{
      * @param expresion Expresión
      */
     public AccesoRefMap(Terminal porcentaje, Expresion expresion) {
+        super(expresion);
         setPorcentaje(porcentaje);
-        setExpresion(expresion);
     }
 
     /**
@@ -43,25 +42,6 @@ public final class AccesoRefMap extends Acceso{
     public void setPorcentaje(Terminal porcentaje) {
         porcentaje.setPadre(padre);
         this.porcentaje = porcentaje;
-    }
-
-    /**
-     * Obtiene la expresión
-     *
-     * @return Expresión
-     */
-    public Expresion getExpresion() {
-        return expresion;
-    }
-
-    /**
-     * Establece la expresión
-     *
-     * @param expresion Expresión
-     */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
     }
 
     @Override

@@ -15,8 +15,7 @@ import perldoop.modelo.arbol.paquete.Paquete;
 public final class VarExistente extends Variable {
 
     private Paquete paquete;
-    private Terminal var;
-
+    
     /**
      * Único contructor de la clase
      *
@@ -24,6 +23,7 @@ public final class VarExistente extends Variable {
      * @param var Variable
      */
     public VarExistente(Paquete paquete, Terminal var) {
+        super(var);
         if (paquete != null) {
             setPaquete(paquete);
         }
@@ -46,25 +46,6 @@ public final class VarExistente extends Variable {
     public void setPaquete(Paquete paquete) {
         paquete.setPadre(this);
         this.paquete = paquete;
-    }
-
-    /**
-     * Obtiene la variable
-     *
-     * @return Variable
-     */
-    public Terminal getVar() {
-        return var;
-    }
-
-    /**
-     * Establece la variable
-     *
-     * @param var Variable
-     */
-    public void setVar(Terminal var) {
-        var.setPadre(this);
-        this.var = var;
     }
 
     @Override

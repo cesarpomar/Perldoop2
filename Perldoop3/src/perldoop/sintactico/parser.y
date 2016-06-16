@@ -28,6 +28,11 @@ import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.elsif.*;
 import perldoop.modelo.arbol.bloqueelsif.*;
+import perldoop.modelo.arbol.regulares.*;
+import perldoop.modelo.arbol.binario.*;
+import perldoop.modelo.arbol.logico.*;
+import perldoop.modelo.arbol.comparacion.*;
+import perldoop.modelo.arbol.aritmetica.*;
 %}
 
 /*Tokens etiquetas del preprocesador, nunca deben llegar al analizador*/
@@ -166,64 +171,64 @@ acceso		:	expresion '{' lista '}'					{$$=set(new AccesoMap(s($1),s($2),s($3),s(
 			|	'@' expresion %prec UNITARIO			{$$=set(new AccesoRefArray(s($1),s($2)));} 
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 
 
-funcion		:	paquete ID expresion					{$$=set(new Funcion(s($1),s($2),s($3)));}
-			|	paquete ID								{$$=set(new Funcion(s($1),s($2),null));}
-			|	ID expresion							{$$=set(new Funcion(null,s($1),s($2)));}
-			|	ID										{$$=set(new Funcion(null,s($1),null));}
+funcion		:	paquete ID expresion					{$$=set(new FuncionArgs(s($1),s($2),s($3)));}
+			|	paquete ID								{$$=set(new FuncionNoArgs(s($1),s($2)));}
+			|	ID expresion							{$$=set(new FuncionArgs(null,s($1),s($2)));}
+			|	ID										{$$=set(new FuncionNoArgs(null,s($1)));}
 
 paquete		:	ID CONTEXTO								{$$=set(new Paquete(s($1),s($2)));}
 
-regulares	:	expresion STR_NO_REX M_REGEX			{}
-			|	expresion STR_REX M_REGEX				{}
-			|	expresion STR_REX S_REGEX				{}
-			|	expresion STR_REX Y_REGEX				{}
+regulares	:	expresion STR_NO_REX M_REGEX			{$$=set(new RegularNoMatch(s($1),s($2),s($3)));}
+			|	expresion STR_REX M_REGEX				{$$=set(new RegularMatch(s($1),s($2),s($3)));}
+			|	expresion STR_REX S_REGEX				{$$=set(new RegularSubs(s($1),s($2),s($3)));}
+			|	expresion STR_REX Y_REGEX				{$$=set(new RegularTrans(s($1),s($2),s($3)));}
 
-binario		:	expresion '|' expresion					{}
-			|	expresion '&' expresion					{}
-			|	expresion '~' expresion					{}
-			|	expresion '^' expresion					{}
-			|	expresion DESP_I expresion				{}
-			|	expresion DESP_D expresion				{}
+binario		:	expresion '|' expresion					{$$=set(new BinOr(s($1),s($2),s($3)));}
+			|	expresion '&' expresion					{$$=set(new BinAnd(s($1),s($2),s($3)));}
+			|	'~' expresion							{$$=set(new BinNot(s($1),s($2)));}
+			|	expresion '^' expresion					{$$=set(new BinXor(s($1),s($2),s($3)));}
+			|	expresion DESP_I expresion				{$$=set(new BinDespI(s($1),s($2),s($3)));}
+			|	expresion DESP_D expresion				{$$=set(new BinDespD(s($1),s($2),s($3)));}
 
-logico		:	expresion LOR expresion					{}
-			|	expresion LAND expresion				{}
-			|	'!' expresion							{}
-			|	expresion LLOR expresion				{}
-			|	expresion LLAND expresion				{}
-			|	LLNOT expresion							{}
-			|	expresion LLXOR expresion				{}
-			|	expresion '?' expresion ':' expresion	{}
+logico		:	expresion LOR expresion					{$$=set(new LogOr(s($1),s($2),s($3)));}
+			|	expresion LAND expresion				{$$=set(new LogAnd(s($1),s($2),s($3)));}
+			|	'!' expresion							{$$=set(new LogNot(s($1),s($2)));}
+			|	expresion LLOR expresion				{$$=set(new LogOrBajo(s($1),s($2),s($3)));}
+			|	expresion LLAND expresion				{$$=set(new LogAndBajo(s($1),s($2),s($3)));}
+			|	LLNOT expresion							{$$=set(new LogNotBajo(s($1),s($2)));}
+			|	expresion LLXOR expresion				{$$=set(new LogXorBajo(s($1),s($2),s($3)));}
+			|	expresion '?' expresion ':' expresion	{$$=set(new LogTernario(s($1),s($2),s($3),s($4),s($5)));}
 
-comparacion	:	expresion NUM_EQ expresion				{}
-			|	expresion NUM_NE expresion				{}
-			|	expresion '<' expresion					{}
-			|	expresion NUM_LE expresion				{}
-			|	expresion '>' expresion					{}
-			|	expresion NUM_GE expresion				{}
-			|	expresion CMP_NUM expresion				{}
-			|	expresion STR_EQ expresion				{}
-			|	expresion STR_NE expresion				{}
-			|	expresion STR_LT expresion				{}
-			|	expresion STR_LE expresion				{}
-			|	expresion STR_GT expresion				{}
-			|	expresion STR_GE expresion				{}
-			|	expresion CMP expresion					{}
-			|	expresion SMART_EQ expresion			{}
+comparacion	:	expresion NUM_EQ expresion				{$$=set(new CompNumEq(s($1),s($2),s($3)));}
+			|	expresion NUM_NE expresion				{$$=set(new CompNumNe(s($1),s($2),s($3)));}
+			|	expresion '<' expresion					{$$=set(new CompNumLt(s($1),s($2),s($3)));}
+			|	expresion NUM_LE expresion				{$$=set(new CompNumLe(s($1),s($2),s($3)));}
+			|	expresion '>' expresion					{$$=set(new CompNumGt(s($1),s($2),s($3)));}
+			|	expresion NUM_GE expresion				{$$=set(new CompNumGe(s($1),s($2),s($3)));}
+			|	expresion CMP_NUM expresion				{$$=set(new CompNumCmp(s($1),s($2),s($3)));}
+			|	expresion STR_EQ expresion				{$$=set(new CompStrEq(s($1),s($2),s($3)));}
+			|	expresion STR_NE expresion				{$$=set(new CompStrNe(s($1),s($2),s($3)));}
+			|	expresion STR_LT expresion				{$$=set(new CompStrLt(s($1),s($2),s($3)));}
+			|	expresion STR_LE expresion				{$$=set(new CompStrLe(s($1),s($2),s($3)));}
+			|	expresion STR_GT expresion				{$$=set(new CompStrGt(s($1),s($2),s($3)));}
+			|	expresion STR_GE expresion				{$$=set(new CompStrGe(s($1),s($2),s($3)));}
+			|	expresion CMP expresion					{$$=set(new CompStrCmp(s($1),s($2),s($3)));}
+			|	expresion SMART_EQ expresion			{$$=set(new CompSmart(s($1),s($2),s($3)));}
 
-aritmetica	:	expresion '+' expresion					{}
-			|	expresion '-' expresion					{}
-			|	expresion '*' expresion					{}
-			|	expresion '/' expresion					{}
-			|	expresion POW expresion					{}
-			|	expresion X expresion					{}
-			|	expresion '.' expresion					{}
-			|	expresion '%' expresion					{}
-			|	'+' expresion %prec UNITARIO			{}
-			|	'-' expresion %prec UNITARIO			{}
-			|	MAS_MAS expresion						{}
-			|	MENOS_MENOS expresion					{}
-			|	expresion MAS_MAS						{}
-			|	expresion MENOS_MENOS					{}
+aritmetica	:	expresion '+' expresion					{$$=set(new AritSuma(s($1),s($2),s($3)));}
+			|	expresion '-' expresion					{$$=set(new AritResta(s($1),s($2),s($3)));}
+			|	expresion '*' expresion					{$$=set(new AritMulti(s($1),s($2),s($3)));}
+			|	expresion '/' expresion					{$$=set(new AritDiv(s($1),s($2),s($3)));}
+			|	expresion POW expresion					{$$=set(new AritPow(s($1),s($2),s($3)));}
+			|	expresion X expresion					{$$=set(new AritX(s($1),s($2),s($3)));}
+			|	expresion '.' expresion					{$$=set(new AritConcat(s($1),s($2),s($3)));}
+			|	expresion '%' expresion					{$$=set(new AritMod(s($1),s($2),s($3)));}
+			|	'+' expresion %prec UNITARIO			{$$=set(new AritPositivo(s($1),s($2)));}
+			|	'-' expresion %prec UNITARIO			{$$=set(new AritNegativo(s($1),s($2)));}
+			|	MAS_MAS expresion						{$$=set(new AritPreIncremento(s($1),s($2)));}
+			|	MENOS_MENOS expresion					{$$=set(new AritPreDecremento(s($1),s($2)));}
+			|	expresion MAS_MAS						{$$=set(new AritPostIncremento(s($1),s($2)));}
+			|	expresion MENOS_MENOS					{$$=set(new AritPostDecremento(s($1),s($2)));}
 
 abrirBloque :											{$$=set(new AbrirBloque());}
 

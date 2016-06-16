@@ -13,7 +13,6 @@ import perldoop.modelo.arbol.expresion.Expresion;
 public final class AccesoRefArray extends Acceso {
 
     private Terminal arroba;
-    private Expresion expresion;
 
     /**
      * Único contructor de la clase
@@ -22,8 +21,8 @@ public final class AccesoRefArray extends Acceso {
      * @param expresion Expresión
      */
     public AccesoRefArray(Terminal arroba, Expresion expresion) {
+        super(expresion);
         setArroba(arroba);
-        setExpresion(expresion);
     }
 
     /**
@@ -43,25 +42,6 @@ public final class AccesoRefArray extends Acceso {
     public void setArroba(Terminal arroba) {
         arroba.setPadre(padre);
         this.arroba = arroba;
-    }
-
-    /**
-     * Obtiene la expresión
-     *
-     * @return Expresión
-     */
-    public Expresion getExpresion() {
-        return expresion;
-    }
-
-    /**
-     * Establece la expresión
-     *
-     * @param expresion Expresión
-     */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
     }
 
     @Override

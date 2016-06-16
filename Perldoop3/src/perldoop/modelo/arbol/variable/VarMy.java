@@ -12,7 +12,6 @@ import perldoop.modelo.arbol.Visitante;
 public final class VarMy extends Variable {
 
     private Terminal my;
-    private Terminal var;
 
     /**
      * Único contructor de la clase
@@ -21,8 +20,8 @@ public final class VarMy extends Variable {
      * @param var Var
      */
     public VarMy(Terminal my, Terminal var) {
+        super(var);
         setMy(my);
-        setVar(var);
     }
 
     /**
@@ -42,25 +41,6 @@ public final class VarMy extends Variable {
     public void setMy(Terminal my) {
         my.setPadre(this);
         this.my = my;
-    }
-
-    /**
-     * Obtiene la variable
-     *
-     * @return Variable
-     */
-    public Terminal getVar() {
-        return var;
-    }
-
-    /**
-     * Establece la variable
-     *
-     * @param var Variable
-     */
-    public void setVar(Terminal var) {
-        var.setPadre(this);
-        this.var = var;
     }
 
     @Override
