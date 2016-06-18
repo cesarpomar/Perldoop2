@@ -1,7 +1,7 @@
 echo off
 cd %~dp0
 rm Parser.java
-echo ----------------------Analizador sintactico----------------------
+printf "----------------------Analizador sintactico----------------------\n"
 yacc -Jnorun -Jnoconstruct -Jpackage=perldoop.sintactico -Jsemantic=ParserVal parser.y 
 python split.py
-echo -----------------------------------------------------------------
+printf "-----------------------------------------------------------------\n"

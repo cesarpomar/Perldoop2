@@ -3,18 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package perldoop.semantico.sentencia;
-
-import perldoop.modelo.arbol.sentencia.StcLista;
+package perldoop.modelo.semantico;
 
 /**
  *
  * @author César
  */
-public class SemSentencia {
-     
-    public void visitar(StcLista s) {
-        //Por ahora nada
-    }
+public class TipoFuncion {
     
 }

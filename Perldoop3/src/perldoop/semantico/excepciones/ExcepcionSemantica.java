@@ -10,5 +10,4 @@ public class ExcepcionSemantica extends RuntimeException {
     public ExcepcionSemantica() {
         super("EXCEPCION SEMÁNTICA");
     }
-
 }

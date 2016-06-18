@@ -40,7 +40,7 @@ import perldoop.modelo.arbol.aritmetica.*;
 
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
-%token ID SIGIL
+%token ID VAR SIGIL
 %token ENTERO DECIMAL CADENA_SIMPLE CADENA_DOBLE CADENA_COMANDO M_REGEX S_REGEX Y_REGEX STDIN STDOUT STDERR
 
 /*Palabras reservadas*/
@@ -52,7 +52,7 @@ import perldoop.modelo.arbol.aritmetica.*;
 %left LLAND
 %left LLNOT
 %left ','
-%left FUNCION
+%left ID
 %right '=' MULTI_IGUAL DIV_IGUAL MOD_IGUAL SUMA_IGUAL MAS_IGUAL MENOS_IGUAL DESP_I_IGUAL DESP_D_IGUAL AND_IGUAL OR_IGUAL XOR_IGUAL POW_IGUAL LAND_IGUAL LOR_IGUAL CONCAT_IGUAL X_IGUAL
 %right ':' '?'
 %nonassoc DOS_PUNTOS
@@ -66,7 +66,7 @@ import perldoop.modelo.arbol.aritmetica.*;
 %left '+' '-' '.'
 %left '*' '/' '%' X
 %left STR_REX STR_NO_REX
-%left '!' '~' UNITARIO ID
+%left '!' '~' UNITARIO 
 %right POW
 %nonassoc MAS_MAS MENOS_MENOS
 %left FLECHA
@@ -149,18 +149,18 @@ constante	:	ENTERO									{$$=set(new Entero(s($1)));}
 			|	CADENA_DOBLE							{$$=set(new CadenaDoble(s($1)));}
 			|	CADENA_COMANDO 							{$$=set(new CadenaComando(s($1)));}  
 
-variable	:	'$' ID									{$$=set(new VarExistente(s($1),s($2)));} 
-			|	'@' ID									{$$=set(new VarExistente(s($1),s($2)));} 
-			|	'%' ID									{$$=set(new VarExistente(s($1),s($2)));} 
-			|	'$' ID AMBITO ID						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
-			|	'@' ID AMBITO ID						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
-			|	'%' ID AMBITO ID						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
-			|	MY '$' ID								{$$=set(new VarMy(s($1),s($2),s($3)));} 
-			|	MY '@' ID								{$$=set(new VarMy(s($1),s($2),s($3)));} 
-			|	MY '%' ID								{$$=set(new VarMy(s($1),s($2),s($3)));} 
-			|	OUR '$' ID								{$$=set(new VarOur(s($1),s($2),s($3)));} 
-			|	OUR '@' ID								{$$=set(new VarOur(s($1),s($2),s($3)));} 
-			|	OUR '%' ID								{$$=set(new VarOur(s($1),s($2),s($3)));} 
+variable	:	'$' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
+			|	'@' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
+			|	'%' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
+			|	'$' VAR AMBITO VAR						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
+			|	'@' VAR AMBITO VAR						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
+			|	'%' VAR AMBITO VAR						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
+			|	MY '$' VAR								{$$=set(new VarMy(s($1),s($2),s($3)));} 
+			|	MY '@' VAR								{$$=set(new VarMy(s($1),s($2),s($3)));} 
+			|	MY '%' VAR								{$$=set(new VarMy(s($1),s($2),s($3)));} 
+			|	OUR '$' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
+			|	OUR '@' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
+			|	OUR '%' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
 
 coleccion	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
 			|	'('  ')'								{$$=set(new ColParentesis(s($1),new Lista(),s($2)));}
@@ -179,12 +179,13 @@ acceso		:	expresion '{' lista '}'					{$$=set(new AccesoMap(s($1),s($2),s($3),s(
 			|	'$' expresion %prec UNITARIO			{$$=set(new AccesoRefEscalar(s($1),s($2)));} 
 			|	'@' expresion %prec UNITARIO			{$$=set(new AccesoRefArray(s($1),s($2)));} 
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 
-			|	'$' '#' expresion						{$$=set(new AccesoSigil(s($1),s($2),s($3)));} 
+			|	'$' '#' expresion %prec UNITARIO		{$$=set(new AccesoSigil(s($1),s($2),s($3)));} 
 
-funcion		:	ID AMBITO ID expresion					{$$=set(new PaqueteFuncionArgs(s($1),s($2),s($3),s($4)));}
+funcion		:	ID AMBITO ID expresion					{$$=set(new PaqueteFuncionArgs(s($1),s($2),s($3),add(new Argumentos(s($2)))));}
 			|	ID AMBITO ID							{$$=set(new PaqueteFuncionNoArgs(s($1),s($2),s($3)));}
-			|	ID expresion							{$$=set(new FuncionArgs(s($1),s($2)));}
+			|	ID expresion							{$$=set(new FuncionArgs(s($1),add(new Argumentos(s($2)))));}
 			|	ID										{$$=set(new FuncionNoArgs(s($1)));}
+			|	DO constante %prec ID					{$$=set(new FuncionDo(s($1),s($2)));}
 
 regulares	:	expresion STR_NO_REX M_REGEX			{$$=set(new RegularNoMatch(s($1),s($2),s($3)));}
 			|	expresion STR_REX M_REGEX				{$$=set(new RegularMatch(s($1),s($2),s($3)));}
@@ -356,13 +357,24 @@ bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(
 
 	/**
 	 * Función interna auxiliar que añade el simbolo a la lista de analizador
-	 * y luego lo retorno encapsulado en un ParseVal del analizador.
+	 * y luego lo retorna encapsulado en un ParseVal del analizador.
 	 * @param s Simbolo
 	 * @return ParseVal
 	 */
 	private ParserVal set(Simbolo s){
 		simbolos.add(s);
 		return new ParserVal(s);
+	}
+	
+	/**
+	 * Función interna auxiliar que añade el simbolo a la lista de analizador
+	 * y luego lo retorna.
+	 * @param s Simbolo
+	 * @return ParseVal
+	 */
+	private <T extends Simbolo>  T add(T s){
+		simbolos.add(s);
+		return s;
 	}
 
 	/**

@@ -8,6 +8,7 @@ import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.sentencia.Sentencia;
 import perldoop.modelo.semantico.Paquete;
+import perldoop.modelo.semantico.TablaSimbolos;
 
 /**
  * Clase que verifica la semanca del arbol de simbolos.
@@ -19,7 +20,7 @@ public final class AnalizadorSemantico {
     private List<Simbolo> simbolos;
     private Opciones opciones;
     private GestorErrores gestorErrores;
-    private EstadoSemantico estadoSemantico;
+    private TablaSimbolos tablaSimbolos;
     private int errores;
 
     /**
@@ -35,7 +36,7 @@ public final class AnalizadorSemantico {
         this.simbolos = simbolos;
         this.opciones = opciones;
         this.gestorErrores = gestorErrores;
-        this.estadoSemantico = new EstadoSemantico(paquetes);
+        this.tablaSimbolos = new TablaSimbolos(paquetes);
     }
 
     /**

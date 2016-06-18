@@ -5,32 +5,46 @@ import perldoop.modelo.arbol.constante.CadenaDoble;
 import perldoop.modelo.arbol.constante.CadenaSimple;
 import perldoop.modelo.arbol.constante.Decimal;
 import perldoop.modelo.arbol.constante.Entero;
+import perldoop.modelo.semantico.TablaSimbolos;
 import perldoop.modelo.semantico.Tipo;
 
 /**
+ * Clase para la semantica de las constantes
  *
- * @author César
+ * @author César Pomar
  */
 public class SemConstante {
 
-    public void visitar(CadenaComando s) {
-        s.setTipo(new Tipo(Tipo.STRING));
-    }
+    /*Tabla de simbolos */
+    private TablaSimbolos ts;
 
-    public void visitar(CadenaDoble s) {
-        s.setTipo(new Tipo(Tipo.STRING));
-    }
-
-    public void visitar(CadenaSimple s) {
-        s.setTipo(new Tipo(Tipo.STRING));
-    }
-
-    public void visitar(Decimal s) {
-        s.setTipo(new Tipo(Tipo.DOUBLE));
+    /**
+     * Contruye la semantica
+     *
+     * @param ts Tabla de simbolos
+     */
+    public SemConstante(TablaSimbolos ts) {
+        this.ts = ts;
     }
 
     public void visitar(Entero s) {
         s.setTipo(new Tipo(Tipo.INTEGER));
     }
-    
+
+    public void visitar(Decimal s) {
+        s.setTipo(new Tipo(Tipo.INTEGER));
+    }
+
+    public void visitar(CadenaSimple s) {
+        s.setTipo(new Tipo(Tipo.INTEGER));
+    }
+
+    public void visitar(CadenaDoble s) {
+        s.setTipo(new Tipo(Tipo.INTEGER));
+    }
+
+    public void visitar(CadenaComando s) {
+        s.setTipo(new Tipo(Tipo.INTEGER));
+    }
+
 }

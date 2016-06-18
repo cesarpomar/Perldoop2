@@ -16,11 +16,13 @@ import perldoop.modelo.Opciones;
 %unicode
 %line
 %column
-%state VAR PD
+%char
+%state VAR FUN PD
 
 %{
-	private StringBuilder comentario;
+	private StringBuilder buffer;
 	private Token yyval;
+	private Token comentario;
 	private Opciones opciones;
 	private GestorErrores gestorErrores;
 	private int errores;
@@ -36,6 +38,7 @@ import perldoop.modelo.Opciones;
 		errores = 0;
 		this.opciones = opciones;
 		this.gestorErrores = gestorErrores;
+		buffer = new StringBuilder(100);
 	}
 
 	/**
@@ -127,6 +130,7 @@ import perldoop.modelo.Opciones;
 		yyval.setTipo(tipo);
 		yyval.setLinea(yyline);
 		yyval.setColumna(yycolumn);
+		yyval.setPosicion(yychar);
 		return tipo;
 	}
 %}
@@ -153,18 +157,24 @@ IGNORAR_BLOQUE	=	\#<ignore-block>\n[^]*\#<ignore-block>
 IMPORT_JAVA		=	\#<java-import>.*
 LINEA_JAVA		=	\#<java-line>.*
 
-PD_ID			=	<[a-z]+>
+PD_ID			=	<{ID}>
 PD_VAR			=	<(\$|@|%){ID}>
 PD_NUM			=	<{ENTERO}>
 
 
 %%
 
-	/*----Variables----*/
+	/*----Paquetes----*/
 <VAR>{
-	{ID}				{return token(Parser.ID);}
+	{ID}				{return token(Parser.VAR);}
 	"::"				{return token(Parser.AMBITO);}
 	"\#"				{return token(Parser.SIGIL);}
+	.					{yypushback(1);yybegin(YYINITIAL);}
+}
+
+<FUN>{
+	{ID}				{return token(Parser.ID);}
+	"::"				{return token(Parser.AMBITO);}
 	.					{yypushback(1);yybegin(YYINITIAL);}
 }
 
@@ -173,11 +183,11 @@ PD_NUM			=	<{ENTERO}>
 	"\$"				{yybegin(VAR);return token('$');}
 	"@"					{yybegin(VAR);return token('@');}
 	"%"					{yybegin(VAR);return token('%');}
-	"&"					{yybegin(VAR);return token('&');} 
+	"&"					{yybegin(FUN);return token('&');} 
 	{ID}				{String txt = yytext(); 
-						 int tipo = Reservados.buscarId(txt, Parser.ID);
-						 if(tipo==Parser.SUB) yybegin(VAR);
-						 return token(txt, tipo);}
+						int tipo = Reservados.buscarId(txt, Parser.ID);
+						if(tipo==Parser.SUB) yybegin(VAR);
+						return token(txt, tipo);}
 
 		/*----Constantes----*/
 	{ENTERO}			{return token(Parser.ENTERO);}
@@ -260,7 +270,8 @@ PD_NUM			=	<{ENTERO}>
 
 		/*----Comentarios----*/
 
-	"\#"				{yybegin(PD);comentario = new StringBuilder(100);}
+	"\#"				{yybegin(PD);token("", Parser.COMENTARIO, true);
+						comentario=yyval;buffer.setLength(0);}
 	{IGNORAR_LINEA}		{}
 	{IGNORAR_BLOQUE}	{}
 	{IMPORT_JAVA}		{return token(Parser.IMPORT_JAVA);}
@@ -269,15 +280,16 @@ PD_NUM			=	<{ENTERO}>
 
 	/*----Etiquetas----*/
 <PD> {
-	{PD_ID}				{
-							String t = yytext(); Integer tipo = Reservados.buscarEtiqueta(t);
-							if (tipo == null){comentario.append(t);}else{return token(t, tipo, true);}
-						}
+	{PD_ID}				{String t = yytext(); Integer tipo = Reservados.buscarEtiqueta(t);
+						if (tipo == null){buffer.append(t);token(t, 0);
+						gestorErrores.error(Errores.AVISO,Errores.ETIQUETA_IGNORADA, yyval, t);}
+						else{return token(t, tipo, true);}}
 	{PD_NUM}			{return token(yytext(), Parser.PD_NUM, true);}
 	{PD_VAR}			{return token(yytext(), Parser.PD_VAR, true);}
-	[^\n\r]				{comentario.append(yytext());}
-	"\n"				{yybegin(YYINITIAL);return token(comentario.toString(), Parser.COMENTARIO, true);}
+	[^\n\r]				{buffer.append(yytext());}
 	"\r"				{}
+	"\n"				{yybegin(YYINITIAL);String txt = buffer.toString();
+						if(!txt.trim().isEmpty()){yyval=comentario;return comentario.getTipo();}}
 }
 
 <YYINITIAL>{

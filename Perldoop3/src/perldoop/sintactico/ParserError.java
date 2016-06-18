@@ -124,7 +124,6 @@ public class ParserError {
             case Parser.LLXOR:
             case Parser.LLAND:
             case Parser.LLNOT:
-            case Parser.FUNCION:
             case Parser.MULTI_IGUAL:
             case Parser.DIV_IGUAL:
             case Parser.MOD_IGUAL:

@@ -6,4 +6,5 @@ package perldoop.modelo;
  */
 public class Opciones {
     
+    private boolean interpolarVariables;
 }

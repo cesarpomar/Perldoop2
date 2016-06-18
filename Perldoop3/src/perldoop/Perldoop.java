@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import perldoop.depurador.Depurador;
 import perldoop.error.GestorErrores;
 import perldoop.generador.Generador;
 import perldoop.io.CodigoReader;
@@ -62,7 +63,7 @@ public class Perldoop {
             System.err.println("Analisis sintactico fallido, errores: " + parser.getErrores());
             return;
         }
-        System.exit(0);
+        //Depurador.simbolos(simbolos.get(simbolos.size()-1));
         //Semantico
         AnalizadorSemantico as = new AnalizadorSemantico(simbolos, opciones, gestorErrores, paquetes);
         as.analizar();

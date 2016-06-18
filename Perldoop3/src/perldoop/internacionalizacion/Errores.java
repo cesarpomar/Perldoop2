@@ -13,6 +13,7 @@ public class Errores extends Internacionalizacion {
     //Lexicos
     public static final String CARACTER_INVALIDO = "CARACTER_INVALIDO";
     public static final String FALLOS_LEXICOS = "FALLOS_LEXICOS";
+    public static final String ETIQUETA_IGNORADA = "ETIQUETA_IGNORADA";
     //Preprocesador
     public static final String ETIQUETA_NO_USADA = "ETIQUETA_NO_USADA";
     public static final String FALLOS_SINTACTICOS = "FALLOS_SINTACTICOS";

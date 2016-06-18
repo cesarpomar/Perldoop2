@@ -10,16 +10,25 @@ import java.util.Map;
  *
  * @author César Pomar
  */
-public class TablaSimbolos {
+public final class TablaSimbolos {
 
     private List<Map<String, Contexto>> bloques;
+    private Map<String, Tipo> predeclaraciones;
+    private Map<String, TipoFuncion> funciones;
+    private Map<String, Paquete> paquetes;
+    private Paquete paquete;
 
     /**
      * Construye la tabla de símbolos
+     *
+     * @param paquetes Paquetes
      */
-    public TablaSimbolos() {
+    public TablaSimbolos(Map<String, Paquete> paquetes) {
         bloques = new ArrayList<>(20);
-        bloques.add(new HashMap<>(10));
+        bloques.add(new HashMap<>(10));//Atributos
+        predeclaraciones = new HashMap<>(20);
+        funciones = new HashMap<>(20);
+        this.paquetes = paquetes;
     }
 
     /**
@@ -88,12 +97,52 @@ public class TablaSimbolos {
     }
 
     /**
-     * obtiene el número de niveles
+     * Obtiene el número de bloques
      *
-     * @return Número del niveles
+     * @return Número de Bloques
      */
-    public int getNiveles() {
+    public int getBloques() {
         return bloques.size();
+    }
+
+    /**
+     * Añade un tipo a una variable sin declarar
+     *
+     * @param identificador Identificador
+     * @param tipo Tipo
+     */
+    public void addDeclaracion(String identificador, Tipo tipo) {
+        predeclaraciones.put(identificador, tipo);
+    }
+
+    /**
+     * Obtiene el tipo de una variable sin declarar
+     *
+     * @param identificador Identificador
+     * @return Tipo
+     */
+    public Tipo buscarDeclaracion(String identificador) {
+        return predeclaraciones.get(identificador);
+    }
+
+    /**
+     * Obtiene si existe un paquete
+     *
+     * @return Declaracion de paquete
+     */
+    public boolean isPaquete() {
+        return paquete != null;
+    }
+
+    /**
+     * Crea un paquete con la tabla
+     * @param nombre Nombre del paquete
+     */
+    public void crerPaquete(String nombre) {
+        if (paquete == null) {
+            paquete = new Paquete();
+            paquetes.put(nombre, paquete);
+        }
     }
 
 }

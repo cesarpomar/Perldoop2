@@ -3,7 +3,6 @@ package perldoop.modelo.arbol.funcion;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
  * Clase que representa la reduccion -> <br>
@@ -14,36 +13,36 @@ import perldoop.modelo.arbol.expresion.Expresion;
  */
 public final class FuncionArgs extends Funcion {
 
-    private Expresion expresion;
+    private Argumentos argumentos;
 
     /**
      * Único contructor de la clase
      *
      * @param identificador Identificador
-     * @param expresion Expresión
+     * @param argumentos Argumentos
      */
-    public FuncionArgs(Terminal identificador, Expresion expresion) {
+    public FuncionArgs(Terminal identificador, Argumentos argumentos) {
         super(identificador);
-        setExpresion(expresion);
+        setArgumentos(argumentos);
     }
 
     /**
-     * Obtiene la expresión
+     * Obtiene los argumentos
      *
-     * @return Expresión
+     * @return Argumentos
      */
-    public Expresion getExpresion() {
-        return expresion;
+    public Argumentos getArgumentos() {
+        return argumentos;
     }
 
     /**
-     * Establece la expresión
+     * Establece los argumentos
      *
-     * @param expresion Expresión
+     * @param argumentos Argumentos
      */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
+    public void setArgumentos(Argumentos argumentos) {
+        argumentos.setPadre(this);
+        this.argumentos = argumentos;
     }
 
     @Override
@@ -53,7 +52,7 @@ public final class FuncionArgs extends Funcion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{identificador, expresion};
+        return new Simbolo[]{identificador, argumentos};
     }
 
 }

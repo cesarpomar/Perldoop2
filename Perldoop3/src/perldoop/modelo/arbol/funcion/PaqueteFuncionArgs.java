@@ -16,7 +16,7 @@ public final class PaqueteFuncionArgs extends Funcion {
 
     private Terminal paquete;
     private Terminal ambito;
-    private Expresion expresion;
+    private Argumentos argumentos;
 
     /**
      * Único contructor de la clase
@@ -24,13 +24,13 @@ public final class PaqueteFuncionArgs extends Funcion {
      * @param paquete Paquete
      * @param ambito Ambito
      * @param identificador Identificador
-     * @param expresion Expresión
+     * @param argumentos Argumentos
      */
-    public PaqueteFuncionArgs(Terminal paquete, Terminal ambito, Terminal identificador, Expresion expresion) {
+    public PaqueteFuncionArgs(Terminal paquete, Terminal ambito, Terminal identificador, Argumentos argumentos) {
         super(identificador);
         setPaquete(paquete);
         setAmbito(ambito);
-        setExpresion(expresion);
+        setArgumentos(argumentos);
     }
 
     /**
@@ -72,22 +72,22 @@ public final class PaqueteFuncionArgs extends Funcion {
     }
 
     /**
-     * Obtiene la expresión
+     * Obtiene los argumentos
      *
-     * @return Expresión
+     * @return Argumentos
      */
-    public Expresion getExpresion() {
-        return expresion;
+    public Argumentos getArgumentos() {
+        return argumentos;
     }
 
     /**
-     * Establece la expresión
+     * Establece los argumentos
      *
-     * @param expresion Expresión
+     * @param argumentos Argumentos
      */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
+    public void setArgumentos(Argumentos argumentos) {
+        argumentos.setPadre(this);
+        this.argumentos = argumentos;
     }
 
     @Override
@@ -97,7 +97,7 @@ public final class PaqueteFuncionArgs extends Funcion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{paquete, ambito, identificador, expresion};
+        return new Simbolo[]{paquete, ambito, identificador, argumentos};
     }
 
 }
