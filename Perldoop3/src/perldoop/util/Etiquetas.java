@@ -2,7 +2,7 @@ package perldoop.util;
 
 import java.util.List;
 import perldoop.modelo.lexico.Token;
-import perldoop.modelo.semantico.Tipo;
+import perldoop.modelo.semantica.Tipo;
 
 /**
  *

@@ -181,8 +181,8 @@ acceso		:	expresion '{' lista '}'					{$$=set(new AccesoMap(s($1),s($2),s($3),s(
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 
 			|	'$' '#' expresion %prec UNITARIO		{$$=set(new AccesoSigil(s($1),s($2),s($3)));} 
 
-funcion		:	ID AMBITO ID expresion					{$$=set(new PaqueteFuncionArgs(s($1),s($2),s($3),add(new Argumentos(s($2)))));}
-			|	ID AMBITO ID							{$$=set(new PaqueteFuncionNoArgs(s($1),s($2),s($3)));}
+funcion		:	ID AMBITO ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),s($3),add(new Argumentos(s($2)))));}
+			|	ID AMBITO ID							{$$=set(new FuncionPaqueteNoArgs(s($1),s($2),s($3)));}
 			|	ID expresion							{$$=set(new FuncionArgs(s($1),add(new Argumentos(s($2)))));}
 			|	ID										{$$=set(new FuncionNoArgs(s($1)));}
 			|	DO constante %prec ID					{$$=set(new FuncionDo(s($1),s($2)));}

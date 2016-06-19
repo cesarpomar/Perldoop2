@@ -1,6 +1,6 @@
 package perldoop.modelo.arbol;
 
-import perldoop.modelo.semantico.Tipo;
+import perldoop.modelo.semantica.Tipo;
 
 
 /**

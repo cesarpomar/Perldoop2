@@ -28,8 +28,9 @@ import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
 
 /**
+ * Interfaz para el patron Visitor
  *
- * @author César
+ * @author César Pomar
  */
 public interface Visitante {
 
@@ -200,9 +201,9 @@ public interface Visitante {
     void visitar(AccesoSigil s);
 
     //Funcion
-    void visitar(PaqueteFuncionArgs s);
+    void visitar(FuncionPaqueteArgs s);
 
-    void visitar(PaqueteFuncionNoArgs s);
+    void visitar(FuncionPaqueteNoArgs s);
 
     void visitar(FuncionArgs s);
 

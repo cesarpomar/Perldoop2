@@ -6,17 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import perldoop.depurador.Depurador;
 import perldoop.error.GestorErrores;
-import perldoop.generador.Generador;
+import perldoop.generacion.Generador;
 import perldoop.io.CodigoReader;
 import perldoop.lexico.Lexer;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.lexico.Token;
-import perldoop.modelo.semantico.Paquete;
+import perldoop.modelo.semantica.Paquete;
+import perldoop.modelo.semantica.TablaSimbolos;
 import perldoop.preprocesador.Preprocesador;
-import perldoop.semantico.AnalizadorSemantico;
+import perldoop.semantica.Semantica;
+import perldoop.traductor.Traductor;
 import perldoop.sintactico.Parser;
 
 /**
@@ -30,7 +31,7 @@ public class Perldoop {
      */
     public static void main(String[] args) {
         String fichero = "D:\\test.pl";
-        Map<String,Paquete> paquetes = new HashMap<>();
+        Map<String, Paquete> paquetes = new HashMap<>();
         Opciones opciones = new Opciones();
         //Gestor de Errores
         GestorErrores gestorErrores;
@@ -65,15 +66,16 @@ public class Perldoop {
         }
         //Depurador.simbolos(simbolos.get(simbolos.size()-1));
         //Semantico
-        AnalizadorSemantico as = new AnalizadorSemantico(simbolos, opciones, gestorErrores, paquetes);
-        as.analizar();
-        if (as.getErrores() > 0) {
+        TablaSimbolos ts = new TablaSimbolos(paquetes);
+        Semantica sem = new Semantica(ts, opciones, gestorErrores);
+        Generador gen = new Generador(ts, opciones, gestorErrores);
+
+        Traductor as = new Traductor(simbolos, sem, gen, opciones);
+        if (as.traducir() > 0) {
             System.err.println("Analisis semantico fallido, errores: " + parser.getErrores());
             return;
         }
-        //Generador
-        Generador gen = new Generador(simbolos);
-        //gen.generar();
+
     }
 
 }

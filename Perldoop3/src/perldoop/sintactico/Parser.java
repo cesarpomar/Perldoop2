@@ -3627,11 +3627,11 @@ case 90:
 break;
 case 91:
 //#line 184 "parser.y"
-{yyval=set(new PaqueteFuncionArgs(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),add(new Argumentos(s(val_peek(2))))));}
+{yyval=set(new FuncionPaqueteArgs(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),add(new Argumentos(s(val_peek(2))))));}
 break;
 case 92:
 //#line 185 "parser.y"
-{yyval=set(new PaqueteFuncionNoArgs(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
+{yyval=set(new FuncionPaqueteNoArgs(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 93:
 //#line 186 "parser.y"
