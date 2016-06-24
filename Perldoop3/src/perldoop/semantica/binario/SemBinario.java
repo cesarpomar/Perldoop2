@@ -1,7 +1,7 @@
 package perldoop.semantica.binario;
 
 import perldoop.modelo.arbol.binario.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de binario

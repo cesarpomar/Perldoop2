@@ -1,6 +1,6 @@
 package perldoop.generacion.cuerpo;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**

@@ -1,7 +1,7 @@
 package perldoop.semantica.elsif;
 
 import perldoop.modelo.arbol.elsif.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de elsIf

@@ -1,6 +1,6 @@
 package perldoop.generacion.funcion;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.funcion.Argumentos;
 import perldoop.modelo.arbol.funcion.FuncionArgs;
 import perldoop.modelo.arbol.funcion.FuncionDo;

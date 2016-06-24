@@ -4,7 +4,7 @@ package perldoop.modelo.generacion;
  * Clase que representa una sentencia java
  * @author César Pomar
  */
-public class SentenciaJava implements CodigoJava {
+public final class SentenciaJava implements CodigoJava {
 
     private String sentencia;
 

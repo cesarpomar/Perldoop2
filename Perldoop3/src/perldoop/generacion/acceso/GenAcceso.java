@@ -1,6 +1,6 @@
 package perldoop.generacion.acceso;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.acceso.AccesoArray;
 import perldoop.modelo.arbol.acceso.AccesoArrayRef;
 import perldoop.modelo.arbol.acceso.AccesoMap;

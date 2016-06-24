@@ -1,7 +1,7 @@
 package perldoop.semantica.logico;
 
 import perldoop.modelo.arbol.logico.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de logico

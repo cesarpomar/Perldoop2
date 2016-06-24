@@ -1,7 +1,7 @@
 package perldoop.semantica.variable;
 
 import perldoop.modelo.arbol.variable.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de variable

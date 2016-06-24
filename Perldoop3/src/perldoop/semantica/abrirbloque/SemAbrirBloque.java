@@ -1,7 +1,7 @@
 package perldoop.semantica.abrirbloque;
 
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de abrirBloque

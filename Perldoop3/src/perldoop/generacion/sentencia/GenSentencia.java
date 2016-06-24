@@ -1,6 +1,6 @@
 package perldoop.generacion.sentencia;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.sentencia.StcBloque;
 import perldoop.modelo.arbol.sentencia.StcComentario;
 import perldoop.modelo.arbol.sentencia.StcDeclaracion;

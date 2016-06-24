@@ -1,9 +1,7 @@
-package perldoop.generacion;
+package perldoop.modelo.generacion;
 
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
-import perldoop.modelo.generacion.BloqueJava;
-import perldoop.modelo.generacion.ClaseJava;
 import perldoop.modelo.semantica.TablaSimbolos;
 
 /**
@@ -11,9 +9,10 @@ import perldoop.modelo.semantica.TablaSimbolos;
  *
  * @author César Pomar
  */
-public class TablaGenerador {
+public final class TablaGenerador {
 
     private TablaSimbolos tablaSimbolos;
+    private GestorReservas gestorReservas;
     private Opciones opciones;
     private GestorErrores gestorErrores;
     private ClaseJava clase;
@@ -28,9 +27,11 @@ public class TablaGenerador {
      */
     public TablaGenerador(TablaSimbolos tablaSimbolos, Opciones opciones, GestorErrores gestorErrores) {
         this.tablaSimbolos = tablaSimbolos;
+        this.gestorReservas = new GestorReservas();
         this.opciones = opciones;
         this.gestorErrores = gestorErrores;
         clase = new ClaseJava();
+        bloqueActual = clase.getCodigo();
     }
 
     /**

@@ -1,18 +1,70 @@
-package perldoop.modelo.semantica;
+package perldoop.modelo.generacion;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Comprueba las palabras reservadas en java
+ * Gestiona la reserva de palabras durante la generación de código
  *
  * @author César Pomar
  */
-public class PalabrasReservadasJava {
+public final class GestorReservas {
+
+    public final static String PREF = "pd_";
+    private Map<String, Integer> reservas;
 
     /**
-     * Busca si una palabra esta reservada por java
+     * Construye el gestor de Reservas
+     */
+    public GestorReservas() {
+        this.reservas = new HashMap<>(100);
+    }
+
+    /**
+     * Obtiene el alias de una variable
+     *
+     * @param id Id
+     * @return Id alias
+     */
+    public String getAlias(String id) {
+        if (!isReservada(id)) {
+            return id;
+        }
+        id = limpiar(id);
+        int n = reservas.getOrDefault(id, 0);
+        reservas.put(id, n+1);
+        return PREF+id+n;
+    }
+
+    /**
+     * Obtiene una variable auxiliar
+     *
+     * @return Variable auxiliar
+     */
+    public String getAux() {
+        return getAlias("");
+    }
+
+    /**
+     * Limpia una variable eliminado el prefijo de reserva.
+     *
+     * @param id Id
+     * @return Id limpio
+     */
+    private String limpiar(String id) {
+        while (id.startsWith(PREF)) {
+            id = id.substring(3);
+        }
+        return id;
+    }
+
+    /**
+     * Busca si una palabra esta reservada
+     *
      * @param id Identificador
      * @return Esta reservada
      */
-    public static boolean buscar(String id) {
+    private static boolean isReservada(String id) {
         switch (id) {
             case "abstract":
             case "continue":
@@ -65,8 +117,9 @@ public class PalabrasReservadasJava {
             case "super":
             case "while":
                 return true;
+            default:
+                return id.startsWith(PREF);
         }
-        return false;
     }
 
 }

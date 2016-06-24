@@ -1,7 +1,7 @@
 package perldoop.semantica.bloqueelsif;
 
 import perldoop.modelo.arbol.bloqueelsif.BloqueElsIf;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de bloqueElsIf

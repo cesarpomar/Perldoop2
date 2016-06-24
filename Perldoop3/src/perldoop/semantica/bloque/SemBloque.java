@@ -1,7 +1,7 @@
 package perldoop.semantica.bloque;
 
 import perldoop.modelo.arbol.bloque.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de bloque

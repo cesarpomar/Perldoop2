@@ -1,7 +1,7 @@
 package perldoop.semantica.lista;
 
 import perldoop.modelo.arbol.lista.Lista;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de lista

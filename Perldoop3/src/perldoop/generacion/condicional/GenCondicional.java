@@ -1,6 +1,6 @@
 package perldoop.generacion.condicional;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.condicional.CondicionalIf;
 import perldoop.modelo.arbol.condicional.CondicionalUnless;
 

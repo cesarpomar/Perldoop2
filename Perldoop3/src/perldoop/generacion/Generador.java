@@ -1,5 +1,6 @@
 package perldoop.generacion;
 
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
@@ -29,6 +30,7 @@ import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.generacion.ClaseJava;
 import perldoop.modelo.semantica.TablaSimbolos;
 
@@ -425,6 +427,11 @@ public class Generador implements Visitante {
     @Override
     public void visitar(VarOur s) {
         fachada.getGenVariable().visitar(s);
+    }
+    
+    @Override
+    public void visitar(Paquetes s) {
+        fachada.getGenPaquetes().visitar(s);
     }
 
     @Override

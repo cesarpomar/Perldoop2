@@ -1,5 +1,6 @@
 package perldoop.generacion;
 
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.generacion.abrirbloque.*;
 import perldoop.generacion.acceso.*;
 import perldoop.generacion.aritmetica.*;
@@ -21,6 +22,7 @@ import perldoop.generacion.funcionsub.*;
 import perldoop.generacion.lista.*;
 import perldoop.generacion.logico.*;
 import perldoop.generacion.modificador.*;
+import perldoop.generacion.paquetes.*;
 import perldoop.generacion.regulares.*;
 import perldoop.generacion.sentencia.*;
 import perldoop.generacion.variable.*;
@@ -55,6 +57,7 @@ public final class FachadaGeneradores {
     private GenFuncionSub genFuncionSub;
     private GenLista genLista;
     private GenLogico genLogico;
+    private GenPaquetes genPaquetes;
     private GenModificador genModificador;
     private GenRegulares genRegulares;
     private GenSentencia genSentencia;
@@ -117,7 +120,7 @@ public final class FachadaGeneradores {
      * @return Generador de aritmetica
      */
     public GenAritmetica getGenAritmetica() {
-        if (genAritmetica ==null){
+        if (genAritmetica == null) {
             genAritmetica = new GenAritmetica(tabla);
         }
         return genAritmetica;
@@ -138,7 +141,7 @@ public final class FachadaGeneradores {
      * @return Generador de asignacion
      */
     public GenAsignacion getGenAsignacion() {
-        if (genAsignacion ==null){
+        if (genAsignacion == null) {
             genAsignacion = new GenAsignacion(tabla);
         }
         return genAsignacion;
@@ -159,7 +162,7 @@ public final class FachadaGeneradores {
      * @return Generador de binario
      */
     public GenBinario getGenBinario() {
-        if (genBinario ==null){
+        if (genBinario == null) {
             genBinario = new GenBinario(tabla);
         }
         return genBinario;
@@ -180,7 +183,7 @@ public final class FachadaGeneradores {
      * @return Generador de bloque
      */
     public GenBloque getGenBloque() {
-        if (genBloque ==null){
+        if (genBloque == null) {
             genBloque = new GenBloque(tabla);
         }
         return genBloque;
@@ -201,7 +204,7 @@ public final class FachadaGeneradores {
      * @return Generador de elsif
      */
     public GenBloqueElsIf getGenBloqueElsIf() {
-        if (genBloqueElsIf ==null){
+        if (genBloqueElsIf == null) {
             genBloqueElsIf = new GenBloqueElsIf(tabla);
         }
         return genBloqueElsIf;
@@ -222,7 +225,7 @@ public final class FachadaGeneradores {
      * @return Generador de coleccion
      */
     public GenColeccion getGenColeccion() {
-        if (genColeccion ==null){
+        if (genColeccion == null) {
             genColeccion = new GenColeccion(tabla);
         }
         return genColeccion;
@@ -243,7 +246,7 @@ public final class FachadaGeneradores {
      * @return Generador de comparacion
      */
     public GenComparacion getGenComparacion() {
-        if (genComparacion ==null){
+        if (genComparacion == null) {
             genComparacion = new GenComparacion(tabla);
         }
         return genComparacion;
@@ -264,7 +267,7 @@ public final class FachadaGeneradores {
      * @return Generador de condicional
      */
     public GenCondicional getGenCondicional() {
-        if (genCondicional ==null){
+        if (genCondicional == null) {
             genCondicional = new GenCondicional(tabla);
         }
         return genCondicional;
@@ -285,7 +288,7 @@ public final class FachadaGeneradores {
      * @return Generador de constante
      */
     public GenConstante getGenConstante() {
-        if (genConstante ==null){
+        if (genConstante == null) {
             genConstante = new GenConstante(tabla);
         }
         return genConstante;
@@ -306,7 +309,7 @@ public final class FachadaGeneradores {
      * @return Generador de cuerpo
      */
     public GenCuerpo getGenCuerpo() {
-        if (genCuerpo ==null){
+        if (genCuerpo == null) {
             genCuerpo = new GenCuerpo(tabla);
         }
         return genCuerpo;
@@ -327,7 +330,7 @@ public final class FachadaGeneradores {
      * @return Generador de elsif
      */
     public GenElsIf getGenElsIf() {
-        if (genElsIf ==null){
+        if (genElsIf == null) {
             genElsIf = new GenElsIf(tabla);
         }
         return genElsIf;
@@ -348,7 +351,7 @@ public final class FachadaGeneradores {
      * @return Generador de expresion
      */
     public GenExpresion getGenExpresion() {
-        if (genExpresion ==null){
+        if (genExpresion == null) {
             genExpresion = new GenExpresion(tabla);
         }
         return genExpresion;
@@ -369,7 +372,7 @@ public final class FachadaGeneradores {
      * @return Generador de flujo
      */
     public GenFlujo getGenFlujo() {
-        if (genFlujo ==null){
+        if (genFlujo == null) {
             genFlujo = new GenFlujo(tabla);
         }
         return genFlujo;
@@ -390,7 +393,7 @@ public final class FachadaGeneradores {
      * @return Generador de funcion
      */
     public GenFuncion getGenFuncion() {
-        if (genFuncion ==null){
+        if (genFuncion == null) {
             genFuncion = new GenFuncion(tabla);
         }
         return genFuncion;
@@ -411,7 +414,7 @@ public final class FachadaGeneradores {
      * @return Generador de funciondef
      */
     public GenFuncionDef getGenFuncionDef() {
-        if (genFuncionDef ==null){
+        if (genFuncionDef == null) {
             genFuncionDef = new GenFuncionDef(tabla);
         }
         return genFuncionDef;
@@ -432,7 +435,7 @@ public final class FachadaGeneradores {
      * @return Generador de funcionsub
      */
     public GenFuncionSub getGenFuncionSub() {
-        if (genFuncionSub ==null){
+        if (genFuncionSub == null) {
             genFuncionSub = new GenFuncionSub(tabla);
         }
         return genFuncionSub;
@@ -453,7 +456,7 @@ public final class FachadaGeneradores {
      * @return Generador de lista
      */
     public GenLista getGenLista() {
-        if (genLista ==null){
+        if (genLista == null) {
             genLista = new GenLista(tabla);
         }
         return genLista;
@@ -474,7 +477,7 @@ public final class FachadaGeneradores {
      * @return Generador de logico
      */
     public GenLogico getGenLogico() {
-        if (genLogico ==null){
+        if (genLogico == null) {
             genLogico = new GenLogico(tabla);
         }
         return genLogico;
@@ -490,12 +493,28 @@ public final class FachadaGeneradores {
     }
 
     /**
+     * Establece el generador de paquetes
+     * @return Generador de paquetes
+     */
+    public GenPaquetes getGenPaquetes() {
+        return genPaquetes;
+    }
+
+    /**
+     * Obtiene el generador de paquetes
+     * @param genPaquetes Generador de paquetes
+     */
+    public void setGenPaquetes(GenPaquetes genPaquetes) {
+        this.genPaquetes = genPaquetes;
+    }
+
+    /**
      * Obtiene el generador de modificador
      *
      * @return Generador de modificador
      */
     public GenModificador getGenModificador() {
-        if (genModificador ==null){
+        if (genModificador == null) {
             genModificador = new GenModificador(tabla);
         }
         return genModificador;
@@ -516,7 +535,7 @@ public final class FachadaGeneradores {
      * @return Generador de regulares
      */
     public GenRegulares getGenRegulares() {
-        if (genRegulares ==null){
+        if (genRegulares == null) {
             genRegulares = new GenRegulares(tabla);
         }
         return genRegulares;
@@ -537,7 +556,7 @@ public final class FachadaGeneradores {
      * @return Generador de sentencia
      */
     public GenSentencia getGenSentencia() {
-        if (genSentencia ==null){
+        if (genSentencia == null) {
             genSentencia = new GenSentencia(tabla);
         }
         return genSentencia;
@@ -558,7 +577,7 @@ public final class FachadaGeneradores {
      * @return Generador de variable
      */
     public GenVariable getGenVariable() {
-        if (genVariable ==null){
+        if (genVariable == null) {
             genVariable = new GenVariable(tabla);
         }
         return genVariable;

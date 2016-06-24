@@ -1,7 +1,7 @@
 package perldoop.semantica.acceso;
 
 import perldoop.modelo.arbol.acceso.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de acceso

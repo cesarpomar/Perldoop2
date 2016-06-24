@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.constante.CadenaSimple;
 import perldoop.modelo.arbol.constante.Decimal;
 import perldoop.modelo.arbol.constante.Entero;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de constante

@@ -1,6 +1,6 @@
 package perldoop.generacion.aritmetica;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.aritmetica.AritConcat;
 import perldoop.modelo.arbol.aritmetica.AritDiv;
 import perldoop.modelo.arbol.aritmetica.AritMod;

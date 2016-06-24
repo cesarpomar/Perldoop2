@@ -1,7 +1,7 @@
 package perldoop.semantica.modificador;
 
 import perldoop.modelo.arbol.modificador.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de modificador

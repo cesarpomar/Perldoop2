@@ -1,8 +1,7 @@
-package perldoop.semantica;
+package perldoop.modelo.semantica;
 
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
-import perldoop.modelo.semantica.TablaSimbolos;
 
 /**
  *

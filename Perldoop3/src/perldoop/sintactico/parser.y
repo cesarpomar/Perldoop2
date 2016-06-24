@@ -20,6 +20,7 @@ import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.asignacion.*;
 import perldoop.modelo.arbol.constante.*;
 import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.funcion.*;
@@ -152,15 +153,21 @@ constante	:	ENTERO									{$$=set(new Entero(s($1)));}
 variable	:	'$' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
 			|	'@' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
 			|	'%' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
-			|	'$' VAR AMBITO VAR						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
-			|	'@' VAR AMBITO VAR						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
-			|	'%' VAR AMBITO VAR						{$$=set(new VarPaquete(s($1),s($2),s($3),s($4)));} 
+			|	'$' paqueteVar VAR						{$$=set(new VarPaquete(s($1),s($2),s($3)));} 
+			|	'@' paqueteVar VAR						{$$=set(new VarPaquete(s($1),s($2),s($3)));} 
+			|	'%' paqueteVar VAR						{$$=set(new VarPaquete(s($1),s($2),s($3)));} 
 			|	MY '$' VAR								{$$=set(new VarMy(s($1),s($2),s($3)));} 
 			|	MY '@' VAR								{$$=set(new VarMy(s($1),s($2),s($3)));} 
 			|	MY '%' VAR								{$$=set(new VarMy(s($1),s($2),s($3)));} 
 			|	OUR '$' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
 			|	OUR '@' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
 			|	OUR '%' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
+
+paqueteVar	:	paqueteVar VAR AMBITO					{$$=set(Paquetes.add(s($1),s($2),s($3)));} 
+			|	VAR AMBITO								{$$=set(new Paquetes(s($1),s($2)));} 
+
+paqueteID	:	paqueteID ID AMBITO						{$$=set(Paquetes.add(s($1),s($2),s($3)));} 
+			|	ID AMBITO								{$$=set(new Paquetes(s($1),s($2)));} 
 
 coleccion	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
 			|	'('  ')'								{$$=set(new ColParentesis(s($1),new Lista(),s($2)));}
@@ -181,8 +188,8 @@ acceso		:	expresion '{' lista '}'					{$$=set(new AccesoMap(s($1),s($2),s($3),s(
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 
 			|	'$' '#' expresion %prec UNITARIO		{$$=set(new AccesoSigil(s($1),s($2),s($3)));} 
 
-funcion		:	ID AMBITO ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),s($3),add(new Argumentos(s($2)))));}
-			|	ID AMBITO ID							{$$=set(new FuncionPaqueteNoArgs(s($1),s($2),s($3)));}
+funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),add(new Argumentos(s($3)))));}
+			|	paqueteID ID							{$$=set(new FuncionPaqueteNoArgs(s($1),s($2)));}
 			|	ID expresion							{$$=set(new FuncionArgs(s($1),add(new Argumentos(s($2)))));}
 			|	ID										{$$=set(new FuncionNoArgs(s($1)));}
 			|	DO constante %prec ID					{$$=set(new FuncionDo(s($1),s($2)));}

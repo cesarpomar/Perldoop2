@@ -1,6 +1,6 @@
 package perldoop.generacion.elsif;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.elsif.ElsIfElsIf;
 import perldoop.modelo.arbol.elsif.ElsIfElse;
 import perldoop.modelo.arbol.elsif.ElsIfNada;

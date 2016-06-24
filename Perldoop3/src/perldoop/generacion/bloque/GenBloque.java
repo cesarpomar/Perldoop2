@@ -1,6 +1,6 @@
 package perldoop.generacion.bloque;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.bloque.BloqueCondicional;
 import perldoop.modelo.arbol.bloque.BloqueDoUntil;
 import perldoop.modelo.arbol.bloque.BloqueDoWhile;

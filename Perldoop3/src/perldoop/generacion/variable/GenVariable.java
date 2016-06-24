@@ -1,10 +1,9 @@
 package perldoop.generacion.variable;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.variable.VarExistente;
 import perldoop.modelo.arbol.variable.VarMy;
 import perldoop.modelo.arbol.variable.VarOur;
-import perldoop.modelo.arbol.variable.VarPaquete;
 import perldoop.util.Util;
 
 /**
@@ -29,11 +28,8 @@ public class GenVariable {
         Util.limpiar(s);
     }
 
-    public void visitar(VarPaquete s) {
-        StringBuilder c = s.getAmbito().getCodigoGenerado();
-        c.append('.').append(s.getVar().getCodigoGenerado());
-        s.setCodigoGenerado(c);
-        Util.limpiar(s);
+    public void visitar(perldoop.modelo.arbol.variable.VarPaquete s) {
+
     }
 
     public void visitar(VarMy s) {

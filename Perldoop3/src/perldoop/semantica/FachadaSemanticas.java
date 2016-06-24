@@ -1,5 +1,6 @@
 package perldoop.semantica;
 
+import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.semantica.abrirbloque.*;
 import perldoop.semantica.acceso.*;
 import perldoop.semantica.aritmetica.*;
@@ -21,6 +22,7 @@ import perldoop.semantica.funcionsub.*;
 import perldoop.semantica.lista.*;
 import perldoop.semantica.logico.*;
 import perldoop.semantica.modificador.*;
+import perldoop.semantica.paquetes.*;
 import perldoop.semantica.regulares.*;
 import perldoop.semantica.sentencia.*;
 import perldoop.semantica.variable.*;
@@ -55,6 +57,7 @@ public final class FachadaSemanticas {
     private SemFuncionSub semFuncionSub;
     private SemLista semLista;
     private SemLogico semLogico;
+    private SemPaquetes semPaquetes;
     private SemModificador semModificador;
     private SemRegulares semRegulares;
     private SemSentencia semSentencia;
@@ -117,7 +120,7 @@ public final class FachadaSemanticas {
      * @return Semantica de aritmetica
      */
     public SemAritmetica getSemAritmetica() {
-        if (semAritmetica ==null){
+        if (semAritmetica == null) {
             semAritmetica = new SemAritmetica(tabla);
         }
         return semAritmetica;
@@ -138,7 +141,7 @@ public final class FachadaSemanticas {
      * @return Semantica de asignacion
      */
     public SemAsignacion getSemAsignacion() {
-        if (semAsignacion ==null){
+        if (semAsignacion == null) {
             semAsignacion = new SemAsignacion(tabla);
         }
         return semAsignacion;
@@ -159,7 +162,7 @@ public final class FachadaSemanticas {
      * @return Semantica de binario
      */
     public SemBinario getSemBinario() {
-        if (semBinario ==null){
+        if (semBinario == null) {
             semBinario = new SemBinario(tabla);
         }
         return semBinario;
@@ -180,7 +183,7 @@ public final class FachadaSemanticas {
      * @return Semantica de bloque
      */
     public SemBloque getSemBloque() {
-        if (semBloque ==null){
+        if (semBloque == null) {
             semBloque = new SemBloque(tabla);
         }
         return semBloque;
@@ -201,7 +204,7 @@ public final class FachadaSemanticas {
      * @return Semantica de elsif
      */
     public SemBloqueElsIf getSemBloqueElsIf() {
-        if (semBloqueElsIf ==null){
+        if (semBloqueElsIf == null) {
             semBloqueElsIf = new SemBloqueElsIf(tabla);
         }
         return semBloqueElsIf;
@@ -222,7 +225,7 @@ public final class FachadaSemanticas {
      * @return Semantica de coleccion
      */
     public SemColeccion getSemColeccion() {
-        if (semColeccion ==null){
+        if (semColeccion == null) {
             semColeccion = new SemColeccion(tabla);
         }
         return semColeccion;
@@ -243,7 +246,7 @@ public final class FachadaSemanticas {
      * @return Semantica de comparacion
      */
     public SemComparacion getSemComparacion() {
-        if (semComparacion ==null){
+        if (semComparacion == null) {
             semComparacion = new SemComparacion(tabla);
         }
         return semComparacion;
@@ -264,7 +267,7 @@ public final class FachadaSemanticas {
      * @return Semantica de condicional
      */
     public SemCondicional getSemCondicional() {
-        if (semCondicional ==null){
+        if (semCondicional == null) {
             semCondicional = new SemCondicional(tabla);
         }
         return semCondicional;
@@ -285,7 +288,7 @@ public final class FachadaSemanticas {
      * @return Semantica de constante
      */
     public SemConstante getSemConstante() {
-        if (semConstante ==null){
+        if (semConstante == null) {
             semConstante = new SemConstante(tabla);
         }
         return semConstante;
@@ -306,7 +309,7 @@ public final class FachadaSemanticas {
      * @return Semantica de cuerpo
      */
     public SemCuerpo getSemCuerpo() {
-        if (semCuerpo ==null){
+        if (semCuerpo == null) {
             semCuerpo = new SemCuerpo(tabla);
         }
         return semCuerpo;
@@ -327,7 +330,7 @@ public final class FachadaSemanticas {
      * @return Semantica de elsif
      */
     public SemElsIf getSemElsIf() {
-        if (semElsIf ==null){
+        if (semElsIf == null) {
             semElsIf = new SemElsIf(tabla);
         }
         return semElsIf;
@@ -348,7 +351,7 @@ public final class FachadaSemanticas {
      * @return Semantica de expresion
      */
     public SemExpresion getSemExpresion() {
-        if (semExpresion ==null){
+        if (semExpresion == null) {
             semExpresion = new SemExpresion(tabla);
         }
         return semExpresion;
@@ -369,7 +372,7 @@ public final class FachadaSemanticas {
      * @return Semantica de flujo
      */
     public SemFlujo getSemFlujo() {
-        if (semFlujo ==null){
+        if (semFlujo == null) {
             semFlujo = new SemFlujo(tabla);
         }
         return semFlujo;
@@ -390,7 +393,7 @@ public final class FachadaSemanticas {
      * @return Semantica de funcion
      */
     public SemFuncion getSemFuncion() {
-        if (semFuncion ==null){
+        if (semFuncion == null) {
             semFuncion = new SemFuncion(tabla);
         }
         return semFuncion;
@@ -411,7 +414,7 @@ public final class FachadaSemanticas {
      * @return Semantica de funciondef
      */
     public SemFuncionDef getSemFuncionDef() {
-        if (semFuncionDef ==null){
+        if (semFuncionDef == null) {
             semFuncionDef = new SemFuncionDef(tabla);
         }
         return semFuncionDef;
@@ -432,7 +435,7 @@ public final class FachadaSemanticas {
      * @return Semantica de funcionsub
      */
     public SemFuncionSub getSemFuncionSub() {
-        if (semFuncionSub ==null){
+        if (semFuncionSub == null) {
             semFuncionSub = new SemFuncionSub(tabla);
         }
         return semFuncionSub;
@@ -453,7 +456,7 @@ public final class FachadaSemanticas {
      * @return Semantica de lista
      */
     public SemLista getSemLista() {
-        if (semLista ==null){
+        if (semLista == null) {
             semLista = new SemLista(tabla);
         }
         return semLista;
@@ -474,7 +477,7 @@ public final class FachadaSemanticas {
      * @return Semantica de logico
      */
     public SemLogico getSemLogico() {
-        if (semLogico ==null){
+        if (semLogico == null) {
             semLogico = new SemLogico(tabla);
         }
         return semLogico;
@@ -490,12 +493,31 @@ public final class FachadaSemanticas {
     }
 
     /**
+     * obtiene la semantica de paquetes
+     * @return Semantica de paquetes
+     */
+    public SemPaquetes getSemPaquetes() {
+        if(semPaquetes == null){
+            semPaquetes = new SemPaquetes(tabla);
+        }
+        return semPaquetes;
+    }
+
+    /**
+     * Establece la semantica de paquetes
+     * @param semPaquetes Semantica de paquetes
+     */
+    public void setSemPaquetes(SemPaquetes semPaquetes) {
+        this.semPaquetes = semPaquetes;
+    }
+
+    /**
      * Obtiene la semantica de modificador
      *
      * @return Semantica de modificador
      */
     public SemModificador getSemModificador() {
-        if (semModificador ==null){
+        if (semModificador == null) {
             semModificador = new SemModificador(tabla);
         }
         return semModificador;
@@ -516,7 +538,7 @@ public final class FachadaSemanticas {
      * @return Semantica de regulares
      */
     public SemRegulares getSemRegulares() {
-        if (semRegulares ==null){
+        if (semRegulares == null) {
             semRegulares = new SemRegulares(tabla);
         }
         return semRegulares;
@@ -537,7 +559,7 @@ public final class FachadaSemanticas {
      * @return Semantica de sentencia
      */
     public SemSentencia getSemSentencia() {
-        if (semSentencia ==null){
+        if (semSentencia == null) {
             semSentencia = new SemSentencia(tabla);
         }
         return semSentencia;
@@ -558,7 +580,7 @@ public final class FachadaSemanticas {
      * @return Semantica de variable
      */
     public SemVariable getSemVariable() {
-        if (semVariable ==null){
+        if (semVariable == null) {
             semVariable = new SemVariable(tabla);
         }
         return semVariable;

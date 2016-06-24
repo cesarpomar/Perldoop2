@@ -46,4 +46,9 @@ public final class Terminal extends Simbolo {
         return new Simbolo[]{};
     }
 
+    @Override
+    public String toString() {
+        return token.getValor();
+    }
+    
 }

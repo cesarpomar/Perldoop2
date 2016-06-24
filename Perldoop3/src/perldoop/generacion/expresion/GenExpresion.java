@@ -1,6 +1,6 @@
 package perldoop.generacion.expresion;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpAritmetica;
 import perldoop.modelo.arbol.expresion.ExpAsignacion;

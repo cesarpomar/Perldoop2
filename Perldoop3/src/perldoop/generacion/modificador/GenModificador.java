@@ -1,6 +1,6 @@
 package perldoop.generacion.modificador;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.modificador.ModFor;
 import perldoop.modelo.arbol.modificador.ModIf;
 import perldoop.modelo.arbol.modificador.ModNada;

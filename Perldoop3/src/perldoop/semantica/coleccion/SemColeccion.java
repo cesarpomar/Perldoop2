@@ -1,7 +1,7 @@
 package perldoop.semantica.coleccion;
 
 import perldoop.modelo.arbol.coleccion.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de Coleccion

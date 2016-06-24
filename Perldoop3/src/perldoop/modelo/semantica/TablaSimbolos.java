@@ -17,6 +17,7 @@ public final class TablaSimbolos {
     private Map<String, TipoFuncion> funciones;
     private Map<String, Paquete> paquetes;
     private Paquete paquete;
+    private boolean vacia;
 
     /**
      * Construye la tabla de símbolos
@@ -29,6 +30,7 @@ public final class TablaSimbolos {
         predeclaraciones = new HashMap<>(20);
         funciones = new HashMap<>(20);
         this.paquetes = paquetes;
+        vacia = true;
     }
 
     /**
@@ -52,8 +54,16 @@ public final class TablaSimbolos {
      * @param contexto Contexto
      */
     public void addVariable(EntradaTabla entrada, char contexto) {
+        vacia = false;
+        if (entrada.isPublica() && paquete != null) {
+            paquete.addVariable(entrada, contexto);
+        }
         entrada.setNivel(bloques.size() - 1);
         Contexto c = bloques.get(entrada.getNivel()).get(entrada.getIdentificador());
+        if(c == null){
+            c = new Contexto(entrada.getAlias());
+            bloques.get(entrada.getNivel()).put(entrada.getIdentificador(), c);
+        }
         switch (contexto) {
             case '$':
                 c.setEscalar(entrada);
@@ -68,7 +78,7 @@ public final class TablaSimbolos {
     }
 
     /**
-     * Busca una variable
+     * Busca una variable en su contexto
      *
      * @param identificador Identificador
      * @param contexto Contexto
@@ -92,6 +102,23 @@ public final class TablaSimbolos {
                 return c.getArray();
             case '%':
                 return c.getHash();
+        }
+        return null;
+    }
+
+    /**
+     * Busca una variable
+     *
+     * @param identificador Identificador
+     * @return Entrada
+     */
+    public Contexto buscarVariable(String identificador) {
+        Contexto c = null;
+        for (int i = bloques.size() - 1; i >= 0; i--) {
+            c = bloques.get(i).get(identificador);
+            if (c != null) {
+                return c;
+            }
         }
         return null;
     }
@@ -126,7 +153,7 @@ public final class TablaSimbolos {
     }
 
     /**
-     * Obtiene si existe un paquete
+     * Comprueba si la tabla pertenece a un paquete
      *
      * @return Declaracion de paquete
      */
@@ -135,11 +162,31 @@ public final class TablaSimbolos {
     }
 
     /**
+     * Comprueba si la tabla de simbolos ha sido usada
+     *
+     * @return Tabla vacia
+     */
+    public boolean isVacia() {
+        return vacia;
+    }
+
+    /**
+     * Obtiene un paquete
+     *
+     * @param nombre Nombre del paquete
+     * @return Paquete
+     */
+    public Paquete getPaquete(String nombre) {
+        return paquetes.get(nombre);
+    }
+
+    /**
      * Crea un paquete con la tabla
+     *
      * @param nombre Nombre del paquete
      */
     public void crerPaquete(String nombre) {
-        if (paquete == null) {
+        if (paquete == null && isVacia()) {
             paquete = new Paquete();
             paquetes.put(nombre, paquete);
         }

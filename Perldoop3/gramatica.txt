@@ -72,18 +72,24 @@ constante   : ENTERO
             | CADENA_DOBLE
             | CADENA_COMANDO
 
-variable    : '$' ID
-            | '@' ID
-            | '%' ID
-            | '$' ID AMBITO ID
-            | '@' ID AMBITO ID
-            | '%' ID AMBITO ID 
-            | MY '$' ID
-            | MY '@' ID
-            | MY '%' ID
-            | OUR '$' ID 
-            | OUR '@' ID
-            | OUR '%' ID
+variable    : '$' Var
+            | '@' Var
+            | '%' Var
+            | '$' paqueteVar Var
+            | '@' paqueteVar Var
+            | '%' paqueteVar Var 
+            | MY '$' Var
+            | MY '@' Var
+            | MY '%' Var
+            | OUR '$' Var 
+            | OUR '@' Var
+            | OUR '%' Var
+
+paqueteVar  : paqueteVar VAR AMBITO
+            | VAR AMBITO
+
+paqueteID   : paqueteID ID AMBITO
+            | ID AMBITO
 
 coleccion   : '(' lista ')'
             | '(' ')'
@@ -103,8 +109,8 @@ acceso      : expresion '{' lista '}'
             | '@' expresion
             | '%' expresion
 
-funcion     : ID AMBITO ID expresion
-            | ID AMBITO ID
+funcion     : paqueteID ID expresion
+            | paqueteID ID
             | ID expresion
             | ID
 

@@ -1,6 +1,6 @@
 package perldoop.generacion.regulares;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.regulares.RegularMatch;
 import perldoop.modelo.arbol.regulares.RegularNoMatch;
 import perldoop.modelo.arbol.regulares.RegularSubs;

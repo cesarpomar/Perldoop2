@@ -1,6 +1,6 @@
 package perldoop.generacion.asignacion;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.asignacion.AndIgual;
 import perldoop.modelo.arbol.asignacion.ConcatIgual;
 import perldoop.modelo.arbol.asignacion.DespDIgual;

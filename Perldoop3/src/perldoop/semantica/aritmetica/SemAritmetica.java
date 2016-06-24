@@ -1,7 +1,7 @@
 package perldoop.semantica.aritmetica;
 
 import perldoop.modelo.arbol.aritmetica.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de aritmetica

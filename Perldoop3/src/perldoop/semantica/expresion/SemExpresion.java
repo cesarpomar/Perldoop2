@@ -1,7 +1,7 @@
 package perldoop.semantica.expresion;
 
 import perldoop.modelo.arbol.expresion.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de expresion

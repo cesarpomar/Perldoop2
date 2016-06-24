@@ -1,7 +1,7 @@
 package perldoop.semantica.sentencia;
 
 import perldoop.modelo.arbol.sentencia.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de sentencia

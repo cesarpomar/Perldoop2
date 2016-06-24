@@ -1,7 +1,7 @@
 package perldoop.semantica.flujo;
 
 import perldoop.modelo.arbol.flujo.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de flujo

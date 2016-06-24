@@ -1,13 +1,14 @@
-package perldoop.generacion.lista;
+package perldoop.generacion.paquetes;
 
+import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.generacion.TablaGenerador;
-import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase generadora de lista
+ * Clase generadora de paquetes
+ *
  * @author César Pomar
  */
-public class GenLista {
+public class GenPaquetes {
 
     private TablaGenerador tabla;
 
@@ -16,12 +17,11 @@ public class GenLista {
      *
      * @param tabla
      */
-    public GenLista(TablaGenerador tabla) {
+    public GenPaquetes(TablaGenerador tabla) {
         this.tabla = tabla;
     }
 
-    public void visitar(Lista s) {
+    public void visitar(Paquetes s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

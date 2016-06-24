@@ -1,6 +1,6 @@
 package perldoop.generacion.binario;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.binario.BinAnd;
 import perldoop.modelo.arbol.binario.BinDespD;
 import perldoop.modelo.arbol.binario.BinDespI;

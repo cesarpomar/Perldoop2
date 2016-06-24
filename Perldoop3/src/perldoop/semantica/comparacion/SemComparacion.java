@@ -1,7 +1,7 @@
 package perldoop.semantica.comparacion;
 
 import perldoop.modelo.arbol.comparacion.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de comparacion

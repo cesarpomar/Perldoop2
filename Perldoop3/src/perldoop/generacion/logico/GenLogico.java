@@ -1,6 +1,6 @@
 package perldoop.generacion.logico;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.logico.LogAnd;
 import perldoop.modelo.arbol.logico.LogAndBajo;
 import perldoop.modelo.arbol.logico.LogNot;

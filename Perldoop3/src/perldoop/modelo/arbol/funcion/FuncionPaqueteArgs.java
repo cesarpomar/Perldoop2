@@ -3,6 +3,7 @@ package perldoop.modelo.arbol.funcion;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
  * Clase que representa la reduccion -> <br>
@@ -13,61 +14,39 @@ import perldoop.modelo.arbol.Visitante;
  */
 public final class FuncionPaqueteArgs extends Funcion {
 
-    private Terminal paquete;
-    private Terminal ambito;
+    private Paquetes paquetes;
     private Argumentos argumentos;
 
     /**
      * Único contructor de la clase
      *
-     * @param paquete Paquete
-     * @param ambito Ambito
+     * @param paquetes paquetes
      * @param identificador Identificador
      * @param argumentos Argumentos
      */
-    public FuncionPaqueteArgs(Terminal paquete, Terminal ambito, Terminal identificador, Argumentos argumentos) {
+    public FuncionPaqueteArgs(Paquetes paquetes, Terminal identificador, Argumentos argumentos) {
         super(identificador);
-        setPaquete(paquete);
-        setAmbito(ambito);
+        setPaquetes(paquetes);
         setArgumentos(argumentos);
     }
 
     /**
-     * Obtiene el paquete
+     * Obtiene los paquetes
      *
-     * @return Paquete
+     * @return Paquetes
      */
-    public Terminal getPaquete() {
-        return paquete;
+    public Paquetes getPaquetes() {
+        return paquetes;
     }
 
     /**
-     * Establece el paquete
+     * Establece los paquetes
      *
-     * @param paquete Paquete
+     * @param paquetes Paquetes
      */
-    public void setPaquete(Terminal paquete) {
-        paquete.setPadre(this);
-        this.paquete = paquete;
-    }
-
-    /**
-     * Obtiene el ambito
-     *
-     * @return Ambito
-     */
-    public Terminal getAmbito() {
-        return ambito;
-    }
-
-    /**
-     * Establece el ambito
-     *
-     * @param ambito Ambito
-     */
-    public void setAmbito(Terminal ambito) {
-        ambito.setPadre(this);
-        this.ambito = ambito;
+    public void setPaquetes(Paquetes paquetes) {
+        paquetes.setPadre(this);
+        this.paquetes = paquetes;
     }
 
     /**
@@ -96,7 +75,7 @@ public final class FuncionPaqueteArgs extends Funcion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{paquete, ambito, identificador, argumentos};
+        return new Simbolo[]{paquetes, identificador, argumentos};
     }
 
 }

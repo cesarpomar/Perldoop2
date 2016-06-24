@@ -1,7 +1,7 @@
 package perldoop.semantica.cuerpo;
 
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de cuerpo

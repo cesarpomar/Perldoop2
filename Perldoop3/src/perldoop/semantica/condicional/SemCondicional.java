@@ -1,7 +1,7 @@
 package perldoop.semantica.condicional;
 
 import perldoop.modelo.arbol.condicional.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de condicional

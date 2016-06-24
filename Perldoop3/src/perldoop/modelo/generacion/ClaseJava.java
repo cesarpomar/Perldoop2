@@ -9,38 +9,39 @@ import java.util.Set;
  * Clase que representa una clase java
  * @author César Pomar
  */
-public class ClaseJava {
+public final class ClaseJava {
 
-    private String paquete;
+    private List<String> paquetes;
     private Set<String> imports;
     private String nombre;
     private List<String> implementar;
     private String heredar;
-    private List<CodigoJava> codigo;
+    private BloqueJava codigo;
 
     /**
      * Contructor único
      */
     public ClaseJava() {
+        paquetes = new ArrayList<>(5);
         imports = new HashSet<>(10);
         implementar = new ArrayList<>(5);
-        codigo = new ArrayList<>(100);
+        codigo = new BloqueJava();
     }
 
     /**
-     * Obtiene el paquete
-     * @return Paquete
+     * Obtiene los paquetes
+     * @return Paquetes
      */
-    public String getPaquete() {
-        return paquete;
+    public List<String> getPaquetes() {
+        return paquetes;
     }
 
     /**
-     * Establece el paquete
-     * @param paquete Paquete
+     * Establece los paquetes
+     * @param paquetes Paquetes
      */
-    public void setPaquete(String paquete) {
-        this.paquete = paquete;
+    public void setPaquetes(List<String> paquetes) {
+        this.paquetes = paquetes;
     }
     
     /**
@@ -112,7 +113,7 @@ public class ClaseJava {
      *
      * @return Código de la clase
      */
-    public List<CodigoJava> getCodigo() {
+    public BloqueJava getCodigo() {
         return codigo;
     }
 
@@ -121,7 +122,7 @@ public class ClaseJava {
      *
      * @param codigo Código de la clase
      */
-    public void setCodigo(List<CodigoJava> codigo) {
+    public void setCodigo(BloqueJava codigo) {
         this.codigo = codigo;
     }
 

@@ -1,6 +1,6 @@
 package perldoop.generacion.comparacion;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.comparacion.CompNumCmp;
 import perldoop.modelo.arbol.comparacion.CompNumEq;
 import perldoop.modelo.arbol.comparacion.CompNumGe;

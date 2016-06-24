@@ -1,6 +1,6 @@
 package perldoop.generacion.constante;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.constante.CadenaComando;
 import perldoop.modelo.arbol.constante.CadenaDoble;
 import perldoop.modelo.arbol.constante.CadenaSimple;

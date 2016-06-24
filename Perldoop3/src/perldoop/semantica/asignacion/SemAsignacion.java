@@ -1,7 +1,7 @@
 package perldoop.semantica.asignacion;
 
 import perldoop.modelo.arbol.asignacion.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de asignacion

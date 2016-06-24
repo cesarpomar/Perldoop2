@@ -7,7 +7,7 @@ import java.util.List;
  * Clase que representa un bloque de codigo en java
  * @author César Pomar
  */
-public class BloqueJava implements CodigoJava{
+public final class BloqueJava implements CodigoJava{
     
     private String cabecera;
     private List<CodigoJava> codigo;

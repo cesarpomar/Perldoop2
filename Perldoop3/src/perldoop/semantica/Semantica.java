@@ -1,5 +1,6 @@
 package perldoop.semantica;
 
+import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
@@ -29,6 +30,7 @@ import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.semantica.TablaSimbolos;
 
 /**
@@ -334,7 +336,6 @@ public class Semantica implements Visitante {
     @Override
     public void visitar(CadenaDoble s) {
         fachada.getSemConstante().visitar(s);
-
     }
 
     @Override
@@ -362,6 +363,11 @@ public class Semantica implements Visitante {
     @Override
     public void visitar(VarOur s) {
         fachada.getSemVariable().visitar(s);
+    }
+
+    @Override
+    public void visitar(Paquetes s) {
+        fachada.getSemPaquetes().visitar(s);
     }
 
     @Override
@@ -463,7 +469,6 @@ public class Semantica implements Visitante {
     @Override
     public void visitar(Argumentos s) {
         fachada.getSemFuncion().visitar(s);
-
     }
 
     @Override
@@ -710,7 +715,6 @@ public class Semantica implements Visitante {
     @Override
     public void visitar(BloqueCondicional s) {
         fachada.getSemBloque().visitar(s);
-
     }
 
     @Override

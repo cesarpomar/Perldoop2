@@ -1,6 +1,6 @@
 package perldoop.generacion.bloqueelsif;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.bloqueelsif.BloqueElsIf;
 
 /**

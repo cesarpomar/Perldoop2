@@ -26,6 +26,7 @@ import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.paquete.*;
 
 /**
  * Interfaz para el patron Visitor
@@ -169,6 +170,9 @@ public interface Visitante {
     void visitar(VarMy s);
 
     void visitar(VarOur s);
+
+    //Paquete
+    void visitar(Paquetes s);
 
     //Colección
     void visitar(ColParentesis s);

@@ -1,6 +1,6 @@
 package perldoop.generacion.coleccion;
 
-import perldoop.generacion.TablaGenerador;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColGenerador;
 import perldoop.modelo.arbol.coleccion.ColLlave;

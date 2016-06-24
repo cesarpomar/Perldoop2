@@ -1,7 +1,7 @@
 package perldoop.semantica.regulares;
 
 import perldoop.modelo.arbol.regulares.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de regulares

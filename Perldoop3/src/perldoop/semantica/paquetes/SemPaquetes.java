@@ -1,14 +1,14 @@
-package perldoop.semantica.funcionsub;
+package perldoop.semantica.paquetes;
 
-import perldoop.modelo.arbol.funcionsub.FuncionSub;
+import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
- * Clase para la semantica de funcionSub
+ * Clase para la semantica de paquetes
  *
  * @author César Pomar
  */
-public class SemFuncionSub {
+public class SemPaquetes {
 
     private TablaSemantica tabla;
 
@@ -17,10 +17,10 @@ public class SemFuncionSub {
      *
      * @param tabla Tabla de simbolos
      */
-    public SemFuncionSub(TablaSemantica tabla) {
+    public SemPaquetes(TablaSemantica tabla) {
         this.tabla = tabla;
     }
 
-    public void visitar(FuncionSub s) {
+    public void visitar(Paquetes s) {
     }
 }

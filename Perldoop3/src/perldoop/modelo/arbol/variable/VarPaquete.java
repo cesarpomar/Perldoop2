@@ -3,69 +3,48 @@ package perldoop.modelo.arbol.variable;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -> <br>variable : '$' paquete ID<br>
- * '@' paquete ID<br>
- * '%' paquete ID
+ * Clase que representa la reduccion -> <br>variable : '$' paqueteVar ID<br>
+ * '@' paqueteVar ID<br>
+ * '%' paqueteVar ID
  *
  * @author César Pomar
  */
 public final class VarPaquete extends Variable {
 
-    private Terminal paquete;
-    private Terminal ambito;
+    private Paquetes paquetes;
 
     /**
      * Único contructor de la clase
      *
      * @param contexto Contexto
-     * @param paquete Paquete
-     * @param ambito Ambito
+     * @param paquetes paquetes
      * @param var Variable
      */
-    public VarPaquete(Terminal contexto, Terminal paquete, Terminal ambito, Terminal var) {
+    public VarPaquete(Terminal contexto, Paquetes paquetes, Terminal var) {
         super(contexto, var);
-        setPaquete(paquete);
-        setAmbito(ambito);
+        setPaquetes(paquetes);
     }
 
     /**
-     * Obtiene el paquete
+     * Obtiene los paquetes
      *
-     * @return Paquete
+     * @return Paquetes
      */
-    public Terminal getPaquete() {
-        return paquete;
+    public Paquetes getPaquetes() {
+        return paquetes;
     }
 
     /**
-     * Establece el paquete
+     * Establece los paquetes
      *
-     * @param paquete Paquete
+     * @param paquetes Paquetes
      */
-    public void setPaquete(Terminal paquete) {
-        paquete.setPadre(this);
-        this.paquete = paquete;
-    }
-
-    /**
-     * Obtiene el ambito
-     *
-     * @return Ambito
-     */
-    public Terminal getAmbito() {
-        return ambito;
-    }
-
-    /**
-     * Establece el ambito
-     *
-     * @param ambito Ambito
-     */
-    public void setAmbito(Terminal ambito) {
-        ambito.setPadre(this);
-        this.ambito = ambito;
+    public void setPaquetes(Paquetes paquetes) {
+        paquetes.setPadre(this);
+        this.paquetes = paquetes;
     }
 
     @Override
@@ -75,6 +54,6 @@ public final class VarPaquete extends Variable {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{paquete, var};
+        return new Simbolo[]{contexto, paquetes, var};
     }
 }

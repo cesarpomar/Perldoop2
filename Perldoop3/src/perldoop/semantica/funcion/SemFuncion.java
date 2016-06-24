@@ -1,7 +1,7 @@
 package perldoop.semantica.funcion;
 
 import perldoop.modelo.arbol.funcion.*;
-import perldoop.semantica.TablaSemantica;
+import perldoop.modelo.semantica.TablaSemantica;
 
 /**
  * Clase para la semantica de funcion
