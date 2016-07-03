@@ -21,6 +21,8 @@ public class Errores extends Internacionalizacion {
     public static final String ERROR_SINTACTICO = "ERROR_SINTACTICO";
     public static final String FALLOS_SEMANTICO = "FALLOS_SEMANTICO";
     //Semanticos
+    public static final String MODIFICAR_CONSTANTE = "MODIFICAR_CONSTANTE";
+    public static final String MODIFICAR_DEFERENCIACION = "MODIFICAR_DEFERENCIACION";
 
     public Errores() {
         super("errores");

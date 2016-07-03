@@ -4,7 +4,7 @@ import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.variable.VarExistente;
 import perldoop.modelo.arbol.variable.VarMy;
 import perldoop.modelo.arbol.variable.VarOur;
-import perldoop.util.Util;
+import perldoop.generacion.util.Util;
 
 /**
  * Clase generadora de variable

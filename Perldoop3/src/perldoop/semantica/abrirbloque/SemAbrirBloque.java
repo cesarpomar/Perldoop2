@@ -22,5 +22,6 @@ public class SemAbrirBloque {
     }
 
     public void visitar(AbrirBloque s) {
+        tabla.getTablaSimbolos().abrirBloque();
     }
 }

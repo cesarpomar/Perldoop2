@@ -5,23 +5,36 @@ import java.util.List;
 
 /**
  * Clase que representa un bloque de codigo en java
+ *
  * @author César Pomar
  */
-public final class BloqueJava implements CodigoJava{
-    
+public final class BloqueJava implements CodigoJava {
+
     private String cabecera;
     private List<CodigoJava> codigo;
     private String pie;
 
     /**
-     * Constructor único
+     * Constructor por defecto
      */
     public BloqueJava() {
         codigo = new ArrayList<>(100);
     }
 
     /**
+     * Contructor del blqoue con cabcera y pie
+     * @param cabecera Cabecera del bloque
+     * @param pie Pie del bloque
+     */
+    public BloqueJava(String cabecera, String pie) {
+        this();
+        this.cabecera = cabecera;
+        this.pie = pie;
+    }
+
+    /**
      * Obtiene la cabecera
+     *
      * @return Cabecera
      */
     public String getCabecera() {
@@ -30,6 +43,7 @@ public final class BloqueJava implements CodigoJava{
 
     /**
      * Establece la cabecera
+     *
      * @param cabecera Cabecera
      */
     public void setCabecera(String cabecera) {
@@ -38,6 +52,7 @@ public final class BloqueJava implements CodigoJava{
 
     /**
      * Obtiene el código de la clase
+     *
      * @return Código de la clase
      */
     public List<CodigoJava> getCodigo() {
@@ -46,6 +61,7 @@ public final class BloqueJava implements CodigoJava{
 
     /**
      * Establece el código de la clase
+     *
      * @param codigo Código de la clase
      */
     public void setCodigo(List<CodigoJava> codigo) {
@@ -54,6 +70,7 @@ public final class BloqueJava implements CodigoJava{
 
     /**
      * Obtiene el pie
+     *
      * @return Pie
      */
     public String getPie() {
@@ -62,12 +79,11 @@ public final class BloqueJava implements CodigoJava{
 
     /**
      * Establece el pie
+     *
      * @param pie Pie
      */
     public void setPie(String pie) {
         this.pie = pie;
     }
-    
-    
-    
+
 }

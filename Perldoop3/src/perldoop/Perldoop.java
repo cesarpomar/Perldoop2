@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import perldoop.depurador.Depurador;
 import perldoop.error.GestorErrores;
 import perldoop.generacion.Generador;
-import perldoop.io.CodigoReader;
+import perldoop.io.CodeReader;
+import perldoop.io.CodeWriter;
 import perldoop.lexico.Lexer;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;
@@ -37,7 +39,7 @@ public class Perldoop {
         GestorErrores gestorErrores;
         //Lexico
         List<Token> tokens;
-        try (CodigoReader cr = new CodigoReader(fichero)) {
+        try (CodeReader cr = new CodeReader(fichero)) {
             gestorErrores = new GestorErrores(fichero, cr.getCodigo());
             Lexer lex = new Lexer(cr, opciones, gestorErrores);
             tokens = lex.getTokens();
@@ -64,7 +66,7 @@ public class Perldoop {
             System.err.println("Analisis sintactico fallido, errores: " + parser.getErrores());
             return;
         }
-        //Depurador.simbolos(simbolos.get(simbolos.size()-1));
+        Depurador.simbolos(simbolos.get(simbolos.size()-1));
         //Semantico
         TablaSimbolos ts = new TablaSimbolos(paquetes);
         Semantica sem = new Semantica(ts, opciones, gestorErrores);
@@ -75,7 +77,12 @@ public class Perldoop {
             System.err.println("Analisis semantico fallido, errores: " + parser.getErrores());
             return;
         }
-
+        CodeWriter cw = new CodeWriter(null);
+        try {
+            cw.escribir(gen.getClase(), "test.java");
+        } catch (IOException ex) {
+            Logger.getLogger(Perldoop.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

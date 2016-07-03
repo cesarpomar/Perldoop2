@@ -3,6 +3,7 @@ package perldoop.modelo.arbol.aritmetica;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
  * Clase que representa la reduccion -> aritmetica : MAS_MAS expresion
@@ -11,7 +12,7 @@ import perldoop.modelo.arbol.Visitante;
  */
 public final class AritPreIncremento extends Aritmetica {
 
-    private Terminal expresion;
+    private Expresion expresion;
 
     /**
      * Único contructor de la clase
@@ -19,7 +20,7 @@ public final class AritPreIncremento extends Aritmetica {
      * @param operador Operador
      * @param expresion Expresión
      */
-    public AritPreIncremento(Terminal operador, Terminal expresion) {
+    public AritPreIncremento(Terminal operador, Expresion expresion) {
         super(operador);
         setExpresion(expresion);
     }
@@ -29,7 +30,7 @@ public final class AritPreIncremento extends Aritmetica {
      *
      * @return Expresión
      */
-    public Terminal getExpresion() {
+    public Expresion getExpresion() {
         return expresion;
     }
 
@@ -38,7 +39,7 @@ public final class AritPreIncremento extends Aritmetica {
      *
      * @param expresion Expresión
      */
-    public void setExpresion(Terminal expresion) {
+    public void setExpresion(Expresion expresion) {
         expresion.setPadre(this);
         this.expresion = expresion;
     }

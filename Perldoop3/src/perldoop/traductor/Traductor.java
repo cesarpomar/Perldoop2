@@ -77,7 +77,7 @@ public final class Traductor {
                 try {
                     s.aceptar(semantica);
                     if (errores == 0) {
-                        s.aceptar(generador);
+                       // s.aceptar(generador);
                     }
                 } catch (ExcepcionSemantica ex) {
                     error = true;

@@ -1,5 +1,6 @@
 package perldoop.modelo.arbol.funcion;
 
+import java.util.ArrayList;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Visitante;
@@ -18,6 +19,7 @@ public final class Argumentos extends Simbolo{
      * @param expresion Primer argumento
      */
     public Argumentos(Expresion expresion) {
+        argumentos = new ArrayList<>(8);
         addArgumentos(expresion);
     }
         

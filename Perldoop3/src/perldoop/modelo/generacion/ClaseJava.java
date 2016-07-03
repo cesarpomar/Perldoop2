@@ -25,7 +25,7 @@ public final class ClaseJava {
         paquetes = new ArrayList<>(5);
         imports = new HashSet<>(10);
         implementar = new ArrayList<>(5);
-        codigo = new BloqueJava();
+        codigo = new BloqueJava("{","}");
     }
 
     /**

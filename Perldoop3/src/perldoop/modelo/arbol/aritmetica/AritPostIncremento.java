@@ -3,14 +3,16 @@ package perldoop.modelo.arbol.aritmetica;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
  * Clase que representa la reduccion -> aritmetica : expresion MAS_MAS
  *
  * @author César Pomar
  */
-public final class AritPostIncremento extends Aritmetica{
-        private Terminal expresion;
+public final class AritPostIncremento extends Aritmetica {
+
+    private Expresion expresion;
 
     /**
      * Único contructor de la clase
@@ -18,7 +20,7 @@ public final class AritPostIncremento extends Aritmetica{
      * @param expresion Expresión
      * @param operador Operador
      */
-    public AritPostIncremento(Terminal expresion, Terminal operador) {
+    public AritPostIncremento(Expresion expresion, Terminal operador) {
         super(operador);
         setExpresion(expresion);
     }
@@ -28,7 +30,7 @@ public final class AritPostIncremento extends Aritmetica{
      *
      * @return Expresión
      */
-    public Terminal getExpresion() {
+    public Expresion getExpresion() {
         return expresion;
     }
 
@@ -37,7 +39,7 @@ public final class AritPostIncremento extends Aritmetica{
      *
      * @param expresion Expresión
      */
-    public void setExpresion(Terminal expresion) {
+    public void setExpresion(Expresion expresion) {
         expresion.setPadre(this);
         this.expresion = expresion;
     }

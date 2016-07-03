@@ -29,6 +29,7 @@ public class GestorErrores {
 
     /**
      * Imprimer un error
+     *
      * @param codigo dentificador del error
      * @param t Token del elemento a marcar en el error
      * @param args Valores para el mensaje de error
@@ -39,17 +40,20 @@ public class GestorErrores {
 
     /**
      * Imprime un error con tipo variable
+     *
      * @param tipo Tipo del Error
      * @param codigo Identificador del error
      * @param t Token del elemento a marcar en el error
      * @param args Valores para el mensaje de error
      */
     public void error(String tipo, String codigo, Token t, Object... args) {
-        System.err.println(fichero+":"+(t.getLinea()+1)+":"+(t.getColumna()+1)+": "+errores.get(tipo)+": "+errores.get(codigo, args));
+        System.err.println(fichero + ":" + (t.getLinea() + 1) + ":" + (t.getColumna() + 1) + ": " + errores.get(tipo) + ": " + errores.get(codigo, args));
+        mostrarCodigo(t);
     }
 
     /**
      * Imprime un error sintactico
+     *
      * @param codigo Identificador del error
      * @param t Token que contiene el error
      * @param tokensEsperados Tokens que huviesen sido correctos
@@ -57,4 +61,44 @@ public class GestorErrores {
     public void error(String codigo, Token t, List<String> tokensEsperados) {
         error(codigo, t, t.getValor(), tokensEsperados.toString());
     }
+
+    /**
+     * Muestra al usuario un fragmento del codigo con la posicion del error
+     *
+     * @param t Token
+     */
+    public void mostrarCodigo(Token t) {
+        int inicio = 0;
+        int rpos = 0;
+        int fin = codigo.length();
+        //Buscar inicio linea
+        for (int i = t.getPosicion() - 1; i > -1; i--) {
+            char c = codigo.charAt(i);
+            if (c == '\n' || c == '\t') {
+                inicio = i + 1;
+                rpos = t.getPosicion() - inicio - 1;
+                break;
+            }
+        }
+        //Buscar fin linea
+        for (int i = t.getPosicion() + 1; i < codigo.length(); i++) {
+            char c = codigo.charAt(i);
+            if (c == '\n') {
+                fin = i - 1;
+                break;
+            }
+        }
+        //Cogemos como maximo 30 char de cada lado
+        if (fin - rpos > 30) {
+            fin = rpos + 30;
+        }
+        if (rpos - inicio > 30) {
+            inicio = rpos - 30;
+            fin = fin - 30;
+            rpos = 30;
+        }
+        System.err.println("\t"+codigo.subSequence(inicio, fin));
+        System.err.println("\t"+String.format("%" + (rpos - 1) + "s", "^"));
+    }
+
 }

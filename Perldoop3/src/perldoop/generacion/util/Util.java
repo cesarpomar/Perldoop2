@@ -1,4 +1,4 @@
-package perldoop.util;
+package perldoop.generacion.util;
 
 import perldoop.modelo.arbol.Simbolo;
 

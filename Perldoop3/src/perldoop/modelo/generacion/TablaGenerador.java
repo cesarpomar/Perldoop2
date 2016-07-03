@@ -1,5 +1,7 @@
 package perldoop.modelo.generacion;
 
+import java.util.ArrayList;
+import java.util.List;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.semantica.TablaSimbolos;
@@ -17,12 +19,13 @@ public final class TablaGenerador {
     private GestorErrores gestorErrores;
     private ClaseJava clase;
     private BloqueJava bloqueActual;
+    private List<String> sentencias;
 
     /**
      * Contruye la tabla del generador
      *
      * @param tablaSimbolos Tabla de símbolos
-     * @param opciones opciones
+     * @param opciones Opciones
      * @param gestorErrores Gestor de errores
      */
     public TablaGenerador(TablaSimbolos tablaSimbolos, Opciones opciones, GestorErrores gestorErrores) {
@@ -32,6 +35,7 @@ public final class TablaGenerador {
         this.gestorErrores = gestorErrores;
         clase = new ClaseJava();
         bloqueActual = clase.getCodigo();
+        sentencias = new ArrayList<>(20);
     }
 
     /**
@@ -90,6 +94,7 @@ public final class TablaGenerador {
 
     /**
      * Obtiene la clase
+     *
      * @return Clase
      */
     public ClaseJava getClase() {
@@ -98,6 +103,7 @@ public final class TablaGenerador {
 
     /**
      * Establece la clase
+     *
      * @param clase Clase
      */
     public void setClase(ClaseJava clase) {
@@ -106,6 +112,7 @@ public final class TablaGenerador {
 
     /**
      * Obtiene el bloque actual
+     *
      * @return Bloque actual
      */
     public BloqueJava getBloqueActual() {
@@ -114,10 +121,20 @@ public final class TablaGenerador {
 
     /**
      * Establece el bloque actual
+     *
      * @param bloqueActual Bloque actual
      */
     public void setBloqueActual(BloqueJava bloqueActual) {
         this.bloqueActual = bloqueActual;
+    }
+
+    /**
+     * Obtiene el gestor de reservas
+     *
+     * @return Gestor de reservas
+     */
+    public GestorReservas getGestorReservas() {
+        return gestorReservas;
     }
 
 }

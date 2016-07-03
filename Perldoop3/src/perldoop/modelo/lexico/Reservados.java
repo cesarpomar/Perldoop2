@@ -73,7 +73,7 @@ public class Reservados {
                 case "<file>":
                 case "<array>":
                 case "<list>":
-                case "<map>":
+                case "<hash>":
                     return (int) Parser.PD_TIPO;
                 case "<args>":
                     return (int) Parser.PD_ARGS;
