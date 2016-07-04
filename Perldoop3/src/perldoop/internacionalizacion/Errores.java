@@ -23,6 +23,10 @@ public class Errores extends Internacionalizacion {
     //Semanticos
     public static final String MODIFICAR_CONSTANTE = "MODIFICAR_CONSTANTE";
     public static final String MODIFICAR_DEFERENCIACION = "MODIFICAR_DEFERENCIACION";
+    public static final String OUR_SIN_PAQUETE = "OUR_SIN_PAQUETE";
+    public static final String DECLACION_CONSTANTE = "DECLACION_CONSTANTE";
+    public static final String TIPO_FOREACH = "TIPO_FOREACH";
+    public static final String ACCESO_DECLARACION = "ACCESO_DECLARACION";
 
     public Errores() {
         super("errores");

@@ -13,9 +13,10 @@ import perldoop.excepciones.ExcepcionSemantica;
  *
  * @author César Pomar
  */
-public final class Traductor {
+public final class Traductor implements Acciones {
 
     private List<Simbolo> simbolos;
+    private int index;
     private Opciones opciones;
     private Semantica semantica;
     private Generador generador;
@@ -31,10 +32,12 @@ public final class Traductor {
      */
     public Traductor(List<Simbolo> simbolos, Semantica semantica, Generador generador, Opciones opciones) {
         errores = 0;
+        index = 0;
         this.simbolos = simbolos;
         this.semantica = semantica;
         this.generador = generador;
         this.opciones = opciones;
+        this.semantica.setAcciones(this);
     }
 
     /**
@@ -72,12 +75,13 @@ public final class Traductor {
      */
     public int traducir() {
         boolean error = false;
-        for (Simbolo s : simbolos) {
+        for (; index < simbolos.size(); index++) {
+            Simbolo s = simbolos.get(index);
             if (!error) {
                 try {
                     s.aceptar(semantica);
                     if (errores == 0) {
-                       // s.aceptar(generador);
+                        // s.aceptar(generador);
                     }
                 } catch (ExcepcionSemantica ex) {
                     error = true;
@@ -88,6 +92,22 @@ public final class Traductor {
             }
         }
         return errores;
+    }
+
+    @Override
+    public void reAnalizarDesdeDe(Simbolo s) {
+        List<Simbolo> l = simbolos.subList(index, simbolos.size());
+        int posicion = simbolos.indexOf(s);
+        int distancia = 1;
+        Simbolo padre = simbolos.get(index).getPadre();
+        while (padre != null && l.indexOf(padre) + index < posicion) {
+            distancia++;
+            padre = padre.getPadre();
+        }
+        for (int i = index; i < posicion - distancia + 1; i++) {
+            simbolos.set(i, simbolos.set(i + distancia, simbolos.get(i)));
+        }
+        index--;
     }
 
 }

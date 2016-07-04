@@ -45,7 +45,7 @@ public class CodeWriter implements Closeable {
      */
     public void escribir(ClaseJava java, String fichero) throws IOException {
         escritura = new FileWriter(fichero);
-        buffer = new BufferedWriter(buffer);
+        buffer = new BufferedWriter(escritura);
         printer = new PrintWriter(buffer);
         this.java = java;
         paquetes();
@@ -109,12 +109,14 @@ public class CodeWriter implements Closeable {
         List<BloqueJava> pilaB = new ArrayList<>(20);
         List<Iterator<CodigoJava>> pilaI = new ArrayList<>(20);
         pilaB.add(java.getCodigo());
+        printer.append(java.getCodigo().getCabecera()).println();
         pilaI.add(java.getCodigo().getCodigo().iterator());
         while (!pilaB.isEmpty()) {
             Iterator<CodigoJava> itc = pilaI.get(pilaI.size() - 1);
             if (!itc.hasNext()) {
                 pilaI.remove(pilaI.size() - 1);
                 printer.append(pilaB.remove(pilaB.size()-1).getPie()).println();
+                continue;
             }
             CodigoJava c = itc.next();
             if (c instanceof SentenciaJava) {

@@ -2,16 +2,19 @@ package perldoop.modelo.semantica;
 
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
+import perldoop.traductor.Acciones;
 
 /**
+ * Clase que contiene los datos relativos a la generación de código
  *
- * @author César
+ * @author César Pomar
  */
 public class TablaSemantica {
 
     private TablaSimbolos tablaSimbolos;
     private GestorErrores gestorErrores;
     private Opciones opciones;
+    private Acciones acciones;
 
     /**
      * Contruye la tabla del generador
@@ -78,6 +81,22 @@ public class TablaSemantica {
      */
     public void setGestorErrores(GestorErrores gestorErrores) {
         this.gestorErrores = gestorErrores;
+    }
+
+    /**
+     * Obtiene las acciones
+     * @return Acciones
+     */
+    public Acciones getAcciones() {
+        return acciones;
+    }
+
+    /**
+     * Establece las acciones
+     * @param acciones Acciones
+     */
+    public void setAcciones(Acciones acciones) {
+        this.acciones = acciones;
     }
 
 }

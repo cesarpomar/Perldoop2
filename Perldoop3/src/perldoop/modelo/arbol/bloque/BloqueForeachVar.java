@@ -103,6 +103,7 @@ public final class BloqueForeachVar extends Bloque {
      * @param expresion1 Expresión1
      */
     public void setExpresion1(Expresion expresion1) {
+        expresion1.setPadre(this);
         this.expresion1 = expresion1;
     }
 
@@ -140,6 +141,7 @@ public final class BloqueForeachVar extends Bloque {
      * @param expresion2 Expresión2
      */
     public void setExpresion2(Expresion expresion2) {
+        expresion2.setPadre(this);
         this.expresion2 = expresion2;
     }
 

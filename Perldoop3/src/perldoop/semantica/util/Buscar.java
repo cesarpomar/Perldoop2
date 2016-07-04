@@ -13,6 +13,7 @@ public final class Buscar {
 
     /**
      * Obtiene el primer token del simbolo
+     *
      * @param s Simbolo
      * @return Token
      */
@@ -33,6 +34,7 @@ public final class Buscar {
 
     /**
      * Obtiene el ultimo token del simbolo
+     *
      * @param s Simbolo
      * @return TOken
      */
@@ -47,4 +49,39 @@ public final class Buscar {
         } while (!(hijo instanceof Terminal));
         return ((Terminal) hijo).getToken();
     }
+
+    /**
+     * Busca un padre por su clase
+     *
+     * @param <T> Tipo del padre a buscar
+     * @param s Simbolo que busca padre
+     * @param clase Clase del padre a buscar
+     * @return Si el padre existe lo retorna, en caso contrario null
+     */
+    public static <T extends Simbolo> T buscarPadre(Simbolo s, Class<T> clase) {
+        Simbolo padre = s.getPadre();
+        while (padre != null) {
+            if (padre.getClass().isAssignableFrom(clase)) {
+                return (T) padre;
+            }
+            padre = padre.getPadre();
+        }
+        return null;
+    }
+
+    /**
+     * obtiene el padre n superior del simbolo s
+     *
+     * @param s Simbolo que busca padre
+     * @param n Numero padre a recorrer, siendo 0 su padre inmediato
+     * @return Padre n
+     */
+    public static Simbolo getPadre(Simbolo s, int n) {
+        Simbolo padre = s.getPadre();
+        for (int i = 0; padre != null && i < n; i++) {
+            padre = padre.getPadre();
+        }
+        return padre;
+    }
+
 }

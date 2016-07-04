@@ -32,6 +32,7 @@ import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
 import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.semantica.TablaSimbolos;
+import perldoop.traductor.Acciones;
 
 /**
  * Clase que define la semantica permitida en el codigo fuente Perl
@@ -53,6 +54,22 @@ public class Semantica implements Visitante {
     public Semantica(TablaSimbolos tablaSimbolos, Opciones opciones, GestorErrores gestorErrores) {
         tabla = new TablaSemantica(tablaSimbolos, opciones, gestorErrores);
         fachada = new FachadaSemanticas(tabla);
+    }
+    
+    /**
+     * Obtiene las acciones
+     * @return Acciones
+     */
+    public Acciones getAcciones() {
+        return tabla.getAcciones();
+    }
+
+    /**
+     * Establece las acciones
+     * @param acciones Acciones
+     */
+    public void setAcciones(Acciones acciones) {
+        tabla.setAcciones(acciones);
     }
 
     @Override

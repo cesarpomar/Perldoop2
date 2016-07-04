@@ -143,13 +143,13 @@ public final class TablaSimbolos {
     }
 
     /**
-     * Obtiene el tipo de una variable sin declarar
+     * Obtiene el tipo de una variable sin declarar y luego lo borra
      *
      * @param identificador Identificador
      * @return Tipo
      */
-    public Tipo buscarDeclaracion(String identificador) {
-        return predeclaraciones.get(identificador);
+    public Tipo getDeclaracion(String identificador) {
+        return predeclaraciones.remove(identificador);
     }
 
     /**
