@@ -18,11 +18,11 @@ public final class VarMy extends Variable {
     /**
      * Único contructor de la clase
      *
-     * @param contexto Contexto
      * @param my My
+     * @param contexto Contexto
      * @param var Var
      */
-    public VarMy(Terminal contexto, Terminal my, Terminal var) {
+    public VarMy(Terminal my, Terminal contexto, Terminal var) {
         super(contexto, var);
         setMy(my);
     }

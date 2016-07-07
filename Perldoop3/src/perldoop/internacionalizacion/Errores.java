@@ -27,6 +27,13 @@ public class Errores extends Internacionalizacion {
     public static final String DECLACION_CONSTANTE = "DECLACION_CONSTANTE";
     public static final String TIPO_FOREACH = "TIPO_FOREACH";
     public static final String ACCESO_DECLARACION = "ACCESO_DECLARACION";
+    public static final String VARIABLE_SIN_TIPO = "VARIABLE_SIN_TIPO";
+    public static final String VARIABLE_NO_EXISTE = "VARIABLE_NO_EXISTE";
+    public static final String PAQUETE_NO_EXISTE = "PAQUETE_NO_EXISTE";
+    public static final String TIPO_ESCALAR_OMITIDO = "TIPO_ESCALAR_OMITIDO";
+    public static final String ETIQUETA_SIN_USO = "ETIQUETA_SIN_USO";
+    public static final String TIPO_INCORRECTO = "TIPO_INCORRECTO";
+    public static final String VARIABLE_ENMASCARADA = "VARIABLE_ENMASCARADA";
 
     public Errores() {
         super("errores");

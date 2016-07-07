@@ -8,17 +8,14 @@ package perldoop.modelo.semantica;
  */
 public final class Contexto {
     
-    private EntradaTabla escalar;
-    private EntradaTabla array;
-    private EntradaTabla hash;
-    private String alias;
+    private EntradaVariable escalar;
+    private EntradaVariable array;
+    private EntradaVariable hash;
 
     /**
      * Constructor del contexto 
-     * @param alias Alias de la variable
      */
-    public Contexto(String alias) {
-        this.alias = alias;
+    public Contexto() {
     }
     
     /**
@@ -26,7 +23,7 @@ public final class Contexto {
      *
      * @return Escalar
      */
-    public EntradaTabla getEscalar() {
+    public EntradaVariable getEscalar() {
         return escalar;
     }
 
@@ -35,7 +32,7 @@ public final class Contexto {
      *
      * @param escalar Escalar
      */
-    public void setEscalar(EntradaTabla escalar) {
+    public void setEscalar(EntradaVariable escalar) {
         this.escalar = escalar;
     }
 
@@ -44,7 +41,7 @@ public final class Contexto {
      *
      * @return Array
      */
-    public EntradaTabla getArray() {
+    public EntradaVariable getArray() {
         return array;
     }
 
@@ -53,7 +50,7 @@ public final class Contexto {
      *
      * @param array Array
      */
-    public void setArray(EntradaTabla array) {
+    public void setArray(EntradaVariable array) {
         this.array = array;
     }
 
@@ -62,7 +59,7 @@ public final class Contexto {
      *
      * @return hash
      */
-    public EntradaTabla getHash() {
+    public EntradaVariable getHash() {
         return hash;
     }
 
@@ -71,26 +68,8 @@ public final class Contexto {
      *
      * @param hash Hash
      */
-    public void setHash(EntradaTabla hash) {
+    public void setHash(EntradaVariable hash) {
         this.hash = hash;
-    }
-    
-    /**
-     * Obtiene el alias de la variable
-     *
-     * @return Alias de la variable
-     */
-    public String getAlias() {
-        return alias;
-    }
-
-    /**
-     * Establece el alias de la variable
-     *
-     * @param alias Alias de la variable
-     */
-    public void setAlias(String alias) {
-        this.alias = alias;
     }
     
     /**

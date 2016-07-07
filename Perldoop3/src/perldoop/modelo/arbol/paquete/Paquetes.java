@@ -7,11 +7,12 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- *  Clase que representa la reduccion -><br>
+ * Clase que representa la reduccion -><br>
  * paquete : paqueteVAR VAR AMBITO<br>
  * |	VAR AMBITO<br>
  * paquete : paqueteID ID AMBITO<br>
- * |	ID AMBITO	
+ * |	ID AMBITO
+ *
  * @author César Pomar
  */
 public final class Paquetes extends Simbolo {
@@ -22,6 +23,7 @@ public final class Paquetes extends Simbolo {
 
     /**
      * Único contructor de la clase
+     *
      * @param id Identificador
      * @param ambito Acceso
      */
@@ -33,6 +35,7 @@ public final class Paquetes extends Simbolo {
 
     /**
      * Obtiene los terminales
+     *
      * @return Terminales
      */
     public List<Terminal> getTerminales() {
@@ -41,6 +44,7 @@ public final class Paquetes extends Simbolo {
 
     /**
      * Obtiene los identificadores
+     *
      * @return Identificadores
      */
     public List<Terminal> getIdentificadores() {
@@ -48,7 +52,21 @@ public final class Paquetes extends Simbolo {
     }
 
     /**
+     * Obtiene la representacion de todos los paquetes como un String
+     *
+     * @return String de paqutes
+     */
+    public String getRepresentancion() {
+        StringBuilder sb = new StringBuilder(100);
+        for (Terminal t : identificadores) {
+            sb.append(t);
+        }
+        return sb.toString();
+    }
+
+    /**
      * Añade un nivel al paquete
+     *
      * @param id Identificador
      * @param ambito Ambito
      * @return Este paquete
@@ -64,6 +82,7 @@ public final class Paquetes extends Simbolo {
 
     /**
      * Añade un nivel a el paquete
+     *
      * @param p paquete
      * @param id Identificador
      * @param ambito Ambito

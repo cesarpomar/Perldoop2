@@ -66,15 +66,15 @@ public class Perldoop {
             System.err.println("Analisis sintactico fallido, errores: " + parser.getErrores());
             return;
         }
-        Depurador.simbolos(simbolos.get(simbolos.size()-1));
+        //Depurador.simbolos(simbolos.get(simbolos.size()-1));
         //Semantico
         TablaSimbolos ts = new TablaSimbolos(paquetes);
         Semantica sem = new Semantica(ts, opciones, gestorErrores);
         Generador gen = new Generador(ts, opciones, gestorErrores);
 
-        Traductor as = new Traductor(simbolos, sem, gen, opciones);
-        if (as.traducir() > 0) {
-            System.err.println("Analisis semantico fallido, errores: " + parser.getErrores());
+        Traductor trad = new Traductor(simbolos, sem, gen, opciones);
+        if (trad.traducir() > 0) {
+            System.err.println("Analisis semantico fallido, errores: " + trad.getErrores());
             return;
         }
         CodeWriter cw = new CodeWriter("");

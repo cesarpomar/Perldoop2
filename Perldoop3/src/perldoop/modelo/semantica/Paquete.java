@@ -24,7 +24,7 @@ public final class Paquete {
      * @param entrada Entrada
      * @param contexto Contexto
      */
-    public void addVariable(EntradaTabla entrada, char contexto) {
+    public void addVariable(EntradaVariable entrada, char contexto) {
         Contexto c = atributos.get(entrada.getIdentificador());
         switch (contexto) {
             case '$':
@@ -46,7 +46,7 @@ public final class Paquete {
      * @param contexto Contexto
      * @return Entrada
      */
-    public EntradaTabla buscarVariable(String identificador, char contexto) {
+    public EntradaVariable buscarVariable(String identificador, char contexto) {
         Contexto c = atributos.get(identificador);
         if (c == null) {
             return null;

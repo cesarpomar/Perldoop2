@@ -2,6 +2,9 @@ package perldoop.semantica.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import perldoop.error.GestorErrores;
+import perldoop.excepciones.ExcepcionSemantica;
+import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.semantica.Tipo;
 
@@ -16,47 +19,67 @@ public class Etiquetas {
      * Convierte las etiquetas a un tipo
      *
      * @param etiquetas Etiquetas
+     * @param ge Gestor de errores
      * @return Tipo
      */
-    public static Tipo parseEtiquetas(List<Token> etiquetas) {
+    public static Tipo parseTipo(List<Token> etiquetas, GestorErrores ge) {
         Tipo tipo = new Tipo();
-        for (Token t : etiquetas) {
+        Token t;
+        int i;
+        FOR:
+        for (i = 0; i < etiquetas.size() - 1; i++) {
+            t = etiquetas.get(i);
             switch (t.getValor()) {
-                case "<BOOLEAN>":
-                    tipo.add(Tipo.BOOLEAN);
-                    break;
-                case "<INTEGER>":
-                    tipo.add(Tipo.INTEGER);
-                    break;
-                case "<LONG>":
-                    tipo.add(Tipo.LONG);
-                    break;
-                case "<FLOAT>":
-                    tipo.add(Tipo.FLOAT);
-                    break;
-                case "<DOUBLE>":
-                    tipo.add(Tipo.DOUBLE);
-                    break;
-                case "<STRING>":
-                    tipo.add(Tipo.STRING);
-                    break;
-                case "<FILE>":
-                    tipo.add(Tipo.FILE);
-                    break;
-                case "<ARRAY>":
+                case "<array>":
                     tipo.add(Tipo.ARRAY);
                     break;
-                case "<LIST>":
+                case "<list>":
                     tipo.add(Tipo.LIST);
                     break;
-                case "<HASH>":
+                case "<hash>":
                     tipo.add(Tipo.MAP);
                     break;
-                case "<REF>":
+                case "<ref>":
                     tipo.add(Tipo.REF);
                     break;
+                default:
+                    i--;
+                    break FOR;
             }
         }
+
+        t = etiquetas.get(i++);
+        switch (t.getValor()) {
+            case "<boolean>":
+                tipo.add(Tipo.BOOLEAN);
+                break;
+            case "<integer>":
+                tipo.add(Tipo.INTEGER);
+                break;
+            case "<long>":
+                tipo.add(Tipo.LONG);
+                break;
+            case "<float>":
+                tipo.add(Tipo.FLOAT);
+                break;
+            case "<double>":
+                tipo.add(Tipo.DOUBLE);
+                break;
+            case "<string>":
+                tipo.add(Tipo.STRING);
+                break;
+            case "<file>":
+                tipo.add(Tipo.FILE);
+                break;
+            default:
+                ge.error(Errores.TIPO_ESCALAR_OMITIDO, t);
+                throw new ExcepcionSemantica();
+        }
+        for (; i < etiquetas.size(); i++) {
+            t = etiquetas.get(i);
+            ge.error(Errores.AVISO, Errores.ETIQUETA_NO_USADA, t);
+        }
+
         return tipo;
     }
 
@@ -71,37 +94,37 @@ public class Etiquetas {
         for (int st : tipo.getTipo()) {
             switch (st) {
                 case Tipo.BOOLEAN:
-                    etiquetas.add("<BOOLEAN>");
+                    etiquetas.add("<boolean>");
                     break;
                 case Tipo.INTEGER:
-                    etiquetas.add("<INTEGER>");
+                    etiquetas.add("<integer>");
                     break;
                 case Tipo.LONG:
-                    etiquetas.add("<LONG>");
+                    etiquetas.add("<long>");
                     break;
                 case Tipo.FLOAT:
-                    etiquetas.add("<FLOAT>");
+                    etiquetas.add("<float>");
                     break;
                 case Tipo.DOUBLE:
-                    etiquetas.add("<DOUBLE>");
+                    etiquetas.add("<double>");
                     break;
                 case Tipo.STRING:
-                    etiquetas.add("<STRING>");
+                    etiquetas.add("<string>");
                     break;
                 case Tipo.FILE:
-                    etiquetas.add("<FILE>");
+                    etiquetas.add("<file>");
                     break;
                 case Tipo.ARRAY:
-                    etiquetas.add("<ARRAY>");
+                    etiquetas.add("<array>");
                     break;
                 case Tipo.LIST:
-                    etiquetas.add("<LIST>");
+                    etiquetas.add("<list>");
                     break;
                 case Tipo.MAP:
-                    etiquetas.add("<HASH>");
+                    etiquetas.add("<hash>");
                     break;
                 case Tipo.REF:
-                    etiquetas.add("<REF>");
+                    etiquetas.add("<ref>");
                     break;
             }
         }

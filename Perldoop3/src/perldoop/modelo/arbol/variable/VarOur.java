@@ -18,11 +18,11 @@ public final class VarOur extends Variable {
     /**
      * Único contructor de la clase
      *
-     * @param contexto Contexto
      * @param our Our
+     * @param contexto Contexto
      * @param var Var
      */
-    public VarOur(Terminal contexto, Terminal our, Terminal var) {
+    public VarOur(Terminal our, Terminal contexto, Terminal var) {
         super(contexto, var);
         setOur(our);
     }

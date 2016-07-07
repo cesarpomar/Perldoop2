@@ -3,24 +3,25 @@ package perldoop.modelo.semantica;
 /**
  * Variable almacenada en la tabla de simbolos
  *
- * @author César
+ * @author César Pomar
  */
-public final class EntradaTabla {
+public final class EntradaVariable {
 
     private String identificador;
     private Tipo tipo;
     private boolean publica;
     private int nivel;
     private String alias;
+    private boolean conflicto;
 
     /**
-     * Contruye una entrada de la tabla
+     * Contruye una entrada de la tabla pra una variable
      *
      * @param identificador Identificador
      * @param tipo Tipo
      * @param publica Publica
      */
-    public EntradaTabla(String identificador, Tipo tipo, boolean publica) {
+    public EntradaVariable(String identificador, Tipo tipo, boolean publica) {
         this.identificador = identificador;
         this.tipo = tipo;
         this.publica = publica;
@@ -124,5 +125,23 @@ public final class EntradaTabla {
     public void setAlias(String alias) {
         this.alias = alias;
     }
+
+    /**
+     * Obtiene si la variable entra en conflicto con otra
+     * @return Existe conflicto
+     */
+    public boolean isConflicto() {
+        return conflicto;
+    }
+
+    /**
+     * Estable si la variable entra en conflicto con otra
+     * @param conflicto Existe conflicto
+     */
+    public void setConflicto(boolean conflicto) {
+        this.conflicto = conflicto;
+    }
+    
+    
 
 }
