@@ -3,7 +3,6 @@ package perldoop.generacion.funcion;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.funcion.Argumentos;
 import perldoop.modelo.arbol.funcion.FuncionArgs;
-import perldoop.modelo.arbol.funcion.FuncionDo;
 import perldoop.modelo.arbol.funcion.FuncionNoArgs;
 import perldoop.modelo.arbol.funcion.FuncionPaqueteArgs;
 import perldoop.modelo.arbol.funcion.FuncionPaqueteNoArgs;
@@ -38,10 +37,6 @@ public class GenFuncion {
     }
 
     public void visitar(FuncionNoArgs s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void visitar(FuncionDo s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

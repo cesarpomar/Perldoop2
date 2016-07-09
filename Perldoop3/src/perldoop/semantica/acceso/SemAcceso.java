@@ -44,4 +44,7 @@ public class SemAcceso {
 
     public void visitar(AccesoSigil s) {
     }
+
+    public void visitar(AccesoRef s) {
+    }
 }

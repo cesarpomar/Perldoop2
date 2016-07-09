@@ -83,7 +83,7 @@ public class GestorErrores {
         for (int i = pos + 1; i < codigo.length(); i++) {
             char c = codigo.charAt(i);
             if (c == '\n') {
-                fin = i - 1;
+                fin = i;
                 break;
             }
         }
@@ -96,8 +96,17 @@ public class GestorErrores {
             fin = fin - 30;
             pos = 30;
         }
-        System.err.println("\t"+codigo.subSequence(inicio, fin));
-        System.err.println("\t"+String.format("%" + (pos - inicio) + "s", "^"));
+        System.err.println("\t" + codigo.subSequence(inicio, fin));
+        System.err.println("\t" + String.format("%" + (pos - inicio + 1) + "s", "^"));
+    }
+
+    /**
+     * Obtiene el nombre del fichero
+     *
+     * @return Nombre del fichero
+     */
+    public String getFichero() {
+        return fichero;
     }
 
 }

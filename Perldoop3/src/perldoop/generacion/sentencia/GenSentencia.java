@@ -1,5 +1,6 @@
 package perldoop.generacion.sentencia;
 
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.sentencia.StcBloque;
 import perldoop.modelo.arbol.sentencia.StcComentario;
@@ -10,6 +11,7 @@ import perldoop.modelo.arbol.sentencia.StcPaquete;
 
 /**
  * Clase generadora de sentencia
+ *
  * @author César Pomar
  */
 public class GenSentencia {
@@ -26,7 +28,6 @@ public class GenSentencia {
     }
 
     public void visitar(StcLista s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void visitar(StcBloque s) {
@@ -38,11 +39,14 @@ public class GenSentencia {
     }
 
     public void visitar(StcPaquete s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        tabla.getClase().setNombre(s.getId().toString());
+        for (Terminal p : s.getPaquetes().getIdentificadores()) {
+            tabla.getClase().getPaquetes().add(p.toString());
+        }
     }
 
     public void visitar(StcComentario s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     public void visitar(StcDeclaracion s) {

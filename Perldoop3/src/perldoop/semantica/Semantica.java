@@ -457,6 +457,11 @@ public class Semantica implements Visitante {
     public void visitar(AccesoSigil s) {
         fachada.getSemAcceso().visitar(s);
     }
+    
+        @Override
+    public void visitar(AccesoRef s) {
+        fachada.getSemAcceso().visitar(s);
+    }
 
     @Override
     public void visitar(FuncionPaqueteArgs s) {
@@ -475,11 +480,6 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(FuncionNoArgs s) {
-        fachada.getSemFuncion().visitar(s);
-    }
-
-    @Override
-    public void visitar(FuncionDo s) {
         fachada.getSemFuncion().visitar(s);
     }
 

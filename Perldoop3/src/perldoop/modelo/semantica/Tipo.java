@@ -17,6 +17,7 @@ public final class Tipo {
     public static final byte DOUBLE = 5;
     public static final byte STRING = 6;
     public static final byte FILE = 7;
+    public static final byte BOX = 8;
 
     public static final byte ARRAY = 100;
     public static final byte LIST = 101;
@@ -59,6 +60,16 @@ public final class Tipo {
      */
     public void add(byte valor) {
         tipo.add(valor);
+    }
+
+    /**
+     * Añade un subtipo
+     *
+     * @param pos Posición
+     * @param valor Subtipo
+     */
+    public void add(int pos, byte valor) {
+        tipo.add(pos, valor);
     }
 
     /**
@@ -213,15 +224,15 @@ public final class Tipo {
     public boolean isFile() {
         return !tipo.isEmpty() && tipo.get(0) == FILE;
     }
-    
+
     /**
-     * Obtiene si el tipo es Simple, se considera simple los siguientes tipos: 
-     * Boolean, Integer, Long, Float, Double, String. 
+     * Obtiene si el tipo es Simple, se considera simple los siguientes tipos: Boolean, Integer, Long, Float, Double,
+     * String.
      *
      * @return Tipo es File
      */
     public boolean isSimple() {
         return !tipo.isEmpty() && tipo.get(0) >= BOOLEAN && tipo.get(0) <= STRING;
-    }    
+    }
 
 }

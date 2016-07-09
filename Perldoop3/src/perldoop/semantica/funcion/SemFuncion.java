@@ -33,9 +33,6 @@ public class SemFuncion {
     public void visitar(FuncionNoArgs s) {
     }
 
-    public void visitar(FuncionDo s) {
-    }
-
     public void visitar(Argumentos s) {
     }
 }

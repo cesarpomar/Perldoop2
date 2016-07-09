@@ -7,6 +7,7 @@ import java.util.Set;
 
 /**
  * Clase que representa una clase java
+ *
  * @author César Pomar
  */
 public final class ClaseJava {
@@ -16,6 +17,7 @@ public final class ClaseJava {
     private String nombre;
     private List<String> implementar;
     private String heredar;
+    private List<String> atributos;
     private BloqueJava codigo;
 
     /**
@@ -25,11 +27,13 @@ public final class ClaseJava {
         paquetes = new ArrayList<>(5);
         imports = new HashSet<>(10);
         implementar = new ArrayList<>(5);
-        codigo = new BloqueJava("{","}");
+        atributos = new ArrayList<>(20);
+        codigo = new BloqueJava("{", "}");
     }
 
     /**
      * Obtiene los paquetes
+     *
      * @return Paquetes
      */
     public List<String> getPaquetes() {
@@ -38,14 +42,16 @@ public final class ClaseJava {
 
     /**
      * Establece los paquetes
+     *
      * @param paquetes Paquetes
      */
     public void setPaquetes(List<String> paquetes) {
         this.paquetes = paquetes;
     }
-    
+
     /**
      * Obtiene los imports
+     *
      * @return Imports
      */
     public Set<String> getImports() {
@@ -54,6 +60,7 @@ public final class ClaseJava {
 
     /**
      * Establece los imports
+     *
      * @param imports Imports
      */
     public void setImports(Set<String> imports) {
@@ -62,6 +69,7 @@ public final class ClaseJava {
 
     /**
      * Obtiene el nombre
+     *
      * @return Nombre
      */
     public String getNombre() {
@@ -70,6 +78,7 @@ public final class ClaseJava {
 
     /**
      * Establece el nombre
+     *
      * @param nombre Nombre
      */
     public void setNombre(String nombre) {
@@ -78,6 +87,7 @@ public final class ClaseJava {
 
     /**
      * Obtiene las interfaces a implementar
+     *
      * @return Interfaces a implementar
      */
     public List<String> getImplementar() {
@@ -86,6 +96,7 @@ public final class ClaseJava {
 
     /**
      * Establece las interfaces a implementar
+     *
      * @param implementar Interfaces a implementar
      */
     public void setImplementar(List<String> implementar) {
@@ -94,6 +105,7 @@ public final class ClaseJava {
 
     /**
      * Obtiene las clase a heredar
+     *
      * @return Clase a heredar
      */
     public String getHeredar() {
@@ -102,10 +114,29 @@ public final class ClaseJava {
 
     /**
      * Establece la clase a heredar
+     *
      * @param heredar Clase a heredar
      */
     public void setHeredar(String heredar) {
         this.heredar = heredar;
+    }
+
+    /**
+     * Obtiene los atributos
+     *
+     * @return Atributos
+     */
+    public List<String> getAtributos() {
+        return atributos;
+    }
+
+    /**
+     * Establece los atributos
+     *
+     * @param atributos Atributos
+     */
+    public void setAtributos(List<String> atributos) {
+        this.atributos = atributos;
     }
 
     /**
@@ -125,7 +156,5 @@ public final class ClaseJava {
     public void setCodigo(BloqueJava codigo) {
         this.codigo = codigo;
     }
-
-
 
 }

@@ -19,17 +19,23 @@ public final class Paquetes extends Simbolo {
 
     private List<Terminal> terminales;
     private List<Terminal> identificadores;
-    private StringBuilder nombre;
 
     /**
-     * Único contructor de la clase
+     * Constructor sin argumentos
+     */
+    public Paquetes() {
+        terminales = new ArrayList<>(10);
+        identificadores = new ArrayList<>(5);
+    }
+
+    /**
+     * Constructor con argumentos
      *
      * @param id Identificador
      * @param ambito Acceso
      */
     public Paquetes(Terminal id, Terminal ambito) {
-        terminales = new ArrayList<>(10);
-        identificadores = new ArrayList<>(5);
+        this();
         add(id, ambito);
     }
 

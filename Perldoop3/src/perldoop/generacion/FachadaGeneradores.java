@@ -23,6 +23,7 @@ import perldoop.generacion.lista.*;
 import perldoop.generacion.logico.*;
 import perldoop.generacion.modificador.*;
 import perldoop.generacion.paquetes.*;
+import perldoop.generacion.raiz.GenRaiz;
 import perldoop.generacion.regulares.*;
 import perldoop.generacion.sentencia.*;
 import perldoop.generacion.variable.*;
@@ -58,6 +59,7 @@ public final class FachadaGeneradores {
     private GenLista genLista;
     private GenLogico genLogico;
     private GenPaquetes genPaquetes;
+    private GenRaiz genRaiz;
     private GenModificador genModificador;
     private GenRegulares genRegulares;
     private GenSentencia genSentencia;
@@ -493,15 +495,41 @@ public final class FachadaGeneradores {
     }
 
     /**
-     * Establece el generador de paquetes
-     * @return Generador de paquetes
+     * Obtiene el generador de raiz
+     *
+     * @return Generador de raiz
      */
-    public GenPaquetes getGenPaquetes() {
-        return genPaquetes;
+    public GenRaiz getGenRaiz() {
+        if (genRaiz == null) {
+            genRaiz = new GenRaiz(tabla);
+        }
+        return genRaiz;
+    }
+
+    /**
+     * Establece el generador de raiz
+     *
+     * @param genRaiz Generador de raiz
+     */
+    public void setGenRaiz(GenRaiz genRaiz) {
+        this.genRaiz = genRaiz;
     }
 
     /**
      * Obtiene el generador de paquetes
+     *
+     * @return Generador de paquetes
+     */
+    public GenPaquetes getGenPaquetes() {
+        if (genPaquetes == null) {
+            genPaquetes = new GenPaquetes(tabla);
+        }
+        return genPaquetes;
+    }
+
+    /**
+     * Establece el generador de paquetes
+     *
      * @param genPaquetes Generador de paquetes
      */
     public void setGenPaquetes(GenPaquetes genPaquetes) {

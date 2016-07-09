@@ -26,7 +26,6 @@ public class GenModificador {
     }
 
     public void visitar(ModNada s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void visitar(ModUnless s) {

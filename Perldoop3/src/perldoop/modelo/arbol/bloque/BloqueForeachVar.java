@@ -6,10 +6,10 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -><br> bloque : FOR abrirBloque expresion
- * '(' expresion ')' '{' cuerpo '}'
+ * Clase que representa la reduccion -><br> bloque : FOR abrirBloque expresion '(' lista ')' '{' cuerpo '}'
  *
  * @author César Pomar
  */
@@ -17,9 +17,9 @@ public final class BloqueForeachVar extends Bloque {
 
     private Terminal forT;
     private AbrirBloque abrirBloque;
-    private Expresion expresion1;
+    private Expresion expresion;
     private Terminal parentesisI;
-    private Expresion expresion2;
+    private Lista lista;
     private Terminal parentesisD;
     private Terminal llaveI;
     private Cuerpo cuerpo;
@@ -30,20 +30,20 @@ public final class BloqueForeachVar extends Bloque {
      *
      * @param forT For
      * @param abrirBloque AbrirBloque
-     * @param expresion1 Expresión1
+     * @param expresion Expresión
      * @param parentesisI Parentesis izquierdo
-     * @param expresion2 Expresión2
+     * @param lista Lista
      * @param parentesisD Parentesis derecho
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueForeachVar(Terminal forT, AbrirBloque abrirBloque, Expresion expresion1, Terminal parentesisI, Expresion expresion2, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+    public BloqueForeachVar(Terminal forT, AbrirBloque abrirBloque, Expresion expresion, Terminal parentesisI, Lista lista, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
         setForT(forT);
         setAbrirBloque(abrirBloque);
-        setExpresion1(expresion1);
+        setExpresion(expresion);
         setParentesisI(parentesisI);
-        setExpresion2(expresion2);
+        setLista(lista);
         setParentesisD(parentesisD);
         setLlaveI(llaveI);
         setCuerpo(cuerpo);
@@ -89,22 +89,22 @@ public final class BloqueForeachVar extends Bloque {
     }
 
     /**
-     * Obtiene la expresión1
+     * Obtiene la expresión
      *
-     * @return Expresión1
+     * @return Expresión
      */
-    public Expresion getExpresion1() {
-        return expresion1;
+    public Expresion getExpresion() {
+        return expresion;
     }
 
     /**
-     * Establece la expresión1
+     * Establece la expresión
      *
-     * @param expresion1 Expresión1
+     * @param expresion Expresión
      */
-    public void setExpresion1(Expresion expresion1) {
-        expresion1.setPadre(this);
-        this.expresion1 = expresion1;
+    public void setExpresion(Expresion expresion) {
+        expresion.setPadre(this);
+        this.expresion = expresion;
     }
 
     /**
@@ -127,22 +127,22 @@ public final class BloqueForeachVar extends Bloque {
     }
 
     /**
-     * Obtiene la expresión2
+     * Obtiene la lista
      *
-     * @return Expresión2
+     * @return Lista
      */
-    public Expresion getExpresion2() {
-        return expresion2;
+    public Lista getLista() {
+        return lista;
     }
 
     /**
-     * Establece la expresión2
+     * Establece la lista
      *
-     * @param expresion2 Expresión2
+     * @param lista Lista
      */
-    public void setExpresion2(Expresion expresion2) {
-        expresion2.setPadre(this);
-        this.expresion2 = expresion2;
+    public void setLista(Lista lista) {
+        lista.setPadre(this);
+        this.lista = lista;
     }
 
     /**
@@ -228,6 +228,6 @@ public final class BloqueForeachVar extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{forT, abrirBloque, expresion1, parentesisI, expresion2, parentesisD, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{forT, abrirBloque, expresion, parentesisI, lista, parentesisD, llaveI, cuerpo, llaveD};
     }
 }

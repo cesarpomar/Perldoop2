@@ -93,7 +93,8 @@ cuerpo		:											{$$=set(new Cuerpo());}
 sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)));}
 			|	bloque									{$$=set(new StcBloque(s($1)));}
 			|	flujo									{$$=set(new StcFlujo(s($1)));}
-			|	PACKAGE ID ';'							{$$=set(new StcPaquete(s($1), s($2), s($3)));}
+			|	PACKAGE paqueteID ID ';'				{$$=set(new StcPaquete(s($1), s($2), s($3), s($4)));}
+			|	PACKAGE ID ';'							{$$=set(new StcPaquete(s($1), new Paquetes(), s($2), s($3)));}
 			|	COMENTARIO								{$$=set(new StcComentario(s($1)));}
 			|	DECLARACION_TIPO						{$$=set(new StcDeclaracion(s($1)));}
 			|	error	';'								{$$=set(new StcError());}
@@ -124,8 +125,8 @@ modificador :											{$$=set(new ModNada());}
 
 flujo		:	NEXT ';'								{$$=set(new Next(s($1), s($2)));}
 			|	LAST ';'								{$$=set(new Last(s($1), s($2)));}
-			|	RETURN ';'								{$$=set(new Return(s($1),new Lista(), s($2)));}
-			|	RETURN lista ';'						{$$=set(new Return(s($1), s($2), s($3)));}
+			|	RETURN ';'								{$$=set(new Return(s($1), null, s($2)));}
+			|	RETURN expresion ';'					{$$=set(new Return(s($1), s($2), s($3)));}
 
 asignacion	:   expresion '=' expresion					{$$=set(new Igual(s($1),s($2),s($3)));}
 			|	expresion MAS_IGUAL expresion			{$$=set(new MasIgual(s($1),s($2),s($3)));}
@@ -186,13 +187,13 @@ acceso		:	expresion '{' lista '}'					{$$=set(new AccesoMap(s($1),s($2),s($3),s(
 			|	'$' expresion %prec UNITARIO			{$$=set(new AccesoRefEscalar(s($1),s($2)));} 
 			|	'@' expresion %prec UNITARIO			{$$=set(new AccesoRefArray(s($1),s($2)));} 
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 
-			|	'$' '#' expresion %prec UNITARIO		{$$=set(new AccesoSigil(s($1),s($2),s($3)));} 
+			|	'$' '#' expresion %prec UNITARIO		{$$=set(new AccesoSigil(s($1),s($2),s($3)));}
+			|	'\\' expresion %prec UNITARIO			{$$=set(new AccesoRef(s($1),s($2)));} 
 
 funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),add(new Argumentos(s($3)))));}
 			|	paqueteID ID							{$$=set(new FuncionPaqueteNoArgs(s($1),s($2)));}
 			|	ID expresion							{$$=set(new FuncionArgs(s($1),add(new Argumentos(s($2)))));}
 			|	ID										{$$=set(new FuncionNoArgs(s($1)));}
-			|	DO constante %prec ID					{$$=set(new FuncionDo(s($1),s($2)));}
 
 regulares	:	expresion STR_NO_REX M_REGEX			{$$=set(new RegularNoMatch(s($1),s($2),s($3)));}
 			|	expresion STR_REX M_REGEX				{$$=set(new RegularMatch(s($1),s($2),s($3)));}
@@ -254,7 +255,7 @@ bloque		:	condicional elsif																{$$=set(new BloqueCondicional(s($1),s
 			|	DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'						{$$=set(new BloqueDoWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
 			|	DO abrirBloque '{' cuerpo '}' UNTIL '(' expresion ')' ';'						{$$=set(new BloqueDoUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
 			|	FOR abrirBloque '(' expresion ';' expresion ';' expresion ')' '{' cuerpo '}'	{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11),s($12)));}
-			|	FOR abrirBloque expresion '(' expresion ')' '{' cuerpo '}'						{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			|	FOR abrirBloque expresion '(' lista ')' '{' cuerpo '}'							{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
 			|	FOR abrirBloque '(' lista ')' '{' cuerpo '}'									{$$=set(new BloqueForeach(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
 
 condicional	:	IF abrirBloque '(' expresion ')' '{' cuerpo '}'									{$$=set(new CondicionalIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}

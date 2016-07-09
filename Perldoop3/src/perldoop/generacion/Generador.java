@@ -120,7 +120,7 @@ public class Generador implements Visitante {
 
     @Override
     public void visitar(Raiz s) {
-        //Sin semantica
+        fachada.getGenRaiz().visitar(s);
     }
 
     @Override
@@ -504,6 +504,11 @@ public class Generador implements Visitante {
     public void visitar(AccesoSigil s) {
         fachada.getGenAcceso().visitar(s);
     }
+    
+    @Override
+    public void visitar(AccesoRef s) {
+        fachada.getGenAcceso().visitar(s);
+    }
 
     @Override
     public void visitar(FuncionPaqueteArgs s) {
@@ -522,11 +527,6 @@ public class Generador implements Visitante {
 
     @Override
     public void visitar(FuncionNoArgs s) {
-        fachada.getGenFuncion().visitar(s);
-    }
-
-    @Override
-    public void visitar(FuncionDo s) {
         fachada.getGenFuncion().visitar(s);
     }
 

@@ -60,6 +60,7 @@ public class CodeWriter implements Closeable {
 
     private void paquetes() throws IOException {
         if (java.getPaquetes().isEmpty()) {
+            printer.println();
             return;
         }
         Iterator<String> it = java.getPaquetes().iterator();
@@ -68,7 +69,6 @@ public class CodeWriter implements Closeable {
             printer.append(".").append(it.next());
         }
         printer.append(";");
-        printer.println();
         printer.println();
     }
 
@@ -81,7 +81,7 @@ public class CodeWriter implements Closeable {
 
     private void clase() throws IOException {
         printer.append("/*").println();
-        printer.append(" *").println();
+        printer.append(" * Generación de prueba").println();
         printer.append(" */").println();
         printer.append("public class ").append(java.getNombre()).append(" ");
     }
@@ -106,26 +106,33 @@ public class CodeWriter implements Closeable {
     }
 
     private void bloques() throws IOException {
+        StringBuilder ident = new StringBuilder("\t");
         List<BloqueJava> pilaB = new ArrayList<>(20);
         List<Iterator<CodigoJava>> pilaI = new ArrayList<>(20);
         pilaB.add(java.getCodigo());
         printer.append(java.getCodigo().getCabecera()).println();
         pilaI.add(java.getCodigo().getCodigo().iterator());
+        //Atributos
+        for (String a : java.getAtributos()) {
+            printer.append(ident).append(a).println();
+        }
         while (!pilaB.isEmpty()) {
             Iterator<CodigoJava> itc = pilaI.get(pilaI.size() - 1);
             if (!itc.hasNext()) {
                 pilaI.remove(pilaI.size() - 1);
-                printer.append(pilaB.remove(pilaB.size()-1).getPie()).println();
+                ident.deleteCharAt(ident.length() - 1);
+                printer.append(ident).append(pilaB.remove(pilaB.size() - 1).getPie()).println();
                 continue;
             }
             CodigoJava c = itc.next();
             if (c instanceof SentenciaJava) {
-                printer.append(c.toString()).println();
+                printer.append(ident).append(c.toString()).println();
             } else {
-                BloqueJava b =(BloqueJava) c;
+                BloqueJava b = (BloqueJava) c;
                 pilaB.add(b);
                 pilaI.add(b.getCodigo().iterator());
-                printer.append(b.getCabecera()).println();
+                printer.append(ident).append(b.getCabecera()).println();
+                ident.append("\t");
             }
         }
     }

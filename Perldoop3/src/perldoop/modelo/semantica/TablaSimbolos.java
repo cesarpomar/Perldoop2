@@ -154,7 +154,7 @@ public final class TablaSimbolos {
      * @return Número de Bloques
      */
     public int getBloques() {
-        return bloques.size() - 1;
+        return bloques.size();
     }
 
     /**

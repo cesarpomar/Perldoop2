@@ -1,17 +1,11 @@
 package perldoop.generacion.acceso;
 
 import perldoop.modelo.generacion.TablaGenerador;
-import perldoop.modelo.arbol.acceso.AccesoArray;
-import perldoop.modelo.arbol.acceso.AccesoArrayRef;
-import perldoop.modelo.arbol.acceso.AccesoMap;
-import perldoop.modelo.arbol.acceso.AccesoMapRef;
-import perldoop.modelo.arbol.acceso.AccesoRefArray;
-import perldoop.modelo.arbol.acceso.AccesoRefEscalar;
-import perldoop.modelo.arbol.acceso.AccesoRefMap;
-import perldoop.modelo.arbol.acceso.AccesoSigil;
+import perldoop.modelo.arbol.acceso.*;
 
 /**
  * Clase generadora de acceso
+ *
  * @author César Pomar
  */
 public class GenAcceso {
@@ -56,6 +50,10 @@ public class GenAcceso {
     }
 
     public void visitar(AccesoRefMap s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void visitar(AccesoRef s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

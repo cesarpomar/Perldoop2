@@ -81,7 +81,7 @@ public final class Traductor implements Acciones {
                 try {
                     s.aceptar(semantica);
                     if (errores == 0) {
-                        // s.aceptar(generador);
+                        s.aceptar(generador);
                     }
                 } catch (ExcepcionSemantica ex) {
                     error = true;

@@ -21,7 +21,6 @@ public class GenLista {
     }
 
     public void visitar(Lista s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

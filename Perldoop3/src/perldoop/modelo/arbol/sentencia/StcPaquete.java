@@ -3,15 +3,17 @@ package perldoop.modelo.arbol.sentencia;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -> sentencia : PACKAGE ID ';'
+ * Clase que representa la reduccion -> sentencia : PACKAGE paqueteID ID ';'
  *
  * @author César Pomar
  */
 public final class StcPaquete extends Sentencia {
 
     private Terminal paquete;
+    private Paquetes paquetes;
     private Terminal id;
     private Terminal puntoComa;
 
@@ -19,13 +21,34 @@ public final class StcPaquete extends Sentencia {
      * nico contructor de la clase
      *
      * @param paquete Paquete
+     * @param paquetes paquetes
      * @param id Id
      * @param puntoComa PuntoComa
      */
-    public StcPaquete(Terminal paquete, Terminal id, Terminal puntoComa) {
+    public StcPaquete(Terminal paquete, Paquetes paquetes, Terminal id, Terminal puntoComa) {
         setPaquete(paquete);
+        setPaquetes(paquetes);
         setId(id);
         setPuntoComa(puntoComa);
+    }
+
+    /**
+     * Obtiene los paquetes
+     *
+     * @return Paquetes
+     */
+    public Paquetes getPaquetes() {
+        return paquetes;
+    }
+
+    /**
+     * Establece los paquetes
+     *
+     * @param paquetes Paquetes
+     */
+    public void setPaquetes(Paquetes paquetes) {
+        paquetes.setPadre(this);
+        this.paquetes = paquetes;
     }
 
     /**

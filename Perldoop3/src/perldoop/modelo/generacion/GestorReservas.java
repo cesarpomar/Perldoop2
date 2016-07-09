@@ -21,19 +21,19 @@ public final class GestorReservas {
     }
 
     /**
-     * Obtiene el alias de una variable
+     * Obtiene el alias para una variable o función
      *
      * @param id Id
+     * @param conflicto Alias por conflicto
      * @return Id alias
      */
-    public String getAlias(String id) {
-        if (!isReservada(id)) {
+    public String getAlias(String id, boolean conflicto) {
+        if (!conflicto && !isReservada(id)) {
             return id;
         }
-        id = limpiar(id);
-        int n = reservas.getOrDefault(id, 0);
-        reservas.put(id, n+1);
-        return PREF+id+n;
+        int n = reservas.getOrDefault(id, 1);
+        reservas.put(id, n + 1);
+        return PREF + n + id;
     }
 
     /**
@@ -42,20 +42,7 @@ public final class GestorReservas {
      * @return Variable auxiliar
      */
     public String getAux() {
-        return getAlias("");
-    }
-
-    /**
-     * Limpia una variable eliminado el prefijo de reserva.
-     *
-     * @param id Id
-     * @return Id limpio
-     */
-    private String limpiar(String id) {
-        while (id.startsWith(PREF)) {
-            id = id.substring(3);
-        }
-        return id;
+        return getAlias("", false);
     }
 
     /**

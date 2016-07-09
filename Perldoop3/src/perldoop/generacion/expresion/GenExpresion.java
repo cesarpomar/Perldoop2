@@ -32,51 +32,51 @@ public class GenExpresion {
     }
 
     public void visitar(ExpConstante s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getConstante().getCodigoGenerado());
     }
 
     public void visitar(ExpVariable s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getVariable().getCodigoGenerado());
     }
 
     public void visitar(ExpAsignacion s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getAsignacion().getCodigoGenerado());
     }
 
     public void visitar(ExpBinario s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getBinario().getCodigoGenerado());
     }
 
     public void visitar(ExpAritmetica s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getAritmetica().getCodigoGenerado());
     }
 
     public void visitar(ExpComparacion s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getComparacion().getCodigoGenerado());
     }
 
     public void visitar(ExpLogico s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getLogico().getCodigoGenerado());
     }
 
     public void visitar(ExpColeccion s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getColeccion().getCodigoGenerado());
     }
 
     public void visitar(ExpAcceso s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getAcceso().getCodigoGenerado());
     }
 
     public void visitar(ExpFuncion s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getFuncion().getCodigoGenerado());
     }
 
     public void visitar(ExpFuncion5 s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getFuncion().getCodigoGenerado());
     }
 
     public void visitar(ExpRegulares s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getRegulares().getCodigoGenerado());
     }
 
 }

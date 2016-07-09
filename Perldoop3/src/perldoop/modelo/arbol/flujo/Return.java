@@ -3,31 +3,31 @@ package perldoop.modelo.arbol.flujo;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.lista.Lista;
+import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
  * Clase que representa la reduccion -> <br>
  * flujo : RETURN ';'<br>
- * | RETURN lista ';'
+ | RETURN expresion ';'
  *
  * @author César Pomar
  */
 public final class Return extends Flujo {
 
     private Terminal returnF;
-    private Lista lista;
+    private Expresion expresion;
     private Terminal puntoComa;
 
     /**
      * Único contructor de la clase
      *
      * @param returnF Return
-     * @param lista Lista
+     * @param expresion Expresión
      * @param puntoComa PuntoComa
      */
-    public Return(Terminal returnF, Lista lista, Terminal puntoComa) {
+    public Return(Terminal returnF, Expresion expresion, Terminal puntoComa) {
         setReturnF(returnF);
-        setLista(lista);
+        setExpresion(expresion);
         setPuntoComa(puntoComa);
     }
 
@@ -51,22 +51,22 @@ public final class Return extends Flujo {
     }
 
     /**
-     * Obtiene la lista
+     * Obtiene la expresion
      *
-     * @return Lista
+     * @return Expresion
      */
-    public final Lista getLista() {
-        return lista;
+    public final Expresion getExpresion() {
+        return expresion;
     }
 
     /**
-     * Establece la lista
+     * Establece la expresion
      *
-     * @param lista
+     * @param expresion Expresion
      */
-    public final void setLista(Lista lista) {
-        lista.setPadre(this);
-        this.lista = lista;
+    public final void setExpresion(Expresion expresion) {
+        expresion.setPadre(this);
+        this.expresion = expresion;
     }
 
     /**

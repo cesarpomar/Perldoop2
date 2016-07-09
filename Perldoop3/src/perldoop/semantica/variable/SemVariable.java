@@ -127,10 +127,10 @@ public class SemVariable {
                 tabla.getGestorErrores().error(Errores.AVISO, Errores.TIPO_FOREACH, v.getVar().getToken());
             }
             BloqueForeachVar foreach = (BloqueForeachVar) uso;
-            if (foreach.getExpresion2().getTipo() == null) {
-                tabla.getAcciones().reAnalizarDesdeDe(foreach.getExpresion2());
+            if (foreach.getLista().getTipo() == null) {
+                tabla.getAcciones().reAnalizarDesdeDe(foreach.getLista());
             } else {
-                v.setTipo(new Tipo(foreach.getExpresion2().getTipo()));
+                v.setTipo(new Tipo(foreach.getLista().getTipo()));
             }
 
         } else if (t != null) {
@@ -179,11 +179,12 @@ public class SemVariable {
      * @param v Variable
      */
     private void variableEnmascarada(Variable v) {
+        /*
         String id = v.getVar().toString();
         char contexto = v.getContexto().toString().charAt(0);
         if (tabla.getTablaSimbolos().buscarVariable(id, contexto, tabla.getTablaSimbolos().getBloques()) != null) {
             tabla.getGestorErrores().error(Errores.AVISO, Errores.VARIABLE_ENMASCARADA, v.getVar().getToken(), contexto, id);
-        }
+        }*/
     }
 
 }

@@ -203,6 +203,8 @@ public interface Visitante {
     void visitar(AccesoRefMap s);
 
     void visitar(AccesoSigil s);
+    
+    void visitar(AccesoRef s);
 
     //Funcion
     void visitar(FuncionPaqueteArgs s);
@@ -212,8 +214,6 @@ public interface Visitante {
     void visitar(FuncionArgs s);
 
     void visitar(FuncionNoArgs s);
-
-    void visitar(FuncionDo s);
 
     void visitar(Argumentos s);
 
