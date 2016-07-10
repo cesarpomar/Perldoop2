@@ -24,10 +24,12 @@ public class SemExpresion {
 
     public void visitar(ExpConstante s) {
         s.setTipo(new Tipo(s.getConstante().getTipo()));
+        s.getTipo().setConstante(s.getTipo().isConstante());
     }
 
     public void visitar(ExpVariable s) {
         s.setTipo(new Tipo(s.getVariable().getTipo()));
+        s.getTipo().setVariable(s.getTipo().isVariable());
     }
 
     public void visitar(ExpAsignacion s) {
@@ -51,7 +53,7 @@ public class SemExpresion {
     }
 
     public void visitar(ExpColeccion s) {
- //       s.setTipo(new Tipo(s.getColeccion().getTipo()));
+        s.setTipo(new Tipo(s.getColeccion().getTipo()));
     }
 
     public void visitar(ExpAcceso s) {

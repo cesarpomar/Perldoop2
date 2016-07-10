@@ -23,6 +23,11 @@ public final class NumberBox implements Box {
     }
 
     @Override
+    public Boolean booleanValue() {
+        return value.floatValue() != 0;
+    }
+
+    @Override
     public Integer intValue() {
         return value.intValue();
     }

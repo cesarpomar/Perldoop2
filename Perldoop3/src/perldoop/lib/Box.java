@@ -8,6 +8,13 @@ package perldoop.lib;
 public interface Box {
 
     /**
+     * Obtiene la representanción booleana
+     *
+     * @return Entero despues de la conversión
+     */
+    Boolean booleanValue();
+
+    /**
      * Obtiene la representanción entera
      *
      * @return Entero despues de la conversión

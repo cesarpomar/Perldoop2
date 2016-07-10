@@ -34,6 +34,7 @@ public class Errores extends Internacionalizacion {
     public static final String ETIQUETA_SIN_USO = "ETIQUETA_SIN_USO";
     public static final String TIPO_INCORRECTO = "TIPO_INCORRECTO";
     public static final String VARIABLE_ENMASCARADA = "VARIABLE_ENMASCARADA";
+    public static final String ERROR_CASTING = "ERROR_CASTING";
 
     public Errores() {
         super("errores");

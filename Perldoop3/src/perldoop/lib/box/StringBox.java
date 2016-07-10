@@ -23,6 +23,11 @@ public final class StringBox implements Box {
     }
 
     @Override
+    public Boolean booleanValue() {
+        return !(value == null || value.isEmpty() || value.equals("0"));
+    }
+
+    @Override
     public Integer intValue() {
         return (int) Double.parseDouble(value);
     }

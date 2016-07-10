@@ -6,8 +6,9 @@ import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.acceso.AccesoArray;
 import perldoop.modelo.arbol.acceso.AccesoMap;
+import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.semantica.EntradaVariable;
-import perldoop.semantica.util.Buscar;
+import perldoop.util.Buscar;
 
 /**
  * Clase generadora de variable
@@ -44,7 +45,12 @@ public class GenVariable {
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().toString(), getContexto(s));
         StringBuilder declaracion = Tipos.declaracion(s.getTipo());
         e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(),e.isConflicto()));
-        StringBuilder codigo = new StringBuilder(declaracion);
+        StringBuilder codigo;
+        if(Buscar.getPadre(s, 2) instanceof StcLista){
+            codigo = new StringBuilder(declaracion);
+        }else{
+            codigo = new StringBuilder(20);
+        }
         codigo.append(" ").append(e.getAlias());
     }
 
@@ -52,7 +58,7 @@ public class GenVariable {
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().toString(), getContexto(s));
         StringBuilder declaracion = Tipos.declaracion(s.getTipo());
         e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(),e.isConflicto()));
-        tabla.getClase().getAtributos().add(declaracion.append(" ").append(e.getAlias()).append(";").toString());
+        tabla.getClase().getAtributos().add(declaracion.append(" ").append(e.getAlias()).append(";").toString());        
         s.setCodigoGenerado(new StringBuilder(e.getAlias()));
     }
 

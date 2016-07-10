@@ -1,4 +1,4 @@
-package perldoop.semantica.util;
+package perldoop.util;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
@@ -18,16 +18,13 @@ public final class Buscar {
      * @return Token
      */
     public static Token tokenInicio(Simbolo s) {
-        Simbolo hijo = null;
+        Simbolo hijo = s;
         do {
-            Simbolo[] hijos = s.getHijos();
+            Simbolo[] hijos = hijo.getHijos();
             if (hijos.length == 0) {
-                Simbolo padre = hijo.getPadre();
-                while (padre.getHijos().length < 2) {
-                    padre = padre.getPadre();
-                }
-                hijo = padre.getHijos()[1];
+                return null;
             }
+            hijo = hijos[0];
         } while (!(hijo instanceof Terminal));
         return ((Terminal) hijo).getToken();
     }
@@ -39,9 +36,9 @@ public final class Buscar {
      * @return TOken
      */
     public static Token tokenFin(Simbolo s) {
-        Simbolo hijo = null;
+        Simbolo hijo = s;
         do {
-            Simbolo[] hijos = s.getHijos();
+            Simbolo[] hijos = hijo.getHijos();
             if (hijos.length == 0) {
                 return null;
             }

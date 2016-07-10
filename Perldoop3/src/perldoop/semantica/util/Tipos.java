@@ -1,7 +1,12 @@
 package perldoop.semantica.util;
 
 import java.util.List;
+import perldoop.error.GestorErrores;
+import perldoop.internacionalizacion.Errores;
+import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.semantica.Tipo;
+import perldoop.util.Buscar;
 
 /**
  * Clase para la gestion semantica de tipos
@@ -63,6 +68,19 @@ public final class Tipos {
             }
         }
         return true;
+    }
+
+    /**
+     * Comprueba el casting de un simbolo a otro para verificar la conversión
+     *
+     * @param s Simbolo con tipo de origen
+     * @param t Tipo de destino
+     * @param ge Sistema para lanzar el error si porcede
+     */
+    public static void casting(Simbolo s, Tipo t, GestorErrores ge) {
+        if(!compatible(s.getTipo(), t)){          
+            ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), Etiquetas.parseTipo(s.getTipo()),Etiquetas.parseTipo(t));
+        }
     }
 
     /**

@@ -5,56 +5,56 @@ import perldoop.lib.PerlFile;
 import perldoop.lib.Ref;
 
 /**
- * Contenedor de referencias
+ * Contenedor de números
  *
  * @author César Pomar
  */
-public class RefBox implements Box {
+public final class BooleanBox implements Box {
 
-    private final Ref value;
+    private final Boolean value;
 
     /**
-     * Contruye un contenedor de nreferencias
+     * Contruye un contenedor de numeros
      *
      * @param value Valor para almacenar
      */
-    public RefBox(Ref value) {
+    public BooleanBox(Boolean value) {
         this.value = value;
     }
 
     @Override
     public Boolean booleanValue() {
-        return (value != null);
+        return value;
     }
 
     @Override
     public Integer intValue() {
-        return (value != null) ? 1 : 0;
+        return value ? 1 : 0;
     }
 
     @Override
     public Long longValue() {
-        return (value != null) ? 1l : 0l;
+        return value ? 1l : 0l;
     }
 
     @Override
     public Float floatValue() {
-        return (value != null) ? 1f : 0f;
+        return value ? 1f : 0f;
     }
 
     @Override
     public Double doubleValue() {
-        return (value != null) ? 1d : 0d;
+        return value ? 1d : 0d;
     }
 
     @Override
     public String stringValue() {
-        return (value != null) ? "1" : "0";
+        return value ? "1" : "0";
     }
 
     @Override
     public <T> Ref<T> RefValue() {
-        return value;
+        throw new ClassCastException();
     }
 
     @Override

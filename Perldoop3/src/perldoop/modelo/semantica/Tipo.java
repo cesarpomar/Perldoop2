@@ -45,6 +45,15 @@ public final class Tipo {
     }
 
     /**
+     * Construye el tipo
+     *
+     * @param list Lista de subtipos
+     */
+    public Tipo(List<Byte> list) {
+        tipo = new ArrayList<>(list);
+    }
+
+    /**
      * Contruye un tipo basado en otro
      *
      * @param t Tipo
@@ -88,6 +97,16 @@ public final class Tipo {
      */
     public void setVariable(boolean variable) {
         this.variable = variable;
+    }
+
+    /**
+     * Crea un subtipo del actual partiendo del subtipo init
+     *
+     * @param init Inico del subtipo
+     * @return Subtipo
+     */
+    public Tipo getSubtipo(int init) {
+        return new Tipo(tipo.subList(init, tipo.size()));
     }
 
     /**

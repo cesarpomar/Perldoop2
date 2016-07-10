@@ -112,7 +112,7 @@ expresion	:	constante								{$$=set(new ExpConstante(s($1)));}
 			|	'&' funcion %prec UNITARIO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
 			|	regulares								{$$=set(new ExpRegulares(s($1)));} 
 
-lista		:	expresion ',' lista						{$$=set(Lista.add(s($1), s($2), s($3)));}
+lista		:	expresion ',' lista						{$$=set(Lista.add(s($1), s($2), s($3)), false);}
 			|	expresion ','							{$$=set(new Lista(s($1), s($2)));}
 			|	expresion								{$$=set(new Lista(s($1)));}
 
@@ -373,6 +373,20 @@ bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(
 		simbolos.add(s);
 		return new ParserVal(s);
 	}
+	
+	/**
+	 * Función interna auxiliar que añade el simbolo a la lista de analizador
+	 * y luego lo retorna encapsulado en un ParseVal del analizador.
+	 * @param s Simbolo
+	 * @param add Añadir a la lista
+	 * @return ParseVal
+	 */
+	private ParserVal set(Simbolo s, boolean add){
+		if(add){
+			simbolos.add(s);
+		}
+		return new ParserVal(s);
+	}	
 	
 	/**
 	 * Función interna auxiliar que añade el simbolo a la lista de analizador

@@ -14,10 +14,43 @@ public final class Tipos {
      * Crea la inicializacion de un tipo
      *
      * @param t Tipo
+     * @param tams Tamaño
      * @return Inicializacion
      */
-    public static StringBuilder inicializacion(Tipo t) {
-        return null;
+    public static StringBuilder inicializacion(Tipo t, String... tams) {
+        StringBuilder dec = new StringBuilder(100);
+        List<Byte> subtipos = t.getTipo();
+        int tam = 0;
+        dec.append("new ");
+        for (int i = 0; i < subtipos.size(); i++) {
+
+            byte st = subtipos.get(i);
+            switch (st) {
+                case Tipo.ARRAY:
+                    dec.append("[").append(get(tams, tam++)).append("]");
+                    break;
+                case Tipo.LIST:
+                    dec.insert(4, "PerlList");
+                    return dec;
+                case Tipo.MAP:
+                    dec.insert(4, "PerlMap");
+                    return dec;
+                case Tipo.REF:
+                    dec.insert(4, "Ref");
+                    return dec;
+                default:
+                    dec.insert(4, repr(st));
+                    return dec;
+            }
+        }
+        return dec;
+    }
+
+    private static String get(String[] array, int pos) {
+        if (pos >= array.length) {
+            return "";
+        }
+        return array[pos];
     }
 
     /**
@@ -37,10 +70,10 @@ public final class Tipos {
                     dec.append("[]");
                     break;
                 case Tipo.LIST:
-                    dec.insert(0, "List<").append(">");
+                    dec.insert(0, "PerlList<").append(">");
                     break;
                 case Tipo.MAP:
-                    dec.insert(0, "Map<String, ").append(">");
+                    dec.insert(0, "PerlMap<").append(">");
                     break;
                 case Tipo.REF:
                     dec.insert(0, "Ref<").append(">");

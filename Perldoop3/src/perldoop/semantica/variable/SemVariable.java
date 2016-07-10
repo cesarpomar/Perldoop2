@@ -14,7 +14,7 @@ import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.semantica.util.Buscar;
+import perldoop.util.Buscar;
 import perldoop.semantica.util.Etiquetas;
 
 /**

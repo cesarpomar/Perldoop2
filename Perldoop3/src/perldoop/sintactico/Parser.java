@@ -3182,6 +3182,20 @@ final static String yyrule[] = {
 	
 	/**
 	 * Función interna auxiliar que añade el simbolo a la lista de analizador
+	 * y luego lo retorna encapsulado en un ParseVal del analizador.
+	 * @param s Simbolo
+	 * @param add Añadir a la lista
+	 * @return ParseVal
+	 */
+	private ParserVal set(Simbolo s, boolean add){
+		if(add){
+			simbolos.add(s);
+		}
+		return new ParserVal(s);
+	}	
+	
+	/**
+	 * Función interna auxiliar que añade el simbolo a la lista de analizador
 	 * y luego lo retorna.
 	 * @param s Simbolo
 	 * @return ParseVal
@@ -3228,7 +3242,7 @@ final static String yyrule[] = {
 		}
 		ParserError.errorSintactico(this, tokens);
 	}
-//#line 2916 "Parser.java"
+//#line 2930 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -3496,7 +3510,7 @@ case 28:
 break;
 case 29:
 //#line 115 "parser.y"
-{yyval=set(Lista.add(s(val_peek(2)), s(val_peek(1)), s(val_peek(0))));}
+{yyval=set(Lista.add(s(val_peek(2)), s(val_peek(1)), s(val_peek(0))), false);}
 break;
 case 30:
 //#line 116 "parser.y"
@@ -4030,7 +4044,7 @@ case 162:
 //#line 268 "parser.y"
 {yyval=set(new BloqueElsIf(s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
-//#line 3713 "Parser.java"
+//#line 3727 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

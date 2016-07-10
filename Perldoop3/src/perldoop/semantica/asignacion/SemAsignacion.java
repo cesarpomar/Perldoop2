@@ -11,6 +11,7 @@ import perldoop.modelo.semantica.TablaSemantica;
 public class SemAsignacion {
 
     private TablaSemantica tabla;
+    private SemIgual semIgual; 
 
     /**
      * Contruye la semantica
@@ -20,10 +21,13 @@ public class SemAsignacion {
     public SemAsignacion(TablaSemantica tabla) {
         this.tabla = tabla;
     }
-
+    
     public void visitar(Igual s) {
+       if(semIgual==null){
+           semIgual=new SemIgual(tabla);
+       } 
+       semIgual.visitar(s);
     }
-
     public void visitar(MasIgual s) {
     }
 

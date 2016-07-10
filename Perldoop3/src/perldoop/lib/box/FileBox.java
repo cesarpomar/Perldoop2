@@ -23,28 +23,33 @@ public class FileBox implements Box {
     }
 
     @Override
+    public Boolean booleanValue() {
+        return (value != null);
+    }
+
+    @Override
     public Integer intValue() {
-        return 1;
+        return (value != null) ? 1 : 0;
     }
 
     @Override
     public Long longValue() {
-        return 1l;
+        return (value != null) ? 1l : 0l;
     }
 
     @Override
     public Float floatValue() {
-        return 1f;
+        return (value != null) ? 1f : 0f;
     }
 
     @Override
     public Double doubleValue() {
-        return 1d;
+        return (value != null) ? 1d : 0d;
     }
 
     @Override
     public String stringValue() {
-        return "0x1";
+        return (value != null) ? "1" : "0";
     }
 
     @Override
