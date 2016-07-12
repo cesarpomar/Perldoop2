@@ -58,6 +58,7 @@ public final class Lista extends Simbolo {
         if (this.invertida != invertida) {
             this.invertida = invertida;
             Collections.reverse(elementos);
+            Collections.reverse(expresiones);
         }
     }
 
@@ -86,6 +87,7 @@ public final class Lista extends Simbolo {
      * @return Esta instancia
      */
     public final Lista add(Expresion exp, Terminal coma) {
+        invertida(true);
         elementos.add(coma);
         add(exp);
         coma.setPadre(this);

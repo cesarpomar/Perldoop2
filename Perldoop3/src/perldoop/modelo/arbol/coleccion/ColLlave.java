@@ -6,14 +6,13 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -> coleccion : '{' lista '}'
+ * Clase que representa la reduccion -> coleccion : '{' lista '}' | '{' '}'
  *
  * @author César Pomar
  */
 public final class ColLlave extends Coleccion{
 
     private Terminal llaveI;
-    private Lista lista;
     private Terminal llaveD;
 
     /**
@@ -24,8 +23,8 @@ public final class ColLlave extends Coleccion{
      * @param llaveD Llave derecha
      */
     public ColLlave(Terminal llaveI, Lista lista, Terminal llaveD) {
+        super(lista);
         setLlaveI(llaveI);
-        setLista(lista);
         setLlaveD(llaveD);
     }
 
@@ -46,25 +45,6 @@ public final class ColLlave extends Coleccion{
     public void setLlaveI(Terminal llaveI) {
         llaveI.setPadre(this);
         this.llaveI = llaveI;
-    }
-
-    /**
-     * Obtiene la lista
-     *
-     * @return Lista
-     */
-    public Lista getLista() {
-        return lista;
-    }
-
-    /**
-     * Establece la lista
-     *
-     * @param lista Lista
-     */
-    public void setLista(Lista lista) {
-        lista.setPadre(this);
-        this.lista = lista;
     }
 
     /**

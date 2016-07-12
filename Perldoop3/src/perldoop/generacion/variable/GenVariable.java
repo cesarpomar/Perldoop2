@@ -4,9 +4,9 @@ import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.acceso.AccesoArray;
-import perldoop.modelo.arbol.acceso.AccesoMap;
-import perldoop.modelo.arbol.sentencia.StcLista;
+import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.coleccion.ColCorchete;
+import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.util.Buscar;
 
@@ -15,14 +15,14 @@ import perldoop.util.Buscar;
  *
  * @author César Pomar
  */
-public class GenVariable {
+public final class GenVariable {
 
     private TablaGenerador tabla;
 
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenVariable(TablaGenerador tabla) {
         this.tabla = tabla;
@@ -44,21 +44,22 @@ public class GenVariable {
     public void visitar(VarMy s) {
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().toString(), getContexto(s));
         StringBuilder declaracion = Tipos.declaracion(s.getTipo());
-        e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(),e.isConflicto()));
+        e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(), e.isConflicto()));
         StringBuilder codigo;
-        if(Buscar.getPadre(s, 2) instanceof StcLista){
-            codigo = new StringBuilder(declaracion);
-        }else{
-            codigo = new StringBuilder(20);
-        }
-        codigo.append(" ").append(e.getAlias());
+        //if(Buscar.getPadre(s, 2) instanceof StcLista){
+        codigo = new StringBuilder(declaracion).append(" ");
+        //}else{
+        //  codigo = new StringBuilder(20);
+        //}
+        codigo.append(e.getAlias());
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(VarOur s) {
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().toString(), getContexto(s));
         StringBuilder declaracion = Tipos.declaracion(s.getTipo());
-        e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(),e.isConflicto()));
-        tabla.getClase().getAtributos().add(declaracion.append(" ").append(e.getAlias()).append(";").toString());        
+        e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(), e.isConflicto()));
+        tabla.getClase().getAtributos().add(declaracion.append(" ").append(e.getAlias()).append(";").toString());
         s.setCodigoGenerado(new StringBuilder(e.getAlias()));
     }
 
@@ -69,13 +70,15 @@ public class GenVariable {
      */
     private char getContexto(Variable v) {
         Simbolo uso = Buscar.getPadre(v, 1);
-        if (uso instanceof AccesoArray) {
-            return '@';
-        } else if (uso instanceof AccesoMap) {
-            return '%';
-        } else {
-            return v.getContexto().toString().charAt(0);
+        if (uso instanceof AccesoCol) {
+            AccesoCol col = (AccesoCol) uso;
+            if (col.getColeccion() instanceof ColCorchete) {
+                return '@';
+            } else if (col.getColeccion() instanceof ColLlave) {
+                return '%';
+            }
         }
+        return v.getContexto().toString().charAt(0);
     }
 
 }

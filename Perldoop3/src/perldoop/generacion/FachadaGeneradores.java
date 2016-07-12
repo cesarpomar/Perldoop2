@@ -24,9 +24,11 @@ import perldoop.generacion.logico.*;
 import perldoop.generacion.modificador.*;
 import perldoop.generacion.paquetes.*;
 import perldoop.generacion.raiz.GenRaiz;
+import perldoop.generacion.rango.GenRango;
 import perldoop.generacion.regulares.*;
 import perldoop.generacion.sentencia.*;
 import perldoop.generacion.variable.*;
+import perldoop.generacion.varmulti.GenVarMulti;
 
 /**
  * Fachada de los generadores
@@ -59,11 +61,13 @@ public final class FachadaGeneradores {
     private GenLista genLista;
     private GenLogico genLogico;
     private GenPaquetes genPaquetes;
+    private GenRango genRango;
     private GenRaiz genRaiz;
     private GenModificador genModificador;
     private GenRegulares genRegulares;
     private GenSentencia genSentencia;
     private GenVariable genVariable;
+    private GenVarMulti genVarMulti;
 
     /**
      * Constructor de la fachada
@@ -537,6 +541,27 @@ public final class FachadaGeneradores {
     }
 
     /**
+     * Obtiene el generador de rangos
+     *
+     * @return Generador de rangos
+     */
+    public GenRango getGenRango() {
+        if (genRango == null) {
+            genRango = new GenRango(tabla);
+        }
+        return genRango;
+    }
+
+    /**
+     * Establece el generador de rangos
+     *
+     * @param genRango Generador de rangos
+     */
+    public void setGenRango(GenRango genRango) {
+        this.genRango = genRango;
+    }
+
+    /**
      * Obtiene el generador de modificador
      *
      * @return Generador de modificador
@@ -618,6 +643,24 @@ public final class FachadaGeneradores {
      */
     public void setGenVariable(GenVariable genVariable) {
         this.genVariable = genVariable;
+    }
+
+    /**
+     * Obtiene el generador de variables multiples
+     *
+     * @return Generador de variables multiples
+     */
+    public GenVarMulti getGenVarMulti() {
+        return genVarMulti;
+    }
+
+    /**
+     * Establece el generador de variables multiples
+     *
+     * @param genVarMulti Generador de variables multiples
+     */
+    public void setGenVarMulti(GenVarMulti genVarMulti) {
+        this.genVarMulti = genVarMulti;
     }
 
 }

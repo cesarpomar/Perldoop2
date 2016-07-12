@@ -20,11 +20,13 @@ import perldoop.modelo.arbol.asignacion.XorIgual;
 
 /**
  * Clase generadora de asignacion
+ *
  * @author César Pomar
  */
 public class GenAsignacion {
 
     private TablaGenerador tabla;
+    private GenIgual genIgual;
 
     /**
      * Construye el generador
@@ -36,7 +38,10 @@ public class GenAsignacion {
     }
 
     public void visitar(Igual s) {
-        
+        if (genIgual == null) {
+            genIgual = new GenIgual(tabla);
+        }
+        genIgual.visitar(s);
     }
 
     public void visitar(MasIgual s) {

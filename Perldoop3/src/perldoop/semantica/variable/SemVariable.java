@@ -5,9 +5,10 @@ import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.acceso.Acceso;
-import perldoop.modelo.arbol.acceso.AccesoArray;
-import perldoop.modelo.arbol.acceso.AccesoMap;
+import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
+import perldoop.modelo.arbol.coleccion.ColCorchete;
+import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.semantica.EntradaVariable;
@@ -91,13 +92,15 @@ public class SemVariable {
      */
     private char getContexto(Variable v) {
         Simbolo uso = Buscar.getPadre(v, 1);
-        if (uso instanceof AccesoArray) {
-            return '@';
-        } else if (uso instanceof AccesoMap) {
-            return '%';
-        } else {
-            return v.getContexto().toString().charAt(0);
+        if (uso instanceof AccesoCol) {
+            AccesoCol col = (AccesoCol) uso;
+            if (col.getColeccion() instanceof ColCorchete) {
+                return '@';
+            } else if (col.getColeccion() instanceof ColLlave) {
+                return '%';
+            }
         }
+        return v.getContexto().toString().charAt(0);
     }
 
     /**

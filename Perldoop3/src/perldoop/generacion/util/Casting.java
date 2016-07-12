@@ -333,6 +333,8 @@ public final class Casting {
             case Tipo.REF:
                 if (origen.getTipo().getTipo().get(0) == Tipo.BOX) {
                     return new StringBuilder(origen.getCodigoGenerado()).append(".refValue()");
+                }else{
+                    
                 }
                 break;
             case Tipo.FILE:
@@ -341,7 +343,7 @@ public final class Casting {
                 }
                 break;
         }
-        return null;
+        return new StringBuilder(origen.getCodigoGenerado());
     }
 
 }

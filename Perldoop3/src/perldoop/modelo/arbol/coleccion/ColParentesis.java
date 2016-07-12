@@ -6,14 +6,13 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -> coleccion : '(' lista ')'
+ * Clase que representa la reduccion -> coleccion : '(' lista ')' | '(' ')'
  *
  * @author César Pomar
  */
 public final class ColParentesis extends Coleccion {
 
     private Terminal parentesisI;
-    private Lista lista;
     private Terminal parentesisD;
 
     /**
@@ -24,8 +23,8 @@ public final class ColParentesis extends Coleccion {
      * @param parentesisD Parentesis derecho
      */
     public ColParentesis(Terminal parentesisI, Lista lista, Terminal parentesisD) {
+        super(lista);
         setParentesisI(parentesisI);
-        setLista(lista);
         setParentesisD(parentesisD);
     }
 
@@ -46,25 +45,6 @@ public final class ColParentesis extends Coleccion {
     public void setParentesisI(Terminal parentesisI) {
         parentesisI.setPadre(this);
         this.parentesisI = parentesisI;
-    }
-
-    /**
-     * Obtiene la lista
-     *
-     * @return Lista
-     */
-    public Lista getLista() {
-        return lista;
-    }
-
-    /**
-     * Establece la lista
-     *
-     * @param lista Lista
-     */
-    public void setLista(Lista lista) {
-        lista.setPadre(this);
-        this.lista = lista;
     }
 
     /**

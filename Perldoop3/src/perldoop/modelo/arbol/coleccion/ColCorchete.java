@@ -6,14 +6,13 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -> coleccion : '[' lista ']'
+ * Clase que representa la reduccion -> coleccion : '[' lista ']' | '[' ']'
  *
  * @author César Pomar
  */
 public final class ColCorchete extends Coleccion{
 
     private Terminal corcheteI;
-    private Lista lista;
     private Terminal corcheteD;
 
     /**
@@ -24,8 +23,8 @@ public final class ColCorchete extends Coleccion{
      * @param corcheteD Corchete derecho
      */
     public ColCorchete(Terminal corcheteI, Lista lista, Terminal corcheteD) {
+        super(lista);
         setCorcheteI(corcheteI);
-        setLista(lista);
         setCorcheteD(corcheteD);
     }
 
@@ -46,25 +45,6 @@ public final class ColCorchete extends Coleccion{
     public void setCorcheteI(Terminal corcheteI) {
         corcheteI.setPadre(this);
         this.corcheteI = corcheteI;
-    }
-
-    /**
-     * Obtiene la lista
-     *
-     * @return Lista
-     */
-    public Lista getLista() {
-        return lista;
-    }
-
-    /**
-     * Establece la lista
-     *
-     * @param lista Lista
-     */
-    public void setLista(Lista lista) {
-        lista.setPadre(this);
-        this.lista = lista;
     }
 
     /**

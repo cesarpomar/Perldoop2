@@ -23,9 +23,11 @@ import perldoop.semantica.lista.*;
 import perldoop.semantica.logico.*;
 import perldoop.semantica.modificador.*;
 import perldoop.semantica.paquetes.*;
+import perldoop.semantica.rango.*;
 import perldoop.semantica.regulares.*;
 import perldoop.semantica.sentencia.*;
 import perldoop.semantica.variable.*;
+import perldoop.semantica.varmulti.*;
 
 /**
  * Fachada de las semanticas
@@ -58,10 +60,12 @@ public final class FachadaSemanticas {
     private SemLista semLista;
     private SemLogico semLogico;
     private SemPaquetes semPaquetes;
+    private SemRango semRango;
     private SemModificador semModificador;
     private SemRegulares semRegulares;
     private SemSentencia semSentencia;
     private SemVariable semVariable;
+    private SemVarMulti semVarMulti;
 
     /**
      * Constructor de la fachada
@@ -494,10 +498,11 @@ public final class FachadaSemanticas {
 
     /**
      * obtiene la semantica de paquetes
+     *
      * @return Semantica de paquetes
      */
     public SemPaquetes getSemPaquetes() {
-        if(semPaquetes == null){
+        if (semPaquetes == null) {
             semPaquetes = new SemPaquetes(tabla);
         }
         return semPaquetes;
@@ -505,10 +510,32 @@ public final class FachadaSemanticas {
 
     /**
      * Establece la semantica de paquetes
+     *
      * @param semPaquetes Semantica de paquetes
      */
     public void setSemPaquetes(SemPaquetes semPaquetes) {
         this.semPaquetes = semPaquetes;
+    }
+
+    /**
+     * Obtiene la semantica de rangos
+     *
+     * @return Semantica de rangos
+     */
+    public SemRango getSemRango() {
+        if (semPaquetes == null) {
+            semRango = new SemRango(tabla);
+        }
+        return semRango;
+    }
+
+    /**
+     * Establece la semantica de rangos
+     *
+     * @param semRango Semantica de rangos
+     */
+    public void setSemRango(SemRango semRango) {
+        this.semRango = semRango;
     }
 
     /**
@@ -594,4 +621,26 @@ public final class FachadaSemanticas {
     public void setSemVariable(SemVariable semVariable) {
         this.semVariable = semVariable;
     }
+
+    /**
+     * Obtiene la semantica de variables multiples
+     * @return Variables multiples 
+     */
+    public SemVarMulti getSemVarMulti() {
+        if(semVarMulti ==null){
+            semVarMulti = new SemVarMulti(tabla);
+        }
+        return semVarMulti;
+    }
+
+    /**
+     * Establece la semantica de variables multiples
+     * @param semVarMulti Variables multiples
+     */
+    public void setSemVarMulti(SemVarMulti semVarMulti) {
+        this.semVarMulti = semVarMulti;
+    }
+    
+    
+    
 }

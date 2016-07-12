@@ -1,5 +1,8 @@
 package perldoop.modelo.arbol;
 
+import perldoop.modelo.arbol.varmulti.VarMultiOur;
+import perldoop.modelo.arbol.varmulti.VarMultiMy;
+import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.arbol.fuente.*;
 import perldoop.modelo.arbol.masfuente.*;
 import perldoop.modelo.arbol.funciondef.*;
@@ -171,6 +174,11 @@ public interface Visitante {
 
     void visitar(VarOur s);
 
+    //VarMulti
+    void visitar(VarMultiMy s);
+
+    void visitar(VarMultiOur s);
+
     //Paquete
     void visitar(Paquetes s);
 
@@ -181,20 +189,13 @@ public interface Visitante {
 
     void visitar(ColLlave s);
 
-    void visitar(ColGenerador s);
-
-    void visitar(ColMy s);
-
-    void visitar(ColOur s);
+    //Rango
+    void visitar(Rango s);
 
     //Acceso
-    void visitar(AccesoMap s);
+    void visitar(AccesoCol s);
 
-    void visitar(AccesoArray s);
-
-    void visitar(AccesoMapRef s);
-
-    void visitar(AccesoArrayRef s);
+    void visitar(AccesoColRef s);
 
     void visitar(AccesoRefEscalar s);
 
@@ -203,7 +204,7 @@ public interface Visitante {
     void visitar(AccesoRefMap s);
 
     void visitar(AccesoSigil s);
-    
+
     void visitar(AccesoRef s);
 
     //Funcion

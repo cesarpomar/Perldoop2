@@ -1,4 +1,4 @@
-package perldoop.modelo.arbol.coleccion;
+package perldoop.modelo.arbol.rango;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
@@ -6,11 +6,11 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> coleccion : expresion DOS_PUNTOS expresion
+ * Clase que representa la reduccion -> rango : expresion DOS_PUNTOS expresion
  *
  * @author César Pomar
  */
-public final class ColGenerador extends Simbolo{
+public final class Rango extends Simbolo{
     
     private Expresion izquierda;
     private Terminal dosPuntos;
@@ -23,7 +23,7 @@ public final class ColGenerador extends Simbolo{
      * @param dosPuntos DosPuntos
      * @param derecha Derecha
      */
-    public ColGenerador(Expresion izquierda, Terminal dosPuntos, Expresion derecha) {
+    public Rango(Expresion izquierda, Terminal dosPuntos, Expresion derecha) {
         setIzquierda(izquierda);
         setDosPuntos(dosPuntos);
         setDerecha(derecha);

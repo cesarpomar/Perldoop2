@@ -1,7 +1,13 @@
 package perldoop.semantica.acceso;
 
+import java.util.List;
+import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.acceso.*;
+import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.semantica.TablaSemantica;
+import perldoop.modelo.semantica.Tipo;
+import perldoop.semantica.util.Tipos;
+import perldoop.util.Buscar;
 
 /**
  * Clase para la semantica de acceso
@@ -21,16 +27,35 @@ public class SemAcceso {
         this.tabla = tabla;
     }
 
-    public void visitar(AccesoMap s) {
+    public void visitar(AccesoCol s) {
+        Tipo t = s.getExpresion().getTipo();
+        Tipo st = t.getSubtipo(1);
+        if (t.isArrayOrList()) {
+            Simbolo uso = Buscar.getPadre(s, 1);
+            List<Expresion> exps = s.getColeccion().getLista().getExpresiones();
+            if(exps.isEmpty()){
+                //Error acceso vacio
+            }
+            if ((uso instanceof AccesoCol) || (uso instanceof AccesoColRef)) {
+                if (exps.size() == 1 && !exps.get(0).getTipo().isColeccion()) {
+                    s.setTipo(new Tipo(st));
+                } else {
+                    s.setTipo(new Tipo(t));
+                }
+            } else if (exps.size() == 1) {
+                s.setTipo(new Tipo(st));
+                if (st.isColeccion()) {
+                    st.add(0, Tipo.REF);
+                }
+            } else {
+                s.setTipo(new Tipo(t));
+            }
+        } else {
+            //error acceso
+        }
     }
 
-    public void visitar(AccesoArray s) {
-    }
-
-    public void visitar(AccesoMapRef s) {
-    }
-
-    public void visitar(AccesoArrayRef s) {
+    public void visitar(AccesoColRef s) {
     }
 
     public void visitar(AccesoRefEscalar s) {
@@ -47,4 +72,5 @@ public class SemAcceso {
 
     public void visitar(AccesoRef s) {
     }
+
 }

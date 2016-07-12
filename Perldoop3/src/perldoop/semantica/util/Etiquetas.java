@@ -71,6 +71,12 @@ public class Etiquetas {
             case "<file>":
                 tipo.add(Tipo.FILE);
                 break;
+            case "<box>":
+                tipo.add(Tipo.BOX);
+                break;
+            case "<number>":
+                tipo.add(Tipo.BOX);
+                break;
             default:
                 ge.error(Errores.TIPO_ESCALAR_OMITIDO, t);
                 throw new ExcepcionSemantica();
@@ -113,6 +119,12 @@ public class Etiquetas {
                     break;
                 case Tipo.FILE:
                     etiquetas.add("<file>");
+                    break;
+                case Tipo.BOX:
+                    etiquetas.add("<box>");
+                    break;
+                case Tipo.NUMBER:
+                    etiquetas.add("<number>");
                     break;
                 case Tipo.ARRAY:
                     etiquetas.add("<array>");

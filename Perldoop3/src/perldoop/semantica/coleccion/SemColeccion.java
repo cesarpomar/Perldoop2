@@ -1,6 +1,7 @@
 package perldoop.semantica.coleccion;
 
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.expresion.Expresion;
@@ -49,9 +50,7 @@ public class SemColeccion {
                     if (col.getTipo() == null) {
                         tipar(col);
                     }
-                    if (col.getTipo() == null) {
-                        s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-                    } else {
+                    if (col.getTipo() != null) {
                         s.setTipo(col.getTipo().getSubtipo(1));
                     }
                 } else if (uso instanceof ColCorchete) {
@@ -59,9 +58,7 @@ public class SemColeccion {
                     if (col.getTipo() == null) {
                         tipar(col);
                     }
-                    if (col.getTipo() == null) {
-                        s.setTipo(new Tipo(Tipo.REF, Tipo.ARRAY, Tipo.BOX));
-                    } else {
+                    if (col.getTipo() != null) {
                         s.setTipo(col.getTipo().getSubtipo(1));
                     }
                 } else if (uso instanceof ColLlave) {
@@ -69,17 +66,11 @@ public class SemColeccion {
                     if (col.getTipo() == null) {
                         tipar(col);
                     }
-                    if (col.getTipo() == null) {
-                        s.setTipo(new Tipo(Tipo.REF, Tipo.MAP, Tipo.BOX));
-                    } else {
+                    if (col.getTipo() != null) {
                         s.setTipo(col.getTipo().getSubtipo(1));
                     }
                 }
             }
-        }
-        //Definimos uno genérico
-        if (s.getTipo() == null) {
-            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
         }
     }
 
@@ -89,41 +80,57 @@ public class SemColeccion {
             subT.add(0, Tipo.REF);
         }
         for (Expresion exp : l.getExpresiones()) {
-            if (exp.getTipo().isArrayOrList()) {
-                Tipos.casting(exp, s.getTipo(), tabla.getGestorErrores());
-            } else if (exp.getTipo().isMap()) {
-                Tipos.casting(exp, s.getTipo(), tabla.getGestorErrores());
-            } else {
-                Tipos.casting(exp, subT, tabla.getGestorErrores());
+            Tipo texp = exp.getTipo();
+            if (texp.isColeccion()) {
+                texp = texp.getSubtipo(1);
+                if (texp.isColeccion()) {
+                    texp.add(0, Tipo.REF);
+                }
             }
+            Tipos.casting(exp, texp, subT, tabla.getGestorErrores());
+
         }
     }
 
     public void visitar(ColParentesis s) {
         if (s.getLista().getElementos().size() > 1) {
             tipar(s);
+            if (s.getTipo() == null) {
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+            }
             comprobarElems(s, s.getLista());
-        }else{
+        } else {
             s.setTipo(s.getLista().getExpresiones().get(0).getTipo());
         }
     }
 
     public void visitar(ColCorchete s) {
-        tipar(s);
-        comprobarElems(s, s.getLista());
+        if (s.getPadre() instanceof AccesoCol) {
+            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.INTEGER));
+            comprobarElems(s, s.getLista());
+        } else {
+            tipar(s);
+            if (s.getTipo() == null) {
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+            }
+            comprobarElems(s, s.getLista());
+            s.getTipo().add(0, Tipo.REF);
+        }
+
     }
 
     public void visitar(ColLlave s) {
-        tipar(s);
-        comprobarElems(s, s.getLista());
+        if (s.getPadre() instanceof AccesoCol) {
+            s.setTipo(new Tipo(Tipo.MAP, Tipo.INTEGER));
+            comprobarElems(s, s.getLista());
+        } else {
+            tipar(s);
+            if (s.getTipo() == null) {
+                s.setTipo(new Tipo(Tipo.MAP, Tipo.BOX));
+            }
+            comprobarElems(s, s.getLista());
+            s.getTipo().add(0, Tipo.REF);
+        }
     }
 
-    public void visitar(ColGenerador s) {
-    }
-
-    public void visitar(ColMy s) {
-    }
-
-    public void visitar(ColOur s) {
-    }
 }

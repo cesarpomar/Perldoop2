@@ -20,7 +20,9 @@ import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.asignacion.*;
 import perldoop.modelo.arbol.constante.*;
 import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.rango.*;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.funcion.*;
@@ -101,12 +103,14 @@ sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)
 
 expresion	:	constante								{$$=set(new ExpConstante(s($1)));} 
 			|	variable								{$$=set(new ExpVariable(s($1)));} 
+			|	varMulti								{}
 			|	asignacion								{$$=set(new ExpAsignacion(s($1)));}  
 			|	binario									{$$=set(new ExpBinario(s($1)));} 
 			|	aritmetica								{$$=set(new ExpAritmetica(s($1)));} 
 			|	logico									{$$=set(new ExpLogico(s($1)));} 
 			|	comparacion								{$$=set(new ExpComparacion(s($1)));} 
 			|	coleccion								{$$=set(new ExpColeccion(s($1)));} 
+			|	rango									{}
 			|	acceso									{$$=set(new ExpAcceso(s($1)));} 
 			|	funcion									{$$=set(new ExpFuncion(s($1)));} 
 			|	'&' funcion %prec UNITARIO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
@@ -163,6 +167,9 @@ variable	:	'$' VAR									{$$=set(new VarExistente(s($1),s($2)));}
 			|	OUR '$' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
 			|	OUR '@' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
 			|	OUR '%' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
+			
+varMulti	:	MY '(' lista ')'						{$$=set(new VarMultiMy(s($1),s($2),s($3),s($4)));}
+			|	OUR '(' lista ')'						{$$=set(new VarMultiOur(s($1),s($2),s($3),s($4)));}
 
 paqueteVar	:	paqueteVar VAR AMBITO					{$$=set(Paquetes.add(s($1),s($2),s($3)));} 
 			|	VAR AMBITO								{$$=set(new Paquetes(s($1),s($2)));} 
@@ -176,14 +183,11 @@ coleccion	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
 			|	'[' ']'									{$$=set(new ColCorchete(s($1),new Lista(),s($2)));}
 			|	'{' lista '}'							{$$=set(new ColLlave(s($1),s($2),s($3)));}
 			|	'{' '}'									{$$=set(new ColLlave(s($1),new Lista(),s($2)));}
-			|	expresion DOS_PUNTOS expresion			{$$=set(new ColGenerador(s($1),s($2),s($3)));}
-			|	MY '(' lista ')'						{$$=set(new ColMy(s($1),s($2),s($3),s($4)));}
-			|	OUR '(' lista ')'						{$$=set(new ColOur(s($1),s($2),s($3),s($4)));}
 
-acceso		:	expresion '{' lista '}'					{$$=set(new AccesoMap(s($1),s($2),s($3),s($4)));}
-			|	expresion '[' lista ']'					{$$=set(new AccesoArray(s($1),s($2),s($3),s($4)));}
-			|	expresion FLECHA '{' lista '}'			{$$=set(new AccesoMapRef(s($1),s($2),s($3),s($4),s($5)));}
-			|	expresion FLECHA '[' lista ']'			{$$=set(new AccesoArrayRef(s($1),s($2),s($3),s($4),s($5)));}
+rango		:	expresion DOS_PUNTOS expresion			{$$=set(new Rango(s($1),s($2),s($3)));}
+			
+acceso		:	expresion coleccion						{$$=set(new AccesoCol(s($1),s($2)));}
+			|	expresion FLECHA coleccion				{$$=set(new AccesoColRef(s($1),s($2),s($3)));}
 			|	'$' expresion %prec UNITARIO			{$$=set(new AccesoRefEscalar(s($1),s($2)));} 
 			|	'@' expresion %prec UNITARIO			{$$=set(new AccesoRefArray(s($1),s($2)));} 
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 

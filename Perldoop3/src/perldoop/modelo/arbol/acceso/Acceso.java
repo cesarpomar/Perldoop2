@@ -18,7 +18,7 @@ public abstract class Acceso extends Simbolo {
      * @param expresion Expresión
      */
     public Acceso(Expresion expresion) {
-        this.expresion = expresion;
+        setExpresion(expresion);
     }
 
     /**

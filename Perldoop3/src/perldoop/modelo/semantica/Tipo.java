@@ -18,6 +18,7 @@ public final class Tipo {
     public static final byte STRING = 6;
     public static final byte FILE = 7;
     public static final byte BOX = 8;
+    public static final byte NUMBER = 9;
 
     public static final byte ARRAY = 100;
     public static final byte LIST = 101;
@@ -66,9 +67,11 @@ public final class Tipo {
      * Añade un subtipo
      *
      * @param valor Subtipo
+     * @return Este tipo
      */
-    public void add(byte valor) {
+    public Tipo add(byte valor) {
         tipo.add(valor);
+        return this;
     }
 
     /**
@@ -76,9 +79,11 @@ public final class Tipo {
      *
      * @param pos Posición
      * @param valor Subtipo
+     * @return Este tipo
      */
-    public void add(int pos, byte valor) {
+    public Tipo add(int pos, byte valor) {
         tipo.add(pos, valor);
+        return this;
     }
 
     /**
@@ -173,6 +178,15 @@ public final class Tipo {
     }
 
     /**
+     * Obtiene si el tipo es una colección Array, List o Map
+     *
+     * @return Tipo es colección
+     */
+    public boolean isColeccion() {
+        return !tipo.isEmpty() && (tipo.get(0) == ARRAY || tipo.get(0) == LIST || tipo.get(0) == MAP);
+    }
+
+    /**
      * Obtiene si el tipo es Ref
      *
      * @return Tipo es Ref
@@ -252,6 +266,14 @@ public final class Tipo {
      */
     public boolean isSimple() {
         return !tipo.isEmpty() && tipo.get(0) >= BOOLEAN && tipo.get(0) <= STRING;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Tipo) {
+            ((Tipo) obj).getTipo().equals(this.getTipo());
+        }
+        return false;
     }
 
 }

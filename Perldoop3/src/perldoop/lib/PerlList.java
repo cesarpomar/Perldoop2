@@ -28,6 +28,18 @@ public final class PerlList<T> extends ArrayList<T> {
     }
 
     /**
+     * Crea una lista con una capacidad inicial
+     *
+     * @param array Crea una lista con los elementos del array
+     */
+    public PerlList(T[] array) {
+        super(array.length*2);
+        for (T e : array) {
+            this.add(e);
+        }
+    }
+
+    /**
      * Crea una lista con los elementos de una colección
      *
      * @param c Colección

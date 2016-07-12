@@ -66,6 +66,7 @@ public final class StcPaquete extends Sentencia {
      * @param paquete Paquete
      */
     public void setPaquete(Terminal paquete) {
+        paquete.setPadre(this);
         this.paquete = paquete;
     }
 
@@ -84,6 +85,7 @@ public final class StcPaquete extends Sentencia {
      * @param id Id
      */
     public void setId(Terminal id) {
+        id.setPadre(this);
         this.id = id;
     }
 

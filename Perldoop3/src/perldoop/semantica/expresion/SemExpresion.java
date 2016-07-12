@@ -57,7 +57,7 @@ public class SemExpresion {
     }
 
     public void visitar(ExpAcceso s) {
-//        s.setTipo(new Tipo(s.getAcceso().getTipo()));
+        s.setTipo(new Tipo(s.getAcceso().getTipo()));
     }
 
     public void visitar(ExpFuncion s) {

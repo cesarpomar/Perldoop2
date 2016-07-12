@@ -1,5 +1,8 @@
 package perldoop.semantica;
 
+import perldoop.modelo.arbol.varmulti.VarMultiOur;
+import perldoop.modelo.arbol.varmulti.VarMultiMy;
+import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
@@ -17,7 +20,9 @@ import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.asignacion.*;
 import perldoop.modelo.arbol.constante.*;
 import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.arbol.coleccion.*;
+import perldoop.modelo.arbol.rango.*;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.abrirbloque.*;
@@ -55,9 +60,10 @@ public class Semantica implements Visitante {
         tabla = new TablaSemantica(tablaSimbolos, opciones, gestorErrores);
         fachada = new FachadaSemanticas(tabla);
     }
-    
+
     /**
      * Obtiene las acciones
+     *
      * @return Acciones
      */
     public Acciones getAcciones() {
@@ -66,6 +72,7 @@ public class Semantica implements Visitante {
 
     /**
      * Establece las acciones
+     *
      * @param acciones Acciones
      */
     public void setAcciones(Acciones acciones) {
@@ -383,6 +390,16 @@ public class Semantica implements Visitante {
     }
 
     @Override
+    public void visitar(VarMultiMy s) {
+        fachada.getSemVarMulti().visitar(s);
+    }
+
+    @Override
+    public void visitar(VarMultiOur s) {
+        fachada.getSemVarMulti().visitar(s);
+    }
+
+    @Override
     public void visitar(Paquetes s) {
         fachada.getSemPaquetes().visitar(s);
     }
@@ -404,37 +421,12 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(ColGenerador s) {
-        fachada.getSemColeccion().visitar(s);
-    }
-
-    @Override
-    public void visitar(ColMy s) {
-        fachada.getSemColeccion().visitar(s);
-    }
-
-    @Override
-    public void visitar(ColOur s) {
-        fachada.getSemColeccion().visitar(s);
-    }
-
-    @Override
-    public void visitar(AccesoMap s) {
+    public void visitar(AccesoCol s) {
         fachada.getSemAcceso().visitar(s);
     }
 
     @Override
-    public void visitar(AccesoArray s) {
-        fachada.getSemAcceso().visitar(s);
-    }
-
-    @Override
-    public void visitar(AccesoMapRef s) {
-        fachada.getSemAcceso().visitar(s);
-    }
-
-    @Override
-    public void visitar(AccesoArrayRef s) {
+    public void visitar(AccesoColRef s) {
         fachada.getSemAcceso().visitar(s);
     }
 
@@ -457,10 +449,15 @@ public class Semantica implements Visitante {
     public void visitar(AccesoSigil s) {
         fachada.getSemAcceso().visitar(s);
     }
-    
-        @Override
+
+    @Override
     public void visitar(AccesoRef s) {
         fachada.getSemAcceso().visitar(s);
+    }
+
+    @Override
+    public void visitar(Rango s) {
+        fachada.getSemRango().visitar(s);
     }
 
     @Override

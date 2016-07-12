@@ -2,9 +2,9 @@ package perldoop.semantica.util;
 
 import java.util.List;
 import perldoop.error.GestorErrores;
+import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
@@ -78,8 +78,22 @@ public final class Tipos {
      * @param ge Sistema para lanzar el error si porcede
      */
     public static void casting(Simbolo s, Tipo t, GestorErrores ge) {
-        if(!compatible(s.getTipo(), t)){          
-            ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), Etiquetas.parseTipo(s.getTipo()),Etiquetas.parseTipo(t));
+        casting(s, s.getTipo(), t, ge);
+    }
+
+    /**
+     * Comprueba el casting de un simbolo a otro para verificar la conversión, en este caso el tipo de simbolo
+     * se especifica a parte por si hiciera falta modificarlo
+     *
+     * @param s Simbolo origen
+     * @param ts Tipo del simbolo origen
+     * @param t Tipo de destino
+     * @param ge Sistema para lanzar el error si porcede
+     */
+    public static void casting(Simbolo s, Tipo ts, Tipo t, GestorErrores ge) {
+        if (!compatible(ts, t)) {
+            ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), Etiquetas.parseTipo(s.getTipo()), Etiquetas.parseTipo(t));
+            throw new ExcepcionSemantica();
         }
     }
 
