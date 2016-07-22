@@ -308,6 +308,70 @@ public final class Casting {
     }
 
     /**
+     * Castea una expresión a Number
+     *
+     * @param s Simbolo
+     * @return Casting
+     */
+    public static StringBuilder toNumber(Simbolo s) {
+        StringBuilder cst = new StringBuilder(50);
+        switch (s.getTipo().getTipo().get(0)) {
+            case Tipo.ARRAY:
+                return cst.append(s.getCodigoGenerado()).append(".length");
+            case Tipo.LIST:
+                return cst.append(s.getCodigoGenerado()).append(".size()");
+            case Tipo.MAP:
+                return cst.append(s.getCodigoGenerado()).append(".size()");
+            case Tipo.REF:
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null) ? 1d : 0d");
+            case Tipo.BOOLEAN:
+                return cst.append("(Perl.toBoolean(").append(s.getCodigoGenerado()).append(")) ? 1d : 0d");
+            case Tipo.INTEGER:
+            case Tipo.LONG:
+            case Tipo.FLOAT:
+            case Tipo.DOUBLE:
+                return cst.append(s.getCodigoGenerado());
+            case Tipo.STRING:
+                return cst.append("Double.parse(").append(s.getCodigoGenerado()).append(")");
+            case Tipo.FILE:
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1d : 0d");
+            case Tipo.BOX:
+                return cst.append(s.getCodigoGenerado()).append(".doubleValue()");
+        }
+        return null;
+    }
+
+    /**
+     * Castea una expresión a Referencia
+     *
+     * @param s Simbolo
+     * @return Casting
+     */
+    public static StringBuilder toRef(Simbolo s) {
+        return null;//return new StringBuilder(origen.getCodigoGenerado()).append(".refValue()");
+    }
+
+    /**
+     * Castea una expresión a Fichero
+     *
+     * @param s Simbolo
+     * @return Casting
+     */
+    public static StringBuilder toFile(Simbolo s) {
+        return null;//return new StringBuilder(origen.getCodigoGenerado()).append("fileValue()");
+    }
+
+    /**
+     * Castea entre colecciones
+     *
+     * @param s Simbolo
+     * @return Casting
+     */
+    public static StringBuilder toCol(Simbolo s) {
+        return null;//return new StringBuilder(origen.getCodigoGenerado()).append("fileValue()");
+    }
+
+    /**
      * Castea la expresion origen al destino
      *
      * @param origen Expresion origen
@@ -328,20 +392,18 @@ public final class Casting {
                 return toDouble(origen);
             case Tipo.STRING:
                 return toString(origen);
+            case Tipo.FILE:
+                return toFile(origen);
             case Tipo.BOX:
                 return toBox(origen);
+            case Tipo.NUMBER:
+                return toNumber(origen);
             case Tipo.REF:
-                if (origen.getTipo().getTipo().get(0) == Tipo.BOX) {
-                    return new StringBuilder(origen.getCodigoGenerado()).append(".refValue()");
-                }else{
-                    
+                return toRef(origen);
+            default:
+                if (!origen.getTipo().equals(destino)) {
+                    return toCol(origen);
                 }
-                break;
-            case Tipo.FILE:
-                if (origen.getTipo().getTipo().get(0) == Tipo.BOX) {
-                    return new StringBuilder(origen.getCodigoGenerado()).append("fileValue()");
-                }
-                break;
         }
         return new StringBuilder(origen.getCodigoGenerado());
     }

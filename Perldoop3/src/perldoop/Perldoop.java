@@ -77,9 +77,9 @@ public class Perldoop {
             System.err.println("Analisis semantico fallido, errores: " + trad.getErrores());
             return;
         }
-        CodeWriter cw = new CodeWriter("");
+        CodeWriter cw = new CodeWriter("D:\\");
         try {
-            cw.escribir(gen.getClase(), "D:\\test.java");
+            cw.escribir(gen.getClase());
         } catch (IOException ex) {
             Logger.getLogger(Perldoop.class.getName()).log(Level.SEVERE, null, ex);
         }

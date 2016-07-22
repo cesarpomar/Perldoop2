@@ -18,8 +18,6 @@ public final class TablaGenerador {
     private Opciones opciones;
     private GestorErrores gestorErrores;
     private ClaseJava clase;
-    private BloqueJava bloqueActual;
-    private List<String> sentencias;
 
     /**
      * Contruye la tabla del generador
@@ -34,8 +32,6 @@ public final class TablaGenerador {
         this.opciones = opciones;
         this.gestorErrores = gestorErrores;
         clase = new ClaseJava();
-        bloqueActual = clase.getCodigo();
-        sentencias = new ArrayList<>(20);
     }
 
     /**
@@ -108,24 +104,6 @@ public final class TablaGenerador {
      */
     public void setClase(ClaseJava clase) {
         this.clase = clase;
-    }
-
-    /**
-     * Obtiene el bloque actual
-     *
-     * @return Bloque actual
-     */
-    public BloqueJava getBloqueActual() {
-        return bloqueActual;
-    }
-
-    /**
-     * Establece el bloque actual
-     *
-     * @param bloqueActual Bloque actual
-     */
-    public void setBloqueActual(BloqueJava bloqueActual) {
-        this.bloqueActual = bloqueActual;
     }
 
     /**

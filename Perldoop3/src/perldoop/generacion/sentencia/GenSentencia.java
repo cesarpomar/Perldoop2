@@ -2,7 +2,6 @@ package perldoop.generacion.sentencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
@@ -14,7 +13,6 @@ import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.generacion.*;
 
 /**
  * Clase generadora de sentencia
@@ -35,7 +33,7 @@ public class GenSentencia {
     }
 
     public void visitar(StcLista s) {
-        List<CodigoJava> codigo = tabla.getBloqueActual().getCodigo();
+        StringBuilder codigo = new StringBuilder(200);
         for (Expresion exp : s.getLista().getExpresiones()) {
             boolean sentencia = false;
             //Calculamos las sentencias
@@ -80,14 +78,12 @@ public class GenSentencia {
             }
             //Si es sentencia la escribimos, si no usamos la funcion auxiliar para evaluarla
             if (sentencia) {
-                codigo.add(new SentenciaJava(exp.getCodigoGenerado().toString() + ";"));
+                codigo.append(exp.getCodigoGenerado()).append(";");
             } else {
-                StringBuilder c = new StringBuilder(exp.getCodigoGenerado().length() + 30);
-                codigo.add(new SentenciaJava(
-                        c.append("Perl.eval(").append(exp.getCodigoGenerado()).append(");").toString()
-                ));
+                codigo.append("Perl.eval(").append(exp.getCodigoGenerado()).append(");");
             }
         }
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(StcBloque s) {
@@ -106,7 +102,7 @@ public class GenSentencia {
     }
 
     public void visitar(StcComentario s) {
-        tabla.getBloqueActual().getCodigo().add(new SentenciaJava(s.getComentario().toString()));
+        s.setCodigoGenerado(new StringBuilder(s.getComentario().getCodigoGenerado()));
     }
 
     public void visitar(StcDeclaracion s) {

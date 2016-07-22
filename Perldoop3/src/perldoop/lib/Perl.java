@@ -11,57 +11,9 @@ import perldoop.lib.box.*;
  *
  * @author César Pomar
  */
-public class Perl {
+public final class Perl {
 
-    /**
-     * Crea un box de booleans
-     *
-     * @param b Boolean
-     * @return Box
-     */
-    public static Box box(Boolean b) {
-        return new BooleanBox(b);
-    }
 
-    /**
-     * Crea un box de numeros
-     *
-     * @param n Numero
-     * @return Box
-     */
-    public static Box box(Number n) {
-        return new NumberBox(n);
-    }
-
-    /**
-     * Crea un box de cadenas
-     *
-     * @param s String
-     * @return Box
-     */
-    public static Box box(String s) {
-        return new StringBox(s);
-    }
-
-    /**
-     * Crea un box de referencias
-     *
-     * @param ref Referencia
-     * @return Box
-     */
-    public static Box box(Ref ref) {
-        return new RefBox(ref);
-    }
-
-    /**
-     * Crea un box de ficheros
-     *
-     * @param file Referencia
-     * @return Box
-     */
-    public static Box box(PerlFile file) {
-        return new FileBox(file);
-    }
 
     public static <T> T[] access(T[] array, Number... indexs) {
         T[] res = (T[]) Array.newInstance(array.getClass().getComponentType(), indexs.length);
@@ -145,9 +97,11 @@ public class Perl {
     public static <T> PerlList<T> list(T[] array) {
         return new PerlList<>(array);
     }
-    
-    public static void eval(Object exp){
+
+    public static void eval(Object exp) {
         //No tiene que hacer nada
     }
+    
+
 
 }

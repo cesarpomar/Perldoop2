@@ -15,20 +15,19 @@ public final class ClaseJava {
     private List<String> paquetes;
     private Set<String> imports;
     private String nombre;
-    private List<String> implementar;
-    private String heredar;
+    private String clasePadre;
+    private List<String> interfaces;
     private List<String> atributos;
-    private BloqueJava codigo;
+    private List<StringBuilder> funciones;
 
     /**
      * Contructor único
      */
     public ClaseJava() {
-        paquetes = new ArrayList<>(5);
         imports = new HashSet<>(10);
-        implementar = new ArrayList<>(5);
+        interfaces = new ArrayList<>(5);
         atributos = new ArrayList<>(20);
-        codigo = new BloqueJava("{", "}");
+        funciones = new ArrayList<>(20);
     }
 
     /**
@@ -45,7 +44,7 @@ public final class ClaseJava {
      *
      * @param paquetes Paquetes
      */
-    public void setPaquetes(List<String> paquetes) {
+    public void setPaquete(List<String> paquetes) {
         this.paquetes = paquetes;
     }
 
@@ -86,39 +85,39 @@ public final class ClaseJava {
     }
 
     /**
-     * Obtiene las interfaces a implementar
+     * Obtiene las interfaces a interfaces
      *
-     * @return Interfaces a implementar
+     * @return Interfaces a interfaces
      */
-    public List<String> getImplementar() {
-        return implementar;
+    public List<String> getInterfaces() {
+        return interfaces;
     }
 
     /**
-     * Establece las interfaces a implementar
+     * Establece las interfaces a interfaces
      *
-     * @param implementar Interfaces a implementar
+     * @param interfaces Interfaces a interfaces
      */
-    public void setImplementar(List<String> implementar) {
-        this.implementar = implementar;
+    public void setInterfaces(List<String> interfaces) {
+        this.interfaces = interfaces;
     }
 
     /**
-     * Obtiene las clase a heredar
+     * Obtiene las clase a clasePadre
      *
-     * @return Clase a heredar
+     * @return Clase a clasePadre
      */
-    public String getHeredar() {
-        return heredar;
+    public String getClasePadre() {
+        return clasePadre;
     }
 
     /**
-     * Establece la clase a heredar
+     * Establece la clase a clasePadre
      *
-     * @param heredar Clase a heredar
+     * @param clasePadre Clase a clasePadre
      */
-    public void setHeredar(String heredar) {
-        this.heredar = heredar;
+    public void setClasePadre(String clasePadre) {
+        this.clasePadre = clasePadre;
     }
 
     /**
@@ -140,21 +139,21 @@ public final class ClaseJava {
     }
 
     /**
-     * Obtiene el código de la clase
+     * Obtiene las funciones
      *
-     * @return Código de la clase
+     * @return Funciones
      */
-    public BloqueJava getCodigo() {
-        return codigo;
+    public List<StringBuilder> getFunciones() {
+        return funciones;
     }
 
     /**
-     * Establece el código de la clase
+     * Establece las funciones
      *
-     * @param codigo Código de la clase
+     * @param funciones Funciones
      */
-    public void setCodigo(BloqueJava codigo) {
-        this.codigo = codigo;
+    public void setFunciones(List<StringBuilder> funciones) {
+        this.funciones = funciones;
     }
 
 }

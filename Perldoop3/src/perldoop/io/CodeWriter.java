@@ -1,31 +1,26 @@
 package perldoop.io;
 
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 import java.io.BufferedWriter;
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import perldoop.modelo.generacion.BloqueJava;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import perldoop.modelo.generacion.ClaseJava;
-import perldoop.modelo.generacion.CodigoJava;
-import perldoop.modelo.generacion.SentenciaJava;
 
 /**
  * Clase para la impresion de las traducciones
  *
  * @author César Pomar
  */
-public class CodeWriter implements Closeable {
+public class CodeWriter {
 
     private File directorio;
-    private FileWriter escritura;
-    private BufferedWriter buffer;
-    private PrintWriter printer;
-    private ClaseJava java;
 
     /**
      * Crea un directorio para escribir el codigo fuente
@@ -40,107 +35,100 @@ public class CodeWriter implements Closeable {
      * Escribe la clase java en el directorio
      *
      * @param java Clase java
-     * @param fichero Nombre del fichero
      * @throws IOException Error de escritura
      */
-    public void escribir(ClaseJava java, String fichero) throws IOException {
-        escritura = new FileWriter(fichero);
-        buffer = new BufferedWriter(escritura);
-        printer = new PrintWriter(buffer);
-        this.java = java;
-        paquetes();
-        imports();
-        clase();
-        interfaces();
-        clasepadre();
-        bloques();
-        printer.close();
-        escritura.close();
+    public void escribir(ClaseJava java) throws IOException {
+        escribir(java, true);
     }
 
-    private void paquetes() throws IOException {
-        if (java.getPaquetes().isEmpty()) {
-            printer.println();
-            return;
+    /**
+     * Escribe la clase java en el directorio
+     *
+     * @param java Clase java
+     * @param formatear Aplicar el formato
+     * @throws IOException Error de escritura
+     */
+    public void escribir(ClaseJava java, boolean formatear) throws IOException {
+        StringBuilder repr = new StringBuilder(10000);
+        //Paquete
+        if (!java.getInterfaces().isEmpty()) {
+            repr.append("package ");
+            appendList(repr, java.getPaquetes(), ".");
+            repr.append("; ");
         }
-        Iterator<String> it = java.getPaquetes().iterator();
-        printer.append("package ").append(it.next());
-        while (it.hasNext()) {
-            printer.append(".").append(it.next());
+        //Imports
+        appendList(repr, java.getImports());
+        //Clase
+        repr.append("public ").append(java.getNombre()).append(" ");
+        //Clase Padre
+        if (java.getClasePadre() != null) {
+            repr.append("extends ").append(java.getClasePadre()).append(" ");
         }
-        printer.append(";");
-        printer.println();
-    }
-
-    private void imports() throws IOException {
-        for (String i : java.getImports()) {
-            printer.append("import ").append(i).append(";").println();
+        //Interfaces
+        if (!java.getInterfaces().isEmpty()) {
+            repr.append("implements ");
+            appendList(repr, java.getInterfaces(), ",");
+            repr.append(" ");
         }
-        printer.println();
-    }
-
-    private void clase() throws IOException {
-        printer.append("/*").println();
-        printer.append(" * Generación de prueba").println();
-        printer.append(" */").println();
-        printer.append("public class ").append(java.getNombre()).append(" ");
-    }
-
-    private void interfaces() throws IOException {
-        if (java.getImplementar().isEmpty()) {
-            return;
-        }
-        Iterator<String> it = java.getImplementar().iterator();
-        printer.append("implements ").append(it.next()).append(" ");
-        while (it.hasNext()) {
-            printer.append(", ").append(it.next()).append(" ");
-        }
-
-    }
-
-    private void clasepadre() throws IOException {
-        if (java.getHeredar() == null) {
-            return;
-        }
-        printer.append("extends ").append(java.getHeredar()).append(" ");
-    }
-
-    private void bloques() throws IOException {
-        StringBuilder ident = new StringBuilder("\t");
-        List<BloqueJava> pilaB = new ArrayList<>(20);
-        List<Iterator<CodigoJava>> pilaI = new ArrayList<>(20);
-        pilaB.add(java.getCodigo());
-        printer.append(java.getCodigo().getCabecera()).println();
-        pilaI.add(java.getCodigo().getCodigo().iterator());
+        //Inicio clase
+        repr.append("{");
         //Atributos
-        for (String a : java.getAtributos()) {
-            printer.append(ident).append(a).println();
-        }
-        while (!pilaB.isEmpty()) {
-            Iterator<CodigoJava> itc = pilaI.get(pilaI.size() - 1);
-            if (!itc.hasNext()) {
-                pilaI.remove(pilaI.size() - 1);
-                ident.deleteCharAt(ident.length() - 1);
-                printer.append(ident).append(pilaB.remove(pilaB.size() - 1).getPie()).println();
-                continue;
+        appendList(repr, java.getAtributos());
+        //Funciones
+        appendList(repr, java.getFunciones());
+        //Fin clase
+        repr.append("}");
+        //Formatemos
+        if (formatear) {
+            try {
+                escribir(new Formatter().formatSource(repr.toString()), java.getNombre(), java.getPaquetes());
+                return;
+            } catch (FormatterException ex) {
+                Logger.getLogger(CodeWriter.class.getName()).log(Level.SEVERE, null, ex);
             }
-            CodigoJava c = itc.next();
-            if (c instanceof SentenciaJava) {
-                printer.append(ident).append(c.toString()).println();
-            } else {
-                BloqueJava b = (BloqueJava) c;
-                pilaB.add(b);
-                pilaI.add(b.getCodigo().iterator());
-                printer.append(ident).append(b.getCabecera()).println();
-                ident.append("\t");
+        }
+        escribir(repr.toString(), java.getNombre(), java.getPaquetes());
+    }
+
+    private void escribir(String codigo, String fichero, List<String> paquetes) throws IOException {
+        File ruta = directorio;
+        for (String p : paquetes) {
+            ruta = new File(ruta, p);
+        }
+        ruta.mkdirs();
+        try (FileWriter escritura = new FileWriter(new File(ruta, fichero + ".java"));
+                BufferedWriter buffer = new BufferedWriter(escritura);) {
+            buffer.append(codigo);
+        }
+    }
+
+    /**
+     * Inserta una colección en una cadena
+     *
+     * @param <T> Tipo de la colección
+     * @param sb Cadenas
+     * @param col Colección de cadenas
+     * @param separador Separador
+     */
+    public <T> void appendList(StringBuilder sb, Collection<T> col, String separador) {
+        Iterator<T> it = col.iterator();
+        while (it.hasNext()) {
+            sb.append(it.next());
+            if (it.hasNext()) {
+                sb.append(separador);
             }
         }
     }
 
-    @Override
-    public void close() throws IOException {
-        buffer.close();
-        escritura.close();
+    /**
+     * Inserta una colección en una cadena
+     *
+     * @param <T> Tipo de la colección
+     * @param sb Cadenas
+     * @param col Colección de cadenas
+     */
+    public <T> void appendList(StringBuilder sb, Collection<T> col) {
+        appendList(sb, col, "");
     }
 
 }
