@@ -24,6 +24,7 @@ public final class ClaseJava {
      * Contructor único
      */
     public ClaseJava() {
+        paquetes = new ArrayList<>(5);
         imports = new HashSet<>(10);
         interfaces = new ArrayList<>(5);
         atributos = new ArrayList<>(20);

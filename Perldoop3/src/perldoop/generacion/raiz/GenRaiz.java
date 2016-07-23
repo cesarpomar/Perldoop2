@@ -32,6 +32,6 @@ public class GenRaiz {
             tabla.getClase().setNombre(nombre);
         }
         //Import libreria
-        tabla.getClase().getImports().add("perldoop.lib.*");
+        tabla.getClase().getImports().add("import perldoop.lib.*;");
     }
 }

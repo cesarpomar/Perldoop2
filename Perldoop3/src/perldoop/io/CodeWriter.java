@@ -59,7 +59,7 @@ public class CodeWriter {
         //Imports
         appendList(repr, java.getImports());
         //Clase
-        repr.append("public ").append(java.getNombre()).append(" ");
+        repr.append("public class ").append(java.getNombre()).append(" ");
         //Clase Padre
         if (java.getClasePadre() != null) {
             repr.append("extends ").append(java.getClasePadre()).append(" ");
