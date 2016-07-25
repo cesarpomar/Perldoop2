@@ -119,6 +119,8 @@ public final class Tipos {
                 return "PerlFile";
             case Tipo.BOX:
                 return "Box";
+            case Tipo.NUMBER:
+                return "Number";
         }
         return null;
     }

@@ -32,6 +32,15 @@ public class CodeWriter {
     }
 
     /**
+     * Crea un directorio para escribir el codigo fuente
+     *
+     * @param directorio Directorio de salida
+     */
+    public CodeWriter(File directorio) {
+        this.directorio = directorio;
+    }
+
+    /**
      * Escribe la clase java en el directorio
      *
      * @param java Clase java

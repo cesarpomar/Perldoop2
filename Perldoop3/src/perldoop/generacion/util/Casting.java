@@ -1,6 +1,5 @@
 package perldoop.generacion.util;
 
-import perldoop.error.GestorErrores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.semantica.Tipo;
 
@@ -65,6 +64,8 @@ public final class Casting {
                 return cst.append(s.getCodigoGenerado()).append(" != null");
             case Tipo.BOX:
                 return cst.append(s.getCodigoGenerado()).append(".booleanValue()");
+            case Tipo.NUMBER:
+                return cst.append(s.getCodigoGenerado()).append(".intValue() != 0");
         }
         return null;
     }
@@ -114,6 +115,8 @@ public final class Casting {
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1 : 0");
             case Tipo.BOX:
                 return cst.append(s.getCodigoGenerado()).append(".intvalue()");
+            case Tipo.NUMBER:
+                return cst.append(s.getCodigoGenerado()).append(".intValue()");
         }
         return null;
     }
@@ -151,6 +154,9 @@ public final class Casting {
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1l : 0l");
             case Tipo.BOX:
                 return cst.append(s.getCodigoGenerado()).append(".longValue()");
+            case Tipo.NUMBER:
+                return cst.append(s.getCodigoGenerado()).append(".longValue()");
+
         }
         return null;
     }
@@ -192,6 +198,8 @@ public final class Casting {
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1f : 0f");
             case Tipo.BOX:
                 return cst.append(s.getCodigoGenerado()).append(".floatValue()");
+            case Tipo.NUMBER:
+                return cst.append(s.getCodigoGenerado()).append(".floatValue()");
         }
         return null;
     }
@@ -228,6 +236,8 @@ public final class Casting {
             case Tipo.FILE:
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1d : 0d");
             case Tipo.BOX:
+                return cst.append(s.getCodigoGenerado()).append(".doubleValue()");
+            case Tipo.NUMBER:
                 return cst.append(s.getCodigoGenerado()).append(".doubleValue()");
         }
         return null;
@@ -266,6 +276,8 @@ public final class Casting {
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? \"1\" : \"0\"");
             case Tipo.BOX:
                 return cst.append(s.getCodigoGenerado()).append(".toString()");
+            case Tipo.NUMBER:
+                return cst.append(s.getCodigoGenerado()).append(".toString()");
         }
         return null;
     }
@@ -303,6 +315,8 @@ public final class Casting {
                 return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.BOX:
                 return cst.append(s.getCodigoGenerado());
+            case Tipo.NUMBER:
+                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
         }
         return null;
     }
@@ -325,11 +339,12 @@ public final class Casting {
             case Tipo.REF:
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null) ? 1d : 0d");
             case Tipo.BOOLEAN:
-                return cst.append("(Perl.toBoolean(").append(s.getCodigoGenerado()).append(")) ? 1d : 0d");
+                return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(") ? 1d : 0d");
             case Tipo.INTEGER:
             case Tipo.LONG:
             case Tipo.FLOAT:
             case Tipo.DOUBLE:
+            case Tipo.NUMBER:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.STRING:
                 return cst.append("Double.parse(").append(s.getCodigoGenerado()).append(")");
@@ -358,7 +373,14 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toFile(Simbolo s) {
-        return null;//return new StringBuilder(origen.getCodigoGenerado()).append("fileValue()");
+        StringBuilder cst = new StringBuilder(50);
+        switch (s.getTipo().getTipo().get(0)) {
+            case Tipo.FILE:
+                return cst.append(s.getCodigoGenerado());
+            case Tipo.BOX:
+                return cst.append(s.getCodigoGenerado()).append(".fileValue()");
+        }
+        return null;
     }
 
     /**
@@ -368,7 +390,14 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toCol(Simbolo s) {
-        return null;//return new StringBuilder(origen.getCodigoGenerado()).append("fileValue()");
+        StringBuilder cst = new StringBuilder(200);
+        cst.append("Pd.cast(new Casting() {");
+        cst.append("@Override");
+        cst.append("public <T> T casting() {");
+        
+        
+        cst.append("}})");
+        return cst;
     }
 
     /**

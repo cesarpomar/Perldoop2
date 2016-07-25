@@ -28,7 +28,8 @@ import perldoop.generacion.rango.GenRango;
 import perldoop.generacion.regulares.*;
 import perldoop.generacion.sentencia.*;
 import perldoop.generacion.variable.*;
-import perldoop.generacion.varmulti.GenVarMulti;
+import perldoop.generacion.varmulti.*;
+import perldoop.generacion.terminal.*;
 
 /**
  * Fachada de los generadores
@@ -68,6 +69,7 @@ public final class FachadaGeneradores {
     private GenSentencia genSentencia;
     private GenVariable genVariable;
     private GenVarMulti genVarMulti;
+    private GenTerminal genTerminal;
 
     /**
      * Constructor de la fachada
@@ -651,6 +653,9 @@ public final class FachadaGeneradores {
      * @return Generador de variables multiples
      */
     public GenVarMulti getGenVarMulti() {
+        if (genVarMulti == null) {
+            genVarMulti = new GenVarMulti(tabla);
+        }
         return genVarMulti;
     }
 
@@ -661,6 +666,27 @@ public final class FachadaGeneradores {
      */
     public void setGenVarMulti(GenVarMulti genVarMulti) {
         this.genVarMulti = genVarMulti;
+    }
+
+    /**
+     * Obtiene el generador de terminales
+     *
+     * @return Generador de terminales
+     */
+    public GenTerminal getGenTerminal() {
+        if(genTerminal==null){
+            genTerminal = new GenTerminal(tabla);
+        }
+        return genTerminal;
+    }
+
+    /**
+     * Establece el generador de terminales
+     *
+     * @param genTerminal Generador de terminales
+     */
+    public void setGenTerminal(GenTerminal genTerminal) {
+        this.genTerminal = genTerminal;
     }
 
 }

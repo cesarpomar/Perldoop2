@@ -14,7 +14,7 @@ import java.io.Reader;
  */
 public class CodeReader extends Reader {
 
-    private File fichero;
+    private File ruta;
     private FileReader lectura;
     private BufferedReader buffer;
     private StringBuilder codigo;
@@ -26,10 +26,20 @@ public class CodeReader extends Reader {
      * @throws FileNotFoundException Fichero no existe
      */
     public CodeReader(String ruta) throws FileNotFoundException {
-        fichero = new File(ruta);
-        lectura = new FileReader(fichero);
+        this(new File(ruta));
+    }
+
+    /**
+     * Abre un fichero de codigo fuente
+     *
+     * @param ruta Ruta del fichero
+     * @throws FileNotFoundException Fichero no existe
+     */
+    public CodeReader(File ruta) throws FileNotFoundException {
+        this.ruta = ruta;
+        lectura = new FileReader(ruta);
         buffer = new BufferedReader(lectura);
-        codigo = new StringBuilder((int) fichero.length());
+        codigo = new StringBuilder((int) ruta.length());
     }
 
     @Override
@@ -60,8 +70,8 @@ public class CodeReader extends Reader {
      *
      * @return Fichero
      */
-    public File getFichero() {
-        return fichero;
+    public File getRuta() {
+        return ruta;
     }
 
 }

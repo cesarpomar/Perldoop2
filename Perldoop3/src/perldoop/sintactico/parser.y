@@ -410,7 +410,7 @@ bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(
 	private int yylex (){
 		if(iterator.hasNext()){
 			Token token = iterator.next();
-			yylval = new ParserVal(new Terminal(token));
+			yylval = set(new Terminal(token));
 			return token.getTipo();
 		}
 		return 0;

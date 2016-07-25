@@ -10,17 +10,22 @@ public class Errores extends Internacionalizacion {
     //Tipos
     public static final String ERROR = "ERROR";
     public static final String AVISO = "AVISO";
+    //Consola
+    public static final String FICHERO_NO_EXISTE = "FICHERO_NO_EXISTE";
+    public static final String ERROR_LECTURA = "ERROR_LECTURA";
+    public static final String ERROR_ESCRITURA = "ERROR_ESCRITURA";
     //Lexicos
     public static final String CARACTER_INVALIDO = "CARACTER_INVALIDO";
     public static final String FALLOS_LEXICOS = "FALLOS_LEXICOS";
     public static final String ETIQUETA_IGNORADA = "ETIQUETA_IGNORADA";
     //Preprocesador
+    public static final String FALLOS_PREPROCESADOR = "FALLOS_PREPROCESADOR";
     public static final String ETIQUETA_NO_USADA = "ETIQUETA_NO_USADA";
     public static final String FALLOS_SINTACTICOS = "FALLOS_SINTACTICOS";
     //Sintacticos
     public static final String ERROR_SINTACTICO = "ERROR_SINTACTICO";
-    public static final String FALLOS_SEMANTICO = "FALLOS_SEMANTICO";
     //Semanticos
+    public static final String FALLOS_SEMANTICO = "FALLOS_SEMANTICO";
     public static final String MODIFICAR_CONSTANTE = "MODIFICAR_CONSTANTE";
     public static final String MODIFICAR_DEFERENCIACION = "MODIFICAR_DEFERENCIACION";
     public static final String OUR_SIN_PAQUETE = "OUR_SIN_PAQUETE";

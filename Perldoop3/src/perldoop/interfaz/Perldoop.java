@@ -1,14 +1,14 @@
 package perldoop.interfaz;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import perldoop.depurador.Depurador;
 import perldoop.error.GestorErrores;
 import perldoop.generacion.Generador;
+import perldoop.internacionalizacion.Errores;
 import perldoop.io.CodeReader;
 import perldoop.io.CodeWriter;
 import perldoop.lexico.Lexer;
@@ -23,68 +23,77 @@ import perldoop.traductor.Traductor;
 import perldoop.sintactico.Parser;
 
 /**
+ * Clase para gestionar el funcionamiento de la herramienta
  *
- * @author César
+ * @author César Pomar
  */
-public class Perldoop {
+public final class Perldoop {
 
     /**
-     * @param args the command line arguments
+     * Punto de inicio de la aplicacion
+     *
+     * @param args Argumentos de ejecución
      */
     public static void main(String[] args) {
-        Consola c = new Consola(args);
-        c.parse();
-        String fichero = "D:\\test.pl";
-        Map<String, Paquete> paquetes = new HashMap<>();
-        Opciones opciones = new Opciones();
-        //Gestor de Errores
         GestorErrores gestorErrores;
-        //Lexico
-        List<Token> tokens;
-        try (CodeReader cr = new CodeReader(fichero)) {
-            gestorErrores = new GestorErrores(fichero, cr.getCodigo());
-            Lexer lex = new Lexer(cr, opciones, gestorErrores);
-            tokens = lex.getTokens();
-            lex.yyclose();
-            if (lex.getErrores() > 0) {
-                System.err.println("Analisi lexico fallido, errores: " + lex.getErrores());
-                return;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Perldoop.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        //Preprocesador
-        Preprocesador prep = new Preprocesador(tokens, opciones, gestorErrores);
-        prep.procesar();
-        if (prep.getErrores() > 0) {
-            System.err.println("Procesado de etiquetas fallido, errores: " + prep.getErrores());
-            return;
-        }
-        //Sintactico
-        Parser parser = new Parser(tokens, opciones, gestorErrores);
-        List<Simbolo> simbolos = parser.parsear();
-        if (parser.getErrores() > 0) {
-            System.err.println("Analisis sintactico fallido, errores: " + parser.getErrores());
-            return;
-        }
-        //Depurador.simbolos(simbolos.get(simbolos.size()-1));
-        //Semantico
-        TablaSimbolos ts = new TablaSimbolos(paquetes);
-        Semantica sem = new Semantica(ts, opciones, gestorErrores);
-        Generador gen = new Generador(ts, opciones, gestorErrores);
+        Opciones opciones;
+        CodeWriter writer;
+        Consola consola = new Consola(args);
+        Map<String, Paquete> paquetes = new HashMap<>();
+        consola.parse();
+        opciones = consola.getOpciones();
+        writer = new CodeWriter(opciones.getDirectorioSalida());
+        for (String ruta : consola.getFicheros()) {
+            gestorErrores = new GestorErrores(ruta);
+            File fichero = new File(ruta);
+            //Lexico
+            List<Token> tokens;
+            try (CodeReader codeReader = new CodeReader(fichero)) {
+                gestorErrores.setCodigo(codeReader.getCodigo());
+                Lexer lexer = new Lexer(codeReader, opciones, gestorErrores);
+                tokens = lexer.getTokens();
+                if (lexer.getErrores() > 0) {
+                    gestorErrores.error(Errores.FALLOS_LEXICOS, lexer.getErrores());
+                    continue;
+                }
+            } catch (FileNotFoundException ex) {
+                gestorErrores.error(Errores.FICHERO_NO_EXISTE);
+                continue;
 
-        Traductor trad = new Traductor(simbolos, sem, gen, opciones);
-        if (trad.traducir() > 0) {
-            System.err.println("Analisis semantico fallido, errores: " + trad.getErrores());
-            return;
-        }
-        CodeWriter cw = new CodeWriter("D:\\");
-        try {
-            cw.escribir(gen.getClase());
-        } catch (IOException ex) {
-            Logger.getLogger(Perldoop.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                gestorErrores.error(Errores.ERROR_LECTURA);
+                continue;
+            }
+            //Preprocesador
+            Preprocesador preprocesador = new Preprocesador(tokens, opciones, gestorErrores);
+            tokens = preprocesador.procesar();
+            if (preprocesador.getErrores() > 0) {
+                gestorErrores.error(Errores.FALLOS_PREPROCESADOR, preprocesador.getErrores());
+                continue;
+            }
+            //Sintactico
+            List<Simbolo> simbolos;
+            Parser parser = new Parser(tokens, opciones, gestorErrores);
+            simbolos = parser.parsear();
+            if (parser.getErrores() > 0) {
+                gestorErrores.error(Errores.FALLOS_SINTACTICOS, parser.getErrores());
+                continue;
+            }
+            //Traductor
+            TablaSimbolos tablaSimbolos = new TablaSimbolos(paquetes);
+            Semantica semantica = new Semantica(tablaSimbolos, opciones, gestorErrores);
+            Generador generador = new Generador(tablaSimbolos, opciones, gestorErrores);
+            Traductor traductor = new Traductor(simbolos, semantica, generador, opciones);        
+            if (traductor.traducir() > 0) {
+                gestorErrores.error(Errores.FALLOS_SEMANTICO, traductor.getErrores());
+                continue;
+            }
+            //Escritura
+            try {
+                writer.escribir(generador.getClase(), opciones.isFormatearCodigo());
+            } catch (IOException ex) {
+                gestorErrores.error(Errores.ERROR_ESCRITURA);
+            }
         }
     }
-
 }

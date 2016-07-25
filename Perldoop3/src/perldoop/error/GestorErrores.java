@@ -19,12 +19,19 @@ public class GestorErrores {
      * Crear el gestor de errores
      *
      * @param fichero Nombre del fichero del codigo fuente
+     */
+    public GestorErrores(String fichero) {
+        this.fichero = fichero;
+        errores = new Errores();
+    }
+
+    /**
+     * Establece el código fuente en analisis
+     *
      * @param codigo Código fuente en analisis
      */
-    public GestorErrores(String fichero, StringBuilder codigo) {
-        this.fichero = fichero;
+    public void setCodigo(StringBuilder codigo) {
         this.codigo = codigo;
-        errores = new Errores();
     }
 
     /**
@@ -60,6 +67,16 @@ public class GestorErrores {
      */
     public void error(String codigo, Token t, List<String> tokensEsperados) {
         error(codigo, t, t.getValor(), tokensEsperados.toString());
+    }
+
+    /**
+     * Imprime un error de consola
+     *
+     * @param codigo Identificador del error
+     * @param args Valores para el mensaje de error
+     */
+    public void error(String codigo, Object... args) {
+        System.err.println(fichero + ":" + errores.get(codigo, args));
     }
 
     /**

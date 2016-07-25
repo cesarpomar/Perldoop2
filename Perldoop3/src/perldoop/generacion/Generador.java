@@ -1,8 +1,5 @@
 package perldoop.generacion;
 
-import perldoop.modelo.arbol.varmulti.VarMultiOur;
-import perldoop.modelo.arbol.varmulti.VarMultiMy;
-import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
@@ -847,8 +844,7 @@ public class Generador implements Visitante {
 
     @Override
     public void visitar(Terminal s) {
-        //No merece la pena delegar por una copia
-        s.setCodigoGenerado(new StringBuilder(s.getToken().getValor()));
+        fachada.getGenTerminal().visitar(s);
     }
 
 }

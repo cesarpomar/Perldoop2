@@ -178,4 +178,10 @@ public class Token {
         this.etiqueta = etiqueta;
     }
 
+    @Override
+    public String toString() {
+        return valor;
+    }
+
+    
 }
