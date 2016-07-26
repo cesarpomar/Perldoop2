@@ -45,10 +45,5 @@ public final class Terminal extends Simbolo {
     public Simbolo[] getHijos() {
         return new Simbolo[]{};
     }
-
-    @Override
-    public String toString() {
-        return token.getValor();
-    }
     
 }

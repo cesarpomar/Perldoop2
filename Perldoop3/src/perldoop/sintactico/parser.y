@@ -89,7 +89,7 @@ funcionDef	:	funcionSub '{' cuerpo '}'				{$$=set(new FuncionDef(s($1), s($2), s
 
 funcionSub	:	SUB ID									{$$=set(new FuncionSub(s($1), s($2)));}
 
-cuerpo		:											{$$=set(new Cuerpo());}
+cuerpo		:											{$$=set(new Cuerpo(),false);}
 			|	cuerpo sentencia						{$$=set(Cuerpo.add(s($1), s($2)));}
 
 sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)));}

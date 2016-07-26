@@ -288,8 +288,8 @@ PD_NUM			=	<{ENTERO}>
 	{PD_VAR}			{return token(yytext(), Parser.PD_VAR, true);}
 	[^\n\r]				{buffer.append(yytext());}
 	"\r"				{}
-	"\n"				{yybegin(YYINITIAL);String txt = buffer.toString();
-						if(!txt.trim().isEmpty()){yyval=comentario;return comentario.getTipo();}}
+	"\n"				{yybegin(YYINITIAL);comentario.setValor(buffer.toString());
+						if(!comentario.getValor().trim().isEmpty()){yyval=comentario;return comentario.getTipo();}}
 }
 
 <YYINITIAL>{

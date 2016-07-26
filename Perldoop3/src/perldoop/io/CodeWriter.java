@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import perldoop.modelo.Opciones;
 import perldoop.modelo.generacion.ClaseJava;
 
 /**
@@ -21,23 +22,16 @@ import perldoop.modelo.generacion.ClaseJava;
 public class CodeWriter {
 
     private File directorio;
+    private Opciones opciones;
 
     /**
      * Crea un directorio para escribir el codigo fuente
      *
-     * @param directorio Directorio de salida
+     * @param opciones Opciones
      */
-    public CodeWriter(String directorio) {
-        this.directorio = new File(directorio);
-    }
-
-    /**
-     * Crea un directorio para escribir el codigo fuente
-     *
-     * @param directorio Directorio de salida
-     */
-    public CodeWriter(File directorio) {
-        this.directorio = directorio;
+    public CodeWriter(Opciones opciones) {
+        this.opciones = opciones;
+        this.directorio = opciones.getDirectorioSalida();
     }
 
     /**
@@ -47,17 +41,6 @@ public class CodeWriter {
      * @throws IOException Error de escritura
      */
     public void escribir(ClaseJava java) throws IOException {
-        escribir(java, true);
-    }
-
-    /**
-     * Escribe la clase java en el directorio
-     *
-     * @param java Clase java
-     * @param formatear Aplicar el formato
-     * @throws IOException Error de escritura
-     */
-    public void escribir(ClaseJava java, boolean formatear) throws IOException {
         StringBuilder repr = new StringBuilder(10000);
         //Paquete
         if (!java.getInterfaces().isEmpty()) {
@@ -85,10 +68,16 @@ public class CodeWriter {
         appendList(repr, java.getAtributos());
         //Funciones
         appendList(repr, java.getFunciones());
+        //Codigo global
+        if (!java.getCodigoGlobal().isEmpty()) {
+            repr.append("private static global(){");
+            appendList(repr, java.getCodigoGlobal());
+            repr.append("}");
+        }
         //Fin clase
         repr.append("}");
         //Formatemos
-        if (formatear) {
+        if (opciones.isFormatearCodigo()) {
             try {
                 escribir(new Formatter().formatSource(repr.toString()), java.getNombre(), java.getPaquetes());
                 return;

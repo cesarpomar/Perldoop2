@@ -7,6 +7,7 @@ import perldoop.modelo.arbol.flujo.Return;
 
 /**
  * Clase generadora de flujo
+ *
  * @author César Pomar
  */
 public class GenFlujo {
@@ -16,7 +17,7 @@ public class GenFlujo {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenFlujo(TablaGenerador tabla) {
         this.tabla = tabla;

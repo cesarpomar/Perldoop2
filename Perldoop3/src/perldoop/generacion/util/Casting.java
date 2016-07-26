@@ -1,6 +1,9 @@
 package perldoop.generacion.util;
 
+import java.util.Iterator;
+import java.util.Map;
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.semantica.Tipo;
 
 /**
@@ -363,7 +366,14 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toRef(Simbolo s) {
-        return null;//return new StringBuilder(origen.getCodigoGenerado()).append(".refValue()");
+        StringBuilder cst = new StringBuilder(50);
+        switch (s.getTipo().getTipo().get(0)) {
+            case Tipo.REF:
+                return cst.append(s.getCodigoGenerado());
+            case Tipo.BOX:
+                return cst.append(s.getCodigoGenerado()).append(".refValue()");
+        }
+        return null;
     }
 
     /**
@@ -386,18 +396,87 @@ public final class Casting {
     /**
      * Castea entre colecciones
      *
-     * @param s Simbolo
+     * @param origen Expresion origen
+     * @param destino Tipo destino
      * @return Casting
      */
-    public static StringBuilder toCol(Simbolo s) {
+    public static StringBuilder toCol(Simbolo origen, Tipo destino) {
         StringBuilder cst = new StringBuilder(200);
         cst.append("Pd.cast(new Casting() {");
         cst.append("@Override");
-        cst.append("public <T> T casting() {");
-        
-        
-        cst.append("}})");
+        cst.append("public <T> T casting(Object col) {");
+        String tam;
+        if (origen.getTipo().isArray()) {
+            tam = "col.length";
+        } else {
+            tam = "col.size()";
+        }
+        if (!destino.isArray()) {
+            tam += "*3";
+        }
+        cst.append(Tipos.declaracion(destino)).append(" ").append(" col2=").append(Tipos.inicializacion(destino, tam));
+        if (origen.getTipo().isMap()) {
+            fromMap(cst, origen.getTipo(), destino);
+        } else {
+            fromArrayList(cst, origen.getTipo(), destino);
+        }
+        cst.append("return (T)col2;");
+        cst.append("}},").append(origen.getCodigoGenerado()).append(")");
         return cst;
+    }
+
+    /**
+     * Convierte desde un array a lista
+     *
+     * @param cst Codigo para el casting
+     * @param origen Expresion origen
+     * @param destino Tipo destino
+     */
+    private static void fromArrayList(StringBuilder cst, Tipo origen, Tipo destino) {
+        String lectura;
+        String tam;
+        StringBuilder tipo = Tipos.declaracion(destino);
+        cst.append(tipo).append(" col =").append("(").append(tipo).append(")").append("arg;");
+        if (origen.isArray()) {
+            lectura = "col[i]";
+            tam = "col.length";
+        } else {
+            lectura = "col.get(i)";
+            tam = "col.size()";
+        }
+        if (destino.isMap()) {
+            cst.append("String key = null;");
+            cst.append("Boolean value = false;");
+        }
+        cst.append("for(int i=0;i<").append(tam).append(";i++){");
+        Terminal t = new Terminal(null);
+        t.setCodigoGenerado(new StringBuilder(lectura));
+        t.setTipo(origen.getSubtipo(1));
+        if (destino.isArray()) {
+            cst.append("col[i]=").append(casting(t, destino.getSubtipo(1)));
+        } else if (destino.isList()) {
+            cst.append("col.add(").append(casting(t, destino.getSubtipo(1))).append(")");
+        } else {
+            cst.append("if(value){");
+            cst.append("col.put(key,").append(casting(t, destino.getSubtipo(1))).append(")");
+            cst.append("}else{");
+            cst.append("key = ").append(toString(t));
+            cst.append("}");
+        }
+        cst.append("}");
+
+    }
+
+    /**
+     * Convierte desde un Mapa
+     *
+     * @param cst Codigo para el casting
+     * @param origen Expresion origen
+     * @param destino Tipo destino
+     */
+    private static void fromMap(StringBuilder cst, Tipo origen, Tipo destino) {
+        cst.append("java.uti.Iterator<PerlMap.Entry<String,").append(Tipos.declaracion(destino)).append(">>");
+        cst.append(" ").append("it;");
     }
 
     /**
@@ -431,7 +510,7 @@ public final class Casting {
                 return toRef(origen);
             default:
                 if (!origen.getTipo().equals(destino)) {
-                    return toCol(origen);
+                    return toCol(origen, destino);
                 }
         }
         return new StringBuilder(origen.getCodigoGenerado());

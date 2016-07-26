@@ -19,6 +19,7 @@ public final class ClaseJava {
     private List<String> interfaces;
     private List<String> atributos;
     private List<StringBuilder> funciones;
+    private List<StringBuilder> codigoGlobal;
 
     /**
      * Contructor único
@@ -29,6 +30,7 @@ public final class ClaseJava {
         interfaces = new ArrayList<>(5);
         atributos = new ArrayList<>(20);
         funciones = new ArrayList<>(20);
+        codigoGlobal = new ArrayList<>(20);
     }
 
     /**
@@ -155,6 +157,24 @@ public final class ClaseJava {
      */
     public void setFunciones(List<StringBuilder> funciones) {
         this.funciones = funciones;
+    }
+
+    /**
+     * Obtiene el código global
+     *
+     * @return Código global
+     */
+    public List<StringBuilder> getCodigoGlobal() {
+        return codigoGlobal;
+    }
+
+    /**
+     * Establece el código global
+     *
+     * @param codigoGlobal Código global
+     */
+    public void setCodigoGlobal(List<StringBuilder> codigoGlobal) {
+        this.codigoGlobal = codigoGlobal;
     }
 
 }

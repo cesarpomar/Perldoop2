@@ -3401,7 +3401,7 @@ case 6:
 break;
 case 7:
 //#line 92 "parser.y"
-{yyval=set(new Cuerpo());}
+{yyval=set(new Cuerpo(),false);}
 break;
 case 8:
 //#line 93 "parser.y"

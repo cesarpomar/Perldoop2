@@ -16,6 +16,7 @@ import perldoop.generacion.cuerpo.*;
 import perldoop.generacion.elsif.*;
 import perldoop.generacion.expresion.*;
 import perldoop.generacion.flujo.*;
+import perldoop.generacion.fuente.*;
 import perldoop.generacion.funcion.*;
 import perldoop.generacion.funciondef.*;
 import perldoop.generacion.funcionsub.*;
@@ -56,6 +57,7 @@ public final class FachadaGeneradores {
     private GenElsIf genElsIf;
     private GenExpresion genExpresion;
     private GenFlujo genFlujo;
+    private GenFuente genFuente;
     private GenFuncion genFuncion;
     private GenFuncionDef genFuncionDef;
     private GenFuncionSub genFuncionSub;
@@ -396,6 +398,27 @@ public final class FachadaGeneradores {
     }
 
     /**
+     * Obtiene el generador de fuente
+     *
+     * @return Generador de fuente
+     */
+    public GenFuente getGenFuente() {
+        if (genFuente == null) {
+            genFuente = new GenFuente(tabla);
+        }
+        return genFuente;
+    }
+
+    /**
+     * Establece el generador de fuente
+     *
+     * @param genFuente Generador de fuente
+     */
+    public void setGenFuente(GenFuente genFuente) {
+        this.genFuente = genFuente;
+    }
+
+    /**
      * Obtiene el generador de funcion
      *
      * @return Generador de funcion
@@ -674,7 +697,7 @@ public final class FachadaGeneradores {
      * @return Generador de terminales
      */
     public GenTerminal getGenTerminal() {
-        if(genTerminal==null){
+        if (genTerminal == null) {
             genTerminal = new GenTerminal(tabla);
         }
         return genTerminal;

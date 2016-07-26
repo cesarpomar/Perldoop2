@@ -42,7 +42,7 @@ public final class Perldoop {
         Map<String, Paquete> paquetes = new HashMap<>();
         consola.parse();
         opciones = consola.getOpciones();
-        writer = new CodeWriter(opciones.getDirectorioSalida());
+        writer = new CodeWriter(opciones);
         for (String ruta : consola.getFicheros()) {
             gestorErrores = new GestorErrores(ruta);
             File fichero = new File(ruta);
@@ -90,7 +90,7 @@ public final class Perldoop {
             }
             //Escritura
             try {
-                writer.escribir(generador.getClase(), opciones.isFormatearCodigo());
+                writer.escribir(generador.getClase());
             } catch (IOException ex) {
                 gestorErrores.error(Errores.ERROR_ESCRITURA);
             }

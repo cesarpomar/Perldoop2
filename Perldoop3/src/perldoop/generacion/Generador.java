@@ -127,7 +127,7 @@ public class Generador implements Visitante {
 
     @Override
     public void visitar(Fuente s) {
-        //Sin semantica
+        fachada.getGenFuente().visitar(s);
     }
 
     @Override

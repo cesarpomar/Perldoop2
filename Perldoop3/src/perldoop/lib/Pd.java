@@ -78,9 +78,10 @@ public class Pd {
      *
      * @param <T> Tipo de la colección resultante
      * @param c Case con la implementación del casting
+     * @param col Colección a convertir
      * @return Colección resultante
      */
-    public static <T> T cast(Casting c) {
-        return c.casting();
+    public static <T> T cast(Casting c, Object col) {
+        return c.casting(col);
     }
 }

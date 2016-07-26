@@ -1325,8 +1325,8 @@ public class Lexer {
             }
           case 123: break;
           case 38: 
-            { yybegin(YYINITIAL);String txt = buffer.toString();
-						if(!txt.trim().isEmpty()){yyval=comentario;return comentario.getTipo();}
+            { yybegin(YYINITIAL);comentario.setValor(buffer.toString());
+						if(!comentario.getValor().trim().isEmpty()){yyval=comentario;return comentario.getTipo();}
             }
           case 124: break;
           case 39: 

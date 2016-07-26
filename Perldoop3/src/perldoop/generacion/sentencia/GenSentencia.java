@@ -99,6 +99,8 @@ public class GenSentencia {
         for (Terminal p : s.getPaquetes().getIdentificadores()) {
             tabla.getClase().getPaquetes().add(p.toString());
         }
+        s.setCodigoGenerado(new StringBuilder(0));
+        
     }
 
     public void visitar(StcComentario s) {

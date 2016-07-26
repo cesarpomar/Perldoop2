@@ -42,7 +42,17 @@ public final class GestorReservas {
      * @return Variable auxiliar
      */
     public String getAux() {
-        return getAlias("", false);
+        return getAlias("", true);
+    }
+
+    /**
+     * Obtiene una variable auxiliar
+     *
+     * @param id Nombre de la variable
+     * @return Variable auxiliar
+     */
+    public String getAux(String id) {
+        return getAlias(id, true);
     }
 
     /**

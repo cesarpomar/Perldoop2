@@ -72,5 +72,9 @@ public abstract class Simbolo {
     public final void setCodigoGenerado(StringBuilder codigoGenerado) {
         this.codigoGenerado = codigoGenerado;
     }
-    
+
+    @Override
+    public String toString() {
+        return codigoGenerado.toString();
+    }
 }
