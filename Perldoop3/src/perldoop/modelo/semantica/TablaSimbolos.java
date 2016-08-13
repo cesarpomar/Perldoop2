@@ -31,6 +31,7 @@ public final class TablaSimbolos {
         bloques.add(new HashMap<>(10));//Atributos
         predeclaraciones = new HashMap<>(20);
         funciones = new HashMap<>(20);
+        funcionesNoDeclaradas = new HashMap<>(20);
         this.paquetes = paquetes;
         vacia = true;
     }
@@ -200,13 +201,12 @@ public final class TablaSimbolos {
     /**
      * Crea una entrada para una función que aun no ha sido declarada
      *
-     * @param identifcador Identificador
-     * @param t Token, para error si nunca es definida
+     * @param t Token
      * @return Alias de la función
      */
-    public String addFuncionNoDeclarada(String identifcador, Token t) {
-        funcionesNoDeclaradas.put(identifcador, t);
-        return identifcador;
+    public String addFuncionNoDeclarada(Token t) {
+        funcionesNoDeclaradas.put(t.getValor(), t);
+        return t.getValor();
     }
 
     /**
@@ -244,7 +244,7 @@ public final class TablaSimbolos {
      */
     public void crerPaquete(String nombre) {
         if (paquete == null && isVacia()) {
-            paquete = new Paquete();
+            paquete = new Paquete(funciones);
             paquetes.put(nombre, paquete);
         }
     }

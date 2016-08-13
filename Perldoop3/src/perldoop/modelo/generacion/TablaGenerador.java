@@ -18,6 +18,7 @@ public final class TablaGenerador {
     private Opciones opciones;
     private GestorErrores gestorErrores;
     private ClaseJava clase;
+    private List<StringBuilder> declaraciones;
 
     /**
      * Contruye la tabla del generador
@@ -31,6 +32,7 @@ public final class TablaGenerador {
         this.gestorReservas = new GestorReservas();
         this.opciones = opciones;
         this.gestorErrores = gestorErrores;
+        declaraciones = new ArrayList<>(10);
         clase = new ClaseJava();
     }
 
@@ -113,6 +115,24 @@ public final class TablaGenerador {
      */
     public GestorReservas getGestorReservas() {
         return gestorReservas;
+    }
+
+    /**
+     * Obtiene las declaraciones
+     *
+     * @return Declaraciones
+     */
+    public List<StringBuilder> getDeclaraciones() {
+        return declaraciones;
+    }
+
+    /**
+     * Establece las declaraciones
+     *
+     * @param declaraciones Declaraciones
+     */
+    public void setDeclaraciones(List<StringBuilder> declaraciones) {
+        this.declaraciones = declaraciones;
     }
 
 }

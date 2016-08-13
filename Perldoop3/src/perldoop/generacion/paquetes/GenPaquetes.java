@@ -1,5 +1,6 @@
 package perldoop.generacion.paquetes;
 
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.generacion.TablaGenerador;
 
@@ -22,8 +23,10 @@ public class GenPaquetes {
     }
 
     public void visitar(Paquetes s) {
-        
-        
-        
+        StringBuilder codigo = new StringBuilder(100);
+        for (Terminal t : s.getIdentificadores()) {
+            codigo.append(t.getCodigoGenerado()).append(".");
+        }
+        s.setCodigoGenerado(codigo);
     }
 }

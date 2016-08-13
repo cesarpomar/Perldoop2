@@ -9,12 +9,27 @@ import perldoop.modelo.lexico.Token;
 
 /**
  * Clase para depurar el analisis del traductor
+ *
  * @author César Pomar
  */
 public class Depurador {
 
     public static void tokens(List<Token> tokens) {
+        StringBuilder salida;
+        for (Token t : tokens) {
+            salida = new StringBuilder(60);
+            salida.append(t.getTipo()).append(":");
+            salida.append(t.getLinea()).append(":");
+            salida.append(t.getColumna()).append(":");
+            salida.append(t.getValor());
+            System.out.println(salida);
+        }
+    }
 
+    public static void terminales(List<Terminal> terminales) {
+        for(Terminal t :terminales){
+            imprimir(t, 0);
+        }
     }
 
     public static void simbolos(Simbolo raiz) {

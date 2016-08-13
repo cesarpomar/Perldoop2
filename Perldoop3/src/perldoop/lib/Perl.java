@@ -90,10 +90,6 @@ public final class Perl {
         return mapa;
     }
 
-    public static Integer multiE(Object... eqs) {
-        return eqs.length;
-    }
-
     public static <T> PerlList<T> list(T[] array) {
         return new PerlList<>(array);
     }

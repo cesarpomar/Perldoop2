@@ -1,5 +1,6 @@
 package perldoop.generacion.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import perldoop.modelo.semantica.Tipo;
 
@@ -18,30 +19,44 @@ public final class Tipos {
      * @return Inicializacion
      */
     public static StringBuilder inicializacion(Tipo t, String... tams) {
-        StringBuilder dec = new StringBuilder(100);
+        StringBuilder dec;
         List<Byte> subtipos = t.getTipo();
-        int tam = 0;
-        dec.append("new ");
-        for (int i = 0; i < subtipos.size(); i++) {
-
-            byte st = subtipos.get(i);
-            switch (st) {
-                case Tipo.ARRAY:
-                    dec.append("[").append(get(tams, tam++)).append("]");
-                    break;
-                case Tipo.LIST:
-                    dec.insert(4, "PerlList");
-                    return dec;
-                case Tipo.MAP:
-                    dec.insert(4, "PerlMap");
-                    return dec;
-                case Tipo.REF:
-                    dec.insert(4, "Ref");
-                    return dec;
-                default:
-                    dec.insert(4, repr(st));
-                    return dec;
+        int tam = 0;     
+        if (subtipos.get(0) == Tipo.ARRAY) {
+            dec = new StringBuilder(100);
+            dec.append("new ");
+            for (int i = 0; i < subtipos.size(); i++) {
+                byte st = subtipos.get(i);
+                switch (st) {
+                    case Tipo.ARRAY:
+                        dec.append("[").append(get(tams, tam++)).append("]");
+                        break;
+                    case Tipo.LIST:
+                        dec.insert(4, "PerlList");
+                        return dec;
+                    case Tipo.MAP:
+                        dec.insert(4, "PerlMap");
+                        return dec;
+                    case Tipo.REF:
+                        dec.insert(4, "Ref");
+                        return dec;
+                    default:
+                        dec.insert(4, repr(st));
+                        return dec;
+                }
             }
+        }
+        dec=declaracion(t).insert(0, "new ");
+        switch (t.getTipo().get(0)) {
+            case Tipo.LIST:
+                dec.append("(").append(get(tams, tam++)).append(")");
+                break;
+            case Tipo.MAP:
+                dec.append("(").append(get(tams, tam++)).append(")");
+                break;
+            case Tipo.REF:
+                dec.append("(").append(")");
+                break;
         }
         return dec;
     }
@@ -92,7 +107,7 @@ public final class Tipos {
      * @return Casting
      */
     public static StringBuilder casting(Tipo t) {
-        return null;
+        return declaracion(t);
     }
 
     /**

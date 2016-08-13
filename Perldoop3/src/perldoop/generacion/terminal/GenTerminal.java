@@ -24,21 +24,21 @@ public class GenTerminal {
     }
 
     public void visitar(Terminal s) {
-        StringBuilder codigo = new StringBuilder(200);
+        StringBuilder comentario = new StringBuilder(200);
         Token t = s.getToken();
-        codigo.append(t.getValor());
-        if (tabla.getOpciones().isComentarios() && t.getComentarios() != null) {
-            codigo.append("/*");
-            Iterator<Token> comentarios = t.getComentarios().iterator();
+        if (tabla.getOpciones().isComentarios() && s.getTokensComentario() != null) {
+            comentario.append("/*");
+            Iterator<Token> comentarios = s.getTokensComentario().iterator();
             while (comentarios.hasNext()) {
-                codigo.append(comentarios.next());
-                if(comentarios.hasNext()){
-                    codigo.append("\n");
+                comentario.append(comentarios.next());
+                if (comentarios.hasNext()) {
+                    comentario.append("\n");
                 }
             }
-            codigo.append("*/");
+            comentario.append("*/");
         }
-        s.setCodigoGenerado(codigo);
+        s.setComentario(comentario.toString());
+        s.setCodigoGenerado(new StringBuilder(s.getValor()).append(comentario));
     }
 
 }

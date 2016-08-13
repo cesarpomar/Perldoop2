@@ -394,6 +394,32 @@ public final class Casting {
     }
 
     /**
+     * Castea un array a list del mismo tipo
+     *
+     * @param s Simbolo
+     * @return Casting
+     */
+    public static StringBuilder toArray(Simbolo s) {
+        StringBuilder cst = new StringBuilder(50);
+        Tipo array = s.getTipo().getSubtipo(1).add(0,Tipo.ARRAY);
+        cst.append(s.getCodigoGenerado()).append(".toArray(").append(Tipos.inicializacion(array)).append(")");
+        return cst;
+    }
+
+    /**
+     * Castea un list a un array del mismo tipo
+     *
+     * @param s Simbolo
+     * @return Casting
+     */
+    public static StringBuilder toList(Simbolo s) {
+        StringBuilder cst = new StringBuilder(50);
+        Tipo array = s.getTipo().getSubtipo(1).add(0,Tipo.LIST);
+        cst.append(Tipos.inicializacion(array,s.getCodigoGenerado().toString()));
+        return cst;
+    }
+
+    /**
      * Castea entre colecciones
      *
      * @param origen Expresion origen
@@ -402,9 +428,11 @@ public final class Casting {
      */
     public static StringBuilder toCol(Simbolo origen, Tipo destino) {
         StringBuilder cst = new StringBuilder(200);
-        cst.append("Pd.cast(new Casting() {");
-        cst.append("@Override");
-        cst.append("public <T> T casting(Object col) {");
+        StringBuilder tipo = Tipos.declaracion(origen.getTipo());
+        cst.append("(").append(Tipos.declaracion(destino)).append(")");
+        cst.append("Pd.cast(new Casting() { ");
+        cst.append("@Override ");
+        cst.append("public Object casting(Object arg) {");
         String tam;
         if (origen.getTipo().isArray()) {
             tam = "col.length";
@@ -414,13 +442,14 @@ public final class Casting {
         if (!destino.isArray()) {
             tam += "*3";
         }
-        cst.append(Tipos.declaracion(destino)).append(" ").append(" col2=").append(Tipos.inicializacion(destino, tam));
+        cst.append(tipo).append(" col =").append("(").append(tipo).append(")").append("arg;");
+        cst.append(Tipos.declaracion(destino)).append(" ").append(" col2=").append(Tipos.inicializacion(destino, tam)).append(";");
         if (origen.getTipo().isMap()) {
             fromMap(cst, origen.getTipo(), destino);
         } else {
             fromArrayList(cst, origen.getTipo(), destino);
         }
-        cst.append("return (T)col2;");
+        cst.append("return col2;");
         cst.append("}},").append(origen.getCodigoGenerado()).append(")");
         return cst;
     }
@@ -435,8 +464,6 @@ public final class Casting {
     private static void fromArrayList(StringBuilder cst, Tipo origen, Tipo destino) {
         String lectura;
         String tam;
-        StringBuilder tipo = Tipos.declaracion(destino);
-        cst.append(tipo).append(" col =").append("(").append(tipo).append(")").append("arg;");
         if (origen.isArray()) {
             lectura = "col[i]";
             tam = "col.length";
@@ -453,18 +480,17 @@ public final class Casting {
         t.setCodigoGenerado(new StringBuilder(lectura));
         t.setTipo(origen.getSubtipo(1));
         if (destino.isArray()) {
-            cst.append("col[i]=").append(casting(t, destino.getSubtipo(1)));
+            cst.append("col2[i]=").append(casting(t, destino.getSubtipo(1))).append(";");
         } else if (destino.isList()) {
-            cst.append("col.add(").append(casting(t, destino.getSubtipo(1))).append(")");
+            cst.append("col2.add(").append(casting(t, destino.getSubtipo(1))).append(");");
         } else {
             cst.append("if(value){");
-            cst.append("col.put(key,").append(casting(t, destino.getSubtipo(1))).append(")");
+            cst.append("col2.put(key,").append(casting(t, destino.getSubtipo(1))).append(");");
             cst.append("}else{");
-            cst.append("key = ").append(toString(t));
+            cst.append("key = ").append(toString(t)).append(";");
             cst.append("}");
         }
         cst.append("}");
-
     }
 
     /**
@@ -475,8 +501,28 @@ public final class Casting {
      * @param destino Tipo destino
      */
     private static void fromMap(StringBuilder cst, Tipo origen, Tipo destino) {
-        cst.append("java.uti.Iterator<PerlMap.Entry<String,").append(Tipos.declaracion(destino)).append(">>");
-        cst.append(" ").append("it;");
+        Tipo subtipo = destino.getSubtipo(1);
+        cst.append("java.util.Iterator<PerlMap.Entry<String,").append(Tipos.declaracion(subtipo)).append(">>");
+        cst.append(" ").append("it = col.entrySet().iterator();");
+        cst.append("int i=0;");
+        cst.append("while(it.hasNext()){");
+        cst.append("PerlMap.Entry<String,").append(Tipos.declaracion(subtipo)).append("> ").append("entry = it.next();");
+        Terminal t1 = new Terminal(null);
+        t1.setCodigoGenerado(new StringBuilder("entry.getKey()"));
+        t1.setTipo(new Tipo(Tipo.STRING));
+        Terminal t2 = new Terminal(null);
+        t2.setCodigoGenerado(new StringBuilder("entry.getValue()"));
+        t2.setTipo(origen.getSubtipo(1));
+        if (destino.isArray()) {
+            cst.append("col2[i++]=").append(casting(t1, subtipo)).append(";");;
+            cst.append("col2[i++]=").append(casting(t2, subtipo)).append(";");;
+        } else if (destino.isList()) {
+            cst.append("col2.add(").append(casting(t1, subtipo)).append(");");
+            cst.append("col2.add(").append(casting(t2, subtipo)).append(");");
+        } else {
+            cst.append("col2.put(").append(t1.getCodigoGenerado()).append(",").append(casting(t2, subtipo)).append(");");
+        }
+        cst.append("}");
     }
 
     /**
@@ -510,6 +556,13 @@ public final class Casting {
                 return toRef(origen);
             default:
                 if (!origen.getTipo().equals(destino)) {
+                    if(origen.getTipo().isArrayOrList() && destino.isArrayOrList()){
+                        if(destino.isArray()){
+                            return toArray(origen);
+                        }else{
+                             return toList(origen);
+                        }
+                    }
                     return toCol(origen, destino);
                 }
         }

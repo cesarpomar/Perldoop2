@@ -34,6 +34,12 @@ public class GenSentencia {
 
     public void visitar(StcLista s) {
         StringBuilder codigo = new StringBuilder(200);
+        if (!tabla.getDeclaraciones().isEmpty()) {
+            for (StringBuilder d : tabla.getDeclaraciones()) {
+                codigo.append(d);
+            }
+            tabla.getDeclaraciones().clear();
+        }
         for (Expresion exp : s.getLista().getExpresiones()) {
             boolean sentencia = false;
             //Calculamos las sentencias
@@ -70,7 +76,7 @@ public class GenSentencia {
                 while (!hijos.isEmpty()) {
                     Simbolo hijo = hijos.remove(hijos.size() - 1);
                     hijos.addAll(Arrays.asList(hijo.getHijos()));
-                    if(hijo instanceof Funcion || hijo instanceof Asignacion){
+                    if (hijo instanceof Funcion || hijo instanceof Asignacion) {
                         sentencia = true;
                         break;
                     }
@@ -100,7 +106,7 @@ public class GenSentencia {
             tabla.getClase().getPaquetes().add(p.toString());
         }
         s.setCodigoGenerado(new StringBuilder(0));
-        
+
     }
 
     public void visitar(StcComentario s) {

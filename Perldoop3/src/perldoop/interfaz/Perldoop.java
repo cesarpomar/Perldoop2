@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import perldoop.depurador.Depurador;
 import perldoop.error.GestorErrores;
 import perldoop.generacion.Generador;
 import perldoop.internacionalizacion.Errores;
@@ -14,6 +15,7 @@ import perldoop.io.CodeWriter;
 import perldoop.lexico.Lexer;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSimbolos;
@@ -52,6 +54,7 @@ public final class Perldoop {
                 gestorErrores.setCodigo(codeReader.getCodigo());
                 Lexer lexer = new Lexer(codeReader, opciones, gestorErrores);
                 tokens = lexer.getTokens();
+                //Depurador.tokens(tokens);
                 if (lexer.getErrores() > 0) {
                     gestorErrores.error(Errores.FALLOS_LEXICOS, lexer.getErrores());
                     continue;
@@ -65,16 +68,19 @@ public final class Perldoop {
                 continue;
             }
             //Preprocesador
+            List<Terminal> terminales;
             Preprocesador preprocesador = new Preprocesador(tokens, opciones, gestorErrores);
-            tokens = preprocesador.procesar();
+            terminales = preprocesador.procesar();
+            //Depurador.terminales(terminales);
             if (preprocesador.getErrores() > 0) {
                 gestorErrores.error(Errores.FALLOS_PREPROCESADOR, preprocesador.getErrores());
                 continue;
             }
             //Sintactico
             List<Simbolo> simbolos;
-            Parser parser = new Parser(tokens, opciones, gestorErrores);
+            Parser parser = new Parser(terminales, opciones, gestorErrores);
             simbolos = parser.parsear();
+            //Depurador.simbolos(simbolos.get(0));
             if (parser.getErrores() > 0) {
                 gestorErrores.error(Errores.FALLOS_SINTACTICOS, parser.getErrores());
                 continue;

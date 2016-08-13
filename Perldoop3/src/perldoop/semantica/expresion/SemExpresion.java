@@ -61,11 +61,11 @@ public class SemExpresion {
     }
 
     public void visitar(ExpFuncion s) {
-//        s.setTipo(new Tipo(s.getFuncion().getTipo()));
+        s.setTipo(new Tipo(s.getFuncion().getTipo()));
     }
 
     public void visitar(ExpFuncion5 s) {
-//        s.setTipo(new Tipo(s.getFuncion().getTipo()));
+        s.setTipo(new Tipo(s.getFuncion().getTipo()));
     }
 
     public void visitar(ExpRegulares s) {

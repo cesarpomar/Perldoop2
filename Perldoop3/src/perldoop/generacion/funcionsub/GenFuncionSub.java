@@ -2,9 +2,11 @@ package perldoop.generacion.funcionsub;
 
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.funcionsub.FuncionSub;
+import perldoop.modelo.semantica.EntradaFuncion;
 
 /**
  * Clase generadora de funcionSub
+ *
  * @author César Pomar
  */
 public class GenFuncionSub {
@@ -21,7 +23,11 @@ public class GenFuncionSub {
     }
 
     public void visitar(FuncionSub s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(50);
+        EntradaFuncion fun = tabla.getTablaSimbolos().buscarFuncion(s.getId().getToken().toString());
+        fun.setAlias(tabla.getGestorReservas().getAlias(fun.getIdentificador(), fun.isConflicto()));
+        codigo.append("public static Box[] ").append(fun.getAlias()).append(" (Box[] __)");
+        s.setCodigoGenerado(codigo);
     }
 
 }

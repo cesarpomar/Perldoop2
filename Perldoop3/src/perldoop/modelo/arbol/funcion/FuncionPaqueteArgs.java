@@ -3,6 +3,8 @@ package perldoop.modelo.arbol.funcion;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
@@ -15,19 +17,20 @@ import perldoop.modelo.arbol.paquete.Paquetes;
 public final class FuncionPaqueteArgs extends Funcion {
 
     private Paquetes paquetes;
-    private Argumentos argumentos;
+    private ColParentesis coleccion;
+    private Lista lista;
 
     /**
      * Único contructor de la clase
      *
-     * @param paquetes paquetes
+     * @param paquetes Paquetes
+     * @param coleccion Colección
      * @param identificador Identificador
-     * @param argumentos Argumentos
      */
-    public FuncionPaqueteArgs(Paquetes paquetes, Terminal identificador, Argumentos argumentos) {
+    public FuncionPaqueteArgs(Paquetes paquetes, Terminal identificador, ColParentesis coleccion) {
         super(identificador);
         setPaquetes(paquetes);
-        setArgumentos(argumentos);
+        setColeccion(coleccion);
     }
 
     /**
@@ -50,22 +53,33 @@ public final class FuncionPaqueteArgs extends Funcion {
     }
 
     /**
-     * Obtiene los argumentos
+     * Obtiene la colección
      *
-     * @return Argumentos
+     * @return Colección
      */
-    public Argumentos getArgumentos() {
-        return argumentos;
+    public ColParentesis getColeccion() {
+        return coleccion;
     }
 
     /**
-     * Establece los argumentos
+     * Establece la colección
      *
-     * @param argumentos Argumentos
+     * @param coleccion Colección
      */
-    public void setArgumentos(Argumentos argumentos) {
-        argumentos.setPadre(this);
-        this.argumentos = argumentos;
+    public void setColeccion(ColParentesis coleccion) {
+        coleccion.setPadre(this);
+        lista = coleccion.getLista();
+        lista.setPadre(this);
+        this.coleccion = coleccion;
+    }
+
+    /**
+     * Obtiene la lista de argumentos
+     *
+     * @return Argumentos
+     */
+    public Lista getLista() {
+        return lista;
     }
 
     @Override
@@ -75,7 +89,7 @@ public final class FuncionPaqueteArgs extends Funcion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{paquetes, identificador, argumentos};
+        return new Simbolo[]{paquetes, identificador, lista};
     }
 
 }

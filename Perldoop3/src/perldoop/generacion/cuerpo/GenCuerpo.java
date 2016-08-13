@@ -2,6 +2,7 @@ package perldoop.generacion.cuerpo;
 
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
+import perldoop.modelo.arbol.fuente.Fuente;
 import perldoop.modelo.arbol.sentencia.Sentencia;
 
 /**
@@ -23,19 +24,19 @@ public class GenCuerpo {
     }
 
     public void visitar(Cuerpo s) {
-        int n = s.getSentencias().size();
-        StringBuilder codigo = new StringBuilder(0); 
-        if (n > 0 && s.getSentencias().get(n - 1).getCodigoGenerado() != null) {
-            int tam = 0;
-            for (Sentencia sts : s.getSentencias()) {
-                tam += sts.getCodigoGenerado().length();
-            }
-            codigo = new StringBuilder(tam);
-            for (Sentencia sts : s.getSentencias()) {
-                codigo.append(sts.getCodigoGenerado());
-            }
+        StringBuilder codigo = new StringBuilder(50);
+        int tam = 0;
+        for (Sentencia sts : s.getSentencias()) {
+            tam += sts.getCodigoGenerado().length();
+        }
+        codigo = new StringBuilder(tam);
+        for (Sentencia sts : s.getSentencias()) {
+            codigo.append(sts.getCodigoGenerado());
         }
         s.setCodigoGenerado(codigo);
+        if(s.getPadre() instanceof Fuente){
+            tabla.getClase().getCodigoGlobal().add(codigo);
+        }
     }
 
 }

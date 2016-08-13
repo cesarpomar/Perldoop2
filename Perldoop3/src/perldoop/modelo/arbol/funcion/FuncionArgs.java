@@ -3,6 +3,8 @@ package perldoop.modelo.arbol.funcion;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.lista.Lista;
 
 /**
  * Clase que representa la reduccion -> <br>
@@ -13,36 +15,48 @@ import perldoop.modelo.arbol.Visitante;
  */
 public final class FuncionArgs extends Funcion {
 
-    private Argumentos argumentos;
+    private ColParentesis coleccion;
+    private Lista lista;
 
     /**
      * Único contructor de la clase
      *
+     * @param coleccion Colección
      * @param identificador Identificador
-     * @param argumentos Argumentos
      */
-    public FuncionArgs(Terminal identificador, Argumentos argumentos) {
+    public FuncionArgs(Terminal identificador, ColParentesis coleccion) {
         super(identificador);
-        setArgumentos(argumentos);
+        setColeccion(coleccion);
     }
 
     /**
-     * Obtiene los argumentos
+     * Obtiene la colección
+     *
+     * @return Colección
+     */
+    public ColParentesis getColeccion() {
+        return coleccion;
+    }
+
+    /**
+     * Establece la colección
+     *
+     * @param coleccion Colección
+     */
+    public void setColeccion(ColParentesis coleccion) {
+        coleccion.setPadre(this);
+        lista = coleccion.getLista();
+        lista.setPadre(this);
+        this.coleccion = coleccion;
+    }
+
+    /**
+     * Obtiene la lista de argumentos
      *
      * @return Argumentos
      */
-    public Argumentos getArgumentos() {
-        return argumentos;
-    }
-
-    /**
-     * Establece los argumentos
-     *
-     * @param argumentos Argumentos
-     */
-    public void setArgumentos(Argumentos argumentos) {
-        argumentos.setPadre(this);
-        this.argumentos = argumentos;
+    public Lista getLista() {
+        return lista;
     }
 
     @Override
@@ -52,7 +66,7 @@ public final class FuncionArgs extends Funcion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{identificador, argumentos};
+        return new Simbolo[]{identificador, lista};
     }
 
 }

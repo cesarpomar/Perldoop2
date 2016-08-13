@@ -22,5 +22,6 @@ public class SemFuncionDef {
     }
 
     public void visitar(FuncionDef s) {
+        tabla.getTablaSimbolos().cerrarBloque();     
     }
 }

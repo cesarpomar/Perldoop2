@@ -70,7 +70,7 @@ public class CodeWriter {
         appendList(repr, java.getFunciones());
         //Codigo global
         if (!java.getCodigoGlobal().isEmpty()) {
-            repr.append("private static global(){");
+            repr.append("private static void global(){");
             appendList(repr, java.getCodigoGlobal());
             repr.append("}");
         }

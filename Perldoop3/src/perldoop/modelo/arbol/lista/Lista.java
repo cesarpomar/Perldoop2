@@ -11,8 +11,8 @@ import perldoop.modelo.arbol.expresion.Expresion;
 /**
  * Clase que representa las reducciones -> <br>
  * lista :	expresion ',' lista<br>
-         |	expresion ','<br>							
-	 |	expresion<br>	
+ * |	expresion ','<br>
+ * |	expresion<br>
  *
  * @author César Pomar
  */
@@ -33,6 +33,7 @@ public final class Lista extends Simbolo {
 
     /**
      * Construye una lista con una expresión y una coma
+     *
      * @param exp Expresión
      * @param coma Coma
      */
@@ -43,6 +44,7 @@ public final class Lista extends Simbolo {
 
     /**
      * Construye una lista con una expresión
+     *
      * @param exp Expresión
      */
     public Lista(Expresion exp) {
@@ -52,6 +54,7 @@ public final class Lista extends Simbolo {
 
     /**
      * Invierte la lista para mejorar la eficiencia del insertado por la izquierda
+     *
      * @param invertida listaInvertida
      */
     private void invertida(boolean invertida) {
@@ -64,6 +67,7 @@ public final class Lista extends Simbolo {
 
     /**
      * Obtiene todos los elmentos de la lista
+     *
      * @return Lista de elementos
      */
     public final List<Simbolo> getElementos() {
@@ -73,6 +77,7 @@ public final class Lista extends Simbolo {
 
     /**
      * Obtiene solo las expresiones de la lista
+     *
      * @return Lista de expresiones
      */
     public final List<Expresion> getExpresiones() {
@@ -82,6 +87,7 @@ public final class Lista extends Simbolo {
 
     /**
      * Añade una expresión y una coma
+     *
      * @param exp Expresión
      * @param coma Coma
      * @return Esta instancia
@@ -96,6 +102,7 @@ public final class Lista extends Simbolo {
 
     /**
      * Añade una expresión
+     *
      * @param exp Expresión
      * @return Esta lista
      */
@@ -109,6 +116,7 @@ public final class Lista extends Simbolo {
 
     /**
      * Realiza la misma acción que invocar l.add(exp,coma)
+     *
      * @param exp Expresion
      * @param coma Coma
      * @param l Lista
@@ -120,12 +128,33 @@ public final class Lista extends Simbolo {
 
     /**
      * Realiza la misma acción que invocar l.add(exp)
+     *
      * @param exp Expresion
      * @param l Lista
      * @return Lista l
      */
     public static final Lista add(Expresion exp, Lista l) {
         return l.add(exp);
+    }
+
+    /**
+     * Añade elementos a una lista eliminandolos de la cabeza de otra
+     *
+     * @param l Lista
+     * @param n Numero de elementos
+     */
+    public void addLista(Lista l, int n) {
+        this.invertida(false);
+        l.invertida(true);
+        List<Expresion> lexps = l.getExpresiones();
+        List<Simbolo> lelems = l.getElementos();
+        for (int i = 0; i < n; i++) {
+            expresiones.add(lexps.remove(lexps.size() - 1));
+            elementos.add(lelems.remove(lelems.size() - 1));
+            if (!elementos.isEmpty()) {
+                elementos.add(lelems.remove(lelems.size() - 1));
+            }
+        }
     }
 
     @Override

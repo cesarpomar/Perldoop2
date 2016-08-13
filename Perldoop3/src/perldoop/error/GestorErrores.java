@@ -110,8 +110,6 @@ public class GestorErrores {
         }
         if (pos - inicio > 30) {
             inicio = pos - 30;
-            fin = fin - 30;
-            pos = 30;
         }
         System.err.println("\t" + codigo.subSequence(inicio, fin));
         System.err.println("\t" + String.format("%" + (pos - inicio + 1) + "s", "^"));

@@ -9,6 +9,7 @@ import perldoop.modelo.arbol.funcion.FuncionPaqueteNoArgs;
 
 /**
  * Clase generadora de funcion
+ *
  * @author César Pomar
  */
 public class GenFuncion {
@@ -25,23 +26,35 @@ public class GenFuncion {
     }
 
     public void visitar(FuncionPaqueteArgs s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(s.getPaquetes().getCodigoGenerado()).append(s.getIdentificador().getCodigoGenerado());
+        codigo.append("(").append(s.getColeccion().getCodigoGenerado()).append(")");
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(FuncionPaqueteNoArgs s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(s.getPaquetes().getCodigoGenerado()).append(s.getIdentificador().getCodigoGenerado());
+        codigo.append("(").append(")");
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(FuncionArgs s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(s.getIdentificador().getCodigoGenerado());
+        codigo.append("(").append(s.getColeccion().getCodigoGenerado()).append(")");
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(FuncionNoArgs s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(s.getIdentificador().getCodigoGenerado());
+        codigo.append("(").append(")");
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(Argumentos s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO borrar
     }
 
 }

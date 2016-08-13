@@ -13,12 +13,12 @@ import perldoop.modelo.semantica.Tipo;
  *
  * @author César Pomar
  */
-public class Etiquetas {
+public final class SemanticaEtiquetas {
 
     /**
      * Convierte las etiquetas a un tipo
      *
-     * @param etiquetas Etiquetas
+     * @param etiquetas SemanticaEtiquetas
      * @param ge Gestor de errores
      * @return Tipo
      */
@@ -93,7 +93,7 @@ public class Etiquetas {
      * Convierte en tipo en etiquetas
      *
      * @param tipo Tipo
-     * @return Etiquetas
+     * @return SemanticaEtiquetas
      */
     public static List<String> parseTipo(Tipo tipo) {
         List<String> etiquetas = new ArrayList<>(tipo.getTipo().size());

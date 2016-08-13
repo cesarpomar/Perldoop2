@@ -71,14 +71,12 @@ public class Reservados {
                 case "<double>":
                 case "<string>":
                 case "<file>":
+                    return (int) Parser.PD_TIPO;
                 case "<array>":
                 case "<list>":
                 case "<hash>":
-                    return (int) Parser.PD_TIPO;
-                case "<args>":
-                    return (int) Parser.PD_ARGS;
-                case "<returns>":
-                    return (int) Parser.PD_RETURNS;
+                case "<map>":
+                    return (int) Parser.PD_COL;
             }
         }
         return null;

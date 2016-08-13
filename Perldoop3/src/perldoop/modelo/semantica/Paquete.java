@@ -5,16 +5,21 @@ import java.util.Map;
 
 /**
  * Clase que representa un paquete
+ *
  * @author César Pomar
  */
 public final class Paquete {
 
     private Map<String, Contexto> atributos;
+    private Map<String, EntradaFuncion> funciones;
 
     /**
      * Constructor del paquete
+     *
+     * @param funciones Funciones
      */
-    public Paquete() {
+    public Paquete(Map<String, EntradaFuncion> funciones) {
+        this.funciones = funciones;
         atributos = new HashMap<>(10);
     }
 
@@ -70,6 +75,16 @@ public final class Paquete {
      */
     public Contexto buscarVariable(String identificador) {
         return atributos.get(identificador);
+    }
+
+    /**
+     * Obtiene el alias de una función si existe
+     *
+     * @param identificador Identificador
+     * @return Entrada función
+     */
+    public EntradaFuncion buscarFuncion(String identificador) {
+        return funciones.get(identificador);
     }
 
 }

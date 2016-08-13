@@ -271,7 +271,7 @@ public final class Tipo {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Tipo) {
-            ((Tipo) obj).getTipo().equals(this.getTipo());
+            return ((Tipo) obj).getTipo().equals(this.getTipo());
         }
         return false;
     }

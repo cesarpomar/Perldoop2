@@ -39,7 +39,7 @@ import perldoop.modelo.arbol.aritmetica.*;
 %}
 
 /*Tokens etiquetas del preprocesador, nunca deben llegar al analizador*/
-%token PD_TIPO PD_NUM PD_VAR PD_ARGS PD_RETURNS
+%token PD_COL PD_TIPO PD_NUM PD_VAR
 
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
@@ -89,8 +89,10 @@ funcionDef	:	funcionSub '{' cuerpo '}'				{$$=set(new FuncionDef(s($1), s($2), s
 
 funcionSub	:	SUB ID									{$$=set(new FuncionSub(s($1), s($2)));}
 
-cuerpo		:											{$$=set(new Cuerpo(),false);}
-			|	cuerpo sentencia						{$$=set(Cuerpo.add(s($1), s($2)));}
+cuerpoR		:											{$$=set(new Cuerpo(),false);}
+			|	cuerpoR sentencia						{$$=set(Cuerpo.add(s($1), s($2)),false);}
+			
+cuerpo		:	cuerpoR									{$$=set(s($1));}
 
 sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)));}
 			|	bloque									{$$=set(new StcBloque(s($1)));}
@@ -194,9 +196,9 @@ acceso		:	expresion coleccion						{$$=set(new AccesoCol(s($1),s($2)));}
 			|	'$' '#' expresion %prec UNITARIO		{$$=set(new AccesoSigil(s($1),s($2),s($3)));}
 			|	'\\' expresion %prec UNITARIO			{$$=set(new AccesoRef(s($1),s($2)));} 
 
-funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),add(new Argumentos(s($3)))));}
+funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),add(new ColParentesis(add(new Terminal(new Token("("))),add(new Lista(s($3))),add(new Terminal(new Token(")")))))));}
 			|	paqueteID ID							{$$=set(new FuncionPaqueteNoArgs(s($1),s($2)));}
-			|	ID expresion							{$$=set(new FuncionArgs(s($1),add(new Argumentos(s($2)))));}
+			|	ID expresion							{$$=set(new FuncionArgs(s($1),add(new ColParentesis(add(new Terminal(new Token("("))),add(new Lista(s($2))),add(new Terminal(new Token(")")))))));}
 			|	ID										{$$=set(new FuncionNoArgs(s($1)));}
 
 regulares	:	expresion STR_NO_REX M_REGEX			{$$=set(new RegularNoMatch(s($1),s($2),s($3)));}
@@ -275,22 +277,22 @@ bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(
 %%
 
 	private List<Simbolo> simbolos;
-	private List<Token> tokens;
-	private Iterator<Token> iterator;
+	private List<Terminal> terminales;
+	private Iterator<Terminal> iterator;
 	private Opciones opciones;
 	private GestorErrores gestorErrores;
 	private int errores;
 	
 	/**
 	 * Constructor del analizador sintactico
-	 * @param tokens Tokens lexicos
+	 * @param terminales Terminales
 	 * @param opciones Opciones
 	 * @param gestorErrores Gestor de errores
 	 */
-	public Parser(List<Token> tokens, Opciones opciones,GestorErrores gestorErrores) {
-		this.tokens = tokens;
-		simbolos = new ArrayList<>(tokens.size()*10);
-		iterator = tokens.iterator();
+	public Parser(List<Terminal> terminales, Opciones opciones,GestorErrores gestorErrores) {
+		this.terminales = terminales;
+		simbolos = new ArrayList<>(terminales.size()*10);
+		iterator = terminales.iterator();
 		this.opciones = opciones;
 		this.gestorErrores = gestorErrores;
 		errores = 0;
@@ -409,9 +411,9 @@ bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(
 	 */
 	private int yylex (){
 		if(iterator.hasNext()){
-			Token token = iterator.next();
-			yylval = set(new Terminal(token));
-			return token.getTipo();
+			Terminal t = iterator.next();
+			yylval = set(t);
+			return t.getToken().getTipo();
 		}
 		return 0;
 	}

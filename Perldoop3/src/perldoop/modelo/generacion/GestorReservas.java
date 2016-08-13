@@ -63,6 +63,7 @@ public final class GestorReservas {
      */
     private static boolean isReservada(String id) {
         switch (id) {
+            //Java
             case "abstract":
             case "continue":
             case "for":
@@ -113,6 +114,16 @@ public final class GestorReservas {
             case "native":
             case "super":
             case "while":
+            //Perldoop
+            case "Box":
+            case "Casting":
+            case "Pd":
+            case "Perl":
+            case "PerlFile":
+            case "PerlList":
+            case "PerlMap":
+            case "Ref":
+            case "__":
                 return true;
             default:
                 return id.startsWith(PREF);

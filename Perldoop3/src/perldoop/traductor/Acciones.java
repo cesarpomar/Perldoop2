@@ -1,5 +1,6 @@
 package perldoop.traductor;
 
+import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.modelo.arbol.Simbolo;
 
 /**
@@ -10,10 +11,17 @@ import perldoop.modelo.arbol.Simbolo;
 public interface Acciones {
 
     /**
+     * Analiza un simbolo
+     *
+     * @param s Simbolo
+     */
+    void analizar(Simbolo s) throws ExcepcionSemantica;
+
+    /**
      * Vuelve a analizar el simbolo despues de analizar s
      *
      * @param s Simbolo anterior al reanalisis
      */
-    void reAnalizarDesdeDe(Simbolo s);
+    void reAnalizarDespuesDe(Simbolo s);
 
 }

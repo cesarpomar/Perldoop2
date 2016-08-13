@@ -76,12 +76,21 @@ public class Pd {
     /**
      * Función para realizar el casting entre coleciónes
      *
-     * @param <T> Tipo de la colección resultante
      * @param c Case con la implementación del casting
      * @param col Colección a convertir
      * @return Colección resultante
      */
-    public static <T> T cast(Casting c, Object col) {
+    public static Object cast(Casting c, Object col) {
         return c.casting(col);
+    }
+
+    /**
+     * Función para realizar asignaciones en sus argumentos
+     *
+     * @param eqs Asignaciones
+     * @return Numero de asignaciones
+     */
+    public static Integer equals(Object... eqs) {
+        return eqs.length;
     }
 }

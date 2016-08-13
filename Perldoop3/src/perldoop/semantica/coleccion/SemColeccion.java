@@ -5,6 +5,7 @@ import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
@@ -43,6 +44,9 @@ public class SemColeccion {
                         s.setTipo(new Tipo(igual.getIzquierda().getTipo()));
                     }
                 }
+            } else if (uso instanceof Funcion) {
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+
             } else if (uso instanceof Lista) {
                 uso = uso.getPadre();
                 if (uso instanceof ColParentesis) {
@@ -93,15 +97,11 @@ public class SemColeccion {
     }
 
     public void visitar(ColParentesis s) {
-        if (s.getLista().getElementos().size() > 1) {
-            tipar(s);
-            if (s.getTipo() == null) {
-                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-            }
-            comprobarElems(s, s.getLista());
-        } else {
-            s.setTipo(s.getLista().getExpresiones().get(0).getTipo());
+        tipar(s);
+        if (s.getTipo() == null) {
+            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
         }
+        comprobarElems(s, s.getLista());
     }
 
     public void visitar(ColCorchete s) {

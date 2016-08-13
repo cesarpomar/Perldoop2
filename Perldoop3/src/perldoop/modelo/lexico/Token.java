@@ -14,8 +14,6 @@ public class Token {
     private int linea;
     private int columna;
     private int posicion;
-    private List<Token> comentarios;
-    private List<Token> etiquetas;
     private boolean etiqueta;
 
     /**
@@ -23,6 +21,15 @@ public class Token {
      */
     public Token() {
         valor = "";
+    }
+
+    /**
+     * Construye un token vcon unvalor
+     *
+     * @param valor Valor
+     */
+    public Token(String valor) {
+        this.valor = valor;
     }
 
     /**
@@ -100,6 +107,7 @@ public class Token {
 
     /**
      * Obtiene la columna
+     *
      * @return Columna
      */
     public final int getColumna() {
@@ -108,6 +116,7 @@ public class Token {
 
     /**
      * Establece la columna
+     *
      * @param columna Columna
      */
     public final void setColumna(int columna) {
@@ -116,6 +125,7 @@ public class Token {
 
     /**
      * Obtiene la posición
+     *
      * @return Posición
      */
     public int getPosicion() {
@@ -124,6 +134,7 @@ public class Token {
 
     /**
      * Establece la posicón
+     *
      * @param posicion Posición
      */
     public void setPosicion(int posicion) {
@@ -131,40 +142,9 @@ public class Token {
     }
 
     /**
-     * Obtiene los comentarios
-     * @return Comentarios
-     */
-    public final List<Token> getComentarios() {
-        return comentarios;
-    }
-
-    /**
-     * Establece los comentarios
-     * @param comentarios Comentarios
-     */
-    public final void setComentarios(List<Token> comentarios) {
-        this.comentarios = comentarios;
-    }
-
-    /**
-     * Obtiene las etiquetas
-     * @return Etiquetas
-     */
-    public final List<Token> getEtiquetas() {
-        return etiquetas;
-    }
-
-    /**
-     * Estabece las etiquetas
-     * @param etiquetas Etiquetas
-     */
-    public final void setEtiquetas(List<Token> etiquetas) {
-        this.etiquetas = etiquetas;
-    }
-
-    /**
      * Obtiene si es una etiqueta
-     * @return Es etiqueta 
+     *
+     * @return Es etiqueta
      */
     public final boolean isEtiqueta() {
         return etiqueta;
@@ -172,7 +152,8 @@ public class Token {
 
     /**
      * Establece si es una etiqueta
-     * @param etiqueta Es etiqueta 
+     *
+     * @param etiqueta Es etiqueta
      */
     public final void setEtiqueta(boolean etiqueta) {
         this.etiqueta = etiqueta;
@@ -183,5 +164,4 @@ public class Token {
         return valor;
     }
 
-    
 }

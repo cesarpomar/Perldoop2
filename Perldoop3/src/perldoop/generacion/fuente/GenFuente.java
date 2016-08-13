@@ -22,6 +22,6 @@ public class GenFuente {
     }
 
     public void visitar(Fuente s) {
-        tabla.getClase().getCodigoGlobal().add(s.getCuerpo().getCodigoGenerado());
+        //TODO borrar
     }
 }

@@ -5,19 +5,28 @@ import java.util.List;
 import perldoop.error.GestorErrores;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.Opciones;
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.lexico.Token;
+import perldoop.modelo.preprocesador.Etiquetas;
+import perldoop.modelo.preprocesador.EtiquetasInicializacion;
+import perldoop.modelo.preprocesador.EtiquetasPredeclaracion;
+import perldoop.modelo.preprocesador.EtiquetasTipo;
 import perldoop.sintactico.Parser;
 
 /**
- * Clase para preprocesar y eliminar los tokens referentes a etiquetas del
- * codigo fuente
+ * Clase para preprocesar y eliminar los tokens referentes a etiquetas del codigo fuente
  *
  * @author César Pomar
  */
-public class Preprocesador {
+public final class Preprocesador {
+
+    private final int ESTADO_INICIAL = 0;
+    private final int ESTADO_COLECCION = 1;
+    private final int ESTADO_SIZE = 2;
+    private final int ESTADO_INICIALIZACION = 3;
+    private final int ESTADO_VARIABLES = 4;
 
     private List<Token> tokens;
-    private int index;
     private Opciones opciones;
     private GestorErrores gestorErrores;
     private int errores;
@@ -72,8 +81,7 @@ public class Preprocesador {
     }
 
     /**
-     * Obtiene el número de errores, si no hay errores el analisis se ha
-     * realizado correctamente.
+     * Obtiene el número de errores, si no hay errores el analisis se ha realizado correctamente.
      *
      * @return Número de errores
      */
@@ -82,213 +90,224 @@ public class Preprocesador {
     }
 
     /**
-     * Inicia el procesado de tokens, el analizador procesa las etiquetas en la
-     * lista de tokens y luego las elimina.
+     * Inicia el procesado de tokens, el analizador procesa las etiquetas en la lista de tokens y luego los transforma
+     * en terminales
      *
-     * @return Lista de token con la que se contruyo la clase.
+     * @return Lista de terminales
      */
-    public List<Token> procesar() {
-        for (index = 0; index < tokens.size(); index++) {
-            switch (tokens.get(index).getTipo()) {
-                //Comentarios en el texto
-                case Parser.COMENTARIO:
-                    comentario();
-                    break;
-                //Todas las etiquetas del tipo
-                case Parser.PD_TIPO:
-                    tipo();
-                    break;
-                //Etiqueta que referencia a una variable
-                case Parser.PD_VAR:
-                    variable();
-                    break;
-                //Etiqueta que especifica un tamaño
-                case Parser.PD_NUM:
-                    tamano();
-                    break;
-                //Etiqueta de argumentos de funcioón
-                case Parser.PD_ARGS:
-                    argumentos();
-                    break;
-                //Etiqueta de retornos de función
-                case Parser.PD_RETURNS:
-                    retornos();
-                    break;
-            }
-        }
-        return tokens;
-    }
-
-    /**
-     * Procesa los tokens comentario
-     */
-    private void comentario() {
-        if (index > 0) {
-            Token comentario = tokens.remove(index);
-            Token token = tokens.get(--index);
-            if (token.getComentarios() == null) {
-                token.setComentarios(new ArrayList<>(2));
-            }
-            token.getComentarios().add(comentario);
-        } else {
-            tokens.get(index).setEtiqueta(false);
-        }
-    }
-
-    /**
-     * Procesa los tokens de tipo
-     */
-    private void tipo() {
-        Token etiqueta = tokens.get(index);
-        boolean usada = false;
-        //Al principio de la linea
-        if (index == 0 || tokens.get(index - 1).getLinea() != etiqueta.getLinea()) {
-            tokens.remove(index--);
-            //Tipamos los my y our hasta final de sentencia
-            for (int i = index + 1; i < tokens.size(); i++) {
-                Token ti = tokens.get(i);
-                if (ti.getTipo() != ';') {
-                    break;
-                }
-                switch (ti.getTipo()) {
-                    case Parser.MY:
-                    case Parser.OUR:
-                        usada = true;
-                        if (ti.getEtiquetas() == null) {
-                            ti.setEtiquetas(new ArrayList<>(2));
-                        }
-                        ti.getEtiquetas().add(etiqueta);
-                        break;
-                }
-            }
-        } else {
-            //Vamos hacia atras tipando todos los my, our y <var> de la linea
-            tokens.remove(index--);
-            for (int i = index; i >= 0; i--) {
-                Token ti = tokens.get(i);
-                if (ti.getLinea() != etiqueta.getLinea()) {
-                    break;
-                }
-                switch (ti.getTipo()) {
-                    case Parser.MY:
-                    case Parser.OUR:
-                    case Parser.DECLARACION_TIPO:
-                        usada = true;
-                        if (ti.getEtiquetas() == null) {
-                            ti.setEtiquetas(new ArrayList<>(2));
-                        }
-                        ti.getEtiquetas().add(etiqueta);
-                        break;
-                }
-            }
-        }
-        if (!usada) {
-            gestorErrores.error(Errores.AVISO, Errores.ETIQUETA_NO_USADA, etiqueta, etiqueta.getValor());
-        }
-    }
-
-    /**
-     * Procesa los tokens de variable
-     */
-    private void variable() {
-        Token etiqueta = tokens.get(index);
-        //Al principio de la linea
-        if (index == 0 || tokens.get(index - 1).getLinea() != etiqueta.getLinea() || tokens.get(index - 1).getTipo() == Parser.DECLARACION_TIPO) {
-            etiqueta.setEtiqueta(false);
-            etiqueta.setTipo(Parser.DECLARACION_TIPO);
-        } else {
-            //Tiene el significado de tamaño
-            tamano();
-        }
-    }
-
-    /**
-     * Procesa los tokens de tamaño
-     */
-    private void tamano() {
-        Token etiqueta = tokens.get(index);
-        boolean usada = false;
-        //Al principio de la linea
-        if (index == 0 || tokens.get(index - 1).getLinea() != etiqueta.getLinea()) {
-            tokens.remove(index--);
-            //Guardamos el tamaño en todos los = hasta final de sentencia
-            for (int i = index + 1; i < tokens.size(); i++) {
-                Token ti = tokens.get(i);
-                if (ti.getTipo() != ';') {
-                    break;
-                }
-                if (ti.getTipo() == '=') {
-                    if (ti.getEtiquetas() == null) {
-                        ti.setEtiquetas(new ArrayList<>(2));
+    public List<Terminal> procesar() {
+        List<Terminal> terminales = new ArrayList<>(tokens.size());
+        EtiquetasInicializacion inicializacion = null;
+        EtiquetasPredeclaracion predeclaracion = null;
+        EtiquetasTipo tipo = null;
+        EtiquetasTipo tipoSentencia = null;
+        int estado = 0;
+        for (int i = 0; i < tokens.size(); i++) {
+            switch (estado) {
+                case ESTADO_INICIAL:
+                    switch (tokens.get(i).getTipo()) {
+                        case Parser.COMENTARIO:
+                            comentario(i, terminales);
+                            break;
+                        case Parser.PD_TIPO:
+                            tipo = new EtiquetasTipo();
+                            tipo.addTipo(tokens.get(i));
+                            aceptar(tipo, terminales);
+                            break;
+                        case Parser.PD_COL:
+                            tipo = new EtiquetasTipo();
+                            tipo.addTipo(tokens.get(i));
+                            estado = ESTADO_COLECCION;
+                            break;
+                        case Parser.PD_NUM:
+                            inicializacion = new EtiquetasInicializacion();
+                            inicializacion.addSize(tokens.get(i));
+                            estado = ESTADO_INICIALIZACION;
+                            break;
+                        case Parser.PD_VAR:
+                            inicializacion = new EtiquetasInicializacion();
+                            predeclaracion = new EtiquetasPredeclaracion();
+                            inicializacion.addSize(tokens.get(i));
+                            predeclaracion.addVariable(tokens.get(i));
+                            estado = ESTADO_VARIABLES;
+                            break;
+                        case '=':
+                            if (inicializacion != null) {
+                                terminales.add(setEtiqueta(i, inicializacion));
+                                break;
+                            }
+                        case Parser.MY:
+                        case Parser.OUR:
+                            terminales.add(setEtiqueta(i, tipoSentencia));
+                            break;
+                        case ';':
+                            tipoSentencia = null;
+                        default:
+                            terminales.add(perl(i));
                     }
-                    ti.getEtiquetas().add(etiqueta);
-                }
+                    break;
+                case ESTADO_COLECCION:
+                    switch (tokens.get(i).getTipo()) {
+                        case Parser.COMENTARIO:
+                            comentario(i, terminales);
+                            break;
+                        case Parser.PD_TIPO:
+                            tipo.addTipo(tokens.get(i));
+                            if (predeclaracion == null) {
+                                aceptar(tipo, terminales);
+                            } else {
+                                aceptar(predeclaracion, terminales);
+                            }
+                            estado = ESTADO_INICIAL;
+                            break;
+                        case Parser.PD_COL:
+                            tipo.addTipo(tokens.get(i));
+                            break;
+                        case Parser.PD_NUM:
+                        case Parser.PD_VAR:
+                            tipo.setSize(tokens.get(i));
+                            estado = ESTADO_SIZE;
+                            break;
+                        default:
+                        //Error sintaxis etiqueta
+                    }
+                    break;
+                case ESTADO_SIZE:
+                    switch (tokens.get(i).getTipo()) {
+                        case Parser.COMENTARIO:
+                            comentario(i, terminales);
+                            break;
+                        case Parser.PD_TIPO:
+                            tipo.addTipo(tokens.get(i));
+                            if (predeclaracion == null) {
+                                aceptar(tipo, terminales);
+                            } else {
+                                aceptar(predeclaracion, terminales);
+                            }
+                            estado = ESTADO_INICIAL;
+                            break;
+                        case Parser.PD_COL:
+                            tipo.addTipo(tokens.get(i));
+                            estado = ESTADO_COLECCION;
+                            break;
+                        case Parser.PD_NUM:
+                        case Parser.PD_VAR:
+                            //Error sintaxis etiqueta
+                            break;
+                        default:
+                        //Error sintaxis etiqueta
+                    }
+                    break;
+                case ESTADO_VARIABLES:
+                    switch (tokens.get(i).getTipo()) {
+                        case Parser.COMENTARIO:
+                            comentario(i, terminales);
+                            break;
+                        case Parser.PD_TIPO:
+                            tipo = predeclaracion.getTipo();
+                            tipo.addTipo(tokens.get(i));
+                            aceptar(tipo, terminales);
+                            estado = ESTADO_INICIAL;
+                            break;
+                        case Parser.PD_COL:
+                            tipo = predeclaracion.getTipo();
+                            tipo.addTipo(tokens.get(i));
+                            estado = ESTADO_COLECCION;
+                            break;
+                        case Parser.PD_NUM:
+                            inicializacion.addSize(tokens.get(i));
+                            estado = ESTADO_INICIALIZACION;
+                            break;
+                        case Parser.PD_VAR:
+                            predeclaracion.addVariable(tokens.get(i));
+                            break;
+                        default:
+                            aceptar(inicializacion, terminales);
+                            terminales.add(perl(i));
+                    }
+                    break;
+                case ESTADO_INICIALIZACION:
+                    switch (tokens.get(i).getTipo()) {
+                        case Parser.COMENTARIO:
+                            comentario(i, terminales);
+                            break;
+                        case Parser.PD_TIPO:
+                        case Parser.PD_COL:
+                            //Error sintaxis etiqueta
+                            break;
+                        case Parser.PD_NUM:
+                        case Parser.PD_VAR:
+                            inicializacion.addSize(tokens.get(i));
+                            break;
+                        default:
+                            aceptar(inicializacion, terminales);
+                            terminales.add(perl(i));
+                    }
+                    break;
             }
+        }
+        return terminales;
+    }
+
+    private Terminal perl(int i) {
+        return new Terminal(tokens.get(i));
+    }
+
+    private Terminal setEtiqueta(int i, Etiquetas etiquetas) {
+        Terminal t = perl(i);
+        t.setEtiquetas(etiquetas);
+        return t;
+    }
+
+    private void comentario(int i, List<Terminal> terminales) {
+        if (i == 0) {
+            terminales.add(perl(i));
         } else {
-            //Vamos hacia atras guardando el tamaño en los = de la linea
-            tokens.remove(index--);
-            for (int i = index; i >= 0; i--) {
-                Token ti = tokens.get(i);
-                if (ti.getLinea() != etiqueta.getLinea()) {
+            Terminal t = terminales.get(terminales.size() - 1);
+            if (t.getTokensComentario() == null) {
+                t.setTokensComentario(new ArrayList<>(10));
+            }
+            t.getTokensComentario().add(tokens.get(i));
+        }
+    }
+
+    private void aceptar(EtiquetasInicializacion etiqueta, List<Terminal> terminales) {
+        int linea = etiqueta.getSizes().get(0).getLinea();
+        if (!terminales.isEmpty() && linea == terminales.get(terminales.size() - 1).getToken().getLinea()) {
+            for (int i = terminales.size() - 1; i > -1; i--) {
+                Terminal t = terminales.get(i);
+                if (t.getToken().getTipo() == '=') {
+                    t.setEtiquetas(etiqueta);
+                }
+                if (t.getToken().getLinea() != linea) {
                     break;
                 }
-                switch (ti.getTipo()) {
+            }
+        }
+    }
+
+    private void aceptar(EtiquetasPredeclaracion etiqueta, List<Terminal> terminales) {
+        Token t = etiqueta.getVariables().get(0);
+        t.setTipo(Parser.DECLARACION_TIPO);
+        terminales.add(new Terminal(t));
+    }
+
+    private void aceptar(EtiquetasTipo etiqueta, List<Terminal> terminales) {
+        int linea = etiqueta.getTipos().get(0).getLinea();
+        if (!terminales.isEmpty() && linea == terminales.get(terminales.size() - 1).getToken().getLinea()) {
+            for (int i = terminales.size() - 1; i > -1; i--) {
+                Terminal t = terminales.get(i);
+                switch (t.getToken().getTipo()) {
+                    case Parser.MY:
+                    case Parser.OUR:
                     case '=':
-                    case Parser.DECLARACION_TIPO:
-                        usada = true;
-                        if (ti.getEtiquetas() == null) {
-                            ti.setEtiquetas(new ArrayList<>(2));
-                        }
-                        ti.getEtiquetas().add(etiqueta);
-                        break;
+                        t.setEtiquetas(etiqueta);
                 }
-            }
-        }
-        if (!usada) {
-            gestorErrores.error(Errores.AVISO, Errores.ETIQUETA_NO_USADA, etiqueta, etiqueta.getValor());
-        }
-    }
-
-    /**
-     * Procesa los tokens de argumentos
-     */
-    private void argumentos() {
-        Token etiqueta = tokens.remove(index--);
-        etiqueta.setEtiquetas(new ArrayList<>(5));
-        boolean usada = false;
-        int i = index + 1;
-        //Absorbemos los tipos
-        for (; i < tokens.size(); i++) {
-            if (tokens.get(i).getTipo() == Parser.PD_TIPO) {
-                etiqueta.getEtiquetas().add(tokens.remove(i--));
-            } else {
-                break;
-            }
-        }
-        for (; i < tokens.size(); i++) {
-            if (!tokens.get(i).isEtiqueta()) {
-                if (tokens.get(i).getTipo() == Parser.SUB) {
-                    Token sub = tokens.get(i);
-                    usada = true;
-                    if (sub.getEtiquetas() == null) {
-                        sub.setEtiquetas(new ArrayList<>(2));
-                    }
-                    sub.getEtiquetas().add(etiqueta);
-                } else {
+                if (t.getToken().getLinea() != linea) {
                     break;
                 }
             }
         }
-        if (!usada) {
-            gestorErrores.error(Errores.AVISO, Errores.ETIQUETA_NO_USADA, etiqueta, etiqueta.getValor());
-        }
-    }
-
-    /**
-     * Procesa los tokens de retorno
-     */
-    private void retornos() {
-        argumentos();
     }
 
 }

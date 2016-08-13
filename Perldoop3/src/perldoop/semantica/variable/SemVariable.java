@@ -11,12 +11,13 @@ import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.lexico.Token;
+import perldoop.modelo.preprocesador.EtiquetasTipo;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
-import perldoop.semantica.util.Etiquetas;
+import perldoop.semantica.util.SemanticaEtiquetas;
 
 /**
  * Clase para la semantica de variable
@@ -67,7 +68,7 @@ public class SemVariable {
 
     public void visitar(VarMy s) {
         noAccederDeclaracion(s);
-        obtenerTipo(s, s.getMy().getToken().getEtiquetas());
+        obtenerTipo(s, ((EtiquetasTipo)s.getMy().getEtiquetas()).getTipos());
         validarTipo(s);
         variableEnmascarada(s);
 
@@ -77,7 +78,7 @@ public class SemVariable {
 
     public void visitar(VarOur s) {
         noAccederDeclaracion(s);
-        obtenerTipo(s, s.getOur().getToken().getEtiquetas());
+        obtenerTipo(s, ((EtiquetasTipo)s.getOur().getEtiquetas()).getTipos());
         validarTipo(s);
         variableEnmascarada(s);
 
@@ -120,7 +121,7 @@ public class SemVariable {
      * Obtiene el tipo de la variable
      *
      * @param v Variable
-     * @param etiquetas Etiquetas
+     * @param etiquetas SemanticaEtiquetas
      */
     private void obtenerTipo(Variable v, List<Token> etiquetas) {
         Simbolo uso = Buscar.getPadre(v, 1);
@@ -131,7 +132,7 @@ public class SemVariable {
             }
             BloqueForeachVar foreach = (BloqueForeachVar) uso;
             if (foreach.getLista().getTipo() == null) {
-                tabla.getAcciones().reAnalizarDesdeDe(foreach.getLista());
+                tabla.getAcciones().reAnalizarDespuesDe(foreach.getLista());
             } else {
                 v.setTipo(new Tipo(foreach.getLista().getTipo()));
             }
@@ -139,7 +140,7 @@ public class SemVariable {
         } else if (t != null) {
             v.setTipo(t);
         } else if (etiquetas != null) {
-            v.setTipo(Etiquetas.parseTipo(etiquetas, tabla.getGestorErrores()));
+            v.setTipo(SemanticaEtiquetas.parseTipo(etiquetas, tabla.getGestorErrores()));
         } else {
             tabla.getGestorErrores().error(Errores.VARIABLE_SIN_TIPO, v.getVar().getToken(), v.getVar());
             throw new ExcepcionSemantica();
@@ -158,19 +159,19 @@ public class SemVariable {
             case '$':
                 if (t.isArrayOrList() || t.isMap()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar(), Etiquetas.parseTipo(t).get(0));
+                            contexto, v.getVar(), SemanticaEtiquetas.parseTipo(t).get(0));
                 }
                 break;
             case '@':
                 if (!t.isArrayOrList()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar(), Etiquetas.parseTipo(t).get(0));
+                            contexto, v.getVar(), SemanticaEtiquetas.parseTipo(t).get(0));
                 }
                 break;
             case '%':
                 if (!t.isMap()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar(), Etiquetas.parseTipo(t).get(0));
+                            contexto, v.getVar(), SemanticaEtiquetas.parseTipo(t).get(0));
                 }
                 break;
         }

@@ -29,8 +29,8 @@ public class GenAcceso {
     public void visitar(AccesoCol s) {
         List<Expresion> exps = s.getColeccion().getLista().getExpresiones();
         StringBuilder codigo = new StringBuilder(100);
-        if (exps.size() > 1) {
-            codigo.append("Perl.access(").append(s.getExpresion().getCodigoGenerado()).append(", ");
+        if (exps.size() > 1 || exps.get(0).getTipo().isColeccion()) {
+            codigo.append("Pd.access(").append(s.getExpresion().getCodigoGenerado()).append(", ");
             codigo.append(s.getColeccion().getCodigoGenerado()).append(")");
         } else {
             Expresion exp = exps.get(0);
@@ -38,12 +38,13 @@ public class GenAcceso {
             if (s.getColeccion() instanceof ColCorchete) {
                 if (s.getExpresion().getTipo().isArray()) {
                     codigo.append("[").append(Casting.casting(exp, new Tipo(Tipo.INTEGER))).append("]");
-                }else{
+                } else {
                     codigo.append(".get(").append(Casting.casting(exp, new Tipo(Tipo.INTEGER))).append(")");
                 }
             } else {
                 codigo.append(".get(").append(Casting.casting(exp, new Tipo(Tipo.STRING))).append(")");
             }
+
         }
         s.setCodigoGenerado(codigo);
     }

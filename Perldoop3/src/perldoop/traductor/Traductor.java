@@ -59,8 +59,7 @@ public final class Traductor implements Acciones {
     }
 
     /**
-     * Obtiene el número de errores, si no hay errores el analisis se ha
-     * realizado correctamente.
+     * Obtiene el número de errores, si no hay errores el analisis se ha realizado correctamente.
      *
      * @return Número de errores
      */
@@ -76,18 +75,14 @@ public final class Traductor implements Acciones {
     public int traducir() {
         boolean error = false;
         for (; index < simbolos.size(); index++) {
-            Simbolo s = simbolos.get(index);
             if (!error) {
                 try {
-                    s.aceptar(semantica);
-                    if (errores == 0) {
-                        s.aceptar(generador);
-                    }
+                    analizar(simbolos.get(index));
                 } catch (ExcepcionSemantica ex) {
                     error = true;
                     errores++;
                 }
-            } else if (s instanceof Sentencia) {
+            } else if (simbolos.get(index) instanceof Sentencia) {
                 error = false;
             }
         }
@@ -95,7 +90,15 @@ public final class Traductor implements Acciones {
     }
 
     @Override
-    public void reAnalizarDesdeDe(Simbolo s) {
+    public void analizar(Simbolo s) throws ExcepcionSemantica{
+        s.aceptar(semantica);
+        if (errores == 0) {
+            s.aceptar(generador);
+        }
+    }
+
+    @Override
+    public void reAnalizarDespuesDe(Simbolo s) {
         List<Simbolo> l = simbolos.subList(index, simbolos.size());
         int posicion = simbolos.indexOf(s);
         int distancia = 1;
