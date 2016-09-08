@@ -1,6 +1,5 @@
 package perldoop.semantica.variable;
 
-import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
@@ -10,7 +9,6 @@ import perldoop.modelo.arbol.bloque.BloqueForeachVar;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.lexico.Token;
 import perldoop.modelo.preprocesador.EtiquetasTipo;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Paquete;
@@ -40,7 +38,7 @@ public class SemVariable {
     public void visitar(VarExistente s) {
         char contexto = getContexto(s);
         //Buscar entrada
-        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().toString(), contexto);
+        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), contexto);
         if (e == null) {
             tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar(), contexto);
             throw new ExcepcionSemantica();
@@ -68,22 +66,22 @@ public class SemVariable {
 
     public void visitar(VarMy s) {
         noAccederDeclaracion(s);
-        obtenerTipo(s, ((EtiquetasTipo)s.getMy().getEtiquetas()).getTipos());
+        obtenerTipo(s, (EtiquetasTipo) s.getMy().getEtiquetas());
         validarTipo(s);
-        variableEnmascarada(s);
-
-        EntradaVariable entrada = new EntradaVariable(s.getVar().toString(), s.getTipo(), false);
-        tabla.getTablaSimbolos().addVariable(entrada, s.getContexto().toString().charAt(0));
+        boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
+        EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), false);
+        entrada.setConflicto(confligto);
+        tabla.getTablaSimbolos().addVariable(entrada, getContexto(s));
     }
 
     public void visitar(VarOur s) {
         noAccederDeclaracion(s);
-        obtenerTipo(s, ((EtiquetasTipo)s.getOur().getEtiquetas()).getTipos());
+        obtenerTipo(s, (EtiquetasTipo) s.getOur().getEtiquetas());
         validarTipo(s);
-        variableEnmascarada(s);
-
-        EntradaVariable entrada = new EntradaVariable(s.getVar().toString(), s.getTipo(), true);
-        tabla.getTablaSimbolos().addVariable(entrada, s.getContexto().toString().charAt(0));
+        boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
+        EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), true);
+        entrada.setConflicto(confligto);
+        tabla.getTablaSimbolos().addVariable(entrada, getContexto(s));
     }
 
     /**
@@ -121,13 +119,13 @@ public class SemVariable {
      * Obtiene el tipo de la variable
      *
      * @param v Variable
-     * @param etiquetas SemanticaEtiquetas
+     * @param tipoLinea Tipo declarado en la linea
      */
-    private void obtenerTipo(Variable v, List<Token> etiquetas) {
+    private void obtenerTipo(Variable v, EtiquetasTipo tipoLinea) {
         Simbolo uso = Buscar.getPadre(v, 1);
-        Tipo t = tabla.getTablaSimbolos().getDeclaracion(v.getContexto().toString() + v.getVar().toString());
+        EtiquetasTipo predeclaracion = tabla.getTablaSimbolos().getDeclaracion(v.getContexto().toString() + v.getVar().toString());
         if (uso instanceof BloqueForeachVar) {
-            if (t != null) {
+            if (predeclaracion != null) {
                 tabla.getGestorErrores().error(Errores.AVISO, Errores.TIPO_FOREACH, v.getVar().getToken());
             }
             BloqueForeachVar foreach = (BloqueForeachVar) uso;
@@ -137,10 +135,10 @@ public class SemVariable {
                 v.setTipo(new Tipo(foreach.getLista().getTipo()));
             }
 
-        } else if (t != null) {
-            v.setTipo(t);
-        } else if (etiquetas != null) {
-            v.setTipo(SemanticaEtiquetas.parseTipo(etiquetas, tabla.getGestorErrores()));
+        } else if (predeclaracion != null) {
+            v.setTipo(SemanticaEtiquetas.parseTipo(predeclaracion.getTipos()));
+        } else if (tipoLinea != null) {
+            v.setTipo(SemanticaEtiquetas.parseTipo(tipoLinea.getTipos()));
         } else {
             tabla.getGestorErrores().error(Errores.VARIABLE_SIN_TIPO, v.getVar().getToken(), v.getVar());
             throw new ExcepcionSemantica();
@@ -148,7 +146,7 @@ public class SemVariable {
     }
 
     /**
-     * Hay que validar si el tipo es compatible con el contexto
+     * Hay que comprobar que las etiquetas se usen en los contextos adecuados
      *
      * @param v Variable
      */
@@ -175,20 +173,6 @@ public class SemVariable {
                 }
                 break;
         }
-    }
-
-    /**
-     * Si la variable ya estaba declarada hay que avisar que enmascarará la variable existente
-     *
-     * @param v Variable
-     */
-    private void variableEnmascarada(Variable v) {
-        /*
-        String id = v.getVar().toString();
-        char contexto = v.getContexto().toString().charAt(0);
-        if (tabla.getTablaSimbolos().buscarVariable(id, contexto, tabla.getTablaSimbolos().getBloques()) != null) {
-            tabla.getGestorErrores().error(Errores.AVISO, Errores.VARIABLE_ENMASCARADA, v.getVar().getToken(), contexto, id);
-        }*/
     }
 
 }

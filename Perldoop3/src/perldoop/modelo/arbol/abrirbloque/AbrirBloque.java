@@ -4,7 +4,7 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> abrirBloque :<br>
+ * Clase que representa la reduccion -&gt; abrirBloque :<br>
  * La función de esta clase es tener una reducción para poder abrir un nuevo 
  * contexto de variables antes de analizar el cuerpo del bloque.
  *

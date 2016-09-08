@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> compracion : expresion CMP expresion
+ * Clase que representa la reduccion -&gt; compracion : expresion CMP expresion
  *
  * @author César Pomar
  */

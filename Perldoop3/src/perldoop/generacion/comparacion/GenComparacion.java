@@ -28,7 +28,7 @@ public class GenComparacion {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenComparacion(TablaGenerador tabla) {
         this.tabla = tabla;

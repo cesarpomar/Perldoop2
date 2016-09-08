@@ -14,7 +14,7 @@ public class GenAbrirBloque {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenAbrirBloque(TablaGenerador tabla) {
         this.tabla = tabla;

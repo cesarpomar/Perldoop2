@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.asignacion.Asignacion;
 
 /**
- * Clase que representa la reduccion -> expresion : asignacion
+ * Clase que representa la reduccion -&gt; expresion : asignacion
  *
  * @author César Pomar
  */
@@ -16,7 +16,7 @@ public final class ExpAsignacion extends Expresion {
     /**
      * Único contructor de la clase
      *
-     * @param asignacion
+     * @param asignacion Tabla
      */
     public ExpAsignacion(Asignacion asignacion) {
         setAsignacion(asignacion);

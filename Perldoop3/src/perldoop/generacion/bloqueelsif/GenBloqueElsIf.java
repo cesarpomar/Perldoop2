@@ -14,7 +14,7 @@ public class GenBloqueElsIf {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenBloqueElsIf(TablaGenerador tabla) {
         this.tabla = tabla;

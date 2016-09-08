@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> <br>
+ * Clase que representa la reduccion -&gt; <br>
  * flujo : RETURN ';'<br>
  | RETURN expresion ';'
  *

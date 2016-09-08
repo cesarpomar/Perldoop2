@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> aritmetica : expresion MENOS_MENOS
+ * Clase que representa la reduccion -&gt; aritmetica : expresion MENOS_MENOS
  *
  * @author César Pomar
  */

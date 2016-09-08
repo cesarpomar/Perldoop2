@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> logico : '!' expresion
+ * Clase que representa la reduccion -&gt; logico : '!' expresion
  *
  * @author César Pomar
  */

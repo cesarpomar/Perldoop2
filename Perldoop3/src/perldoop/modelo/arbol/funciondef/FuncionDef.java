@@ -7,7 +7,7 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.funcionsub.FuncionSub;
 
 /**
- * Clase que representa la reduccion -> funcionDef : funcionSub '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt; funcionDef : funcionSub '{' cuerpo '}'
  *
  * @author César Pomar
  */

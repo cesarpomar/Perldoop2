@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.bloqueelsif.BloqueElsIf;
 
 /**
- * Clase que representa la reduccion -> elsif : bloqueElsif elsif
+ * Clase que representa la reduccion -&gt; elsif : bloqueElsif elsif
  *
  * @author César Pomar
  */

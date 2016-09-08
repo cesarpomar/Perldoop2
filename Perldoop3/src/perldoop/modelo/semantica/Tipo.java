@@ -107,7 +107,7 @@ public final class Tipo {
     /**
      * Crea un subtipo del actual partiendo del subtipo init
      *
-     * @param init Inico del subtipo
+     * @param init Inicio del subtipo
      * @return Subtipo
      */
     public Tipo getSubtipo(int init) {

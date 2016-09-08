@@ -31,7 +31,7 @@ public class GenAsignacion {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenAsignacion(TablaGenerador tabla) {
         this.tabla = tabla;

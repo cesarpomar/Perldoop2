@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> acceso : '$' expresion
+ * Clase que representa la reduccion -&gt; acceso : '$' expresion
  *
  * @author César Pomar
  */

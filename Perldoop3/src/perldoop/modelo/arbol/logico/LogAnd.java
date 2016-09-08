@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> logico : expresion LAND expresion
+ * Clase que representa la reduccion -&gt; logico : expresion LAND expresion
  *
  * @author César Pomar
  */

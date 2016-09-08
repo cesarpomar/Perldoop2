@@ -9,7 +9,7 @@ import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -><br> bloque : FOR abrirBloque expresion '(' lista ')' '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> bloque : FOR abrirBloque expresion '(' lista ')' '{' cuerpo '}'
  *
  * @author César Pomar
  */

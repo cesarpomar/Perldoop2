@@ -7,7 +7,7 @@ import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -> <br>
+ * Clase que representa la reduccion -&gt; <br>
  * variable : paquete ID expresion<br>
  * | ID expresion<br>
  *

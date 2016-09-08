@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.condicional.Condicional;
 import perldoop.modelo.arbol.elsif.ElsIf;
 
 /**
- * Clase que representa la reduccion -> bloque : condicional elsif
+ * Clase que representa la reduccion -&gt; bloque : condicional elsif
  *
  * @author César Pomar
  */

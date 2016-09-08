@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -> <br>
+ * Clase que representa la reduccion -&gt; <br>
  * variable : paquete ID<br>
  * | ID<br>
  *

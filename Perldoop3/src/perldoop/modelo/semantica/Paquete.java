@@ -31,6 +31,10 @@ public final class Paquete {
      */
     public void addVariable(EntradaVariable entrada, char contexto) {
         Contexto c = atributos.get(entrada.getIdentificador());
+        if (c == null) {
+            c = new Contexto();
+            atributos.put(entrada.getIdentificador(), c);
+        }
         switch (contexto) {
             case '$':
                 c.setEscalar(entrada);

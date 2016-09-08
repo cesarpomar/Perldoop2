@@ -19,7 +19,7 @@ public class GenBinario {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenBinario(TablaGenerador tabla) {
         this.tabla = tabla;

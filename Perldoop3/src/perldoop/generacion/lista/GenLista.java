@@ -22,7 +22,7 @@ public class GenLista {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenLista(TablaGenerador tabla) {
         this.tabla = tabla;

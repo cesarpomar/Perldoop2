@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> asignacion : CADENA_COMANDO
+ * Clase que representa la reduccion -&gt; asignacion : CADENA_COMANDO
  *
  * @author César Pomar
  */

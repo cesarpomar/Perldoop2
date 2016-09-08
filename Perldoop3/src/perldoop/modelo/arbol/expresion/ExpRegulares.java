@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.regulares.Regulares;
 
 /**
- * Clase que representa la reduccion -> expresion : regulares
+ * Clase que representa la reduccion -&gt; expresion : regulares
  *
  * @author César Pomar
  */

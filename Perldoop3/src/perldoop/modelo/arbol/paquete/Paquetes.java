@@ -7,7 +7,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -><br>
+ * Clase que representa la reduccion -&gt;<br>
  * paquete : paqueteVAR VAR AMBITO<br>
  * |	VAR AMBITO<br>
  * paquete : paqueteID ID AMBITO<br>

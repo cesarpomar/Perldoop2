@@ -475,6 +475,7 @@ public final class Casting {
             cst.append("String key = null;");
             cst.append("Boolean value = false;");
         }
+        cst.append("if(").append(tam).append("%2!=0){throw new Exception();}");
         cst.append("for(int i=0;i<").append(tam).append(";i++){");
         Terminal t = new Terminal(null);
         t.setCodigoGenerado(new StringBuilder(lectura));

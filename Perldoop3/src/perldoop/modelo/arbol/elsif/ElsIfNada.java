@@ -4,7 +4,7 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> elsif : 
+ * Clase que representa la reduccion -&gt; elsif : 
  *
  * @author César Pomar
  */

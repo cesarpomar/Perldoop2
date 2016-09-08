@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.acceso.Acceso;
 
 /**
- * Clase que representa la reduccion -> expresion : acceso
+ * Clase que representa la reduccion -&gt; expresion : acceso
  *
  * @author César Pomar
  */

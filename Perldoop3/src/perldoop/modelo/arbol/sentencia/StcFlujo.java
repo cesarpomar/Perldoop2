@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.flujo.Flujo;
 
 /**
- * Clase que representa la reduccion -> sentencia : flujo
+ * Clase que representa la reduccion -&gt; sentencia : flujo
  *
  * @author César Pomar
  */

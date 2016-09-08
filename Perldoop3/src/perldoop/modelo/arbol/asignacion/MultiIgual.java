@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> asignacion : expresion MULTI_IGUAL expresion
+ * Clase que representa la reduccion -&gt; asignacion : expresion MULTI_IGUAL expresion
  *
  * @author César Pomar
  */

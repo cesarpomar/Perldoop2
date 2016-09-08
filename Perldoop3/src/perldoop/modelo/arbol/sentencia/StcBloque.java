@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.bloque.Bloque;
 
 /**
- * Clase que representa la reduccion -> sentencia : bloque
+ * Clase que representa la reduccion -&gt; sentencia : bloque
  *
  * @author César Pomar
  */

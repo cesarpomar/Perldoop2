@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 
 /**
- * Clase que representa la reduccion -> expresion : coleccion
+ * Clase que representa la reduccion -&gt; expresion : coleccion
  *
  * @author César Pomar
  */

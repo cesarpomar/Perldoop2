@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> compracion : expresion SMART_EQ
+ * Clase que representa la reduccion -&gt; compracion : expresion SMART_EQ
  * expresion
  *
  * @author César Pomar

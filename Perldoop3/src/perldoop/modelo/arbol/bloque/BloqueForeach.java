@@ -8,7 +8,7 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -><br> bloque : FOR abrirBloque '(' lista
+ * Clase que representa la reduccion -&gt;<br> bloque : FOR abrirBloque '(' lista
  * ')' '{' cuerpo '}'
  *
  * @author César Pomar

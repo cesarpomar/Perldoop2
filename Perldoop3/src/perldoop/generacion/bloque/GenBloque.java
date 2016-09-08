@@ -21,7 +21,7 @@ public class GenBloque {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenBloque(TablaGenerador tabla) {
         this.tabla = tabla;

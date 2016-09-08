@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> sentencia : COMENTARIO
+ * Clase que representa la reduccion -&gt; sentencia : COMENTARIO
  *
  * @author César Pomar
  */

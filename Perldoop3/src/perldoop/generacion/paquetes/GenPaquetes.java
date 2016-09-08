@@ -16,7 +16,7 @@ public class GenPaquetes {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenPaquetes(TablaGenerador tabla) {
         this.tabla = tabla;

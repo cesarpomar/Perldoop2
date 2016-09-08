@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> binario : '^' expresion
+ * Clase que representa la reduccion -&gt; binario : '^' expresion
  *
  * @author César Pomar
  */

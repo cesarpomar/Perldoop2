@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.funciondef.FuncionDef;
 import perldoop.modelo.arbol.fuente.Fuente;
 
 /**
- * Clase que representa la reduccion -> masFuente : funcionDef fuente
+ * Clase que representa la reduccion -&gt; masFuente : funcionDef fuente
  *
  * @author César Pomar
  */

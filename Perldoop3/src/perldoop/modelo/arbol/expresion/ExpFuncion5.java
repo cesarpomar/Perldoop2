@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.funcion.Funcion;
 
 /**
- * Clase que representa la reduccion -> expresion : funcion
+ * Clase que representa la reduccion -&gt; expresion : funcion
  *
  * @author César Pomar
  */

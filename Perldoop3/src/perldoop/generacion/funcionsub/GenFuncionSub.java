@@ -16,7 +16,7 @@ public class GenFuncionSub {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenFuncionSub(TablaGenerador tabla) {
         this.tabla = tabla;

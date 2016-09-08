@@ -7,7 +7,7 @@ import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.modificador.Modificador;
 
 /**
- * Clase que representa la reduccion -> sentencia : lista modificador ';'
+ * Clase que representa la reduccion -&gt; sentencia : lista modificador ';'
  *
  * @author César Pomar
  */
@@ -42,7 +42,7 @@ public final class StcLista extends Sentencia {
     /**
      * Establece la lista
      *
-     * @param lista
+     * @param lista Tabla
      */
     public final void setLista(Lista lista) {
         lista.setPadre(this);

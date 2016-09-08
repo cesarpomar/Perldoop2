@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> asignacion : ENTERO
+ * Clase que representa la reduccion -&gt; asignacion : ENTERO
  *
  * @author César Pomar
  */

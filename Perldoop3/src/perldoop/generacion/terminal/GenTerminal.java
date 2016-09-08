@@ -17,16 +17,18 @@ public class GenTerminal {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenTerminal(TablaGenerador tabla) {
         this.tabla = tabla;
     }
 
     public void visitar(Terminal s) {
-        StringBuilder comentario = new StringBuilder(200);
-        Token t = s.getToken();
         if (tabla.getOpciones().isComentarios() && s.getTokensComentario() != null) {
+            StringBuilder comentario = new StringBuilder(200);
+            if (s.getTokensComentario().get(0).getLinea() != s.getToken().getLinea()) {
+                comentario.append("\n");
+            }
             comentario.append("/*");
             Iterator<Token> comentarios = s.getTokensComentario().iterator();
             while (comentarios.hasNext()) {
@@ -35,10 +37,12 @@ public class GenTerminal {
                     comentario.append("\n");
                 }
             }
-            comentario.append("*/");
-        }
-        s.setComentario(comentario.toString());
-        s.setCodigoGenerado(new StringBuilder(s.getValor()).append(comentario));
+            comentario.append("*/\n");
+            s.setComentario(comentario.toString());
+        } else {
+            s.setComentario("");
+        }     
+        s.setCodigoGenerado(new StringBuilder(s.getValor()));
     }
 
 }

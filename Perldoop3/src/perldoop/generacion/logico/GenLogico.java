@@ -21,7 +21,7 @@ public class GenLogico {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenLogico(TablaGenerador tabla) {
         this.tabla = tabla;

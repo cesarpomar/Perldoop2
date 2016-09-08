@@ -19,7 +19,7 @@ public class GenFuncion {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenFuncion(TablaGenerador tabla) {
         this.tabla = tabla;

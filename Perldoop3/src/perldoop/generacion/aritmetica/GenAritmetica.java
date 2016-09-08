@@ -27,7 +27,7 @@ public class GenAritmetica {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenAritmetica(TablaGenerador tabla) {
         this.tabla = tabla;

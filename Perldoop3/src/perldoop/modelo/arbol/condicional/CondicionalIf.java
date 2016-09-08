@@ -8,7 +8,7 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -><br> condicional : IF abrirBloque '('
+ * Clase que representa la reduccion -&gt;<br> condicional : IF abrirBloque '('
  * expresion ')' '{' cuerpo '}'
  *
  * @author César Pomar

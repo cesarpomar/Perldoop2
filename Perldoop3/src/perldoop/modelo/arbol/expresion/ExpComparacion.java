@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.comparacion.Comparacion;
 
 /**
- * Clase que representa la reduccion -> expresion : comparacion
+ * Clase que representa la reduccion -&gt; expresion : comparacion
  *
  * @author César Pomar
  */
@@ -16,7 +16,7 @@ public final class ExpComparacion extends Simbolo {
     /**
      * Único contructor de la clase
      *
-     * @param comparacion
+     * @param comparacion Comparación
      */
     public ExpComparacion(Comparacion comparacion) {
         setComparacion(comparacion);

@@ -25,7 +25,7 @@ public class GenExpresion {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenExpresion(TablaGenerador tabla) {
         this.tabla = tabla;

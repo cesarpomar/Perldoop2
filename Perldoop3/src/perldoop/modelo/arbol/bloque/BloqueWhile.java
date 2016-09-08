@@ -8,7 +8,7 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -><br> bloque : WHILE abrirBloque '('
+ * Clase que representa la reduccion -&gt;<br> bloque : WHILE abrirBloque '('
  * expresion ')' '{' cuerpo '}'
  *
  * @author César Pomar

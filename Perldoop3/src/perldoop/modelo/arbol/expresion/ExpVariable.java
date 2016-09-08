@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.variable.Variable;
 
 /**
- * Clase que representa la reduccion -> expresion : variable
+ * Clase que representa la reduccion -&gt; expresion : variable
  *
  * @author César Pomar
  */

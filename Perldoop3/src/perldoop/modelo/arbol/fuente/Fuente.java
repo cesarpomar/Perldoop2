@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.masfuente.MasFuente;
 
 /**
- * Clase que representa la reduccion -> fuente : cuerpo masFuente
+ * Clase que representa la reduccion -&gt; fuente : cuerpo masFuente
  *
  * @author César Pomar
  */

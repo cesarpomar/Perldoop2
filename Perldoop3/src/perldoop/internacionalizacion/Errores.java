@@ -20,9 +20,12 @@ public class Errores extends Internacionalizacion {
     public static final String ETIQUETA_IGNORADA = "ETIQUETA_IGNORADA";
     //Preprocesador
     public static final String FALLOS_PREPROCESADOR = "FALLOS_PREPROCESADOR";
-    public static final String ETIQUETA_NO_USADA = "ETIQUETA_NO_USADA";
-    public static final String FALLOS_SINTACTICOS = "FALLOS_SINTACTICOS";
+    public static final String ETIQUETAS_COLECCION_INCOMPLETAS = "ETIQUETAS_COLECCION_INCOMPLETAS";
+    public static final String DEMASIADAS_ETIQUETAS_SIZE = "DEMASIADAS_ETIQUETAS_SIZE";
+    public static final String TIPO_EN_INICIALIZACION = "TIPO_EN_INICIALIZACION";
+    public static final String PREDECLARACION_DINAMICA = "PREDECLARACION_DINAMICA";
     //Sintacticos
+    public static final String FALLOS_SINTACTICOS = "FALLOS_SINTACTICOS";
     public static final String ERROR_SINTACTICO = "ERROR_SINTACTICO";
     //Semanticos
     public static final String FALLOS_SEMANTICO = "FALLOS_SEMANTICO";
@@ -35,7 +38,6 @@ public class Errores extends Internacionalizacion {
     public static final String VARIABLE_SIN_TIPO = "VARIABLE_SIN_TIPO";
     public static final String VARIABLE_NO_EXISTE = "VARIABLE_NO_EXISTE";
     public static final String PAQUETE_NO_EXISTE = "PAQUETE_NO_EXISTE";
-    public static final String TIPO_ESCALAR_OMITIDO = "TIPO_ESCALAR_OMITIDO";
     public static final String ETIQUETA_SIN_USO = "ETIQUETA_SIN_USO";
     public static final String TIPO_INCORRECTO = "TIPO_INCORRECTO";
     public static final String VARIABLE_ENMASCARADA = "VARIABLE_ENMASCARADA";

@@ -16,7 +16,7 @@ public class GenRaiz {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenRaiz(TablaGenerador tabla) {
         this.tabla = tabla;

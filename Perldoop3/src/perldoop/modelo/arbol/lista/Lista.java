@@ -9,7 +9,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa las reducciones -> <br>
+ * Clase que representa las reducciones -&gt; <br>
  * lista :	expresion ',' lista<br>
  * |	expresion ','<br>
  * |	expresion<br>

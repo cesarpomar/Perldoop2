@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import perldoop.modelo.lexico.Token;
+import perldoop.modelo.preprocesador.EtiquetasTipo;
 
 /**
  * Clase que almacena las bloques declaradas en el código.
@@ -14,7 +15,7 @@ import perldoop.modelo.lexico.Token;
 public final class TablaSimbolos {
 
     private List<Map<String, Contexto>> bloques;
-    private Map<String, Tipo> predeclaraciones;
+    private Map<String, EtiquetasTipo> predeclaraciones;
     private Map<String, EntradaFuncion> funciones;
     private Map<String, Token> funcionesNoDeclaradas;
     private Map<String, Paquete> paquetes;
@@ -164,7 +165,7 @@ public final class TablaSimbolos {
      * @param identificador Identificador
      * @param tipo Tipo
      */
-    public void addDeclaracion(String identificador, Tipo tipo) {
+    public void addDeclaracion(String identificador, EtiquetasTipo tipo) {
         predeclaraciones.put(identificador, tipo);
     }
 
@@ -174,7 +175,7 @@ public final class TablaSimbolos {
      * @param identificador Identificador
      * @return Tipo
      */
-    public Tipo getDeclaracion(String identificador) {
+    public EtiquetasTipo getDeclaracion(String identificador) {
         return predeclaraciones.remove(identificador);
     }
 

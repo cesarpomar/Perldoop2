@@ -26,7 +26,7 @@ public class GenSentencia {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenSentencia(TablaGenerador tabla) {
         this.tabla = tabla;
@@ -46,6 +46,9 @@ public class GenSentencia {
             if (exp instanceof ExpVariable) {
                 Variable var = ((ExpVariable) exp).getVariable();
                 if (var instanceof VarMy) {
+                    if (tabla.getTablaSimbolos().getBloques() == 1) {
+                        continue;//los atributos ya se han declarado
+                    }
                     sentencia = true;
                 } else {
                     continue;//Las lecturas de variables no sirven para nada
@@ -81,6 +84,9 @@ public class GenSentencia {
                         break;
                     }
                 }
+                if (!sentencia) {
+                    continue;
+                }
             }
             //Si es sentencia la escribimos, si no usamos la funcion auxiliar para evaluarla
             if (sentencia) {
@@ -106,11 +112,10 @@ public class GenSentencia {
             tabla.getClase().getPaquetes().add(p.toString());
         }
         s.setCodigoGenerado(new StringBuilder(0));
-
     }
 
     public void visitar(StcComentario s) {
-        s.setCodigoGenerado(new StringBuilder(s.getComentario().getCodigoGenerado()));
+        s.setCodigoGenerado(new StringBuilder(s.getComentario().getCodigoGenerado()).insert(0, '\n'));
     }
 
     public void visitar(StcDeclaracion s) {

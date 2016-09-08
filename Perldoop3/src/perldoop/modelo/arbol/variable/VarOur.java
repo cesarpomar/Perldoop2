@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> <br>variable : OUR '$' ID<br>
+ * Clase que representa la reduccion -&gt; <br>variable : OUR '$' ID<br>
  * OUR '@' ID<br>
  * OUR '%' ID
  *

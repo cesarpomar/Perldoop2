@@ -7,7 +7,7 @@ import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> acceso : expresion FLECHA coleccion
+ * Clase que representa la reduccion -&gt; acceso : expresion FLECHA coleccion
  *
  * @author César Pomar
  */

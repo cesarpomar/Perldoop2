@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> sentencia : DECLARACION_TIPO
+ * Clase que representa la reduccion -&gt; sentencia : DECLARACION_TIPO
  *
  * @author César Pomar
  */

@@ -20,7 +20,7 @@ public class GenAcceso {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenAcceso(TablaGenerador tabla) {
         this.tabla = tabla;

@@ -12,11 +12,9 @@ import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpFuncion5;
-import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.generacion.TablaGenerador;
-import perldoop.modelo.lexico.Token;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 

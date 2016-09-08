@@ -7,7 +7,7 @@ import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**
- * Clase que representa la reduccion -> elsif : ELSE abrirBloque '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt; elsif : ELSE abrirBloque '{' cuerpo '}'
  *
  * @author César Pomar
  */

@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> rango : expresion DOS_PUNTOS expresion
+ * Clase que representa la reduccion -&gt; rango : expresion DOS_PUNTOS expresion
  *
  * @author César Pomar
  */

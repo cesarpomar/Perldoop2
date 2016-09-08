@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> compracion : expresion STR_NE expresion
+ * Clase que representa la reduccion -&gt; compracion : expresion STR_NE expresion
  *
  * @author César Pomar
  */

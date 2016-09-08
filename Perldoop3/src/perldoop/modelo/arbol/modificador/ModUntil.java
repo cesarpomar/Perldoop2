@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> modificador : UNTIL espresion
+ * Clase que representa la reduccion -&gt; modificador : UNTIL espresion
  *
  * @author César Pomar
  */

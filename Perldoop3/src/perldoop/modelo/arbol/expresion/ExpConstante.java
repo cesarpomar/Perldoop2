@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.constante.Constante;
 
 /**
- * Clase que representa la reduccion -> expresion : constante
+ * Clase que representa la reduccion -&gt; expresion : constante
  *
  * @author César Pomar
  */

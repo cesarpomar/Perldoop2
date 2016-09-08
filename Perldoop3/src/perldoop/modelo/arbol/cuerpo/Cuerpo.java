@@ -8,7 +8,7 @@ import perldoop.modelo.arbol.sentencia.Sentencia;
 
 
 /**
- * Clase que representa las reducciones -> <br>
+ * Clase que representa las reducciones -&gt; <br>
  * cuerpo :<br>
           | cuerpo sentencia<br>							
  *

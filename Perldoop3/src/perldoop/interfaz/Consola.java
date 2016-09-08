@@ -68,7 +68,7 @@ public final class Consola {
     /**
      * Obtiene los ficheros para analizar
      *
-     * @return
+     * @return Lista de nombres de ficheros
      */
     public List<String> getFicheros() {
         return comandos.getList("files");

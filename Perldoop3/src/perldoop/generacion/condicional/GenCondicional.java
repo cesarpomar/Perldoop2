@@ -15,7 +15,7 @@ public class GenCondicional {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenCondicional(TablaGenerador tabla) {
         this.tabla = tabla;

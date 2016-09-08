@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 
 /**
  * /**
- * Clase que representa la reduccion -> flujo : NEXT ';'
+ * Clase que representa la reduccion -&gt; flujo : NEXT ';'
  *
  * @author César Pomar
  */
@@ -19,6 +19,7 @@ public final class Next extends Flujo {
      * Único contructor de la clase
      *
      * @param next Next
+     * @param puntoComa PuntoComa
      */
     public Next(Terminal next, Terminal puntoComa) {
         setNext(next);

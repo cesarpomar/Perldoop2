@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -> coleccion : VarMulti '(' lista ')'
+ * Clase que representa la reduccion -&gt; coleccion : VarMulti '(' lista ')'
  *
  * @author César Pomar
  */

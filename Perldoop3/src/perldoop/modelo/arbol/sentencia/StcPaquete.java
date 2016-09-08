@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -> sentencia : PACKAGE paqueteID ID ';'
+ * Clase que representa la reduccion -&gt; sentencia : PACKAGE paqueteID ID ';'
  *
  * @author César Pomar
  */

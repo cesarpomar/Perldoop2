@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -> binario : expresion DESP_D expresion
+ * Clase que representa la reduccion -&gt; binario : expresion DESP_D expresion
  *
  * @author César Pomar
  */

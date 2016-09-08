@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -> coleccion : '{' lista '}' | '{' '}'
+ * Clase que representa la reduccion -&gt; coleccion : '{' lista '}' | '{' '}'
  *
  * @author César Pomar
  */

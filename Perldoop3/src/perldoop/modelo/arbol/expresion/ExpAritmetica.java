@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.aritmetica.Aritmetica;
 
 /**
- * Clase que representa la reduccion -> expresion : aritmetica
+ * Clase que representa la reduccion -&gt; expresion : aritmetica
  *
  * @author César Pomar
  */

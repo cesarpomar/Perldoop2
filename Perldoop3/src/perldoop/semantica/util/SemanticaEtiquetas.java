@@ -3,8 +3,6 @@ package perldoop.semantica.util;
 import java.util.ArrayList;
 import java.util.List;
 import perldoop.error.GestorErrores;
-import perldoop.excepciones.ExcepcionSemantica;
-import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.semantica.Tipo;
 
@@ -22,14 +20,10 @@ public final class SemanticaEtiquetas {
      * @param ge Gestor de errores
      * @return Tipo
      */
-    public static Tipo parseTipo(List<Token> etiquetas, GestorErrores ge) {
+    public static Tipo parseTipo(List<Token> etiquetas) {
         Tipo tipo = new Tipo();
-        Token t;
-        int i;
-        FOR:
-        for (i = 0; i < etiquetas.size() - 1; i++) {
-            t = etiquetas.get(i);
-            switch (t.getValor()) {
+        for (int i = 0; i < etiquetas.size(); i++) {
+            switch (etiquetas.get(i).getValor()) {
                 case "<array>":
                     tipo.add(Tipo.ARRAY);
                     break;
@@ -42,58 +36,43 @@ public final class SemanticaEtiquetas {
                 case "<ref>":
                     tipo.add(Tipo.REF);
                     break;
-                default:
-                    i--;
-                    break FOR;
+                case "<boolean>":
+                    tipo.add(Tipo.BOOLEAN);
+                    break;
+                case "<integer>":
+                    tipo.add(Tipo.INTEGER);
+                    break;
+                case "<long>":
+                    tipo.add(Tipo.LONG);
+                    break;
+                case "<float>":
+                    tipo.add(Tipo.FLOAT);
+                    break;
+                case "<double>":
+                    tipo.add(Tipo.DOUBLE);
+                    break;
+                case "<string>":
+                    tipo.add(Tipo.STRING);
+                    break;
+                case "<file>":
+                    tipo.add(Tipo.FILE);
+                    break;
+                case "<box>":
+                    tipo.add(Tipo.BOX);
+                    break;
+                case "<number>":
+                    tipo.add(Tipo.NUMBER);
+                    break;
             }
         }
-
-        t = etiquetas.get(i++);
-        switch (t.getValor()) {
-            case "<boolean>":
-                tipo.add(Tipo.BOOLEAN);
-                break;
-            case "<integer>":
-                tipo.add(Tipo.INTEGER);
-                break;
-            case "<long>":
-                tipo.add(Tipo.LONG);
-                break;
-            case "<float>":
-                tipo.add(Tipo.FLOAT);
-                break;
-            case "<double>":
-                tipo.add(Tipo.DOUBLE);
-                break;
-            case "<string>":
-                tipo.add(Tipo.STRING);
-                break;
-            case "<file>":
-                tipo.add(Tipo.FILE);
-                break;
-            case "<box>":
-                tipo.add(Tipo.BOX);
-                break;
-            case "<number>":
-                tipo.add(Tipo.BOX);
-                break;
-            default:
-                ge.error(Errores.TIPO_ESCALAR_OMITIDO, t);
-                throw new ExcepcionSemantica();
-        }
-        for (; i < etiquetas.size(); i++) {
-            t = etiquetas.get(i);
-            ge.error(Errores.AVISO, Errores.ETIQUETA_NO_USADA, t);
-        }
-
         return tipo;
     }
 
     /**
-     * Convierte en tipo en etiquetas
+     * Convierte un tipo a sus etiquetas
      *
      * @param tipo Tipo
-     * @return SemanticaEtiquetas
+     * @return Lista de etiquetas
      */
     public static List<String> parseTipo(Tipo tipo) {
         List<String> etiquetas = new ArrayList<>(tipo.getTipo().size());

@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> funcionSub : SUB ID
+ * Clase que representa la reduccion -&gt; funcionSub : SUB ID
  *
  * @author César Pomar
  */

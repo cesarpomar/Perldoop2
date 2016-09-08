@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> regulares : expresion STR_REX Y_REGEX
+ * Clase que representa la reduccion -&gt; regulares : expresion STR_REX Y_REGEX
  *
  * @author César Pomar
  */

@@ -133,17 +133,17 @@ public final class Preprocesador {
                             break;
                         case '=':
                             if (inicializacion != null) {
-                                terminales.add(setEtiqueta(i, inicializacion));
+                                terminales.add(terminal(i, inicializacion));
                                 break;
                             }
                         case Parser.MY:
                         case Parser.OUR:
-                            terminales.add(setEtiqueta(i, tipoSentencia));
+                            terminales.add(terminal(i, tipoSentencia));
                             break;
                         case ';':
                             tipoSentencia = null;
                         default:
-                            terminales.add(perl(i));
+                            terminales.add(terminal(i));
                     }
                     break;
                 case ESTADO_COLECCION:
@@ -169,7 +169,7 @@ public final class Preprocesador {
                             estado = ESTADO_SIZE;
                             break;
                         default:
-                        //Error sintaxis etiqueta
+                            gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
                     }
                     break;
                 case ESTADO_SIZE:
@@ -192,10 +192,10 @@ public final class Preprocesador {
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
-                            //Error sintaxis etiqueta
+                            gestorErrores.error(Errores.DEMASIADAS_ETIQUETAS_SIZE, tokens.get(i));
                             break;
                         default:
-                        //Error sintaxis etiqueta
+                            gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
                     }
                     break;
                 case ESTADO_VARIABLES:
@@ -223,7 +223,7 @@ public final class Preprocesador {
                             break;
                         default:
                             aceptar(inicializacion, terminales);
-                            terminales.add(perl(i));
+                            terminales.add(terminal(i));
                     }
                     break;
                 case ESTADO_INICIALIZACION:
@@ -233,7 +233,7 @@ public final class Preprocesador {
                             break;
                         case Parser.PD_TIPO:
                         case Parser.PD_COL:
-                            //Error sintaxis etiqueta
+                            gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
@@ -241,7 +241,7 @@ public final class Preprocesador {
                             break;
                         default:
                             aceptar(inicializacion, terminales);
-                            terminales.add(perl(i));
+                            terminales.add(terminal(i));
                     }
                     break;
             }
@@ -249,19 +249,38 @@ public final class Preprocesador {
         return terminales;
     }
 
-    private Terminal perl(int i) {
+    /**
+     * Crea un terminal de un token
+     *
+     * @param i Posición del token
+     * @return Terminal
+     */
+    private Terminal terminal(int i) {
         return new Terminal(tokens.get(i));
     }
 
-    private Terminal setEtiqueta(int i, Etiquetas etiquetas) {
-        Terminal t = perl(i);
+    /**
+     * Crea un terminal de un token y luego le establece las etiquetas asociadas
+     *
+     * @param i Posición del token
+     * @param etiquetas Etiquetas
+     * @return Terminal
+     */
+    private Terminal terminal(int i, Etiquetas etiquetas) {
+        Terminal t = terminal(i);
         t.setEtiquetas(etiquetas);
         return t;
     }
 
+    /**
+     * Crea un terminal de un comentario
+     *
+     * @param i Posición del token comentario
+     * @param terminales Lista de terminales
+     */
     private void comentario(int i, List<Terminal> terminales) {
         if (i == 0) {
-            terminales.add(perl(i));
+            terminales.add(terminal(i));
         } else {
             Terminal t = terminales.get(terminales.size() - 1);
             if (t.getTokensComentario() == null) {
@@ -271,6 +290,12 @@ public final class Preprocesador {
         }
     }
 
+    /**
+     * Acepta y almacena las etiquetas de inicialización en todos los '=' que estean en su misma linea
+     *
+     * @param etiqueta Etiqueta de inicialización
+     * @param terminales Lista de terminales
+     */
     private void aceptar(EtiquetasInicializacion etiqueta, List<Terminal> terminales) {
         int linea = etiqueta.getSizes().get(0).getLinea();
         if (!terminales.isEmpty() && linea == terminales.get(terminales.size() - 1).getToken().getLinea()) {
@@ -286,12 +311,32 @@ public final class Preprocesador {
         }
     }
 
+    /**
+     * Acepta y crea un terminal con las etiquetas de predeclaración
+     *
+     * @param etiqueta Etiquetas de predeclaración
+     * @param terminales Lista de terminales
+     */
     private void aceptar(EtiquetasPredeclaracion etiqueta, List<Terminal> terminales) {
-        Token t = etiqueta.getVariables().get(0);
-        t.setTipo(Parser.DECLARACION_TIPO);
-        terminales.add(new Terminal(t));
+        Terminal t = new Terminal(etiqueta.getVariables().get(0));
+        t.getToken().setTipo(Parser.DECLARACION_TIPO);
+        t.setEtiquetas(etiqueta);
+        terminales.add(t);
+        //No puede haber tamaños como variable en predeclaraciones
+        EtiquetasTipo tipo = etiqueta.getTipo();
+        for (Token tk : tipo.getTipos()) {
+            if (tk.getTipo() == Parser.PD_VAR) {
+                gestorErrores.error(Errores.PREDECLARACION_DINAMICA, tk);
+            }
+        }
     }
 
+    /**
+     * Acepta y almacena las etiquetas de tipo en todos los 'my', 'our' y '=' que estean en su misma linea
+     *
+     * @param etiqueta Etiqueta de tipo
+     * @param terminales Lista de terminales
+     */
     private void aceptar(EtiquetasTipo etiqueta, List<Terminal> terminales) {
         int linea = etiqueta.getTipos().get(0).getLinea();
         if (!terminales.isEmpty() && linea == terminales.get(terminales.size() - 1).getToken().getLinea()) {

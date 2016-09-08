@@ -19,7 +19,7 @@ public class GenModificador {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenModificador(TablaGenerador tabla) {
         this.tabla = tabla;

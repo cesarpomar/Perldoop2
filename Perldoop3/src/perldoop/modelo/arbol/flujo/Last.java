@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -> flujo : LAST ';'
+ * Clase que representa la reduccion -&gt; flujo : LAST ';'
  *
  * @author César Pomar
  */
@@ -18,6 +18,7 @@ public final class Last extends Flujo {
      * Único contructor de la clase
      *
      * @param last Last
+     * @param puntoComa PuntoComa
      */
     public Last(Terminal last, Terminal puntoComa) {
         setLast(last);

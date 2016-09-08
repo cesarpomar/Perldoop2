@@ -17,7 +17,7 @@ public class GenRegulares {
     /**
      * Construye el generador
      *
-     * @param tabla
+     * @param tabla Tabla
      */
     public GenRegulares(TablaGenerador tabla) {
         this.tabla = tabla;

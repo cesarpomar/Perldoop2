@@ -8,7 +8,7 @@ import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -> <br>
+ * Clase que representa la reduccion -&gt; <br>
  * variable : paquete ID expresion<br>
  * | ID expresion<br>
  *
