@@ -2,6 +2,7 @@ package perldoop.semantica.asignacion;
 
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.asignacion.Igual;
+import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.semantica.TablaSemantica;
@@ -32,6 +33,8 @@ public class SemIgual {
             } else {
                 multi_uno(s);
             }
+        } else if (s.getIzquierda() instanceof ExpAcceso && ((ExpAcceso) s.getIzquierda()).getTipo().isColeccion()) {
+            multiacceso(s);
         } else if (s.getDerecha() instanceof ExpColeccion) {
             uno_multi(s);
         } else {
@@ -45,7 +48,7 @@ public class SemIgual {
      * @param s igual
      */
     public void uno_uno(Igual s) {
-        if (!(s.getIzquierda() instanceof ExpVariable)) {
+        if (!(s.getIzquierda() instanceof ExpVariable) && !(s.getIzquierda() instanceof ExpAcceso)) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_CONSTANTE, s.getIgual().getToken(), s.getIgual().toString());
         }
         Tipos.casting(s.getDerecha(), s.getIzquierda().getTipo(), tabla.getGestorErrores());
@@ -93,6 +96,15 @@ public class SemIgual {
      * @param s igual
      */
     public void inicializacion(Igual s) {
+
+    }
+
+    /**
+     * Asignación inicializacion colección
+     *
+     * @param s igual
+     */
+    public void multiacceso(Igual s) {
 
     }
 }

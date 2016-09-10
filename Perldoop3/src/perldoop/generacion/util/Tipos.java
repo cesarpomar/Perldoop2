@@ -1,6 +1,5 @@
 package perldoop.generacion.util;
 
-import java.util.ArrayList;
 import java.util.List;
 import perldoop.modelo.semantica.Tipo;
 
@@ -21,7 +20,7 @@ public final class Tipos {
     public static StringBuilder inicializacion(Tipo t, String... tams) {
         StringBuilder dec;
         List<Byte> subtipos = t.getTipo();
-        int tam = 0;     
+        int tam = 0;
         if (subtipos.get(0) == Tipo.ARRAY) {
             dec = new StringBuilder(100);
             dec.append("new ");
@@ -46,7 +45,7 @@ public final class Tipos {
                 }
             }
         }
-        dec=declaracion(t).insert(0, "new ");
+        dec = declaracion(t).insert(0, "new ");
         switch (t.getTipo().get(0)) {
             case Tipo.LIST:
                 dec.append("(").append(get(tams, tam++)).append(")");
@@ -98,16 +97,6 @@ public final class Tipos {
             }
         }
         return dec;
-    }
-
-    /**
-     * Crea el casting a un tipo
-     *
-     * @param t Tipo
-     * @return Casting
-     */
-    public static StringBuilder casting(Tipo t) {
-        return declaracion(t);
     }
 
     /**

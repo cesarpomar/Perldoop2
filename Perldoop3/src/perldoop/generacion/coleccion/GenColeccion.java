@@ -37,21 +37,6 @@ public class GenColeccion {
         this.tabla = tabla;
     }
 
-    /**
-     * Busca si la colección contiene colecciones anidadas
-     *
-     * @param l Lista
-     * @return Colecciones anidadas
-     */
-    private boolean buscarColeccion(Lista l) {
-        for (Expresion exp : l.getExpresiones()) {
-            if (exp.getTipo().isColeccion()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void genRef(Coleccion c, Tipo t) {
         Simbolo uso = Buscar.getPadre(c, 2);
         //Si no va para otra colecion es una referencia
@@ -113,7 +98,6 @@ public class GenColeccion {
             }
         }
         if (colecciones.size() == 1) {
-            //Si solo hay una coleccion, como mucho habra que convertirla a list
             Terminal term = new Terminal();
             term.setCodigoGenerado(colecciones.get(0));
             term.setTipo(ta);
@@ -137,7 +121,13 @@ public class GenColeccion {
         StringBuilder codigo = new StringBuilder(100);
         Iterator<Expresion> it = l.iterator();
         boolean clave = true;
-        codigo.append("Perl.map(");
+        codigo.append(codigo).append("new PerlMap<");
+        if (st.isRef()) {
+            codigo.append(Tipos.declaracion(st.getSubtipo(1)));
+        } else {
+            codigo.append(Tipos.declaracion(st));
+        }
+        codigo.append(">(");
         StringBuilder claves = new StringBuilder(100);
         StringBuilder valores = new StringBuilder(100);
         while (it.hasNext()) {
@@ -151,6 +141,9 @@ public class GenColeccion {
                 }
             }
             clave = !clave;
+        }
+        if (st.isRef()) {
+            st = st.getSubtipo(1);
         }
         st.add(0, Tipo.ARRAY);//Usamos el mismo convirtiendolo en array
         codigo.append("new String[]{").append(claves).append("}, ");
@@ -240,6 +233,8 @@ public class GenColeccion {
             s.setCodigoGenerado(new StringBuilder(s.getLista().getExpresiones().get(0).getCodigoGenerado()));
         } else if (t.isMap()) {
             s.setCodigoGenerado(genMap(s.getLista(), t));
+        } else if (t.isArrayOrList()) {
+            s.setCodigoGenerado(genArrayList(s.getLista(), t));
         }
         genRef(s, t);
     }

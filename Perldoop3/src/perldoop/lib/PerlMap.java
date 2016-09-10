@@ -46,6 +46,18 @@ public final class PerlMap<T> extends HashMap<String, T> {
         super(m);
     }
 
+    /**
+     * Crea un mapa partiendo de un array de claves y otro de valores
+     * @param claves Array de claves
+     * @param valores Array de valores
+     */
+    public PerlMap(String[] claves, T[] valores) {
+        super(claves.length * 2);
+        for (int i = 0; i < claves.length; i++) {
+            put(claves[i], valores[i]);
+        }
+    }
+
     @Override
     public T put(String key, T value) {
         super.put(key, value);

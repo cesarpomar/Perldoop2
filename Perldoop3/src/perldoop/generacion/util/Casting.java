@@ -474,8 +474,8 @@ public final class Casting {
         if (destino.isMap()) {
             cst.append("String key = null;");
             cst.append("Boolean value = false;");
-        }
-        cst.append("if(").append(tam).append("%2!=0){throw new Exception();}");
+            cst.append("if(").append(tam).append("%2!=0){throw new Exception();}");
+        }     
         cst.append("for(int i=0;i<").append(tam).append(";i++){");
         Terminal t = new Terminal(null);
         t.setCodigoGenerado(new StringBuilder(lectura));
@@ -557,7 +557,8 @@ public final class Casting {
                 return toRef(origen);
             default:
                 if (!origen.getTipo().equals(destino)) {
-                    if(origen.getTipo().isArrayOrList() && destino.isArrayOrList()){
+                    if(origen.getTipo().isArrayOrList() && destino.isArrayOrList() 
+                            && origen.getTipo().getSubtipo(1).equals(destino.getSubtipo(1))){
                         if(destino.isArray()){
                             return toArray(origen);
                         }else{

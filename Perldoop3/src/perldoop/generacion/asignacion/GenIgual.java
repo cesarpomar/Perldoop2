@@ -9,6 +9,7 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpFuncion5;
@@ -43,6 +44,8 @@ public class GenIgual {
             } else {
                 multi_uno(s);
             }
+        } else if (s.getIzquierda() instanceof ExpAcceso && ((ExpAcceso) s.getIzquierda()).getTipo().isColeccion()) {
+            multiacceso(s);
         } else if (s.getDerecha() instanceof ExpColeccion) {
             uno_multi(s);
         } else {
@@ -153,6 +156,21 @@ public class GenIgual {
         String[] tams = new String[0];
         //TODO
         s.setCodigoGenerado(Tipos.inicializacion(s.getTipo(), tams));
+    }
+
+    /**
+     * Asignación inicializacion colección
+     *
+     * @param s igual
+     */
+    public void multiacceso(Igual s) {
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(s.getIzquierda().getCodigoGenerado());
+        codigo.deleteCharAt(codigo.length() - 1);
+        codigo.append(",");
+        codigo.append(Casting.casting(s.getDerecha(), s.getIzquierda().getTipo()));
+        codigo.append(")");
+        s.setCodigoGenerado(codigo);
     }
 
     private StringBuilder asignacion(Simbolo izq, StringBuilder igual, Simbolo der) {

@@ -1,4 +1,9 @@
 /Perldoop3/build/*
 /Perldoop3/dist/*
 /Perldoop3/perldoop3.bat
-/Perldoop3/nbproject/private/private.xml
+/Perldoop3/nbproject/private/*
+
+/Perldoop3-Test/src/perldoop/test/java/*
+/Perldoop3-Test/build/*
+/Perldoop3-Test/dist/*
+/Perldoop3-Test/nbproject/private/*

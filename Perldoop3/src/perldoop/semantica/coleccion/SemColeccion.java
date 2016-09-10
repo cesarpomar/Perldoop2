@@ -4,7 +4,6 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.*;
-import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.semantica.TablaSemantica;
@@ -83,15 +82,19 @@ public class SemColeccion {
         if (subT.isArrayOrList() || subT.isMap()) {
             subT.add(0, Tipo.REF);
         }
-        for (Expresion exp : l.getExpresiones()) {
-            Tipo texp = exp.getTipo();
-            if (texp.isColeccion()) {
-                texp = texp.getSubtipo(1);
+        for (int i = 0; i < l.getExpresiones().size(); i++) {
+            Tipo texp = l.getExpresiones().get(i).getTipo();
+            if (!s.getTipo().isMap() || i % 2 == 1) {
                 if (texp.isColeccion()) {
-                    texp.add(0, Tipo.REF);
+                    texp = texp.getSubtipo(1);
+                    if (texp.isColeccion()) {
+                        texp.add(0, Tipo.REF);
+                    }
                 }
+                Tipos.casting(l.getExpresiones().get(i), texp, subT, tabla.getGestorErrores());
+            }else{
+                Tipos.casting(l.getExpresiones().get(i), texp, new Tipo(Tipo.STRING), tabla.getGestorErrores());
             }
-            Tipos.casting(exp, texp, subT, tabla.getGestorErrores());
         }
     }
 
@@ -120,7 +123,7 @@ public class SemColeccion {
 
     public void visitar(ColLlave s) {
         if (s.getPadre() instanceof AccesoCol) {
-            s.setTipo(new Tipo(Tipo.MAP, Tipo.INTEGER));
+            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));
             comprobarElems(s, s.getLista());
         } else {
             tipar(s);

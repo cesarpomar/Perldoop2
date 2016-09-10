@@ -25,7 +25,7 @@ public class GenRaiz {
     public void visitar(Raiz s) {
         //Si no se decalraro un paquete le damos el nombre con el fichero
         if (tabla.getClase().getNombre() == null) {
-            String nombre = new File(tabla.getGestorErrores().getFichero()).getName();
+            String nombre = new File(tabla.getGestorErrores().getFichero().trim()).getName();
             if (nombre.endsWith(".pl") || nombre.endsWith(".pm")) {
                 nombre = nombre.substring(0, nombre.length() - 3);
             }

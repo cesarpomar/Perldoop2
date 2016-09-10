@@ -30,17 +30,19 @@ public class SemAcceso {
     public void visitar(AccesoCol s) {
         Tipo t = s.getExpresion().getTipo();
         Tipo st = t.getSubtipo(1);
-        if (t.isArrayOrList()) {
+        if (t.isColeccion()) {
             Simbolo uso = Buscar.getPadre(s, 1);
             List<Expresion> exps = s.getColeccion().getLista().getExpresiones();
-            if(exps.isEmpty()){
+            if (exps.isEmpty()) {
                 //Error acceso vacio
             }
             if ((uso instanceof AccesoCol) || (uso instanceof AccesoColRef)) {
                 if (exps.size() == 1 && !exps.get(0).getTipo().isColeccion()) {
                     s.setTipo(new Tipo(st));
-                } else {
+                } else if (t.isArrayOrList()) {
                     s.setTipo(new Tipo(t));
+                } else {
+                    s.setTipo(t.getSubtipo(1).add(0, Tipo.LIST));
                 }
             } else if (exps.size() == 1) {
                 s.setTipo(new Tipo(st));

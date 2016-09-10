@@ -43,7 +43,7 @@ public class CodeWriter {
     public void escribir(ClaseJava java) throws IOException {
         StringBuilder repr = new StringBuilder(10000);
         //Paquete
-        if (!java.getInterfaces().isEmpty()) {
+        if (!java.getPaquetes().isEmpty()) {
             repr.append("package ");
             appendList(repr, java.getPaquetes(), ".");
             repr.append("; ");
@@ -70,7 +70,7 @@ public class CodeWriter {
         appendList(repr, java.getFunciones());
         //Codigo global
         if (!java.getCodigoGlobal().isEmpty()) {
-            repr.append("private static void global(){");
+            repr.append("public static void global(){");
             appendList(repr, java.getCodigoGlobal());
             repr.append("}");
         }
