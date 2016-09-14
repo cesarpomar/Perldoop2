@@ -99,7 +99,7 @@ public class SemVariable {
                 return '%';
             }
         }
-        return v.getContexto().toString().charAt(0);
+        return v.getContexto().getValor().charAt(0);
     }
 
     /**
@@ -123,7 +123,7 @@ public class SemVariable {
      */
     private void obtenerTipo(Variable v, EtiquetasTipo tipoLinea) {
         Simbolo uso = Buscar.getPadre(v, 1);
-        EtiquetasTipo predeclaracion = tabla.getTablaSimbolos().getDeclaracion(v.getContexto().toString() + v.getVar().toString());
+        EtiquetasTipo predeclaracion = tabla.getTablaSimbolos().getDeclaracion(getContexto(v) + v.getVar().getValor());
         if (uso instanceof BloqueForeachVar) {
             if (predeclaracion != null) {
                 tabla.getGestorErrores().error(Errores.AVISO, Errores.TIPO_FOREACH, v.getVar().getToken());
@@ -151,7 +151,7 @@ public class SemVariable {
      * @param v Variable
      */
     private void validarTipo(Variable v) {
-        char contexto = v.getContexto().toString().charAt(0);
+        char contexto = getContexto(v);
         Tipo t = v.getTipo();
         switch (contexto) {
             case '$':

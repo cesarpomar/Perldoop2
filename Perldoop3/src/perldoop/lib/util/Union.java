@@ -41,7 +41,7 @@ public final class Union {
         return this;
     }
 
-    public <T> T[] toArray(Class<T> clase) {
+    public <T> T[] toArray(Class<T[]> clase) {
         Object[] array = (Object[]) Array.newInstance(clase.getComponentType(), size);
         int i = 0;
         for (Iterator it : cols) {

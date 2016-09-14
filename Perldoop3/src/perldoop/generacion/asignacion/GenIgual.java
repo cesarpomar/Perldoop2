@@ -7,6 +7,7 @@ import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
@@ -175,6 +176,16 @@ public class GenIgual {
 
     private StringBuilder asignacion(Simbolo izq, StringBuilder igual, Simbolo der) {
         StringBuilder codigo = new StringBuilder(100);
+        if (izq instanceof ExpAcceso) {
+            Acceso acceso = ((ExpAcceso) izq).getAcceso();
+            Tipo t = acceso.getExpresion().getTipo();
+            if (t.isMap() || t.isList() || (t.isRef() && (t.getSubtipo(1).isList() || t.getSubtipo(1).isMap()))) {
+                codigo.append(izq.getCodigoGenerado())
+                        .append(Casting.casting(der, izq.getTipo())).append(")");
+                return codigo;
+            }
+
+        }
         codigo.append(izq.getCodigoGenerado())
                 .append(igual)
                 .append(Casting.casting(der, izq.getTipo()));

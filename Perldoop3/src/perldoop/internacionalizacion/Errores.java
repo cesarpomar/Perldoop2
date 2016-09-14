@@ -24,6 +24,10 @@ public class Errores extends Internacionalizacion {
     public static final String DEMASIADAS_ETIQUETAS_SIZE = "DEMASIADAS_ETIQUETAS_SIZE";
     public static final String TIPO_EN_INICIALIZACION = "TIPO_EN_INICIALIZACION";
     public static final String PREDECLARACION_DINAMICA = "PREDECLARACION_DINAMICA";
+    public static final String REF_TIPO_BASICO = "REF_TIPO_BASICO";
+    public static final String REF_ANIDADA = "REF_ANIDADA";
+    public static final String REF_SIZE = "REF_SIZE";
+    public static final String REF_INCOMPLETA = "REF_INCOMPLETA";
     //Sintacticos
     public static final String FALLOS_SINTACTICOS = "FALLOS_SINTACTICOS";
     public static final String ERROR_SINTACTICO = "ERROR_SINTACTICO";

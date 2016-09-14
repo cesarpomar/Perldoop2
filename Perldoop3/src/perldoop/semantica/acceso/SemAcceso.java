@@ -3,10 +3,12 @@ package perldoop.semantica.acceso;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.acceso.*;
+import perldoop.modelo.arbol.coleccion.ColCorchete;
+import perldoop.modelo.arbol.coleccion.ColLlave;
+import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.semantica.util.Tipos;
 import perldoop.util.Buscar;
 
 /**
@@ -29,28 +31,27 @@ public class SemAcceso {
 
     public void visitar(AccesoCol s) {
         Tipo t = s.getExpresion().getTipo();
+        if (t.isRef() && s.getExpresion() instanceof ExpAcceso) {
+            t = t.getSubtipo(1);
+        }
         Tipo st = t.getSubtipo(1);
         if (t.isColeccion()) {
-            Simbolo uso = Buscar.getPadre(s, 1);
-            List<Expresion> exps = s.getColeccion().getLista().getExpresiones();
-            if (exps.isEmpty()) {
+            List<Expresion> lista = s.getColeccion().getLista().getExpresiones();
+            if (s.getColeccion() instanceof ColCorchete && !t.isArrayOrList()) {
+                //Error de acceso
+            } else if (s.getColeccion() instanceof ColLlave && !t.isMap()) {
+                //Error de acceso
+            } else if (lista.isEmpty()) {
                 //Error acceso vacio
-            }
-            if ((uso instanceof AccesoCol) || (uso instanceof AccesoColRef)) {
-                if (exps.size() == 1 && !exps.get(0).getTipo().isColeccion()) {
-                    s.setTipo(new Tipo(st));
-                } else if (t.isArrayOrList()) {
-                    s.setTipo(new Tipo(t));
-                } else {
-                    s.setTipo(t.getSubtipo(1).add(0, Tipo.LIST));
-                }
-            } else if (exps.size() == 1) {
-                s.setTipo(new Tipo(st));
+            } else if (lista.size() == 1 && !lista.get(0).getTipo().isColeccion()) {
+                s.setTipo(st);
                 if (st.isColeccion()) {
                     st.add(0, Tipo.REF);
                 }
-            } else {
+            } else if (t.isArrayOrList()) {
                 s.setTipo(new Tipo(t));
+            } else {
+                s.setTipo(t.getSubtipo(1).add(0, Tipo.LIST));
             }
         } else {
             //error acceso
@@ -58,6 +59,12 @@ public class SemAcceso {
     }
 
     public void visitar(AccesoColRef s) {
+        Tipo t = s.getExpresion().getTipo();
+        if(!t.isRef()){
+            //Error no referencia
+        }
+        
+
     }
 
     public void visitar(AccesoRefEscalar s) {

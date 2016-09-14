@@ -77,6 +77,8 @@ public class Reservados {
                 case "<hash>":
                 case "<map>":
                     return (int) Parser.PD_COL;
+                case "<ref>":
+                    return (int) Parser.PD_REF;
             }
         }
         return null;

@@ -39,7 +39,7 @@ import perldoop.modelo.arbol.aritmetica.*;
 %}
 
 /*Tokens etiquetas del preprocesador, nunca deben llegar al analizador*/
-%token PD_COL PD_TIPO PD_NUM PD_VAR
+%token PD_COL PD_REF PD_TIPO PD_NUM PD_VAR
 
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA

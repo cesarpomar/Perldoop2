@@ -25,6 +25,7 @@ public final class Preprocesador {
     private final int ESTADO_SIZE = 2;
     private final int ESTADO_INICIALIZACION = 3;
     private final int ESTADO_VARIABLES = 4;
+    private final int ESTADO_REF = 5;
 
     private List<Token> tokens;
     private Opciones opciones;
@@ -119,6 +120,11 @@ public final class Preprocesador {
                             tipo.addTipo(tokens.get(i));
                             estado = ESTADO_COLECCION;
                             break;
+                        case Parser.PD_REF:
+                            tipo = new EtiquetasTipo();
+                            tipo.addTipo(tokens.get(i));
+                            estado = ESTADO_REF;
+                            break;
                         case Parser.PD_NUM:
                             inicializacion = new EtiquetasInicializacion();
                             inicializacion.addSize(tokens.get(i));
@@ -163,6 +169,10 @@ public final class Preprocesador {
                         case Parser.PD_COL:
                             tipo.addTipo(tokens.get(i));
                             break;
+                        case Parser.PD_REF:
+                            tipo.addTipo(tokens.get(i));
+                            estado = ESTADO_REF;
+                            break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
                             tipo.setSize(tokens.get(i));
@@ -170,6 +180,7 @@ public final class Preprocesador {
                             break;
                         default:
                             gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
+                            estado = ESTADO_INICIAL;
                     }
                     break;
                 case ESTADO_SIZE:
@@ -190,12 +201,18 @@ public final class Preprocesador {
                             tipo.addTipo(tokens.get(i));
                             estado = ESTADO_COLECCION;
                             break;
+                        case Parser.PD_REF:
+                            tipo.addTipo(tokens.get(i));
+                            estado = ESTADO_REF;
+                            break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
                             gestorErrores.error(Errores.DEMASIADAS_ETIQUETAS_SIZE, tokens.get(i));
+                            estado = ESTADO_INICIAL;
                             break;
                         default:
                             gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
+                            estado = ESTADO_INICIAL;
                     }
                     break;
                 case ESTADO_VARIABLES:
@@ -213,6 +230,11 @@ public final class Preprocesador {
                             tipo = predeclaracion.getTipo();
                             tipo.addTipo(tokens.get(i));
                             estado = ESTADO_COLECCION;
+                            break;
+                        case Parser.PD_REF:
+                            tipo = predeclaracion.getTipo();
+                            tipo.addTipo(tokens.get(i));
+                            estado = ESTADO_REF;
                             break;
                         case Parser.PD_NUM:
                             inicializacion.addSize(tokens.get(i));
@@ -233,7 +255,9 @@ public final class Preprocesador {
                             break;
                         case Parser.PD_TIPO:
                         case Parser.PD_COL:
+                        case Parser.PD_REF:
                             gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
+                            estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
@@ -242,6 +266,33 @@ public final class Preprocesador {
                         default:
                             aceptar(inicializacion, terminales);
                             terminales.add(terminal(i));
+                    }
+                    break;
+                case ESTADO_REF:
+                    switch (tokens.get(i).getTipo()) {
+                        case Parser.COMENTARIO:
+                            comentario(i, terminales);
+                            break;
+                        case Parser.PD_TIPO:
+                            gestorErrores.error(Errores.REF_TIPO_BASICO, tokens.get(i));
+                            estado = ESTADO_INICIAL;
+                            break;
+                        case Parser.PD_COL:
+                            tipo.addTipo(tokens.get(i));
+                            estado = ESTADO_COLECCION;
+                            break;
+                        case Parser.PD_REF:
+                            gestorErrores.error(Errores.REF_ANIDADA, tokens.get(i));
+                            estado = ESTADO_INICIAL;
+                            break;
+                        case Parser.PD_NUM:
+                        case Parser.PD_VAR:
+                            gestorErrores.error(Errores.REF_SIZE, tokens.get(i));
+                            estado = ESTADO_INICIAL;
+                            break;
+                        default:
+                            gestorErrores.error(Errores.REF_INCOMPLETA, tokens.get(i));
+                            estado = ESTADO_INICIAL;
                     }
                     break;
             }

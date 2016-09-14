@@ -1,7 +1,5 @@
 package perldoop.generacion.util;
 
-import java.util.Iterator;
-import java.util.Map;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.semantica.Tipo;
@@ -113,7 +111,7 @@ public final class Casting {
                     return cst.append("Perl.toInteger(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.STRING:
-                return cst.append("Integer.parse(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Integer.parseInt(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1 : 0");
             case Tipo.BOX:
@@ -152,7 +150,7 @@ public final class Casting {
             case Tipo.DOUBLE:
                 return cst.append("Perl.toLong(").append(s.getCodigoGenerado()).append(")");
             case Tipo.STRING:
-                return cst.append("Long.parse(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Long.parseLong(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1l : 0l");
             case Tipo.BOX:
@@ -196,7 +194,7 @@ public final class Casting {
                     return cst.append("Perl.toFloat(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.STRING:
-                return cst.append("Float.parse(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Float.parseFloat(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1f : 0f");
             case Tipo.BOX:
@@ -235,7 +233,7 @@ public final class Casting {
             case Tipo.DOUBLE:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.STRING:
-                return cst.append("Double.parse(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Double.parseDouble(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1d : 0d");
             case Tipo.BOX:
@@ -350,7 +348,7 @@ public final class Casting {
             case Tipo.NUMBER:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.STRING:
-                return cst.append("Double.parse(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Double.parseDouble(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1d : 0d");
             case Tipo.BOX:
@@ -436,11 +434,13 @@ public final class Casting {
         String tam;
         if (origen.getTipo().isArray()) {
             tam = "col.length";
-        } else {
+        } else if (origen.getTipo().isList()){
             tam = "col.size()";
+        }else{
+            tam = "col.size()*2";
         }
         if (!destino.isArray()) {
-            tam += "*3";
+            tam += "*2";
         }
         cst.append(tipo).append(" col =").append("(").append(tipo).append(")").append("arg;");
         cst.append(Tipos.declaracion(destino)).append(" ").append(" col2=").append(Tipos.inicializacion(destino, tam)).append(";");
@@ -474,7 +474,7 @@ public final class Casting {
         if (destino.isMap()) {
             cst.append("String key = null;");
             cst.append("Boolean value = false;");
-            cst.append("if(").append(tam).append("%2!=0){throw new Exception();}");
+            cst.append("if(").append(tam).append("%2!=0){throw new RuntimeException();}");
         }     
         cst.append("for(int i=0;i<").append(tam).append(";i++){");
         Terminal t = new Terminal(null);
@@ -490,6 +490,7 @@ public final class Casting {
             cst.append("}else{");
             cst.append("key = ").append(toString(t)).append(";");
             cst.append("}");
+            cst.append("value = !value").append(";");
         }
         cst.append("}");
     }

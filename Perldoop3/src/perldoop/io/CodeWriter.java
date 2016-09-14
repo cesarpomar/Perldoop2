@@ -69,11 +69,9 @@ public class CodeWriter {
         //Funciones
         appendList(repr, java.getFunciones());
         //Codigo global
-        if (!java.getCodigoGlobal().isEmpty()) {
-            repr.append("public static void global(){");
-            appendList(repr, java.getCodigoGlobal());
-            repr.append("}");
-        }
+        repr.append("public static void global(){");
+        appendList(repr, java.getCodigoGlobal());
+        repr.append("}");
         //Fin clase
         repr.append("}");
         //Formatemos
