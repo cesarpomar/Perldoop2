@@ -7,7 +7,7 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.asignacion.Igual;
-import perldoop.modelo.arbol.coleccion.ColCorchete;
+import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.semantica.Tipo;
@@ -31,41 +31,52 @@ public class GenAcceso {
         this.tabla = tabla;
     }
 
-    public void visitar(AccesoCol s) {
-        List<Expresion> exps = s.getColeccion().getLista().getExpresiones();
+    /**
+     * Accede a una o varias posiciones dentro de una expresion de tipo colección
+     *
+     * @param s Simbolo del Acceso
+     * @param expresion Codigo de la expresión
+     * @param coleccion Coleccion de indices para el acceso
+     * @param comentarioRef Comentario a escribir entre la expresión y su acceso
+     */
+    private void accesoColeccion(Acceso s, StringBuilder expresion, Coleccion coleccion, String comentarioRef) {
         StringBuilder codigo = new StringBuilder(100);
+        boolean escritura = false;//Acceso para escribir
+        boolean asignacionCol = false;//Asignacion a otra coleccion
+        boolean accesoAnidado = false;//Se accedera al acceso a continuacion
         Simbolo uso = Buscar.getPadre(s, 1);
-        boolean escritura = false;
-        boolean asignacionCol = false;//Asignacion entre colecciones
-        boolean accesoAnidado = false;//Se accedera al acceso
         if (uso instanceof Igual) {
             escritura = ((Igual) uso).getIzquierda() == s.getPadre();
             asignacionCol = ((Igual) uso).getIzquierda() instanceof ExpAcceso;
-        }else if(uso instanceof AccesoCol){
-            accesoAnidado = ((AccesoCol)uso).getExpresion() == s.getPadre();
+        } else if (uso instanceof AccesoCol) {
+            accesoAnidado = ((AccesoCol) uso).getExpresion() == s.getPadre();
         }
-        if (exps.size() > 1 || exps.get(0).getTipo().isColeccion()) {
-            codigo.append("Pd.access(").append(s.getExpresion().getCodigoGenerado()).append(", ");
-            codigo.append(s.getColeccion().getCodigoGenerado());
+        List<Expresion> lista = coleccion.getLista().getExpresiones();
+        //Acceso a mas de una posición
+        if (lista.size() > 1 || lista.get(0).getTipo().isColeccion()) {
+            codigo.append("Pd.access(").append(expresion).append(comentarioRef).append(", ");
+            codigo.append(coleccion.getCodigoGenerado());
             if (escritura) {
                 codigo.append(",");
             } else {
                 codigo.append(")");
             }
         } else {
-            Expresion exp = exps.get(0);
+            Expresion exp = lista.get(0);
+            //Encapsular en una referencia
             if (!escritura && !accesoAnidado && !asignacionCol && s.getTipo().isRef()) {
                 codigo.append("new ").append(Tipos.declaracion(s.getTipo())).append("(");
             }
-            codigo.append(s.getExpresion().getCodigoGenerado());
-            Tipo texp = s.getExpresion().getTipo();
-            if(texp.isRef()){
-                texp = texp.getSubtipo(1);
+            codigo.append(expresion).append(comentarioRef);
+            //Ignorar referencia en acceso anidado
+            Tipo t = s.getExpresion().getTipo();
+            if (t.isRef()) {
+                t = t.getSubtipo(1);
             }
-            if (s.getColeccion() instanceof ColCorchete) {
-                if (texp.isArray()) {
-                    codigo.append("[").append(Casting.casting(exp, new Tipo(Tipo.INTEGER))).append("]");
-                } else if (escritura) {
+            if (t.isArray()) {
+                codigo.append("[").append(Casting.casting(exp, new Tipo(Tipo.INTEGER))).append("]");
+            } else if (t.isList()) {
+                if (escritura) {
                     codigo.append(".set(").append(Casting.casting(exp, new Tipo(Tipo.INTEGER))).append(",");
                 } else {
                     codigo.append(".get(").append(Casting.casting(exp, new Tipo(Tipo.INTEGER))).append(")");
@@ -75,6 +86,7 @@ public class GenAcceso {
             } else {
                 codigo.append(".get(").append(Casting.casting(exp, new Tipo(Tipo.STRING))).append(")");
             }
+            //hay que cerrar la referencia
             if (!escritura && !accesoAnidado && !asignacionCol && s.getTipo().isRef()) {
                 codigo.append(")");
             }
@@ -82,27 +94,56 @@ public class GenAcceso {
         s.setCodigoGenerado(codigo);
     }
 
+    /**
+     * Accede a una referencia
+     *
+     * @param s Simbolo del Acceso a referencia
+     * @param comenrarioSimbolo Comentario del simbolo que indica la desreferenciación
+     */
+    public void AccesoReferencia(Acceso s, String comenrarioSimbolo) {
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(comenrarioSimbolo);
+        codigo.append(s.getExpresion().getCodigoGenerado());
+        s.setCodigoGenerado(codigo);
+    }
+
+    public void visitar(AccesoCol s) {
+        accesoColeccion(s, s.getExpresion().getCodigoGenerado(), s.getColeccion(), "");
+    }
+
     public void visitar(AccesoColRef s) {
+        StringBuilder expresion = s.getExpresion().getCodigoGenerado();
+        if (!(s.getExpresion() instanceof ExpAcceso)) {
+            expresion = new StringBuilder(expresion).append(".get()");
+        }
+        accesoColeccion(s, expresion, s.getColeccion(), s.getFlecha().getComentario());
     }
 
     public void visitar(AccesoRefEscalar s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        AccesoReferencia(s, s.getDolar().getComentario());
     }
 
     public void visitar(AccesoRefArray s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void visitar(AccesoSigil s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        AccesoReferencia(s, s.getArroba().getComentario());
     }
 
     public void visitar(AccesoRefMap s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        AccesoReferencia(s, s.getPorcentaje().getComentario());
+    }
+
+    public void visitar(AccesoSigil s) {
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(s.getDolar().getComentario());
+        codigo.append(s.getSigil().getComentario());
+        codigo.append(Casting.casting(s, new Tipo(Tipo.INTEGER)));
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(AccesoRef s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append("new ").append(Tipos.declaracion(s.getTipo())).append(s.getBarra().getComentario());
+        codigo.append("(").append(s.getExpresion().getCodigoGenerado()).append(")");
+        s.setCodigoGenerado(codigo);
     }
 
 }

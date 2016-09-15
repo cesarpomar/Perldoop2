@@ -7,7 +7,25 @@ package perldoop.excepciones;
  */
 public class ExcepcionSemantica extends RuntimeException {
 
-    public ExcepcionSemantica() {
+    private String codigo;
+
+    /**
+     * Crea una excepción Semantica
+     *
+     * @param codigo Codigo de error que la lanzo
+     */
+    public ExcepcionSemantica(String codigo) {
         super("EXCEPCION SEMÁNTICA");
+        this.codigo = codigo;
     }
+
+    /**
+     * Obtiene el código de error
+     *
+     * @return Código de error
+     */
+    public String getCodigo() {
+        return codigo;
+    }
+
 }

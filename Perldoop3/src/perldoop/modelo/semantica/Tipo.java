@@ -262,7 +262,7 @@ public final class Tipo {
      * Obtiene si el tipo es Simple, se considera simple los siguientes tipos: Boolean, Integer, Long, Float, Double,
      * String.
      *
-     * @return Tipo es File
+     * @return Tipo es Simple
      */
     public boolean isSimple() {
         return !tipo.isEmpty() && tipo.get(0) >= BOOLEAN && tipo.get(0) <= STRING;

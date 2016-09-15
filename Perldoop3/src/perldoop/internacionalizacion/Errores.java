@@ -46,6 +46,13 @@ public class Errores extends Internacionalizacion {
     public static final String TIPO_INCORRECTO = "TIPO_INCORRECTO";
     public static final String VARIABLE_ENMASCARADA = "VARIABLE_ENMASCARADA";
     public static final String ERROR_CASTING = "ERROR_CASTING";
+    public static final String ACCESO_NO_COLECCION = "ACCESO_NO_COLECCION";
+    public static final String ACCESO_ERRONEO = "ACCESO_ERRONEO";
+    public static final String ACCESO_VACIO = "ACCESO_VACIO";
+    public static final String ACCESO_NO_REF = "ACCESO_NO_REF";
+    public static final String ACCESO_REF_ESCALAR = "ACCESO_REF_ESCALAR";
+    public static final String ACCESO_ERROR_SIGIl = "ACCESO_ERROR_SIGIl";
+    public static final String REFERENCIA_NO_COLECCION ="REFERENCIA_NO_COLECCION";
 
     public Errores() {
         super("errores");

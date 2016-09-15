@@ -33,11 +33,11 @@ public class SemFuncion {
         Paquete paquete = tabla.getTablaSimbolos().getPaquete(s.getPaquetes().getRepresentancion());
         if (paquete == null) {
             //TODO error paquete no existe
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(null);
         }
         if (paquete.buscarFuncion(s.getIdentificador().getToken().getValor()) == null) {
             //TODO error funcion no existe en paquete
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(null);
         }
         if (s.getColeccion().getParentesisI() == null) {
             getArgumentos(s, s.getLista());
@@ -50,11 +50,11 @@ public class SemFuncion {
         Paquete paquete = tabla.getTablaSimbolos().getPaquete(s.getPaquetes().getRepresentancion());
         if (paquete == null) {
             //TODO error paquete no existe
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(null);
         }
         if (paquete.buscarFuncion(s.getIdentificador().getToken().getValor()) == null) {
             //TODO error funcion no existe en paquete
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(null);
         }
         s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
     }

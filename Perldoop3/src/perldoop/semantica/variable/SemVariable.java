@@ -41,7 +41,7 @@ public class SemVariable {
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), contexto);
         if (e == null) {
             tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar(), contexto);
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
         }
         s.setTipo(e.getTipo());
     }
@@ -53,13 +53,13 @@ public class SemVariable {
         if (p == null) {
             tabla.getGestorErrores().error(Errores.PAQUETE_NO_EXISTE, s.getPaquetes().getIdentificadores().get(0).getToken(),
                     s.getPaquetes().getRepresentancion());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.PAQUETE_NO_EXISTE);
         }
         //Buscar entrada
         EntradaVariable e = p.buscarVariable(s.getVar().toString(), contexto);
         if (e == null) {
             tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), contexto);
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
         }
         s.setTipo(e.getTipo());
     }
@@ -111,7 +111,7 @@ public class SemVariable {
         Simbolo uso = Buscar.getPadre(v, 1);
         if (uso instanceof Acceso) {
             tabla.getGestorErrores().error(Errores.ACCESO_DECLARACION, v.getVar().getToken());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.ACCESO_DECLARACION);
         }
     }
 
@@ -141,7 +141,7 @@ public class SemVariable {
             v.setTipo(SemanticaEtiquetas.parseTipo(tipoLinea.getTipos()));
         } else {
             tabla.getGestorErrores().error(Errores.VARIABLE_SIN_TIPO, v.getVar().getToken(), v.getVar());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.VARIABLE_SIN_TIPO);
         }
     }
 

@@ -45,29 +45,12 @@ public final class Tipos {
      * @return Tipo 1 compatible con tipo 2
      */
     public static boolean compatible(Tipo t1, Tipo t2) {
-        if (igual(t1, t2)) {
-            return true;
-        }
         List<Byte> tl1 = t1.getTipo();
         List<Byte> tl2 = t2.getTipo();
         if (tl2.size() == 1) {
             return true;
         }
-        for (int i = 0; i < tl1.size(); i++) {
-            switch (tl1.get(i)) {
-                case Tipo.ARRAY:
-                case Tipo.LIST:
-                    if (tl2.get(i) != Tipo.ARRAY && tl2.get(i) != Tipo.LIST) {
-                        return false;
-                    }
-                    break;
-                default:
-                    if (!tl1.get(i).equals(tl2.get(i))) {
-                        return false;
-                    }
-            }
-        }
-        return true;
+        return tl2.size() == tl1.size() && !t1.isRef() && !t2.isRef();   
     }
 
     /**
@@ -93,7 +76,7 @@ public final class Tipos {
     public static void casting(Simbolo s, Tipo ts, Tipo t, GestorErrores ge) {
         if (!compatible(ts, t)) {
             ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), SemanticaEtiquetas.parseTipo(s.getTipo()), SemanticaEtiquetas.parseTipo(t));
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.ERROR_CASTING);
         }
     }
 

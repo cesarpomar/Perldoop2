@@ -170,8 +170,9 @@ public final class Preprocesador {
                             tipo.addTipo(tokens.get(i));
                             break;
                         case Parser.PD_REF:
-                            tipo.addTipo(tokens.get(i));
-                            estado = ESTADO_REF;
+                            gestorErrores.error(Errores.REF_ANIDADA, tokens.get(i));
+                            errores++;
+                            estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
@@ -180,6 +181,7 @@ public final class Preprocesador {
                             break;
                         default:
                             gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
+                            errores++;
                             estado = ESTADO_INICIAL;
                     }
                     break;
@@ -202,16 +204,19 @@ public final class Preprocesador {
                             estado = ESTADO_COLECCION;
                             break;
                         case Parser.PD_REF:
-                            tipo.addTipo(tokens.get(i));
-                            estado = ESTADO_REF;
+                            gestorErrores.error(Errores.REF_ANIDADA, tokens.get(i));
+                            errores++;
+                            estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
                             gestorErrores.error(Errores.DEMASIADAS_ETIQUETAS_SIZE, tokens.get(i));
+                            errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         default:
                             gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
+                            errores++;
                             estado = ESTADO_INICIAL;
                     }
                     break;
@@ -257,6 +262,7 @@ public final class Preprocesador {
                         case Parser.PD_COL:
                         case Parser.PD_REF:
                             gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
+                            errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_NUM:
@@ -275,6 +281,7 @@ public final class Preprocesador {
                             break;
                         case Parser.PD_TIPO:
                             gestorErrores.error(Errores.REF_TIPO_BASICO, tokens.get(i));
+                            errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_COL:
@@ -283,15 +290,18 @@ public final class Preprocesador {
                             break;
                         case Parser.PD_REF:
                             gestorErrores.error(Errores.REF_ANIDADA, tokens.get(i));
+                            errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
                             gestorErrores.error(Errores.REF_SIZE, tokens.get(i));
+                            errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         default:
                             gestorErrores.error(Errores.REF_INCOMPLETA, tokens.get(i));
+                            errores++;
                             estado = ESTADO_INICIAL;
                     }
                     break;

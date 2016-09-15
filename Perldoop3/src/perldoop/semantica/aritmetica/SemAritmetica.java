@@ -105,11 +105,11 @@ public class SemAritmetica {
         Tipo t = s.getExpresion().getTipo();
         if (!t.isVariable()) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_CONSTANTE, Buscar.tokenFin(s), s.getOperador().toString());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.MODIFICAR_CONSTANTE);
         }
         if (!t.isSimple()) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_DEFERENCIACION, Buscar.tokenFin(s), s.getOperador().toString());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.MODIFICAR_DEFERENCIACION);
         }
         s.setTipo(t);
     }
@@ -118,11 +118,11 @@ public class SemAritmetica {
         Tipo t = s.getExpresion().getTipo();
         if (!t.isVariable()) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_CONSTANTE, Buscar.tokenFin(s), s.getOperador().toString());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.MODIFICAR_CONSTANTE);
         }
         if (!t.isSimple()) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_DEFERENCIACION, Buscar.tokenFin(s), s.getOperador().toString());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.MODIFICAR_DEFERENCIACION);
         }
         s.setTipo(t);
     }
@@ -131,11 +131,11 @@ public class SemAritmetica {
         Tipo t = s.getExpresion().getTipo();
         if (!t.isVariable()) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_CONSTANTE, Buscar.tokenFin(s), s.getOperador().toString());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.MODIFICAR_CONSTANTE);
         }
         if (!t.isSimple()) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_DEFERENCIACION, Buscar.tokenFin(s), s.getOperador().toString());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.MODIFICAR_DEFERENCIACION);
         }
         s.setTipo(t);
     }
@@ -144,11 +144,11 @@ public class SemAritmetica {
         Tipo t = s.getExpresion().getTipo();
         if (!t.isVariable()) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_CONSTANTE, Buscar.tokenFin(s), s.getOperador().toString());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.MODIFICAR_CONSTANTE);
         }
         if (!t.isSimple()) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_DEFERENCIACION, Buscar.tokenFin(s), s.getOperador().toString());
-            throw new ExcepcionSemantica();
+            throw new ExcepcionSemantica(Errores.MODIFICAR_DEFERENCIACION);
         }
         s.setTipo(t);
     }
