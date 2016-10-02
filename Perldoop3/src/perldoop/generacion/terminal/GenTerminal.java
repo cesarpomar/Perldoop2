@@ -24,6 +24,7 @@ public class GenTerminal {
     }
 
     public void visitar(Terminal s) {
+        s.setCodigoGenerado(new StringBuilder(s.getValor()));
         if (tabla.getOpciones().isComentarios() && s.getTokensComentario() != null) {
             StringBuilder comentario = new StringBuilder(200);
             if (s.getTokensComentario().get(0).getLinea() != s.getToken().getLinea()) {
@@ -39,10 +40,10 @@ public class GenTerminal {
             }
             comentario.append("*/\n");
             s.setComentario(comentario.toString());
+            s.getCodigoGenerado().append(comentario);
         } else {
             s.setComentario("");
-        }     
-        s.setCodigoGenerado(new StringBuilder(s.getValor()));
+        }       
     }
 
 }

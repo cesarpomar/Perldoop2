@@ -1,8 +1,5 @@
 package perldoop.semantica;
 
-import perldoop.modelo.arbol.varmulti.VarMultiOur;
-import perldoop.modelo.arbol.varmulti.VarMultiMy;
-import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
@@ -22,7 +19,6 @@ import perldoop.modelo.arbol.constante.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.arbol.coleccion.*;
-import perldoop.modelo.arbol.rango.*;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.abrirbloque.*;
@@ -210,6 +206,11 @@ public class Semantica implements Visitante {
     }
 
     @Override
+    public void visitar(ExpRango s) {
+        fachada.getSemExpresion().visitar(s);
+    }
+
+    @Override
     public void visitar(Lista s) {
         fachada.getSemLista().visitar(s);
     }
@@ -325,6 +326,11 @@ public class Semantica implements Visitante {
     }
 
     @Override
+    public void visitar(DLOrIgual s) {
+        fachada.getSemAsignacion().visitar(s);
+    }
+
+    @Override
     public void visitar(LAndIgual s) {
         fachada.getSemAsignacion().visitar(s);
     }
@@ -376,6 +382,16 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(VarPaquete s) {
+        fachada.getSemVariable().visitar(s);
+    }
+
+    @Override
+    public void visitar(VarSigil s) {
+        fachada.getSemVariable().visitar(s);
+    }
+
+    @Override
+    public void visitar(VarPaqueteSigil s) {
         fachada.getSemVariable().visitar(s);
     }
 
@@ -446,18 +462,8 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(AccesoSigil s) {
-        fachada.getSemAcceso().visitar(s);
-    }
-
-    @Override
     public void visitar(AccesoRef s) {
         fachada.getSemAcceso().visitar(s);
-    }
-
-    @Override
-    public void visitar(Rango s) {
-        fachada.getSemRango().visitar(s);
     }
 
     @Override
@@ -538,6 +544,11 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(LogOr s) {
+        fachada.getSemLogico().visitar(s);
+    }
+
+    @Override
+    public void visitar(DLogOr s) {
         fachada.getSemLogico().visitar(s);
     }
 

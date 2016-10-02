@@ -168,7 +168,7 @@ PD_NUM			=	<{ENTERO}>
 <VAR>{
 	{ID}				{return token(Parser.VAR);}
 	"::"				{return token(Parser.AMBITO);}
-	"\#"				{return token(Parser.SIGIL);}
+	"\#"				{return token('#');}
 	.					{yypushback(1);yybegin(YYINITIAL);}
 }
 
@@ -211,6 +211,7 @@ PD_NUM			=	<{ENTERO}>
 	"<<"				{return token(Parser.DESP_I);}
 	">>"				{return token(Parser.DESP_D);}
 	"\|\|"				{return token(Parser.LOR);}
+	"//"				{return token(Parser.DLOR);}
 	"&&"				{return token(Parser.LAND);}
 	"!"					{return token('!');}   
 	"<"					{return token('<');}
@@ -239,6 +240,7 @@ PD_NUM			=	<{ENTERO}>
 	"\^="				{return token(Parser.XOR_IGUAL);}
 	"&&="				{return token(Parser.LAND_IGUAL);}
 	"\|\|="				{return token(Parser.LOR_IGUAL);}
+	"//="				{return token(Parser.DLOR_IGUAL);}
 	"\.="				{return token(Parser.CONCAT_IGUAL);}
 	"x="				{return token(Parser.X_IGUAL);}
 
@@ -255,7 +257,7 @@ PD_NUM			=	<{ENTERO}>
 	";"					{return token(';');}
 	":"					{return token(':');}
 	"::"				{return token(Parser.AMBITO);}
-	"\\"				{return token(Parser.SUELO);}
+	"\\"				{return token('\\');}
 	"->"				{return token(Parser.FLECHA);}
 
 		/*----Expresiones regualares----*/

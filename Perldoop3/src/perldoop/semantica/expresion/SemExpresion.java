@@ -24,20 +24,18 @@ public class SemExpresion {
 
     public void visitar(ExpConstante s) {
         s.setTipo(new Tipo(s.getConstante().getTipo()));
-        s.getTipo().setConstante(s.getTipo().isConstante());
     }
 
     public void visitar(ExpVariable s) {
         s.setTipo(new Tipo(s.getVariable().getTipo()));
-        s.getTipo().setVariable(s.getTipo().isVariable());
     }
 
     public void visitar(ExpAsignacion s) {
-//        s.setTipo(new Tipo(s.getAsignacion().getTipo()));
+        s.setTipo(new Tipo(s.getAsignacion().getTipo()));
     }
 
     public void visitar(ExpBinario s) {
-//        s.setTipo(new Tipo(s.getBinario().getTipo()));
+        s.setTipo(new Tipo(s.getBinario().getTipo()));
     }
 
     public void visitar(ExpAritmetica s) {
@@ -45,11 +43,11 @@ public class SemExpresion {
     }
 
     public void visitar(ExpLogico s) {
-//        s.setTipo(new Tipo(s.getLogico().getTipo()));
+        s.setTipo(new Tipo(s.getLogico().getTipo()));
     }
 
     public void visitar(ExpComparacion s) {
-//        s.setTipo(new Tipo(s.getComparacion().getTipo()));
+        s.setTipo(new Tipo(s.getComparacion().getTipo()));
     }
 
     public void visitar(ExpColeccion s) {
@@ -69,6 +67,10 @@ public class SemExpresion {
     }
 
     public void visitar(ExpRegulares s) {
-//        s.setTipo(new Tipo(s.getRegulares().getTipo()));
+        s.setTipo(new Tipo(s.getRegulares().getTipo()));
+    }
+
+    public void visitar(ExpRango s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

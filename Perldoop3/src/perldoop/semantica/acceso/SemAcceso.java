@@ -1,5 +1,6 @@
 package perldoop.semantica.acceso;
 
+import perldoop.modelo.arbol.variable.VarSigil;
 import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
@@ -107,7 +108,7 @@ public class SemAcceso {
             tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getArroba().getToken(), SemanticaEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
         }
-        if (!st.equals(st)) {
+        if (!st.isArrayOrList()) {
             tabla.getGestorErrores().error(Errores.ACCESO_ERRONEO, s.getArroba().getToken(),
                     SemanticaEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.MAP)),
                     SemanticaEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.ARRAY)));
@@ -123,7 +124,7 @@ public class SemAcceso {
             tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getPorcentaje().getToken(), SemanticaEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
         }
-        if (!st.equals(st)) {
+        if (!st.isMap()) {
             if (st.isArray()) {
                 tabla.getGestorErrores().error(Errores.ACCESO_ERRONEO, s.getPorcentaje().getToken(),
                         SemanticaEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.ARRAY)),
@@ -138,22 +139,13 @@ public class SemAcceso {
         s.setTipo(st);
     }
 
-    public void visitar(AccesoSigil s) {
-         Tipo t = s.getExpresion().getTipo();
-        if(!t.isColeccion()){
-            tabla.getGestorErrores().error(Errores.ACCESO_ERROR_SIGIl, s.getSigil().getToken());
-            throw new ExcepcionSemantica(Errores.ACCESO_ERROR_SIGIl);
-        }
-        s.setTipo(new Tipo(Tipo.INTEGER));
-    }
-
     public void visitar(AccesoRef s) {
         Tipo t = s.getExpresion().getTipo();
         if(!t.isColeccion()){
             tabla.getGestorErrores().error(Errores.REFERENCIA_NO_COLECCION, s.getBarra().getToken());
             throw new ExcepcionSemantica(Errores.REFERENCIA_NO_COLECCION);
         }        
-        s.setTipo(new Tipo(Tipo.INTEGER));
+        s.setTipo(new Tipo(t).add(0,Tipo.REF));
     }
 
 }

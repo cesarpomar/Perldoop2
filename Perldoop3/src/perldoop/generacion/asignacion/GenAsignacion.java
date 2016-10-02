@@ -3,6 +3,7 @@ package perldoop.generacion.asignacion;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.asignacion.AndIgual;
 import perldoop.modelo.arbol.asignacion.ConcatIgual;
+import perldoop.modelo.arbol.asignacion.DLOrIgual;
 import perldoop.modelo.arbol.asignacion.DespDIgual;
 import perldoop.modelo.arbol.asignacion.DespIIgual;
 import perldoop.modelo.arbol.asignacion.DivIgual;
@@ -101,6 +102,10 @@ public class GenAsignacion {
     }
 
     public void visitar(ConcatIgual s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void visitar(DLOrIgual s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

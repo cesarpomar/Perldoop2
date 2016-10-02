@@ -21,6 +21,7 @@ public final class Traductor implements Acciones {
     private Semantica semantica;
     private Generador generador;
     private int errores;
+    private boolean generar;
 
     /**
      * Construye el traductor
@@ -90,9 +91,10 @@ public final class Traductor implements Acciones {
     }
 
     @Override
-    public void analizar(Simbolo s) throws ExcepcionSemantica{
+    public void analizar(Simbolo s) throws ExcepcionSemantica {
+        generar = true;
         s.aceptar(semantica);
-        if (errores == 0) {
+        if (generar && errores == 0) {
             s.aceptar(generador);
         }
     }
@@ -111,6 +113,11 @@ public final class Traductor implements Acciones {
             simbolos.set(i, simbolos.set(i + distancia, simbolos.get(i)));
         }
         index--;
+    }
+
+    @Override
+    public void saltarGenerador() {
+        generar = false;
     }
 
 }

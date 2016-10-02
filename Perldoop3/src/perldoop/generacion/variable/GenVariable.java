@@ -1,5 +1,6 @@
 package perldoop.generacion.variable;
 
+import perldoop.generacion.util.Casting;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.generacion.util.Tipos;
@@ -9,6 +10,7 @@ import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.semantica.EntradaVariable;
+import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
 /**
@@ -30,14 +32,42 @@ public final class GenVariable {
     }
 
     public void visitar(VarExistente s) {
-        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().toString(), getContexto(s));
+        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), getContexto(s));
         s.setCodigoGenerado(new StringBuilder(e.getAlias()).append(s.getVar().getComentario()));
     }
 
     public void visitar(VarPaquete s) {
-        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().toString(), getContexto(s));
+        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), getContexto(s));
         StringBuilder codigo = new StringBuilder(s.getPaquetes().getCodigoGenerado());
         codigo.append(".").append(e.getAlias()).append(s.getVar().getComentario());
+        s.setCodigoGenerado(codigo);
+    }
+
+    public void visitar(VarSigil s) {
+        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), getContexto(s));
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(s.getContexto().getComentario());
+        codigo.append(s.getSigil().getComentario());
+        codigo.append("(").append(e.getAlias()).append(s.getVar().getComentario());
+        if(e.getTipo().isArray()){
+            codigo.append(".length - 1)");
+        }else{
+            codigo.append(".size() - 1)");
+        }
+        s.setCodigoGenerado(codigo);
+    }
+
+    public void visitar(VarPaqueteSigil s) {
+        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), getContexto(s));
+        StringBuilder codigo = new StringBuilder(s.getPaquetes().getCodigoGenerado());
+        codigo.append(s.getContexto().getComentario());
+        codigo.append(s.getSigil().getComentario());
+        codigo.append("(").append(e.getAlias()).append(s.getVar().getComentario());
+        if(e.getTipo().isArray()){
+            codigo.append(".length - 1)");
+        }else{
+            codigo.append(".size() - 1)");
+        }
         s.setCodigoGenerado(codigo);
     }
 
@@ -63,6 +93,8 @@ public final class GenVariable {
             } else if (col.getColeccion() instanceof ColLlave) {
                 return '%';
             }
+        } else if (v instanceof VarSigil || v instanceof VarPaqueteSigil) {
+            return '@';
         }
         return v.getContexto().toString().charAt(0);
     }

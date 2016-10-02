@@ -29,17 +29,14 @@ public class SemConstante {
 
     public void visitar(Entero s) {
         s.setTipo(new Tipo(Tipo.INTEGER));
-        s.getTipo().setConstante(true);
     }
 
     public void visitar(Decimal s) {
         s.setTipo(new Tipo(Tipo.DOUBLE));
-        s.getTipo().setConstante(true);
     }
 
     public void visitar(CadenaSimple s) {
         s.setTipo(new Tipo(Tipo.STRING));
-        s.getTipo().setConstante(true);
     }
 
     public void visitar(CadenaDoble s) {

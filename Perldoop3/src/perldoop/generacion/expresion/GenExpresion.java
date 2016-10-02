@@ -11,6 +11,7 @@ import perldoop.modelo.arbol.expresion.ExpConstante;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpFuncion5;
 import perldoop.modelo.arbol.expresion.ExpLogico;
+import perldoop.modelo.arbol.expresion.ExpRango;
 import perldoop.modelo.arbol.expresion.ExpRegulares;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 
@@ -77,6 +78,10 @@ public class GenExpresion {
 
     public void visitar(ExpRegulares s) {
         s.setCodigoGenerado(s.getRegulares().getCodigoGenerado());
+    }
+
+    public void visitar(ExpRango s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

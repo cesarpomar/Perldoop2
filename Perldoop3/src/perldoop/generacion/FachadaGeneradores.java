@@ -25,7 +25,6 @@ import perldoop.generacion.logico.*;
 import perldoop.generacion.modificador.*;
 import perldoop.generacion.paquetes.*;
 import perldoop.generacion.raiz.GenRaiz;
-import perldoop.generacion.rango.GenRango;
 import perldoop.generacion.regulares.*;
 import perldoop.generacion.sentencia.*;
 import perldoop.generacion.variable.*;
@@ -64,7 +63,6 @@ public final class FachadaGeneradores {
     private GenLista genLista;
     private GenLogico genLogico;
     private GenPaquetes genPaquetes;
-    private GenRango genRango;
     private GenRaiz genRaiz;
     private GenModificador genModificador;
     private GenRegulares genRegulares;
@@ -563,27 +561,6 @@ public final class FachadaGeneradores {
      */
     public void setGenPaquetes(GenPaquetes genPaquetes) {
         this.genPaquetes = genPaquetes;
-    }
-
-    /**
-     * Obtiene el generador de rangos
-     *
-     * @return Generador de rangos
-     */
-    public GenRango getGenRango() {
-        if (genRango == null) {
-            genRango = new GenRango(tabla);
-        }
-        return genRango;
-    }
-
-    /**
-     * Establece el generador de rangos
-     *
-     * @param genRango Generador de rangos
-     */
-    public void setGenRango(GenRango genRango) {
-        this.genRango = genRango;
     }
 
     /**

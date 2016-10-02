@@ -37,15 +37,4 @@ public final class Ref<T> {
         this.value = value;
     }
 
-    /**
-     * Establece el mismo objeto asignado a ref
-     *
-     * @param ref Referencia
-     * @return Esta referencia
-     */
-    public Ref<T> asignar(Ref<T> ref) {
-        value = ref.value;
-        return this;
-    }
-
 }

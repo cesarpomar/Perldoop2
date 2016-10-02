@@ -23,5 +23,10 @@ public interface Acciones {
      * @param s Simbolo anterior al reanalisis
      */
     void reAnalizarDespuesDe(Simbolo s);
+    
+    /**
+     * Salta la etapa de generación del simbolo actual
+     */
+    void saltarGenerador();
 
 }

@@ -50,8 +50,9 @@ public class Errores extends Internacionalizacion {
     public static final String ACCESO_ERRONEO = "ACCESO_ERRONEO";
     public static final String ACCESO_VACIO = "ACCESO_VACIO";
     public static final String ACCESO_NO_REF = "ACCESO_NO_REF";
+    public static final String ACCESO_REF_MULTIPLE = "ACCESO_REF_MULTIPLE";
     public static final String ACCESO_REF_ESCALAR = "ACCESO_REF_ESCALAR";
-    public static final String ACCESO_ERROR_SIGIl = "ACCESO_ERROR_SIGIl";
+    public static final String VARIABLE_ERROR_SIGIL = "VARIABLE_ERROR_SIGIL";
     public static final String REFERENCIA_NO_COLECCION ="REFERENCIA_NO_COLECCION";
 
     public Errores() {

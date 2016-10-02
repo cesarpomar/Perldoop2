@@ -1,7 +1,13 @@
 package perldoop.semantica.coleccion;
 
+import perldoop.excepciones.ExcepcionSemantica;
+import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.acceso.AccesoColRef;
+import perldoop.modelo.arbol.acceso.AccesoRefArray;
+import perldoop.modelo.arbol.acceso.AccesoRefEscalar;
+import perldoop.modelo.arbol.acceso.AccesoRefMap;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.funcion.Funcion;
@@ -28,63 +34,57 @@ public class SemColeccion {
         this.tabla = tabla;
     }
 
+    /**
+     * Calcula el tipo de la coleccion
+     *
+     * @param s Simbolo de la coleccion
+     */
     private void tipar(Coleccion s) {
-        if (s.getTipo() == null) {
-            Simbolo exp = s.getPadre();
-            Simbolo uso = exp.getPadre();
-            //Cogemos el tipo de la asignación
-            if (uso instanceof Igual) {
-                Igual igual = (Igual) uso;
-                if (igual.getDerecha() == exp) {
-                    //Al otro lado tiene que haber un tipo de dato
-                    if (igual.getIzquierda().getTipo() == null) {
-                        return;
-                    } else {
-                        s.setTipo(new Tipo(igual.getIzquierda().getTipo()));
-                    }
-                }
-            } else if (uso instanceof Funcion) {
-                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-
-            } else if (uso instanceof Lista) {
-                uso = uso.getPadre();
-                if (uso instanceof ColParentesis) {
-                    ColParentesis col = (ColParentesis) uso;
-                    if (col.getTipo() == null) {
-                        tipar(col);
-                    }
-                    if (col.getTipo() != null) {
-                        s.setTipo(col.getTipo().getSubtipo(1));
-                    }
-                } else if (uso instanceof ColCorchete) {
-                    ColCorchete col = (ColCorchete) uso;
-                    if (col.getTipo() == null) {
-                        tipar(col);
-                    }
-                    if (col.getTipo() != null) {
-                        s.setTipo(col.getTipo().getSubtipo(1));
-                    }
-                } else if (uso instanceof ColLlave) {
-                    ColLlave col = (ColLlave) uso;
-                    if (col.getTipo() == null) {
-                        tipar(col);
-                    }
-                    if (col.getTipo() != null) {
-                        s.setTipo(col.getTipo().getSubtipo(1));
-                    }
+        if (s.getTipo() != null) {
+            return;
+        }
+        Simbolo exp = s.getPadre();
+        Simbolo uso = exp.getPadre();
+        if (uso instanceof Igual) {//Uso para inicializar
+            Igual igual = (Igual) uso;
+            //Al otro lado tiene que haber un tipo de dato
+            if (igual.getIzquierda().getTipo() != null) {
+                s.setTipo(new Tipo(igual.getIzquierda().getTipo()));
+            }
+        } else if (uso instanceof Funcion) {//Uso argumentos funcion
+            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+        } else if (uso instanceof Lista && uso.getPadre() instanceof Coleccion) {//Coleccion anidada
+            Coleccion col = (Coleccion) uso.getPadre();
+            tipar(col);
+            if (col.getTipo() != null) {
+                Tipo t = col.getTipo().getSubtipo(1);
+                if (s instanceof ColParentesis || t.isBox()) {
+                    s.setTipo(new Tipo(col.getTipo()));
+                } else {
+                    s.setTipo(t);
                 }
             }
         }
+        //Tipamos siembre sin referencias
+        if(s.getTipo()!=null && s.getTipo().isRef()){
+            s.setTipo(s.getTipo().getSubtipo(1));
+        }
     }
 
-    private void comprobarElems(Simbolo s, Lista l) {
-        Tipo subT = s.getTipo().getSubtipo(1);
+    /**
+     * Comprueba que todos los elementos de la coleccion son compatibles con el tipo de la misma
+     *
+     * @param t Tipo de la coleccion
+     * @param l Lista de elementos
+     */
+    private void comprobarElems(Tipo t, Lista l) {
+        Tipo subT = t.getSubtipo(1);
         if (subT.isArrayOrList() || subT.isMap()) {
             subT.add(0, Tipo.REF);
         }
         for (int i = 0; i < l.getExpresiones().size(); i++) {
             Tipo texp = l.getExpresiones().get(i).getTipo();
-            if (!s.getTipo().isMap() || i % 2 == 1) {
+            if (!t.isMap() || i % 2 == 1) {
                 if (texp.isColeccion()) {
                     texp = texp.getSubtipo(1);
                     if (texp.isColeccion()) {
@@ -92,45 +92,69 @@ public class SemColeccion {
                     }
                 }
                 Tipos.casting(l.getExpresiones().get(i), texp, subT, tabla.getGestorErrores());
-            }else{
+            } else {
                 Tipos.casting(l.getExpresiones().get(i), texp, new Tipo(Tipo.STRING), tabla.getGestorErrores());
             }
         }
     }
 
     public void visitar(ColParentesis s) {
-        tipar(s);
-        if (s.getTipo() == null) {
-            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-        }
-        comprobarElems(s, s.getLista());
-    }
-
-    public void visitar(ColCorchete s) {
-        if (s.getPadre() instanceof AccesoCol) {
-            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.INTEGER));
-            comprobarElems(s, s.getLista());
+        Simbolo uso = s.getPadre().getPadre();
+        if (uso instanceof Igual && ((Igual) uso).getIzquierda() == s.getPadre()) {
+            tabla.getAcciones().saltarGenerador();
+        } else if (s.getLista().getElementos().size() == 1) {
+            s.setTipo(new Tipo(s.getLista().getExpresiones().get(0).getTipo()));
         } else {
             tipar(s);
             if (s.getTipo() == null) {
                 s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
             }
-            comprobarElems(s, s.getLista());
+            comprobarElems(s.getTipo(), s.getLista());
+        }
+    }
+
+    public void visitar(ColCorchete s) {
+        if (s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) {
+            if (s.getLista().getExpresiones().size() == 1) {
+                s.setTipo(new Tipo(Tipo.INTEGER));
+                Tipos.casting(s.getLista().getExpresiones().get(0), s.getTipo(), tabla.getGestorErrores());
+            } else {
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.NUMBER));
+                comprobarElems(s.getTipo(), s.getLista());
+            }
+        } else {
+            tipar(s);
+            if (s.getTipo() == null) {
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+            }
+            comprobarElems(s.getTipo(), s.getLista());
             s.getTipo().add(0, Tipo.REF);
         }
-
     }
 
     public void visitar(ColLlave s) {
-        if (s.getPadre() instanceof AccesoCol) {
-            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));
-            comprobarElems(s, s.getLista());
+        Simbolo padre = s.getPadre();
+        Simbolo uso = padre.getPadre();
+        if (padre instanceof AccesoCol || padre instanceof AccesoColRef) {
+            if (s.getLista().getExpresiones().size() == 1) {
+                s.setTipo(new Tipo(Tipo.STRING));
+                Tipos.casting(s.getLista().getExpresiones().get(0), s.getTipo(), tabla.getGestorErrores());
+            } else {
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));
+                comprobarElems(s.getTipo(), s.getLista());
+            }
+        } else if (uso instanceof AccesoRefEscalar || uso instanceof AccesoRefArray || uso instanceof AccesoRefMap) {
+            if (s.getLista().getElementos().size() != 1) {
+                tabla.getGestorErrores().error(Errores.ACCESO_REF_MULTIPLE, s.getLlaveI());
+                throw new ExcepcionSemantica(Errores.ACCESO_REF_MULTIPLE);
+            }
+            s.setTipo(new Tipo(s.getLista().getExpresiones().get(0).getTipo()));
         } else {
             tipar(s);
             if (s.getTipo() == null) {
                 s.setTipo(new Tipo(Tipo.MAP, Tipo.BOX));
             }
-            comprobarElems(s, s.getLista());
+            comprobarElems(s.getTipo(), s.getLista());
             s.getTipo().add(0, Tipo.REF);
         }
     }

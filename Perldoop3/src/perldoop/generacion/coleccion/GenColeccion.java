@@ -7,7 +7,12 @@ import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.acceso.AccesoColRef;
+import perldoop.modelo.arbol.acceso.AccesoRefArray;
+import perldoop.modelo.arbol.acceso.AccesoRefEscalar;
+import perldoop.modelo.arbol.acceso.AccesoRefMap;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
@@ -40,7 +45,7 @@ public class GenColeccion {
     private void genRef(Coleccion c, Tipo t) {
         Simbolo uso = Buscar.getPadre(c, 2);
         //Si no va para otra colecion es una referencia
-        if (!(uso instanceof Coleccion) && !(c.getPadre() instanceof AccesoCol)) {
+        if (!(uso instanceof Coleccion) && !(c.getPadre() instanceof Acceso)) {
             uso = Buscar.getPadre(uso, 2);
             StringBuilder lambda = new StringBuilder();
             if (!(uso instanceof Igual)) {
@@ -198,45 +203,57 @@ public class GenColeccion {
     public void visitar(ColParentesis s) {
         //Expresion entre parentesis
         if (s.getLista().getElementos().size() == 1) {
-            s.setCodigoGenerado(new StringBuilder(s.getLista().getExpresiones().get(0).getCodigoGenerado()));
-            return;
-        }
-        //Colecciones
-        Tipo t = s.getTipo();
-        if (t.isArrayOrList()) {
-            s.setCodigoGenerado(genArrayList(s.getLista(), t));
-        } else if (t.isMap()) {
-            s.setCodigoGenerado(genMap(s.getLista(), t));
+            Expresion exp = s.getLista().getExpresiones().get(0);
+            StringBuilder codigo = new StringBuilder(50);
+            codigo.append(s.getParentesisI()).append(Casting.casting(exp, s.getTipo())).append(s.getParentesisD());
+            s.setCodigoGenerado(codigo);
+        } else {
+            //Colecciones
+            Tipo t = s.getTipo();
+            if (t.isArrayOrList()) {
+                s.setCodigoGenerado(genArrayList(s.getLista(), t));
+            } else if (t.isMap()) {
+                s.setCodigoGenerado(genMap(s.getLista(), t));
+            }
         }
     }
 
     public void visitar(ColCorchete s) {
-        Tipo t = s.getTipo();
-        if (t.isRef()) {
-            t = t.getSubtipo(1);//Quitar ref
-        }
-        //Colecciones
-        if (s.getLista().getElementos().size() == 1) {
-            s.setCodigoGenerado(new StringBuilder(s.getLista().getExpresiones().get(0).getCodigoGenerado()));
+        Simbolo padre = s.getPadre();
+        if ((padre instanceof AccesoCol || padre instanceof AccesoColRef) && s.getLista().getExpresiones().size() == 1) {
+            Expresion exp = s.getLista().getExpresiones().get(0);
+            StringBuilder codigo = new StringBuilder(50);
+            codigo.append(s.getCorcheteI()).append(Casting.casting(exp, s.getTipo())).append(s.getCorcheteD());
+            s.setCodigoGenerado(codigo);
         } else {
+            Tipo t = s.getTipo();
+            if (t.isRef()) {
+                t = t.getSubtipo(1);
+            }
             s.setCodigoGenerado(genArrayList(s.getLista(), t));
+            genRef(s, t);
         }
-        genRef(s, t);
     }
 
     public void visitar(ColLlave s) {
-        Tipo t = s.getTipo();
-        if (t.isRef()) {
-            t = t.getSubtipo(1);//Quitar ref
+        Simbolo uso = s.getPadre().getPadre();
+        if (uso instanceof AccesoRefEscalar || uso instanceof AccesoRefArray || uso instanceof AccesoRefMap) {
+            Expresion exp = s.getLista().getExpresiones().get(0);
+            StringBuilder codigo = new StringBuilder(50);
+            codigo.append(s.getLlaveI().getComentario()).append(Casting.casting(exp, s.getTipo())).append(s.getLlaveD().getComentario());
+            s.setCodigoGenerado(codigo);
+        } else {
+            Tipo t = s.getTipo();
+            if (t.isRef()) {
+                t = t.getSubtipo(1);//Quitar ref
+            }
+            if (t.isArrayOrList()) {//En caso de multiacceso
+                s.setCodigoGenerado(genArrayList(s.getLista(), t));
+            } else if (t.isMap()) {//Creacion de mapa
+                s.setCodigoGenerado(genMap(s.getLista(), t));
+            }
+            genRef(s, t);
         }
-        if (s.getLista().getElementos().size() == 1) {
-            s.setCodigoGenerado(new StringBuilder(s.getLista().getExpresiones().get(0).getCodigoGenerado()));
-        } else if (t.isMap()) {
-            s.setCodigoGenerado(genMap(s.getLista(), t));
-        } else if (t.isArrayOrList()) {
-            s.setCodigoGenerado(genArrayList(s.getLista(), t));
-        }
-        genRef(s, t);
     }
 
 }

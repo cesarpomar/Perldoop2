@@ -1,5 +1,6 @@
 package perldoop.generacion.acceso;
 
+import perldoop.modelo.arbol.variable.VarSigil;
 import java.util.List;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
@@ -7,8 +8,10 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.asignacion.Igual;
+import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
@@ -42,14 +45,18 @@ public class GenAcceso {
     private void accesoColeccion(Acceso s, StringBuilder expresion, Coleccion coleccion, String comentarioRef) {
         StringBuilder codigo = new StringBuilder(100);
         boolean escritura = false;//Acceso para escribir
-        boolean asignacionCol = false;//Asignacion a otra coleccion
-        boolean accesoAnidado = false;//Se accedera al acceso a continuacion
+        boolean noRef = false;//No generar referencia
         Simbolo uso = Buscar.getPadre(s, 1);
         if (uso instanceof Igual) {
             escritura = ((Igual) uso).getIzquierda() == s.getPadre();
-            asignacionCol = ((Igual) uso).getIzquierda() instanceof ExpAcceso;
-        } else if (uso instanceof AccesoCol) {
-            accesoAnidado = ((AccesoCol) uso).getExpresion() == s.getPadre();
+            noRef = ((Igual) uso).getIzquierda() instanceof ExpAcceso;
+        } else if (uso instanceof Acceso) {
+            noRef = true;
+        } else {
+            Simbolo uso2 = Buscar.getPadre(s, 4);
+            if (uso2 instanceof AccesoRefEscalar || uso2 instanceof AccesoRefArray || uso2 instanceof AccesoRefMap) {
+                noRef = true;
+            }
         }
         List<Expresion> lista = coleccion.getLista().getExpresiones();
         //Acceso a mas de una posición
@@ -64,7 +71,7 @@ public class GenAcceso {
         } else {
             Expresion exp = lista.get(0);
             //Encapsular en una referencia
-            if (!escritura && !accesoAnidado && !asignacionCol && s.getTipo().isRef()) {
+            if (!escritura && !noRef && s.getTipo().isRef()) {
                 codigo.append("new ").append(Tipos.declaracion(s.getTipo())).append("(");
             }
             codigo.append(expresion).append(comentarioRef);
@@ -87,7 +94,7 @@ public class GenAcceso {
                 codigo.append(".get(").append(Casting.casting(exp, new Tipo(Tipo.STRING))).append(")");
             }
             //hay que cerrar la referencia
-            if (!escritura && !accesoAnidado && !asignacionCol && s.getTipo().isRef()) {
+            if (!escritura && !noRef && s.getTipo().isRef()) {
                 codigo.append(")");
             }
         }
@@ -102,9 +109,28 @@ public class GenAcceso {
      */
     public void AccesoReferencia(Acceso s, String comenrarioSimbolo) {
         StringBuilder codigo = new StringBuilder(100);
+        s.setCodigoGenerado(codigo);
         codigo.append(comenrarioSimbolo);
         codigo.append(s.getExpresion().getCodigoGenerado());
-        s.setCodigoGenerado(codigo);
+        //Cogemos la expresion accdida
+        Expresion exp = s.getExpresion();
+        //En caso de estar entre llaves
+        if (s.getExpresion() instanceof ExpColeccion) {
+            ExpColeccion ec = (ExpColeccion) s.getExpresion();
+            if (ec.getColeccion() instanceof ColLlave) {
+                exp = ((ColLlave) ec.getColeccion()).getLista().getExpresiones().get(0);
+            }
+        }
+        //Accesos y colecciones no son realmente referencias
+        if (exp instanceof ExpAcceso) {
+            ExpAcceso acceso = (ExpAcceso) exp;
+            if (acceso.getAcceso() instanceof AccesoCol || acceso.getAcceso() instanceof AccesoColRef) {
+                return;
+            }
+        }else if (exp instanceof ExpColeccion){
+            return;
+        }
+        codigo.append(".get()");
     }
 
     public void visitar(AccesoCol s) {
@@ -129,14 +155,6 @@ public class GenAcceso {
 
     public void visitar(AccesoRefMap s) {
         AccesoReferencia(s, s.getPorcentaje().getComentario());
-    }
-
-    public void visitar(AccesoSigil s) {
-        StringBuilder codigo = new StringBuilder(100);
-        codigo.append(s.getDolar().getComentario());
-        codigo.append(s.getSigil().getComentario());
-        codigo.append(Casting.casting(s, new Tipo(Tipo.INTEGER)));
-        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(AccesoRef s) {

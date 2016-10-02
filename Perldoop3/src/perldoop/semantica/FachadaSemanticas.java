@@ -23,7 +23,6 @@ import perldoop.semantica.lista.*;
 import perldoop.semantica.logico.*;
 import perldoop.semantica.modificador.*;
 import perldoop.semantica.paquetes.*;
-import perldoop.semantica.rango.*;
 import perldoop.semantica.regulares.*;
 import perldoop.semantica.sentencia.*;
 import perldoop.semantica.variable.*;
@@ -60,7 +59,6 @@ public final class FachadaSemanticas {
     private SemLista semLista;
     private SemLogico semLogico;
     private SemPaquetes semPaquetes;
-    private SemRango semRango;
     private SemModificador semModificador;
     private SemRegulares semRegulares;
     private SemSentencia semSentencia;
@@ -515,27 +513,6 @@ public final class FachadaSemanticas {
      */
     public void setSemPaquetes(SemPaquetes semPaquetes) {
         this.semPaquetes = semPaquetes;
-    }
-
-    /**
-     * Obtiene la semantica de rangos
-     *
-     * @return Semantica de rangos
-     */
-    public SemRango getSemRango() {
-        if (semPaquetes == null) {
-            semRango = new SemRango(tabla);
-        }
-        return semRango;
-    }
-
-    /**
-     * Establece la semantica de rangos
-     *
-     * @param semRango Semantica de rangos
-     */
-    public void setSemRango(SemRango semRango) {
-        this.semRango = semRango;
     }
 
     /**

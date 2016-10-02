@@ -3,6 +3,7 @@ package perldoop.semantica.variable;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
@@ -23,7 +24,7 @@ import perldoop.semantica.util.SemanticaEtiquetas;
  * @author César Pomar
  */
 public class SemVariable {
-
+    
     private TablaSemantica tabla;
 
     /**
@@ -34,18 +35,18 @@ public class SemVariable {
     public SemVariable(TablaSemantica tabla) {
         this.tabla = tabla;
     }
-
+    
     public void visitar(VarExistente s) {
         char contexto = getContexto(s);
         //Buscar entrada
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), contexto);
         if (e == null) {
-            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar(), contexto);
+            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar().getValor(), contexto);
             throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
         }
         s.setTipo(e.getTipo());
     }
-
+    
     public void visitar(VarPaquete s) {
         char contexto = getContexto(s);
         //Buscar paquete
@@ -63,7 +64,38 @@ public class SemVariable {
         }
         s.setTipo(e.getTipo());
     }
-
+    
+    public void visitar(VarSigil s) {
+        char contexto = getContexto(s);
+        //Buscar entrada
+        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), contexto);
+        if (e == null) {
+            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar().getValor(), contexto);
+            throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
+        }
+        s.setTipo(e.getTipo());
+        sigil(s, s.getSigil());
+    }
+    
+    public void visitar(VarPaqueteSigil s) {
+        char contexto = getContexto(s);
+        //Buscar paquete
+        Paquete p = tabla.getTablaSimbolos().getPaquete(s.getPaquetes().getRepresentancion());
+        if (p == null) {
+            tabla.getGestorErrores().error(Errores.PAQUETE_NO_EXISTE, s.getPaquetes().getIdentificadores().get(0).getToken(),
+                    s.getPaquetes().getRepresentancion());
+            throw new ExcepcionSemantica(Errores.PAQUETE_NO_EXISTE);
+        }
+        //Buscar entrada
+        EntradaVariable e = p.buscarVariable(s.getVar().toString(), contexto);
+        if (e == null) {
+            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), contexto);
+            throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
+        }
+        s.setTipo(e.getTipo());
+        sigil(s, s.getSigil());
+    }
+    
     public void visitar(VarMy s) {
         noAccederDeclaracion(s);
         obtenerTipo(s, (EtiquetasTipo) s.getMy().getEtiquetas());
@@ -73,7 +105,7 @@ public class SemVariable {
         entrada.setConflicto(confligto);
         tabla.getTablaSimbolos().addVariable(entrada, getContexto(s));
     }
-
+    
     public void visitar(VarOur s) {
         noAccederDeclaracion(s);
         obtenerTipo(s, (EtiquetasTipo) s.getOur().getEtiquetas());
@@ -82,6 +114,21 @@ public class SemVariable {
         EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), true);
         entrada.setConflicto(confligto);
         tabla.getTablaSimbolos().addVariable(entrada, getContexto(s));
+    }
+
+    /**
+     * Analiza el sigil de una coleccion
+     *
+     * @param v Variable
+     * @param sigil Sigil
+     */
+    private void sigil(Variable v, Terminal sigil) {
+        Tipo t = v.getTipo();
+        if (!t.isColeccion()) {
+            tabla.getGestorErrores().error(Errores.VARIABLE_ERROR_SIGIL, sigil.getToken());
+            throw new ExcepcionSemantica(Errores.VARIABLE_ERROR_SIGIL);
+        }
+        v.setTipo(new Tipo(Tipo.INTEGER));
     }
 
     /**
@@ -98,6 +145,8 @@ public class SemVariable {
             } else if (col.getColeccion() instanceof ColLlave) {
                 return '%';
             }
+        }else if(v instanceof VarSigil || v instanceof VarPaqueteSigil){
+            return '@';
         }
         return v.getContexto().getValor().charAt(0);
     }
@@ -134,7 +183,7 @@ public class SemVariable {
             } else {
                 v.setTipo(new Tipo(foreach.getLista().getTipo()));
             }
-
+            
         } else if (predeclaracion != null) {
             v.setTipo(SemanticaEtiquetas.parseTipo(predeclaracion.getTipos()));
         } else if (tipoLinea != null) {
@@ -174,5 +223,5 @@ public class SemVariable {
                 break;
         }
     }
-
+    
 }

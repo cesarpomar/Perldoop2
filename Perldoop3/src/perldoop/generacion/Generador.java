@@ -1,5 +1,7 @@
 package perldoop.generacion;
 
+import perldoop.modelo.arbol.variable.VarSigil;
+import perldoop.modelo.arbol.expresion.ExpRango;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
@@ -19,7 +21,6 @@ import perldoop.modelo.arbol.constante.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.arbol.coleccion.*;
-import perldoop.modelo.arbol.rango.*;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.abrirbloque.*;
@@ -251,6 +252,11 @@ public class Generador implements Visitante {
     }
 
     @Override
+    public void visitar(ExpRango s) {
+        fachada.getGenExpresion().visitar(s);
+    }
+
+    @Override
     public void visitar(Lista s) {
         fachada.getGenLista().visitar(s);
     }
@@ -366,6 +372,11 @@ public class Generador implements Visitante {
     }
 
     @Override
+    public void visitar(DLOrIgual s) {
+        fachada.getGenAsignacion().visitar(s);
+    }
+
+    @Override
     public void visitar(LAndIgual s) {
         fachada.getGenAsignacion().visitar(s);
     }
@@ -422,6 +433,16 @@ public class Generador implements Visitante {
     }
 
     @Override
+    public void visitar(VarSigil s) {
+        fachada.getGenVariable().visitar(s);
+    }
+
+    @Override
+    public void visitar(VarPaqueteSigil s) {
+        fachada.getGenVariable().visitar(s);
+    }
+
+    @Override
     public void visitar(VarMy s) {
         fachada.getGenVariable().visitar(s);
     }
@@ -463,11 +484,6 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(Rango s) {
-        fachada.getGenRango().visitar(s);
-    }
-
-    @Override
     public void visitar(AccesoCol s) {
         fachada.getGenAcceso().visitar(s);
     }
@@ -489,11 +505,6 @@ public class Generador implements Visitante {
 
     @Override
     public void visitar(AccesoRefMap s) {
-        fachada.getGenAcceso().visitar(s);
-    }
-
-    @Override
-    public void visitar(AccesoSigil s) {
         fachada.getGenAcceso().visitar(s);
     }
 
@@ -581,6 +592,11 @@ public class Generador implements Visitante {
 
     @Override
     public void visitar(LogOr s) {
+        fachada.getGenLogico().visitar(s);
+    }
+
+    @Override
+    public void visitar(DLogOr s) {
         fachada.getGenLogico().visitar(s);
     }
 

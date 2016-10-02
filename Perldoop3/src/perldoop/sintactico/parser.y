@@ -22,7 +22,6 @@ import perldoop.modelo.arbol.constante.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.arbol.paquete.*;
-import perldoop.modelo.arbol.rango.*;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.funcion.*;
@@ -43,7 +42,7 @@ import perldoop.modelo.arbol.aritmetica.*;
 
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
-%token ID VAR SIGIL
+%token ID VAR
 %token ENTERO DECIMAL CADENA_SIMPLE CADENA_DOBLE CADENA_COMANDO M_REGEX S_REGEX Y_REGEX STDIN STDOUT STDERR
 
 /*Palabras reservadas*/
@@ -56,10 +55,10 @@ import perldoop.modelo.arbol.aritmetica.*;
 %left LLNOT
 %left ','
 %left ID
-%right '=' MULTI_IGUAL DIV_IGUAL MOD_IGUAL SUMA_IGUAL MAS_IGUAL MENOS_IGUAL DESP_I_IGUAL DESP_D_IGUAL AND_IGUAL OR_IGUAL XOR_IGUAL POW_IGUAL LAND_IGUAL LOR_IGUAL CONCAT_IGUAL X_IGUAL
+%right '=' MULTI_IGUAL DIV_IGUAL MOD_IGUAL SUMA_IGUAL MAS_IGUAL MENOS_IGUAL DESP_I_IGUAL DESP_D_IGUAL AND_IGUAL OR_IGUAL XOR_IGUAL POW_IGUAL LAND_IGUAL LOR_IGUAL DLOR_IGUAL CONCAT_IGUAL X_IGUAL
 %right ':' '?'
 %nonassoc DOS_PUNTOS
-%left LOR SUELO
+%left LOR DLOR
 %left LAND
 %left '|' '^'
 %left '&'
@@ -112,11 +111,11 @@ expresion	:	constante								{$$=set(new ExpConstante(s($1)));}
 			|	logico									{$$=set(new ExpLogico(s($1)));} 
 			|	comparacion								{$$=set(new ExpComparacion(s($1)));} 
 			|	coleccion								{$$=set(new ExpColeccion(s($1)));} 
-			|	rango									{}
 			|	acceso									{$$=set(new ExpAcceso(s($1)));} 
 			|	funcion									{$$=set(new ExpFuncion(s($1)));} 
 			|	'&' funcion %prec UNITARIO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
 			|	regulares								{$$=set(new ExpRegulares(s($1)));} 
+			|	expresion DOS_PUNTOS expresion			{$$=set(new ExpRango(s($1),s($2),s($3)));}
 
 lista		:	expresion ',' lista						{$$=set(Lista.add(s($1), s($2), s($3)), false);}
 			|	expresion ','							{$$=set(new Lista(s($1), s($2)));}
@@ -148,6 +147,7 @@ asignacion	:   expresion '=' expresion					{$$=set(new Igual(s($1),s($2),s($3)))
 			|	expresion DESP_I_IGUAL expresion		{$$=set(new DespIIgual(s($1),s($2),s($3)));}
 			|	expresion LAND_IGUAL expresion			{$$=set(new LAndIgual(s($1),s($2),s($3)));}
 			|	expresion LOR_IGUAL expresion			{$$=set(new LOrIgual(s($1),s($2),s($3)));}
+			|	expresion DLOR_IGUAL expresion			{$$=set(new DLOrIgual(s($1),s($2),s($3)));}
 			|	expresion X_IGUAL expresion				{$$=set(new XIgual(s($1),s($2),s($3)));}
 			|	expresion CONCAT_IGUAL expresion		{$$=set(new ConcatIgual(s($1),s($2),s($3)));}
 
@@ -162,7 +162,9 @@ variable	:	'$' VAR									{$$=set(new VarExistente(s($1),s($2)));}
 			|	'%' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
 			|	'$' paqueteVar VAR						{$$=set(new VarPaquete(s($1),s($2),s($3)));} 
 			|	'@' paqueteVar VAR						{$$=set(new VarPaquete(s($1),s($2),s($3)));} 
-			|	'%' paqueteVar VAR						{$$=set(new VarPaquete(s($1),s($2),s($3)));} 
+			|	'%' paqueteVar VAR						{$$=set(new VarPaquete(s($1),s($2),s($3)));}
+			|	'$' '#' VAR 							{$$=set(new VarSigil(s($1),s($2),s($3)));}
+			|	'$' '#' paqueteVar VAR 					{$$=set(new VarPaqueteSigil(s($1),s($2),s($3),s($4)));}			
 			|	MY '$' VAR								{$$=set(new VarMy(s($1),s($2),s($3)));} 
 			|	MY '@' VAR								{$$=set(new VarMy(s($1),s($2),s($3)));} 
 			|	MY '%' VAR								{$$=set(new VarMy(s($1),s($2),s($3)));} 
@@ -185,15 +187,12 @@ coleccion	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
 			|	'[' ']'									{$$=set(new ColCorchete(s($1),new Lista(),s($2)));}
 			|	'{' lista '}'							{$$=set(new ColLlave(s($1),s($2),s($3)));}
 			|	'{' '}'									{$$=set(new ColLlave(s($1),new Lista(),s($2)));}
-
-rango		:	expresion DOS_PUNTOS expresion			{$$=set(new Rango(s($1),s($2),s($3)));}
 			
 acceso		:	expresion coleccion						{$$=set(new AccesoCol(s($1),s($2)));}
 			|	expresion FLECHA coleccion				{$$=set(new AccesoColRef(s($1),s($2),s($3)));}
 			|	'$' expresion %prec UNITARIO			{$$=set(new AccesoRefEscalar(s($1),s($2)));} 
 			|	'@' expresion %prec UNITARIO			{$$=set(new AccesoRefArray(s($1),s($2)));} 
-			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 
-			|	'$' '#' expresion %prec UNITARIO		{$$=set(new AccesoSigil(s($1),s($2),s($3)));}
+			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 			
 			|	'\\' expresion %prec UNITARIO			{$$=set(new AccesoRef(s($1),s($2)));} 
 
 funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),add(new ColParentesis(add(new Terminal(new Token("("))),add(new Lista(s($3))),add(new Terminal(new Token(")")))))));}
@@ -214,6 +213,7 @@ binario		:	expresion '|' expresion					{$$=set(new BinOr(s($1),s($2),s($3)));}
 			|	expresion DESP_D expresion				{$$=set(new BinDespD(s($1),s($2),s($3)));}
 
 logico		:	expresion LOR expresion					{$$=set(new LogOr(s($1),s($2),s($3)));}
+			|	expresion DLOR expresion				{$$=set(new DLogOr(s($1),s($2),s($3)));}
 			|	expresion LAND expresion				{$$=set(new LogAnd(s($1),s($2),s($3)));}
 			|	'!' expresion							{$$=set(new LogNot(s($1),s($2)));}
 			|	expresion LLOR expresion				{$$=set(new LogOrBajo(s($1),s($2),s($3)));}

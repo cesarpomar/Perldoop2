@@ -26,8 +26,6 @@ public final class Tipo {
     public static final byte REF = 103;
 
     private List<Byte> tipo;
-    private boolean variable;
-    private boolean constante;
 
     /**
      * Construye el tipo
@@ -87,24 +85,6 @@ public final class Tipo {
     }
 
     /**
-     * Comprueba si el tipo pertenece a una variable
-     *
-     * @return Tipo pertenece a una variable
-     */
-    public boolean isVariable() {
-        return variable;
-    }
-
-    /**
-     * Establece si el tipo pertenece a una variable
-     *
-     * @param variable Tipo pertenece a una variable
-     */
-    public void setVariable(boolean variable) {
-        this.variable = variable;
-    }
-
-    /**
      * Crea un subtipo del actual partiendo del subtipo init
      *
      * @param init Inicio del subtipo
@@ -112,24 +92,6 @@ public final class Tipo {
      */
     public Tipo getSubtipo(int init) {
         return new Tipo(tipo.subList(init, tipo.size()));
-    }
-
-    /**
-     * Obtiene si el tipo pertenece a una consantante
-     *
-     * @return Tipo pertenece a una consantante
-     */
-    public boolean isConstante() {
-        return constante;
-    }
-
-    /**
-     * Establece si el tipo pertenece a una consantante
-     *
-     * @param constante Tipo pertenece a una consantante
-     */
-    public void setConstante(boolean constante) {
-        this.constante = constante;
     }
 
     /**
@@ -259,13 +221,31 @@ public final class Tipo {
     }
 
     /**
+     * Obtiene si el tipo es Number
+     *
+     * @return Tipo es Number
+     */
+    public boolean isNumber() {
+        return !tipo.isEmpty() && tipo.get(0) == NUMBER;
+    }
+
+    /**
+     * Obtiene si el tipo es Box
+     *
+     * @return Tipo es Box
+     */
+    public boolean isBox() {
+        return !tipo.isEmpty() && tipo.get(0) == BOX;
+    }
+
+    /**
      * Obtiene si el tipo es Simple, se considera simple los siguientes tipos: Boolean, Integer, Long, Float, Double,
-     * String.
+     * String, File, Box, Number.
      *
      * @return Tipo es Simple
      */
     public boolean isSimple() {
-        return !tipo.isEmpty() && tipo.get(0) >= BOOLEAN && tipo.get(0) <= STRING;
+        return !tipo.isEmpty() && tipo.get(0) < 10;
     }
 
     @Override

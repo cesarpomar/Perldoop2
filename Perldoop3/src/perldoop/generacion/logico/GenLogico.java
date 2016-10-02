@@ -1,5 +1,6 @@
 package perldoop.generacion.logico;
 
+import perldoop.modelo.arbol.logico.DLogOr;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.logico.LogAnd;
 import perldoop.modelo.arbol.logico.LogAndBajo;
@@ -56,6 +57,10 @@ public class GenLogico {
     }
 
     public void visitar(LogTernario s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void visitar(DLogOr s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

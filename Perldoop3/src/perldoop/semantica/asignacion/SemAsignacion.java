@@ -72,4 +72,8 @@ public class SemAsignacion {
 
     public void visitar(ConcatIgual s) {
     }
+
+    public void visitar(DLOrIgual s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

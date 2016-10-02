@@ -2,7 +2,10 @@ package perldoop.generacion.util;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.constante.CadenaComando;
+import perldoop.modelo.arbol.expresion.ExpConstante;
 import perldoop.modelo.semantica.Tipo;
+import perldoop.util.Buscar;
 
 /**
  * Clase para generacion de casting
@@ -31,31 +34,31 @@ public final class Casting {
             case Tipo.BOOLEAN:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.INTEGER:
-                if (s.getTipo().isConstante()) {
+                if (Buscar.isConstante(s)) {
                     return cst.append((Integer.parseInt(s.getCodigoGenerado().toString()) != 0) ? "true" : "false");
                 } else {
                     return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.LONG:
-                if (s.getTipo().isConstante()) {
+                if (Buscar.isConstante(s)) {
                     return cst.append((Long.parseLong(s.getCodigoGenerado().toString()) != 0) ? "true" : "false");
                 } else {
                     return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.FLOAT:
-                if (s.getTipo().isConstante()) {
+                if (Buscar.isConstante(s)) {
                     return cst.append((Float.parseFloat(s.getCodigoGenerado().toString()) != 0) ? "true" : "false");
                 } else {
                     return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.DOUBLE:
-                if (s.getTipo().isConstante()) {
+                if (Buscar.isConstante(s)) {
                     return cst.append((Double.parseDouble(s.getCodigoGenerado().toString()) != 0) ? "true" : "false");
                 } else {
                     return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.STRING:
-                if (s.getTipo().isConstante()) {
+                if (Buscar.isConstante(s)) {
                     String cad = s.getCodigoGenerado().substring(1, s.getCodigoGenerado().length() - 1);
                     return cst.append((cad.isEmpty() || cad.equals("0")) ? "false" : "true");
                 } else {
@@ -93,19 +96,19 @@ public final class Casting {
             case Tipo.INTEGER:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.LONG:
-                if (s.getTipo().isConstante()) {
+                if (Buscar.isConstante(s)) {
                     return cst.append(s.getCodigoGenerado().toString()).append("l");
                 } else {
                     return cst.append("Perl.toInteger(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.FLOAT:
-                if (s.getTipo().isConstante()) {
+                if (Buscar.isConstante(s)) {
                     return cst.append(s.getCodigoGenerado().toString()).append("f");
                 } else {
                     return cst.append("Perl.toInteger(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.DOUBLE:
-                if (s.getTipo().isConstante()) {
+                if (Buscar.isConstante(s)) {
                     return cst.append(s.getCodigoGenerado().toString()).append("d");
                 } else {
                     return cst.append("Perl.toInteger(").append(s.getCodigoGenerado()).append(")");
@@ -188,7 +191,7 @@ public final class Casting {
             case Tipo.FLOAT:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.DOUBLE:
-                if (s.getTipo().isConstante()) {
+                if (Buscar.isConstante(s)) {
                     return cst.append(s.getCodigoGenerado().toString()).append("f");
                 } else {
                     return cst.append("Perl.toFloat(").append(s.getCodigoGenerado()).append(")");
@@ -293,31 +296,31 @@ public final class Casting {
         StringBuilder cst = new StringBuilder(50);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(".length)");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(".length)");
             case Tipo.LIST:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(".size())");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(".size())");
             case Tipo.MAP:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(".size())");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(".size())");
             case Tipo.REF:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.BOOLEAN:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.INTEGER:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.LONG:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FLOAT:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.DOUBLE:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.STRING:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.BOX:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.NUMBER:
-                return cst.append("Perl.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
         }
         return null;
     }
@@ -399,7 +402,7 @@ public final class Casting {
      */
     public static StringBuilder toArray(Simbolo s) {
         StringBuilder cst = new StringBuilder(50);
-        Tipo array = s.getTipo().getSubtipo(1).add(0,Tipo.ARRAY);
+        Tipo array = s.getTipo().getSubtipo(1).add(0, Tipo.ARRAY);
         cst.append(s.getCodigoGenerado()).append(".toArray(").append(Tipos.inicializacion(array)).append(")");
         return cst;
     }
@@ -412,8 +415,8 @@ public final class Casting {
      */
     public static StringBuilder toList(Simbolo s) {
         StringBuilder cst = new StringBuilder(50);
-        Tipo array = s.getTipo().getSubtipo(1).add(0,Tipo.LIST);
-        cst.append(Tipos.inicializacion(array,s.getCodigoGenerado().toString()));
+        Tipo array = s.getTipo().getSubtipo(1).add(0, Tipo.LIST);
+        cst.append(Tipos.inicializacion(array, s.getCodigoGenerado().toString()));
         return cst;
     }
 
@@ -434,9 +437,9 @@ public final class Casting {
         String tam;
         if (origen.getTipo().isArray()) {
             tam = "col.length";
-        } else if (origen.getTipo().isList()){
+        } else if (origen.getTipo().isList()) {
             tam = "col.size()";
-        }else{
+        } else {
             tam = "col.size()*2";
         }
         if (!destino.isArray()) {
@@ -475,7 +478,7 @@ public final class Casting {
             cst.append("String key = null;");
             cst.append("Boolean value = false;");
             cst.append("if(").append(tam).append("%2!=0){throw new RuntimeException();}");
-        }     
+        }
         cst.append("for(int i=0;i<").append(tam).append(";i++){");
         Terminal t = new Terminal(null);
         t.setCodigoGenerado(new StringBuilder(lectura));
@@ -558,12 +561,12 @@ public final class Casting {
                 return toRef(origen);
             default:
                 if (!origen.getTipo().equals(destino)) {
-                    if(origen.getTipo().isArrayOrList() && destino.isArrayOrList() 
-                            && origen.getTipo().getSubtipo(1).equals(destino.getSubtipo(1))){
-                        if(destino.isArray()){
+                    if (origen.getTipo().isArrayOrList() && destino.isArrayOrList()
+                            && origen.getTipo().getSubtipo(1).equals(destino.getSubtipo(1))) {
+                        if (destino.isArray()) {
                             return toArray(origen);
-                        }else{
-                             return toList(origen);
+                        } else {
+                            return toList(origen);
                         }
                     }
                     return toCol(origen, destino);

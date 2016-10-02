@@ -1,6 +1,7 @@
 package perldoop.lib;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import perldoop.lib.box.BooleanBox;
 import perldoop.lib.box.FileBox;
 import perldoop.lib.box.NumberBox;
@@ -103,10 +104,10 @@ public class Pd {
      * @param indexs Posiciones
      * @return Subarray
      */
-    public static <T> T[] access(T[] array, Integer[] indexs) {
+    public static <T> T[] access(T[] array, Number[] indexs) {
         T[] res = (T[]) Array.newInstance(array.getClass().getComponentType(), indexs.length);
         for (int i = 0; i < indexs.length; i++) {
-            res[i] = array[indexs[i]];
+            res[i] = array[indexs[i].intValue()];
         }
         return res;
     }
@@ -119,10 +120,10 @@ public class Pd {
      * @param indexs Posiciones
      * @return Sublista
      */
-    public static <T> PerlList<T> access(PerlList<T> lista, Integer[] indexs) {
+    public static <T> PerlList<T> access(PerlList<T> lista, Number[] indexs) {
         PerlList<T> res = new PerlList<>(indexs.length);
-        for (Integer n : indexs) {
-            res.add(lista.get(n));
+        for (Number n : indexs) {
+            res.add(lista.get(n.intValue()));
         }
         return res;
     }
@@ -152,10 +153,10 @@ public class Pd {
      * @param values Valores
      * @return Numero asignaciones
      */
-    public static <T> Integer access(T[] array, Integer[] indexs, T[] values) {
+    public static <T> Integer access(T[] array, Number[] indexs, T[] values) {
         int i;
         for (i = 0; i < indexs.length && i < values.length; i++) {
-            array[indexs[i]] = values[i];
+            array[indexs[i].intValue()] = values[i];
         }
         return i;
     }
@@ -169,10 +170,10 @@ public class Pd {
      * @param values Valores
      * @return Numero asignaciones
      */
-    public static <T> Integer access(PerlList<T> lista, Integer[] indexs, PerlList<T> values) {
+    public static <T> Integer access(PerlList<T> lista, Number[] indexs, PerlList<T> values) {
         int i;
         for (i = 0; i < indexs.length && i < values.size(); i++) {
-            lista.set(indexs[i], values.get(i));
+            lista.set(indexs[i].intValue(), values.get(i));
         }
         return i;
     }
@@ -193,4 +194,38 @@ public class Pd {
         }
         return i;
     }
+
+    /**
+     * Crea una copia superficial del array
+     *
+     * @param <T> Tipo de los elementos del array
+     * @param array Array
+     * @return Copia superficial
+     */
+    public static <T> T[] copy(T[] array) {
+        return Arrays.copyOf(array, array.length);
+    }
+
+    /**
+     * Crea una copia superficial de la lista
+     *
+     * @param <T> Tipo de los elementos de la lista
+     * @param list Lista
+     * @return Copia superficial
+     */
+    public static <T> PerlList<T> copy(PerlList<T> list) {
+        return new PerlList(list);
+    }
+
+    /**
+     * Crea una copia superficial del map
+     *
+     * @param <T> Tipo de los elementos del map
+     * @param map Map
+     * @return Copia superficial
+     */
+    public static <T> PerlMap<T> copy(PerlMap<T> map) {
+        return new PerlMap<>(map);
+    }
+
 }

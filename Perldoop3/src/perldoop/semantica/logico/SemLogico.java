@@ -44,4 +44,8 @@ public class SemLogico {
 
     public void visitar(LogTernario s) {
     }
+
+    public void visitar(DLogOr s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

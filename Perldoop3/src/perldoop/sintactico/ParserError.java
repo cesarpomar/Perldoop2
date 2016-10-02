@@ -142,7 +142,7 @@ public class ParserError {
             case Parser.X_IGUAL:
             case Parser.DOS_PUNTOS:
             case Parser.LOR:
-            case Parser.SUELO:
+            case Parser.DLOR:
             case Parser.LAND:
             case Parser.NUM_EQ:
             case Parser.NUM_NE:

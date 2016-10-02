@@ -1,4 +1,4 @@
-package perldoop.modelo.arbol.rango;
+package perldoop.modelo.arbol.asignacion;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
@@ -6,26 +6,26 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -&gt; rango : expresion DOS_PUNTOS expresion
+ * Clase que representa la reduccion -&gt; asignacion : expresion DLOR_IGUAL expresion
  *
  * @author César Pomar
  */
-public final class Rango extends Simbolo{
-    
+public final class DLOrIgual extends Asignacion {
+
     private Expresion izquierda;
-    private Terminal dosPuntos;
+    private Terminal lOrIgual;
     private Expresion derecha;
 
     /**
      * Único contructor de la clase
      *
      * @param izquierda Izquierda
-     * @param dosPuntos DosPuntos
+     * @param lOrIgual LorIgual
      * @param derecha Derecha
      */
-    public Rango(Expresion izquierda, Terminal dosPuntos, Expresion derecha) {
+    public DLOrIgual(Expresion izquierda, Terminal lOrIgual, Expresion derecha) {
         setIzquierda(izquierda);
-        setDosPuntos(dosPuntos);
+        setlOrIgual(lOrIgual);
         setDerecha(derecha);
     }
 
@@ -49,22 +49,22 @@ public final class Rango extends Simbolo{
     }
 
     /**
-     * Obtiene el dosPuntos
+     * Obtiene el lOrIgual
      *
-     * @return DosPuntos
+     * @return LOrIgual
      */
-    public Terminal getDosPuntos() {
-        return dosPuntos;
+    public Terminal getlOrIgual() {
+        return lOrIgual;
     }
 
     /**
-     * Establece el dosPuntos
+     * Establece el lOrIgual
      *
-     * @param dosPuntos DosPuntos
+     * @param lOrIgual LOrIgual
      */
-    public void setDosPuntos(Terminal dosPuntos) {
-        dosPuntos.setPadre(this);
-        this.dosPuntos = dosPuntos;
+    public void setlOrIgual(Terminal lOrIgual) {
+        lOrIgual.setPadre(this);
+        this.lOrIgual = lOrIgual;
     }
 
     /**
@@ -93,7 +93,7 @@ public final class Rango extends Simbolo{
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{izquierda, dosPuntos, derecha};
+        return new Simbolo[]{izquierda, lOrIgual, derecha};
     }
-    
+
 }
