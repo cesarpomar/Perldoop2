@@ -2,6 +2,7 @@ package perldoop.semantica.asignacion;
 
 import java.util.ArrayList;
 import java.util.List;
+import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
@@ -42,7 +43,7 @@ public class SemIgual {
             multiple(s);
         } else if (s.getDerecha() instanceof ExpColeccion) {
             ExpColeccion expcol = (ExpColeccion) s.getDerecha();
-            if (expcol.getColeccion() instanceof ColParentesis && expcol.getColeccion().getLista().getElementos().isEmpty()) {
+            if (expcol.getColeccion().getLista().getElementos().isEmpty()) {
                 inicializacion(s);
             } else {
                 simple(s);
@@ -77,16 +78,17 @@ public class SemIgual {
         } else {
             Tipo t = s.getDerecha().getTipo();
             Terminal coleccion = new Terminal();
-            if(t.isArrayOrList()){
+            if (t.isColeccion()) {
                 coleccion.setTipo(t.getSubtipo(1));
-            }else{
-                //Error debe ser array o lista
+            } else {
+                tabla.getGestorErrores().error(Errores.IGUAL_COLECION_REQUERIDA, Buscar.tokenInicio(s.getDerecha()));
+                throw new ExcepcionSemantica(Errores.IGUAL_COLECION_REQUERIDA);
             }
             for (Expresion var : variables) {
                 checkAsignacion(var, s.getIgual(), coleccion);
             }
         }
-
+        s.setTipo(new Tipo(Tipo.INTEGER));
     }
 
     /**
@@ -99,7 +101,8 @@ public class SemIgual {
         Tipo t = s.getIzquierda().getTipo();
         s.setTipo(new Tipo(t));
         if (!t.isColeccion()) {
-            //TODO Error solo para colecciones
+            tabla.getGestorErrores().error(Errores.INICIALIZACION_SOLO_COLECIONES, Buscar.tokenInicio(s.getDerecha()));
+            throw new ExcepcionSemantica(Errores.INICIALIZACION_SOLO_COLECIONES);
         }
         List<Token> sizes = null;
         Etiquetas etiquetas = s.getIgual().getEtiquetas();
@@ -125,15 +128,19 @@ public class SemIgual {
             if (c == '$' || c == '@') {
                 EntradaVariable entrada = tabla.getTablaSimbolos().buscarVariable(valor.substring(1), c);
                 if (entrada == null) {
-                    //Error variable no existe
+                    tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, token, valor, c);
+                    throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
                 }
             } else {
-                //Error mapa no tiene tamaño
+                tabla.getGestorErrores().error(Errores.MAPA_NO_TAM, token);
+                throw new ExcepcionSemantica(Errores.MAPA_NO_TAM);
             }
         }
         if (t.isArray() && sizes.isEmpty()) {
-            //Error tamaño requerido
+            tabla.getGestorErrores().error(Errores.ARRAY_INICIALIZACION_TAM, Buscar.tokenInicio(s.getIzquierda()));
+            throw new ExcepcionSemantica(Errores.ARRAY_INICIALIZACION_TAM);
         }
+        s.setTipo(new Tipo(s.getIzquierda().getTipo()));
     }
 
     /**
@@ -146,6 +153,7 @@ public class SemIgual {
     private void checkAsignacion(Simbolo izq, Terminal operador, Simbolo der) {
         if (!Buscar.isVariable(izq)) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_CONSTANTE, Buscar.tokenInicio(izq), operador.getValor());
+            throw new ExcepcionSemantica(Errores.MODIFICAR_CONSTANTE);
         }
         Tipos.casting(der, izq.getTipo(), tabla.getGestorErrores());
     }

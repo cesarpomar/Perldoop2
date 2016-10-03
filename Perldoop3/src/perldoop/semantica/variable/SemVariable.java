@@ -37,7 +37,7 @@ public class SemVariable {
     }
     
     public void visitar(VarExistente s) {
-        char contexto = getContexto(s);
+        char contexto = Buscar.getContexto(s);
         //Buscar entrada
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), contexto);
         if (e == null) {
@@ -48,7 +48,7 @@ public class SemVariable {
     }
     
     public void visitar(VarPaquete s) {
-        char contexto = getContexto(s);
+        char contexto = Buscar.getContexto(s);
         //Buscar paquete
         Paquete p = tabla.getTablaSimbolos().getPaquete(s.getPaquetes().getRepresentancion());
         if (p == null) {
@@ -66,7 +66,7 @@ public class SemVariable {
     }
     
     public void visitar(VarSigil s) {
-        char contexto = getContexto(s);
+        char contexto = Buscar.getContexto(s);
         //Buscar entrada
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), contexto);
         if (e == null) {
@@ -78,7 +78,7 @@ public class SemVariable {
     }
     
     public void visitar(VarPaqueteSigil s) {
-        char contexto = getContexto(s);
+        char contexto = Buscar.getContexto(s);
         //Buscar paquete
         Paquete p = tabla.getTablaSimbolos().getPaquete(s.getPaquetes().getRepresentancion());
         if (p == null) {
@@ -103,7 +103,7 @@ public class SemVariable {
         boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
         EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), false);
         entrada.setConflicto(confligto);
-        tabla.getTablaSimbolos().addVariable(entrada, getContexto(s));
+        tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
     }
     
     public void visitar(VarOur s) {
@@ -113,7 +113,7 @@ public class SemVariable {
         boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
         EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), true);
         entrada.setConflicto(confligto);
-        tabla.getTablaSimbolos().addVariable(entrada, getContexto(s));
+        tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
     }
 
     /**
@@ -129,26 +129,6 @@ public class SemVariable {
             throw new ExcepcionSemantica(Errores.VARIABLE_ERROR_SIGIL);
         }
         v.setTipo(new Tipo(Tipo.INTEGER));
-    }
-
-    /**
-     * Busca el contexto de una variable
-     *
-     * @param v Variable
-     */
-    private char getContexto(Variable v) {
-        Simbolo uso = Buscar.getPadre(v, 1);
-        if (uso instanceof AccesoCol) {
-            AccesoCol col = (AccesoCol) uso;
-            if (col.getColeccion() instanceof ColCorchete) {
-                return '@';
-            } else if (col.getColeccion() instanceof ColLlave) {
-                return '%';
-            }
-        }else if(v instanceof VarSigil || v instanceof VarPaqueteSigil){
-            return '@';
-        }
-        return v.getContexto().getValor().charAt(0);
     }
 
     /**
@@ -172,7 +152,7 @@ public class SemVariable {
      */
     private void obtenerTipo(Variable v, EtiquetasTipo tipoLinea) {
         Simbolo uso = Buscar.getPadre(v, 1);
-        EtiquetasTipo predeclaracion = tabla.getTablaSimbolos().getDeclaracion(getContexto(v) + v.getVar().getValor());
+        EtiquetasTipo predeclaracion = tabla.getTablaSimbolos().getDeclaracion(Buscar.getContexto(v) + v.getVar().getValor());
         if (uso instanceof BloqueForeachVar) {
             if (predeclaracion != null) {
                 tabla.getGestorErrores().error(Errores.AVISO, Errores.TIPO_FOREACH, v.getVar().getToken());
@@ -200,7 +180,7 @@ public class SemVariable {
      * @param v Variable
      */
     private void validarTipo(Variable v) {
-        char contexto = getContexto(v);
+        char contexto = Buscar.getContexto(v);
         Tipo t = v.getTipo();
         switch (contexto) {
             case '$':

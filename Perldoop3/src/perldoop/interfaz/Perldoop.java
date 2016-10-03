@@ -46,7 +46,7 @@ public final class Perldoop {
         opciones = consola.getOpciones();
         writer = new CodeWriter(opciones);
         for (String ruta : consola.getFicheros()) {
-            gestorErrores = new GestorErrores(ruta);
+            gestorErrores = new GestorErrores(ruta.trim());
             File fichero = new File(ruta);
             //Lexico
             List<Token> tokens;

@@ -71,6 +71,8 @@ public class Reservados {
                 case "<double>":
                 case "<string>":
                 case "<file>":
+                case "<box>":
+                case "<number>":
                     return (int) Parser.PD_TIPO;
                 case "<array>":
                 case "<list>":

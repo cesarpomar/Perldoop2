@@ -21,12 +21,3 @@ our @a2 = (@auxa,@auxl,%auxh, 7, 8);#<array><integer>
 our @l2 = (@auxa,@auxl,%auxh, 7, 8);#<list><integer>
 our %h2 = (@auxa,@auxl,%auxh, 7, 8);#<hash><integer>
 
-#Inicializacion con despliegue en acceso
-
-my @auxaa = ([1,2],[0,0]);#<array><array><integer>
-my @auxll = ([3,4],[0,0]);#<list><list><integer>
-my %auxhl = (0,{5,6},1,{0,0});#<hash><hash><integer>
-
-our @a3 = (@auxa[0],@auxl[0],%auxh{0}, 7, 8);#<array><integer>
-our @l3 = (@auxa[0],@auxl[0],%auxh{0}, 7, 8);#<list><integer>
-our %h3 = (@auxa[0],@auxl[0],%auxh{0}, 7, 8);#<hash><integer>

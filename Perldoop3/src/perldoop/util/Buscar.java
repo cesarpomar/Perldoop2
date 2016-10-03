@@ -1,9 +1,13 @@
 package perldoop.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.coleccion.ColCorchete;
+import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.constante.CadenaComando;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpConstante;
@@ -114,12 +118,12 @@ public final class Buscar {
      */
     public static boolean isVariable(Simbolo s) {
         Simbolo acceso = s;
-        while (s instanceof ExpAcceso) {
-            ExpAcceso expAcceso = (ExpAcceso) s;
-            s = expAcceso.getAcceso().getExpresion();
+        while (acceso instanceof ExpAcceso) {
+            ExpAcceso expAcceso = (ExpAcceso) acceso;
+            acceso = expAcceso.getAcceso().getExpresion();
         }
         if (acceso instanceof ExpVariable) {
-            Variable var = ((ExpVariable) s).getVariable();
+            Variable var = ((ExpVariable) acceso).getVariable();
             if (!(var instanceof VarSigil || var instanceof VarPaqueteSigil)) {
                 return true;
             }
@@ -164,6 +168,65 @@ public final class Buscar {
             accesos++;
         }
         return accesos;
+    }
+
+    /**
+     * Busca la variable en la expresión y la retorna
+     *
+     * @param exp Expresión
+     * @return Variable
+     */
+    public static Variable buscarVariable(Expresion exp) {
+        while (exp instanceof ExpAcceso) {
+            ExpAcceso expAcceso = (ExpAcceso) exp;
+            exp = expAcceso.getAcceso().getExpresion();
+        }
+        if (exp instanceof ExpVariable) {
+            return ((ExpVariable) exp).getVariable();
+        }
+        return null;
+    }
+
+    /**
+     * Retorna todas las instancias de la clase que existen en el subarbol del simbolo
+     *
+     * @param s Simbolo
+     * @param clase Clase
+     * @return Simbolo
+     */
+    public static <T> List<T> buscarClases(Simbolo s, Class<T> clase) {
+        List<Simbolo> lista = new ArrayList<>(100);
+        List<T> resultado = new ArrayList<>(10);
+        lista.add(s);
+        while (!lista.isEmpty()) {
+            Simbolo actual = lista.remove(lista.size() - 1);
+            if (clase.isInstance(actual)) {
+                resultado.add((T) actual);
+            }
+            lista.addAll(Arrays.asList(actual.getHijos()));
+        }
+        return resultado;
+    }
+
+    /**
+     * Busca el contexto de una variable
+     *
+     * @param v Variable
+     * @return Contexto
+     */
+    public static char getContexto(Variable v) {
+        Simbolo uso = Buscar.getPadre(v, 1);
+        if (uso instanceof AccesoCol) {
+            AccesoCol col = (AccesoCol) uso;
+            if (col.getColeccion() instanceof ColCorchete) {
+                return '@';
+            } else if (col.getColeccion() instanceof ColLlave) {
+                return '%';
+            }
+        } else if (v instanceof VarSigil || v instanceof VarPaqueteSigil) {
+            return '@';
+        }
+        return v.getContexto().getValor().charAt(0);
     }
 
 }

@@ -28,7 +28,7 @@ our @l10 = @a[0,1];#<array><string>
 our @l11 = @l[0,1];#<list><integer>
 our @l12 = @h{1,2};#<list><string>
 
-#Acceso como referencia lectura
+#Lectura acceso referencia
 our $l13 = $aa[0]->[0];#<string>
 our $l14 = $ll[0]->[0];#<integer>
 our $l15 = $hh{1}->{1};#<string>
@@ -36,7 +36,7 @@ our $l16 = $l4->[0];#<string>
 our $l17 = $l5->[0];#<integer>
 our $l18 = $l6->{1};#<string>
 
-#Acceso como referencia lectura multiple
+#Lectura acceso referencia multiple
 our @l19 = @aa[0]->[0,1];#<array><string> 
 our @l20 = @ll[0]->[0,1];#<list><integer>
 our @l21 = @hh{1}->{1,2};#<list><string>
@@ -77,7 +77,7 @@ our %w12 = (1,"a",2,"n");#<hash><string>
 @w11[1,2] = (7,8);
 @w12{1,2} = ("n","o");
 
-#Acceso como referencia escritura
+#Escritura acceso referencia
 our @w13 = ([1,2],[3,4]);#<array><array><string>
 our @w14 = ([1,2],[3,4]);#<list><list><integer>
 our %w15 = (1,{1,"a"},2,{2,"n"});#<hash><hash><string>
@@ -92,7 +92,7 @@ $w16->[0] = 0;
 $w17->[0] = 0;
 $w18->{1} = "z";
 
-#Acceso como referencia escritura multiple
+#Escritura acceso referencia multiple
 our @w19 = ([1,2],[3,4]);#<array><array><string>
 our @w20 = ([1,2],[3,4]);#<list><list><integer>
 our %w21 = (1,{1,"a",2,"b"},2,{2,"n"});#<hash><hash><string>
@@ -122,6 +122,6 @@ our $l36 = \@a;#<ref><array><string>
 our $l37 = \@l;#<ref><list><integer>
 our $l38 = \%h;#<ref><hash><string>
 
-#Uso sigil
-our $l34 = $#a;#<integer>
-our $l34 = $#l;#<integer>
+#Sigil
+our $l39 = $#a;#<integer>
+our $l40 = $#l;#<integer>

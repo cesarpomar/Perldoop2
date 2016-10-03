@@ -53,9 +53,6 @@ public final class Tipos {
             case Tipo.MAP:
                 dec.append("(").append(get(tams, tam++)).append(")");
                 break;
-            case Tipo.REF:
-                dec.append("(").append(")");
-                break;
         }
         return dec;
     }

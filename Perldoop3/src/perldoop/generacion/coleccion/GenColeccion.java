@@ -42,6 +42,12 @@ public class GenColeccion {
         this.tabla = tabla;
     }
 
+    /**
+     * Genera la referencia cuando es necesario
+     *
+     * @param c Coleccion
+     * @param t Tipo
+     */
     private void genRef(Coleccion c, Tipo t) {
         Simbolo uso = Buscar.getPadre(c, 2);
         //Si no va para otra colecion es una referencia
@@ -56,7 +62,17 @@ public class GenColeccion {
         }
     }
 
+    /**
+     * Genera la coleccion como Array o List
+     *
+     * @param l Lista de expresiones
+     * @param t Tipo
+     * @return Codigo
+     */
     private StringBuilder genArrayList(Lista l, Tipo t) {
+        if (l.getExpresiones().isEmpty()) {
+            return Tipos.inicializacion(t, "0");
+        }
         //Tipo en Array
         Tipo ta = t.getSubtipo(1).add(0, Tipo.ARRAY);
         //Subtipo expresiones
@@ -122,6 +138,13 @@ public class GenColeccion {
         }
     }
 
+    /**
+     * Genera una mapa con expresiones simple alternando clave y valor
+     *
+     * @param l Lista de expresiones
+     * @param st Tipo contenido en el mapa
+     * @return Codigo
+     */
     private StringBuilder genMapExps(List<Expresion> l, Tipo st) {
         StringBuilder codigo = new StringBuilder(100);
         Iterator<Expresion> it = l.iterator();
@@ -157,7 +180,17 @@ public class GenColeccion {
         return codigo;
     }
 
+    /**
+     * Crea un mapa usando una lista de expresiones
+     *
+     * @param l Lista de expresiones
+     * @param t Tipo
+     * @return Codigo
+     */
     private StringBuilder genMap(Lista l, Tipo t) {
+        if (l.getExpresiones().isEmpty()) {
+            return Tipos.inicializacion(t, "0");
+        }
         //Subtipo expresiones
         Tipo st = t.getSubtipo(1);
         if (st.isColeccion()) {

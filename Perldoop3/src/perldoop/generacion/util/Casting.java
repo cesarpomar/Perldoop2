@@ -279,7 +279,7 @@ public final class Casting {
             case Tipo.FILE:
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? \"1\" : \"0\"");
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".toString()");
+                return cst.append(s.getCodigoGenerado()).append(".stringValue()");
             case Tipo.NUMBER:
                 return cst.append(s.getCodigoGenerado()).append(".toString()");
         }

@@ -1,5 +1,6 @@
 package perldoop.semantica.coleccion;
 
+import java.util.Iterator;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
@@ -10,11 +11,13 @@ import perldoop.modelo.arbol.acceso.AccesoRefEscalar;
 import perldoop.modelo.arbol.acceso.AccesoRefMap;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.*;
+import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.semantica.util.Tipos;
+import perldoop.util.Buscar;
 
 /**
  * Clase para la semantica de Coleccion
@@ -66,8 +69,32 @@ public class SemColeccion {
             }
         }
         //Tipamos siembre sin referencias
-        if(s.getTipo()!=null && s.getTipo().isRef()){
+        if (s.getTipo() != null && s.getTipo().isRef()) {
             s.setTipo(s.getTipo().getSubtipo(1));
+        }
+    }
+
+    /**
+     * Comprueba que todas las claves tienen un valor
+     *
+     * @param l Lista
+     */
+    public void checkClaveValor(Lista l) {
+        int e = 0;
+        Iterator<Expresion> it = l.getExpresiones().iterator();
+        Expresion last = null;
+        while (it.hasNext()) {
+            Expresion exp = it.next();
+            if (!exp.getTipo().isColeccion()) {
+                e++;
+            }
+            if (exp.getTipo().isColeccion() || !it.hasNext()) {
+                if (e % 2 != 0) {
+                    tabla.getGestorErrores().error(Errores.MAPA_NO_VALUE, Buscar.tokenInicio(last));
+                    throw new ExcepcionSemantica(Errores.MAPA_NO_VALUE);
+                }
+            }
+            last = exp;
         }
     }
 
@@ -96,6 +123,9 @@ public class SemColeccion {
                 Tipos.casting(l.getExpresiones().get(i), texp, new Tipo(Tipo.STRING), tabla.getGestorErrores());
             }
         }
+        if (t.isMap()) {
+            checkClaveValor(l);
+        }
     }
 
     public void visitar(ColParentesis s) {
@@ -107,9 +137,10 @@ public class SemColeccion {
         } else {
             tipar(s);
             if (s.getTipo() == null) {
-                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+                tabla.getAcciones().saltarGenerador();
+            } else {
+                comprobarElems(s.getTipo(), s.getLista());
             }
-            comprobarElems(s.getTipo(), s.getLista());
         }
     }
 
