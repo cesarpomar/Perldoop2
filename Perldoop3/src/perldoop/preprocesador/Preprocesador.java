@@ -104,61 +104,62 @@ public final class Preprocesador {
         EtiquetasTipo tipoSentencia = null;
         int estado = 0;
         for (int i = 0; i < tokens.size(); i++) {
+            Token token = tokens.get(i);
             switch (estado) {
                 case ESTADO_INICIAL:
-                    switch (tokens.get(i).getTipo()) {
+                    switch (token.getTipo()) {
                         case Parser.COMENTARIO:
                             comentario(i, terminales);
                             break;
                         case Parser.PD_TIPO:
                             tipo = new EtiquetasTipo();
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             aceptar(tipo, terminales);
                             break;
                         case Parser.PD_COL:
                             tipo = new EtiquetasTipo();
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             estado = ESTADO_COLECCION;
                             break;
                         case Parser.PD_REF:
                             tipo = new EtiquetasTipo();
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             estado = ESTADO_REF;
                             break;
                         case Parser.PD_NUM:
                             inicializacion = new EtiquetasInicializacion();
-                            inicializacion.addSize(tokens.get(i));
+                            inicializacion.addSize(token);
                             estado = ESTADO_INICIALIZACION;
                             break;
                         case Parser.PD_VAR:
                             inicializacion = new EtiquetasInicializacion();
                             predeclaracion = new EtiquetasPredeclaracion();
-                            inicializacion.addSize(tokens.get(i));
-                            predeclaracion.addVariable(tokens.get(i));
+                            inicializacion.addSize(token);
+                            predeclaracion.addVariable(token);
                             estado = ESTADO_VARIABLES;
                             break;
                         case '=':
                             if (inicializacion != null) {
-                                terminales.add(terminal(i, inicializacion));
+                                terminales.add(terminal(token, inicializacion));
                                 break;
                             }
                         case Parser.MY:
                         case Parser.OUR:
-                            terminales.add(terminal(i, tipoSentencia));
+                            terminales.add(terminal(token, tipoSentencia));
                             break;
                         case ';':
                             tipoSentencia = null;
                         default:
-                            terminales.add(terminal(i));
+                            terminales.add(terminal(token));
                     }
                     break;
                 case ESTADO_COLECCION:
-                    switch (tokens.get(i).getTipo()) {
+                    switch (token.getTipo()) {
                         case Parser.COMENTARIO:
                             comentario(i, terminales);
                             break;
                         case Parser.PD_TIPO:
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             if (predeclaracion == null) {
                                 aceptar(tipo, terminales);
                             } else {
@@ -167,31 +168,32 @@ public final class Preprocesador {
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_COL:
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             break;
                         case Parser.PD_REF:
-                            gestorErrores.error(Errores.REF_ANIDADA, tokens.get(i));
+                            gestorErrores.error(Errores.REF_ANIDADA, token);
                             errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
-                            tipo.setSize(tokens.get(i));
+                            tipo.setSize(token);
                             estado = ESTADO_SIZE;
                             break;
                         default:
-                            gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
+                            gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, token);
                             errores++;
                             estado = ESTADO_INICIAL;
+                            i--;
                     }
                     break;
                 case ESTADO_SIZE:
-                    switch (tokens.get(i).getTipo()) {
+                    switch (token.getTipo()) {
                         case Parser.COMENTARIO:
                             comentario(i, terminales);
                             break;
                         case Parser.PD_TIPO:
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             if (predeclaracion == null) {
                                 aceptar(tipo, terminales);
                             } else {
@@ -200,109 +202,115 @@ public final class Preprocesador {
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_COL:
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             estado = ESTADO_COLECCION;
                             break;
                         case Parser.PD_REF:
-                            gestorErrores.error(Errores.REF_ANIDADA, tokens.get(i));
+                            gestorErrores.error(Errores.REF_ANIDADA, token);
                             errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
-                            gestorErrores.error(Errores.DEMASIADAS_ETIQUETAS_SIZE, tokens.get(i));
+                            gestorErrores.error(Errores.DEMASIADAS_ETIQUETAS_SIZE, token);
                             errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         default:
-                            gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
+                            gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, token);
                             errores++;
                             estado = ESTADO_INICIAL;
+                            i--;
                     }
                     break;
                 case ESTADO_VARIABLES:
-                    switch (tokens.get(i).getTipo()) {
+                    switch (token.getTipo()) {
                         case Parser.COMENTARIO:
                             comentario(i, terminales);
                             break;
                         case Parser.PD_TIPO:
                             tipo = predeclaracion.getTipo();
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             aceptar(tipo, terminales);
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_COL:
                             tipo = predeclaracion.getTipo();
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             estado = ESTADO_COLECCION;
                             break;
                         case Parser.PD_REF:
                             tipo = predeclaracion.getTipo();
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             estado = ESTADO_REF;
                             break;
                         case Parser.PD_NUM:
-                            inicializacion.addSize(tokens.get(i));
+                            inicializacion.addSize(token);
                             estado = ESTADO_INICIALIZACION;
                             break;
                         case Parser.PD_VAR:
-                            predeclaracion.addVariable(tokens.get(i));
+                            predeclaracion.addVariable(token);
                             break;
                         default:
                             aceptar(inicializacion, terminales);
-                            terminales.add(terminal(i));
+                            terminales.add(terminal(token));
+                            estado = ESTADO_INICIAL;
+                            i--;
                     }
                     break;
                 case ESTADO_INICIALIZACION:
-                    switch (tokens.get(i).getTipo()) {
+                    switch (token.getTipo()) {
                         case Parser.COMENTARIO:
                             comentario(i, terminales);
                             break;
                         case Parser.PD_TIPO:
                         case Parser.PD_COL:
                         case Parser.PD_REF:
-                            gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, tokens.get(i));
+                            gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, token);
                             errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
-                            inicializacion.addSize(tokens.get(i));
+                            inicializacion.addSize(token);
                             break;
                         default:
                             aceptar(inicializacion, terminales);
-                            terminales.add(terminal(i));
+                            terminales.add(terminal(token));
+                            estado = ESTADO_INICIAL;
+                            i--;
                     }
                     break;
                 case ESTADO_REF:
-                    switch (tokens.get(i).getTipo()) {
+                    switch (token.getTipo()) {
                         case Parser.COMENTARIO:
                             comentario(i, terminales);
                             break;
                         case Parser.PD_TIPO:
-                            gestorErrores.error(Errores.REF_TIPO_BASICO, tokens.get(i));
+                            gestorErrores.error(Errores.REF_TIPO_BASICO, token);
                             errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_COL:
-                            tipo.addTipo(tokens.get(i));
+                            tipo.addTipo(token);
                             estado = ESTADO_COLECCION;
                             break;
                         case Parser.PD_REF:
-                            gestorErrores.error(Errores.REF_ANIDADA, tokens.get(i));
+                            gestorErrores.error(Errores.REF_ANIDADA, token);
                             errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         case Parser.PD_NUM:
                         case Parser.PD_VAR:
-                            gestorErrores.error(Errores.REF_SIZE, tokens.get(i));
+                            gestorErrores.error(Errores.REF_SIZE, token);
                             errores++;
                             estado = ESTADO_INICIAL;
                             break;
                         default:
-                            gestorErrores.error(Errores.REF_INCOMPLETA, tokens.get(i));
+                            gestorErrores.error(Errores.REF_INCOMPLETA, token);
                             errores++;
                             estado = ESTADO_INICIAL;
+                            i--;
                     }
                     break;
             }
@@ -313,11 +321,11 @@ public final class Preprocesador {
     /**
      * Crea un terminal de un token
      *
-     * @param i Posición del token
+     * @param t Token
      * @return Terminal
      */
-    private Terminal terminal(int i) {
-        return new Terminal(tokens.get(i));
+    private Terminal terminal(Token t) {
+        return new Terminal(t);
     }
 
     /**
@@ -327,10 +335,10 @@ public final class Preprocesador {
      * @param etiquetas Etiquetas
      * @return Terminal
      */
-    private Terminal terminal(int i, Etiquetas etiquetas) {
-        Terminal t = terminal(i);
-        t.setEtiquetas(etiquetas);
-        return t;
+    private Terminal terminal(Token t, Etiquetas etiquetas) {
+        Terminal tl = terminal(t);
+        tl.setEtiquetas(etiquetas);
+        return tl;
     }
 
     /**
@@ -341,7 +349,7 @@ public final class Preprocesador {
      */
     private void comentario(int i, List<Terminal> terminales) {
         if (i == 0) {
-            terminales.add(terminal(i));
+            terminales.add(terminal(tokens.get(i)));
         } else {
             Terminal t = terminales.get(terminales.size() - 1);
             if (t.getTokensComentario() == null) {

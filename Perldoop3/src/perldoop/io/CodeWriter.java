@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.generacion.ClaseJava;
+import perldoop.modelo.generacion.Optimizaciones;
 
 /**
  * Clase para la impresion de las traducciones
@@ -23,6 +24,7 @@ public class CodeWriter {
 
     private File directorio;
     private Opciones opciones;
+    private Optimizaciones optimizaciones;
 
     /**
      * Crea un directorio para escribir el codigo fuente
@@ -32,6 +34,7 @@ public class CodeWriter {
     public CodeWriter(Opciones opciones) {
         this.opciones = opciones;
         this.directorio = opciones.getDirectorioSalida();
+        this.optimizaciones = new Optimizaciones(opciones);
     }
 
     /**
@@ -75,6 +78,7 @@ public class CodeWriter {
         //Fin clase
         repr.append("}");
         //Formatemos
+        optimizaciones.optimizar(repr);
         if (opciones.isFormatearCodigo()) {
             try {
                 escribir(new Formatter().formatSource(repr.toString()), java.getNombre(), java.getPaquetes());

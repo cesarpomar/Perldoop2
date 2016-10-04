@@ -6,8 +6,12 @@ import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.acceso.Acceso;
+import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.lexico.Token;
@@ -99,11 +103,8 @@ public class SemIgual {
     private void inicializacion(Igual s) {
         checkAsignacion(s.getIzquierda(), s.getIgual(), s.getDerecha());
         Tipo t = s.getIzquierda().getTipo();
+        int accesos = Buscar.accesos(s.getIzquierda());
         s.setTipo(new Tipo(t));
-        if (!t.isColeccion()) {
-            tabla.getGestorErrores().error(Errores.INICIALIZACION_SOLO_COLECIONES, Buscar.tokenInicio(s.getDerecha()));
-            throw new ExcepcionSemantica(Errores.INICIALIZACION_SOLO_COLECIONES);
-        }
         List<Token> sizes = null;
         Etiquetas etiquetas = s.getIgual().getEtiquetas();
         //Obtenemos las etiquetas de tamaño
@@ -113,30 +114,40 @@ public class SemIgual {
             sizes = ((EtiquetasInicializacion) etiquetas).getSizes();
         } else if (etiquetas instanceof EtiquetasTipo) {
             sizes = ((EtiquetasTipo) etiquetas).getSizes();
-        }
-        //Por cada acceso a la coleccion eliminamos un tamaño
-        int accesos = Buscar.accesos(s.getIzquierda());
-        if (sizes.size() > accesos) {
-            sizes = sizes.subList(accesos, sizes.size());
-        } else {
-            sizes = new ArrayList<>();
+            //Por cada acceso a la coleccion eliminamos un tamaño       
+            if (accesos < sizes.size()) {
+                sizes = sizes.subList(accesos, sizes.size());
+            } else {
+                sizes = new ArrayList<>();
+            }
         }
         //Comprobamos las variables
+        int tams = 0;
         for (Token token : sizes) {
+            if (token == null) {
+                continue;//Aunque no se usen comprobamos todos
+            }
+            tams++;
             String valor = token.getValor();
+            valor = valor.substring(1, valor.length() - 1);
             char c = valor.charAt(0);
-            if (c == '$' || c == '@') {
+            if (c == '$' || c == '@' || c == '%') {
+                if (c == '%') {
+                    tabla.getGestorErrores().error(Errores.MAPA_NO_TAM, token);
+                    throw new ExcepcionSemantica(Errores.MAPA_NO_TAM);
+                }
                 EntradaVariable entrada = tabla.getTablaSimbolos().buscarVariable(valor.substring(1), c);
                 if (entrada == null) {
                     tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, token, valor, c);
                     throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
                 }
-            } else {
-                tabla.getGestorErrores().error(Errores.MAPA_NO_TAM, token);
-                throw new ExcepcionSemantica(Errores.MAPA_NO_TAM);
             }
         }
-        if (t.isArray() && sizes.isEmpty()) {
+        if (!t.isColeccion() && accesos == 0) {
+            tabla.getGestorErrores().error(Errores.INICIALIZACION_SOLO_COLECIONES, Buscar.tokenInicio(s.getDerecha()));
+            throw new ExcepcionSemantica(Errores.INICIALIZACION_SOLO_COLECIONES);
+        }
+        if ((t.isArray() || t.isRef() && t.getSubtipo(1).isArray()) && tams == 0) {
             tabla.getGestorErrores().error(Errores.ARRAY_INICIALIZACION_TAM, Buscar.tokenInicio(s.getIzquierda()));
             throw new ExcepcionSemantica(Errores.ARRAY_INICIALIZACION_TAM);
         }

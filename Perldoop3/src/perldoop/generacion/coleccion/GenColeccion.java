@@ -71,7 +71,10 @@ public class GenColeccion {
      */
     private StringBuilder genArrayList(Lista l, Tipo t) {
         if (l.getExpresiones().isEmpty()) {
-            return Tipos.inicializacion(t, "0");
+            if(t.isArray()){
+                return Tipos.inicializacion(t,"0");
+            }
+            return Tipos.inicializacion(t);
         }
         //Tipo en Array
         Tipo ta = t.getSubtipo(1).add(0, Tipo.ARRAY);
@@ -189,7 +192,7 @@ public class GenColeccion {
      */
     private StringBuilder genMap(Lista l, Tipo t) {
         if (l.getExpresiones().isEmpty()) {
-            return Tipos.inicializacion(t, "0");
+            return Tipos.inicializacion(t);
         }
         //Subtipo expresiones
         Tipo st = t.getSubtipo(1);

@@ -93,6 +93,9 @@ import perldoop.modelo.Opciones;
 		while(yylex() > 0){
 			tokens.add(yyval);
 		}
+		//Añadimos final de fichero
+		token("EOF",0);
+		tokens.add(yyval);
 		return tokens;
 	}
 

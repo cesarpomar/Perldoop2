@@ -24,7 +24,7 @@ import perldoop.semantica.util.SemanticaEtiquetas;
  * @author César Pomar
  */
 public class SemVariable {
-    
+
     private TablaSemantica tabla;
 
     /**
@@ -35,7 +35,7 @@ public class SemVariable {
     public SemVariable(TablaSemantica tabla) {
         this.tabla = tabla;
     }
-    
+
     public void visitar(VarExistente s) {
         char contexto = Buscar.getContexto(s);
         //Buscar entrada
@@ -46,7 +46,7 @@ public class SemVariable {
         }
         s.setTipo(e.getTipo());
     }
-    
+
     public void visitar(VarPaquete s) {
         char contexto = Buscar.getContexto(s);
         //Buscar paquete
@@ -64,7 +64,7 @@ public class SemVariable {
         }
         s.setTipo(e.getTipo());
     }
-    
+
     public void visitar(VarSigil s) {
         char contexto = Buscar.getContexto(s);
         //Buscar entrada
@@ -76,7 +76,7 @@ public class SemVariable {
         s.setTipo(e.getTipo());
         sigil(s, s.getSigil());
     }
-    
+
     public void visitar(VarPaqueteSigil s) {
         char contexto = Buscar.getContexto(s);
         //Buscar paquete
@@ -95,7 +95,7 @@ public class SemVariable {
         s.setTipo(e.getTipo());
         sigil(s, s.getSigil());
     }
-    
+
     public void visitar(VarMy s) {
         noAccederDeclaracion(s);
         obtenerTipo(s, (EtiquetasTipo) s.getMy().getEtiquetas());
@@ -105,7 +105,7 @@ public class SemVariable {
         entrada.setConflicto(confligto);
         tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
     }
-    
+
     public void visitar(VarOur s) {
         noAccederDeclaracion(s);
         obtenerTipo(s, (EtiquetasTipo) s.getOur().getEtiquetas());
@@ -163,7 +163,7 @@ public class SemVariable {
             } else {
                 v.setTipo(new Tipo(foreach.getLista().getTipo()));
             }
-            
+
         } else if (predeclaracion != null) {
             v.setTipo(SemanticaEtiquetas.parseTipo(predeclaracion.getTipos()));
         } else if (tipoLinea != null) {
@@ -186,22 +186,25 @@ public class SemVariable {
             case '$':
                 if (t.isArrayOrList() || t.isMap()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar(), SemanticaEtiquetas.parseTipo(t).get(0));
+                            contexto, v.getVar().getValor(), SemanticaEtiquetas.parseTipo(t).get(0));
+                    throw new ExcepcionSemantica(Errores.TIPO_INCORRECTO);
                 }
                 break;
             case '@':
                 if (!t.isArrayOrList()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar(), SemanticaEtiquetas.parseTipo(t).get(0));
+                            contexto, v.getVar().getValor(), SemanticaEtiquetas.parseTipo(t).get(0));
+                    throw new ExcepcionSemantica(Errores.TIPO_INCORRECTO);
                 }
                 break;
             case '%':
                 if (!t.isMap()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar(), SemanticaEtiquetas.parseTipo(t).get(0));
+                            contexto, v.getVar().getValor(), SemanticaEtiquetas.parseTipo(t).get(0));
+                    throw new ExcepcionSemantica(Errores.TIPO_INCORRECTO);
                 }
                 break;
         }
     }
-    
+
 }

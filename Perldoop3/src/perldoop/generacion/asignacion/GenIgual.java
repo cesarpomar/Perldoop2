@@ -9,6 +9,8 @@ import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.Acceso;
+import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
@@ -138,6 +140,7 @@ public class GenIgual {
     private void inicializacion(Igual s) {
         List<Token> sizes = null;
         Etiquetas etiquetas = s.getIgual().getEtiquetas();
+        int accesos = Buscar.accesos(s.getIzquierda());
         //Obtenemos las etiquetas de tamaño
         if (etiquetas == null) {
             sizes = new ArrayList<>();
@@ -145,18 +148,21 @@ public class GenIgual {
             sizes = ((EtiquetasInicializacion) etiquetas).getSizes();
         } else if (etiquetas instanceof EtiquetasTipo) {
             sizes = ((EtiquetasTipo) etiquetas).getSizes();
-        }
-        //Por cada acceso a la coleccion eliminamos un tamaño
-        int accesos = Buscar.accesos(s.getIzquierda());
-        if (sizes.size() > accesos) {
-            sizes = sizes.subList(accesos, sizes.size());
-        } else {
-            sizes = new ArrayList<>();
+            //Por cada acceso a la coleccion eliminamos un tamaño    
+            if (accesos < sizes.size()) {
+                sizes = sizes.subList(accesos, sizes.size());
+            } else {
+                sizes = new ArrayList<>();
+            }
         }
         //Cogemos los tamaños y tranformanos los tamaños variables
-        String[] tams = new String[sizes.size()];
-        for (int i = 0; i < sizes.size(); i++) {
-            String valor = sizes.get(i).getValor();
+        List<String> tams = new ArrayList<>(sizes.size());
+        for (Token token : sizes) {
+            if (token == null) {
+                break;
+            }
+            String valor = token.getValor();
+            valor = valor.substring(1, valor.length() - 1);
             char c = valor.charAt(0);
             if (c == '$' || c == '@') {
                 EntradaVariable entrada = tabla.getTablaSimbolos().buscarVariable(valor.substring(1), c);
@@ -165,17 +171,26 @@ public class GenIgual {
                 var.setCodigoGenerado(new StringBuilder(entrada.getAlias()));
                 valor = Casting.toInteger(var).toString();
             }
-            tams[i] = valor;
+            tams.add(valor);
         }
-        if (s.getTipo().isRef()) {
-            StringBuilder ini = new StringBuilder(100);
-            ini.append(Tipos.inicializacion(s.getTipo())).append("(");
-            ini.append(Tipos.inicializacion(s.getTipo().getSubtipo(1), tams));
+        //Generamos lainicializacion
+        Tipo t = s.getTipo();
+        if (t.isRef() && accesos > 0) {
+            t = t.getSubtipo(1);
+        }
+        StringBuilder ini = new StringBuilder(100);
+        if (t.isRef()) {
+            ini.append(Tipos.inicializacion(t)).append("(");
+            ini.append(Tipos.inicializacion(t.getSubtipo(1), tams.toArray(new String[tams.size()])));
             ini.append(")");
-            s.setCodigoGenerado(ini);
         } else {
-            s.setCodigoGenerado(Tipos.inicializacion(s.getTipo(), tams));
+            ini.append(Tipos.inicializacion(t, tams.toArray(new String[tams.size()])));
         }
+        //Generamos un simbolo y lo asignamos
+        Terminal term = new Terminal();
+        term.setTipo(s.getIzquierda().getTipo());
+        term.setCodigoGenerado(ini);
+        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(), term));
     }
 
     /**

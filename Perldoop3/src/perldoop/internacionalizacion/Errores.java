@@ -56,7 +56,7 @@ public class Errores extends Internacionalizacion {
     public static final String REFERENCIA_NO_COLECCION = "REFERENCIA_NO_COLECCION";
     public static final String MAPA_NO_TAM = "MAPA_NO_TAM";
     public static final String MAPA_NO_VALUE = "MAPA_NO_VALUE";
-    public static final String ARRAY_INICIALIZACION_TAM = "ARRAY_INICIALIZACION_TA";
+    public static final String ARRAY_INICIALIZACION_TAM = "ARRAY_INICIALIZACION_TAM";
     public static final String IGUAL_COLECION_REQUERIDA = "IGUAL_COLECION_REQUERIDA";
     public static final String INICIALIZACION_SOLO_COLECIONES = "INICIALIZACION_SOLO_COLECIONES";
 
