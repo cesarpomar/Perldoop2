@@ -57,6 +57,51 @@ public final class Tipos {
         return dec;
     }
 
+    /**
+     * Valores por defecto de los tipos basicos
+     *
+     * @param t Tipo basico
+     * @return valor por defecto
+     */
+    public static String valoreDefecto(Tipo t) {
+        switch (t.getTipo().get(0)) {
+            case Tipo.BOOLEAN:
+                return "false";
+            case Tipo.INTEGER:
+                return "0";
+            case Tipo.LONG:
+                return "0l";
+            case Tipo.FLOAT:
+                return "0f";
+            case Tipo.DOUBLE:
+                return "0.0";
+            case Tipo.NUMBER:
+                return "0";
+            case Tipo.BOX:
+                return "Pd.box()";
+            case Tipo.STRING:
+                return "\"\"";
+            case Tipo.FILE:
+                return "null";
+            case Tipo.ARRAY:
+                return "null";
+            case Tipo.LIST:
+                return "null";
+            case Tipo.MAP:
+                return "null";
+            case Tipo.REF:
+                return "null";
+        }
+        return "null";
+    }
+
+    /**
+     * Obtiene un valor siempre que la posicion exista
+     *
+     * @param array Array
+     * @param pos posicion
+     * @return Valor del array o la cadena vacia
+     */
     private static String get(String[] array, int pos) {
         if (pos >= array.length) {
             return "";

@@ -30,8 +30,8 @@ public class Optimizaciones {
      * @param codigo Codigo fuente
      */
     public void optimizar(StringBuilder codigo) {
-        notacionDiamante(codigo);
-        accesoReferenciacion(codigo);
+        //notacionDiamante(codigo);
+        //accesoReferenciacion(codigo);
     }
 
     /**

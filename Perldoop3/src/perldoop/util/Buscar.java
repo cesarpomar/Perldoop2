@@ -6,13 +6,17 @@ import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
+import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.constante.CadenaComando;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpConstante;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.variable.VarPaqueteSigil;
 import perldoop.modelo.arbol.variable.VarSigil;
 import perldoop.modelo.arbol.variable.Variable;
@@ -133,24 +137,35 @@ public final class Buscar {
 
     /**
      * Obtiene la ruta de padres siguiendo sus clases. Si los padres son instancias de las clases, retorna la lista de
-     * padres, null en caso contrario.
+     * padres
      *
      * @param s Simbolo
      * @param clases Clases de los padres
      * @return Lista de padres.
      */
-    public static List<Simbolo> getCamino(Simbolo s, Class<Simbolo>... clases) {
+    public static List<Simbolo> getCamino(Simbolo s, Class... clases) {
         List<Simbolo> lista = new ArrayList<>(clases.length);
         Simbolo padre = s.getPadre();
-        for (Class<Simbolo> clase : clases) {
+        for (Class clase : clases) {
             if (clase.isInstance(padre)) {
                 lista.add(padre);
                 padre = padre.getPadre();
             } else {
-                return null;
+                return new ArrayList<>(0);
             }
         }
         return lista;
+    }
+
+    /**
+     * Comprueba si la ruta de padres coincide con las instancias de las clases indicadas como argumentos
+     *
+     * @param s Simbolo
+     * @param clases Clases
+     * @return Padres coinciden
+     */
+    public static boolean isCamino(Simbolo s, Class... clases) {
+        return !getCamino(s, clases).isEmpty();
     }
 
     /**
@@ -227,6 +242,25 @@ public final class Buscar {
             return '@';
         }
         return v.getContexto().getValor().charAt(0);
+    }
+
+    /**
+     * Comrpueba si Varriable o Acceso sera asignado
+     *
+     * @param s Simbolo
+     * @return Asignada
+     */
+    public static boolean isAsignada(Simbolo s) {
+        List<Simbolo> lista = null;
+        if (s.getPadre().getPadre() instanceof Igual) {
+            lista = Arrays.asList(s.getPadre(), s.getPadre().getPadre());
+
+        }
+        if (lista == null) {
+            lista = Buscar.getCamino(s.getPadre(),Lista.class, ColParentesis.class, ExpColeccion.class, Igual.class);
+        }
+        int last = lista.size() - 1;
+        return last > 0 && ((Igual) lista.get(last)).getIzquierda().equals(lista.get(last - 1));
     }
 
 }

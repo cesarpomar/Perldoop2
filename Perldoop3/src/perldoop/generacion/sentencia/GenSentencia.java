@@ -46,9 +46,6 @@ public class GenSentencia {
             if (exp instanceof ExpVariable) {
                 Variable var = ((ExpVariable) exp).getVariable();
                 if (var instanceof VarMy) {
-                    if (tabla.getTablaSimbolos().getBloques() == 1) {
-                        continue;//los atributos ya se han declarado
-                    }
                     sentencia = true;
                 } else {
                     continue;//Las lecturas de variables no sirven para nada

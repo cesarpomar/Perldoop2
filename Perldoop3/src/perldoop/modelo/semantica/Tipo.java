@@ -145,7 +145,7 @@ public final class Tipo {
      * @return Tipo es colección
      */
     public boolean isColeccion() {
-        return !tipo.isEmpty() && (tipo.get(0) == ARRAY || tipo.get(0) == LIST || tipo.get(0) == MAP);
+        return !tipo.isEmpty() && tipo.size() > 1 && tipo.get(0) != REF;
     }
 
     /**
@@ -245,7 +245,7 @@ public final class Tipo {
      * @return Tipo es Simple
      */
     public boolean isSimple() {
-        return !tipo.isEmpty() && tipo.get(0) < 10;
+        return !tipo.isEmpty() && tipo.size() == 1;
     }
 
     @Override

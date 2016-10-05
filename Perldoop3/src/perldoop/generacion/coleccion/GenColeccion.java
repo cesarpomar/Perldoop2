@@ -13,7 +13,6 @@ import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.acceso.AccesoRefArray;
 import perldoop.modelo.arbol.acceso.AccesoRefEscalar;
 import perldoop.modelo.arbol.acceso.AccesoRefMap;
-import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
@@ -52,13 +51,9 @@ public class GenColeccion {
         Simbolo uso = Buscar.getPadre(c, 2);
         //Si no va para otra colecion es una referencia
         if (!(uso instanceof Coleccion) && !(c.getPadre() instanceof Acceso)) {
-            uso = Buscar.getPadre(uso, 2);
-            StringBuilder lambda = new StringBuilder();
-            if (!(uso instanceof Igual)) {
-                lambda = Tipos.declaracion(t);
-            }
-            lambda.insert(0, "new Ref<").append(">(");
-            c.getCodigoGenerado().insert(0, lambda).append(")");
+            StringBuilder diamante = new StringBuilder();
+            diamante.append("new Ref<").append(Tipos.declaracion(t)).append(">(");
+            c.getCodigoGenerado().insert(0, diamante).append(")");
         }
     }
 

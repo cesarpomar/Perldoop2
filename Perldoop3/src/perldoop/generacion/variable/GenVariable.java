@@ -4,6 +4,7 @@ import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.util.Buscar;
 
@@ -43,9 +44,9 @@ public final class GenVariable {
         codigo.append(s.getContexto().getComentario());
         codigo.append(s.getSigil().getComentario());
         codigo.append("(").append(e.getAlias()).append(s.getVar().getComentario());
-        if(e.getTipo().isArray()){
+        if (e.getTipo().isArray()) {
             codigo.append(".length - 1)");
-        }else{
+        } else {
             codigo.append(".size() - 1)");
         }
         s.setCodigoGenerado(codigo);
@@ -57,9 +58,9 @@ public final class GenVariable {
         codigo.append(s.getContexto().getComentario());
         codigo.append(s.getSigil().getComentario());
         codigo.append("(").append(e.getAlias()).append(s.getVar().getComentario());
-        if(e.getTipo().isArray()){
+        if (e.getTipo().isArray()) {
             codigo.append(".length - 1)");
-        }else{
+        } else {
             codigo.append(".size() - 1)");
         }
         s.setCodigoGenerado(codigo);
@@ -85,24 +86,36 @@ public final class GenVariable {
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(v.getVar().toString(), Buscar.getContexto(v));
         e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(), e.isConflicto()));
         //Declarar
-        StringBuilder declaracion = new StringBuilder(100);
+        StringBuilder declaracion = Tipos.declaracion(v.getTipo());
+        declaracion.append(dec.getComentario()).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
         if (publica || tabla.getTablaSimbolos().getBloques() == 1) {
             if (publica) {
-                declaracion.append("public ");
+                declaracion.insert(0, "public static ");
             } else {
-                declaracion.append("private ");
+                declaracion.insert(0, "private static ");
             }
-            declaracion.append("static ").append(Tipos.declaracion(v.getTipo())).append(dec.getComentario()).append(" ");
-            declaracion.append(e.getAlias()).append(";");
+            declaracion.append(";");
+            //Generar atributo
             tabla.getClase().getAtributos().add(declaracion.toString());
-            v.setCodigoGenerado(new StringBuilder(e.getAlias()).append(v.getVar().getComentario()));
-        } else {
-            declaracion.append(Tipos.declaracion(v.getTipo())).append(" ");
-            declaracion.append(e.getAlias());
-            declaracion.append(v.getVar().getComentario());
+            if (!Buscar.isAsignada(v)) {
+                StringBuilder inicializacion = new StringBuilder(100);
+                inicializacion.append(e.getAlias()).append('=').append(Tipos.valoreDefecto(v.getTipo()));
+                v.setCodigoGenerado(inicializacion);
+                if (!(Buscar.getPadre(v, 2) instanceof StcLista)) {
+                    inicializacion.insert(0, '(').append(')');//Asegurar que permaneceran juntos
+                }
+            } else {
+                v.setCodigoGenerado(new StringBuilder(e.getAlias()));
+            }
+        } else if (Buscar.getPadre(v, 2) instanceof StcLista) {
+            declaracion.append("=").append(Tipos.valoreDefecto(v.getTipo()));
             v.setCodigoGenerado(declaracion);
+        } else {
+            tabla.getDeclaraciones().add(declaracion.append(";"));
+            if (!Buscar.isAsignada(v)) {
+                v.getCodigoGenerado().append("=").append(Tipos.valoreDefecto(v.getTipo())).insert(0, '(').append(')');
+            }
         }
-
     }
 
 }

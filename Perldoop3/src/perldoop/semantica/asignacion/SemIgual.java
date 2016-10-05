@@ -5,14 +5,12 @@ import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
-import perldoop.modelo.arbol.acceso.Acceso;
-import perldoop.modelo.arbol.acceso.AccesoCol;
-import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
-import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
+import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.preprocesador.Etiquetas;
@@ -76,12 +74,12 @@ public class SemIgual {
         List<Expresion> variables = ((ColParentesis) ((ExpColeccion) s.getIzquierda()).getColeccion()).getLista().getExpresiones();
         if (s.getDerecha() instanceof ExpColeccion) {
             List<Expresion> valores = ((ColParentesis) ((ExpColeccion) s.getDerecha()).getColeccion()).getLista().getExpresiones();
-            for (int i = 0; i < variables.size(); i++) {
+            for (int i = 0; i < variables.size() && i < valores.size(); i++) {
                 checkAsignacion(variables.get(i), s.getIgual(), valores.get(i));
             }
         } else {
             Tipo t = s.getDerecha().getTipo();
-            Terminal coleccion = new Terminal();
+            Simbolo coleccion = new SimboloAux();
             if (t.isColeccion()) {
                 coleccion.setTipo(t.getSubtipo(1));
             } else {
@@ -143,7 +141,7 @@ public class SemIgual {
                 }
             }
         }
-        if (!t.isColeccion() && accesos == 0) {
+        if (!t.isColeccion() && accesos == 0 && !(t.isRef() && s.getIzquierda() instanceof ExpVariable)) {
             tabla.getGestorErrores().error(Errores.INICIALIZACION_SOLO_COLECIONES, Buscar.tokenInicio(s.getDerecha()));
             throw new ExcepcionSemantica(Errores.INICIALIZACION_SOLO_COLECIONES);
         }

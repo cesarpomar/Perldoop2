@@ -137,7 +137,7 @@ public class SemColeccion {
         } else {
             tipar(s);
             if (s.getTipo() == null) {
-                tabla.getAcciones().saltarGenerador();
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
             } else {
                 comprobarElems(s.getTipo(), s.getLista());
             }

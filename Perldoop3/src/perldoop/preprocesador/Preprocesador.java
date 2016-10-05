@@ -253,7 +253,6 @@ public final class Preprocesador {
                             break;
                         default:
                             aceptar(inicializacion, terminales);
-                            terminales.add(terminal(token));
                             estado = ESTADO_INICIAL;
                             i--;
                     }
@@ -276,7 +275,6 @@ public final class Preprocesador {
                             break;
                         default:
                             aceptar(inicializacion, terminales);
-                            terminales.add(terminal(token));
                             estado = ESTADO_INICIAL;
                             i--;
                     }

@@ -3,6 +3,7 @@ package perldoop.lib;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import perldoop.lib.box.BooleanBox;
+import perldoop.lib.box.EmptyBox;
 import perldoop.lib.box.FileBox;
 import perldoop.lib.box.NumberBox;
 import perldoop.lib.box.RefBox;
@@ -15,6 +16,15 @@ import perldoop.lib.util.Union;
  * @author César Pomar
  */
 public class Pd {
+
+    /**
+     * Crea un box vacio
+     *
+     * @return Box
+     */
+    public static Box box() {
+        return new EmptyBox();
+    }
 
     /**
      * Crea un box de booleans

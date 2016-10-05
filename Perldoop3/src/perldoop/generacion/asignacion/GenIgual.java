@@ -7,16 +7,15 @@ import java.util.List;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.acceso.Acceso;
-import perldoop.modelo.arbol.acceso.AccesoCol;
-import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpFuncion5;
+import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.arbol.variable.VarMy;
@@ -70,18 +69,15 @@ public class GenIgual {
      * @param s Simbolo de asignacion
      */
     private void simple(Igual s) {
+        Simbolo derAux = s.getDerecha();
         if (s.getDerecha() instanceof ExpFuncion || s.getDerecha() instanceof ExpFuncion5) {
-            Simbolo retorno = new Terminal();
-            if (s.getIzquierda().getTipo().isColeccion()) {
-                retorno.setCodigoGenerado(new StringBuilder(s.getDerecha().getCodigoGenerado()).append("[0]"));
-                retorno.setTipo(new Tipo(Tipo.BOX));
-            } else {
-                retorno = s.getDerecha();
+            if (!s.getIzquierda().getTipo().isColeccion()) {
+                derAux = new SimboloAux(s.getDerecha());
+                derAux.getCodigoGenerado().append("[0]");
+                derAux.setTipo(new Tipo(Tipo.BOX));
             }
-            s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(), retorno));
-        } else {
-            s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(), s.getDerecha()));
         }
+        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(), derAux));
     }
 
     /**
@@ -94,9 +90,12 @@ public class GenIgual {
         List<StringBuilder> asignaciones = new ArrayList<>(variables.size());
         if (s.getDerecha() instanceof ExpColeccion) {
             List<Simbolo> valores = (List) ((ColParentesis) ((ExpColeccion) s.getDerecha()).getColeccion()).getLista().getExpresiones();
+            fixAcceso(variables, valores);
+            checkInicializacion(variables, valores);
             atomicidad(asignaciones, variables, valores);
-            for (int i = 0; i < variables.size(); i++) {
-                asignaciones.add(asignacion(variables.get(i), "", valores.get(i)));
+            for (int i = 0; i < variables.size() && i < valores.size(); i++) {
+                Simbolo valor = valores.get(i);
+                asignaciones.add(asignacion(variables.get(i), "", valor));
             }
         } else {
             String valor;
@@ -113,10 +112,9 @@ public class GenIgual {
                 asignaciones.add(new StringBuilder(100).append(valor).append("=").append(Casting.casting(s.getDerecha(), t)));
                 tabla.getDeclaraciones().add(variable);
             } else {
-                valor = s.getCodigoGenerado().toString();
+                valor = s.getDerecha().getCodigoGenerado().toString();
             }
-            Terminal coleccion = new Terminal();
-            coleccion.setTipo(s.getIzquierda().getTipo().getSubtipo(1));
+            Simbolo coleccion = new SimboloAux(t.getSubtipo(1));
             if (t.isArray()) {
                 for (int i = 0; i < variables.size(); i++) {
                     coleccion.setCodigoGenerado(new StringBuilder(valor).append("[").append(i).append(']'));
@@ -166,10 +164,7 @@ public class GenIgual {
             char c = valor.charAt(0);
             if (c == '$' || c == '@') {
                 EntradaVariable entrada = tabla.getTablaSimbolos().buscarVariable(valor.substring(1), c);
-                Terminal var = new Terminal();
-                var.setTipo(entrada.getTipo());
-                var.setCodigoGenerado(new StringBuilder(entrada.getAlias()));
-                valor = Casting.toInteger(var).toString();
+                valor = Casting.toInteger(new SimboloAux(entrada.getTipo(), new StringBuilder(entrada.getAlias()))).toString();
             }
             tams.add(valor);
         }
@@ -187,10 +182,9 @@ public class GenIgual {
             ini.append(Tipos.inicializacion(t, tams.toArray(new String[tams.size()])));
         }
         //Generamos un simbolo y lo asignamos
-        Terminal term = new Terminal();
-        term.setTipo(s.getIzquierda().getTipo());
-        term.setCodigoGenerado(ini);
-        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(), term));
+        Simbolo aux = new SimboloAux(new Tipo(s.getIzquierda().getTipo()), ini);
+        aux.setPadre(s);
+        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(), aux));
     }
 
     /**
@@ -202,15 +196,15 @@ public class GenIgual {
      * @return Codigo asignacion
      */
     private StringBuilder asignacion(Simbolo izq, String igual, Simbolo der) {
-        StringBuilder codigo = new StringBuilder(100);
-        Simbolo der2 = der;
-        //Copiar colecciones y Referencias
+        StringBuilder codigo = null;
+        Simbolo derAux = new SimboloAux(der);
+        //Si la izquierda es un acceso y la rerecha una referencia real, se hace el get
+        if (der.getTipo().isRef() && izq instanceof ExpAcceso && !(der instanceof ExpAcceso || der instanceof SimboloAux)) {
+            derAux.getCodigoGenerado().append(".get()");
+        }
+        //Las variables de tipo colección se copian en su asignación
         if (der.getTipo().isColeccion() && Buscar.isVariable(der)) {
-            der2 = new Terminal();
-            der2.setTipo(der.getTipo());
-            StringBuilder copia = new StringBuilder(50 + der.getCodigoGenerado().length());
-            copia.append("Pd.copy(").append(der.getCodigoGenerado()).append(")");
-            der2.setCodigoGenerado(copia);
+            derAux.getCodigoGenerado().insert(0, "Pd.copy(").append(")");
         }
         //Usar una funcion en lugar del operador =
         if (izq instanceof ExpAcceso) {
@@ -218,15 +212,25 @@ public class GenIgual {
             Tipo t = acceso.getExpresion().getTipo();
             Tipo st = t.getSubtipo(1);
             if (acceso.getTipo().isColeccion() || t.isList() || t.isMap() || (t.isRef() && (st.isList() || st.isMap()))) {
+                codigo = new StringBuilder(100);
                 codigo.append(izq.getCodigoGenerado())
                         .append(igual)
-                        .append(Casting.casting(der2, izq.getTipo())).append(")");
-                return codigo;
+                        .append(Casting.casting(derAux, izq.getTipo())).append(")");
             }
         }
-        codigo.append(izq.getCodigoGenerado())
-                .append("=").append(igual)
-                .append(Casting.casting(der2, izq.getTipo()));
+        //Usar operador = para la asignación
+        if (codigo == null) {
+            codigo = new StringBuilder(100);
+            codigo.append(izq.getCodigoGenerado())
+                    .append("=").append(igual)
+                    .append(Casting.casting(derAux, izq.getTipo()));
+        }
+
+        //Si es una referencia fruto de un acceso y todabia no es una sentencia, hay que crear la referencia real
+        if (izq.getTipo().isRef() && izq instanceof ExpAcceso && !(Buscar.getPadre(der, 3) instanceof StcLista)) {
+            StringBuilder ref = Tipos.declaracion(izq.getTipo()).append("(").insert(0, "new ");
+            codigo.insert(0, ref).append(")");
+        }
         return codigo;
     }
 
@@ -262,6 +266,49 @@ public class GenIgual {
     }
 
     /**
+     * Soluciona los problemas de referencias en multiasignaciones debido a que la variable y la expresion no tienen acceso
+     * entre ellos.
+     *
+     * @param variables Variables
+     * @param valores Valores
+     */
+    public void fixAcceso(List<Expresion> variables, List<Simbolo> valores) {
+        for (int i = 0; i < variables.size() && i < valores.size(); i++) {
+            Simbolo var = variables.get(i);
+            Simbolo valor = valores.get(i);
+            if(valor instanceof ExpAcceso && !(var instanceof ExpAcceso)){
+                valor.getCodigoGenerado().insert(0, "new Ref<>(").append(")");
+            }
+            
+        }
+    }
+
+    /**
+     * Asegura que no se colaran variables sin inicializar cuando hay mas variables que valores
+     *
+     * @param variables Variables
+     * @param valores Valores
+     */
+    public void checkInicializacion(List<Expresion> variables, List<Simbolo> valores) {
+        if (variables.size() > valores.size()) {
+            for (int i = 0; i < variables.size(); i++) {
+                Expresion exp = variables.get(i);
+                if (exp instanceof ExpVariable) {
+                    Variable var = ((ExpVariable) exp).getVariable();
+                    if (var instanceof VarMy || var instanceof VarOur) {
+                        valores.add(new SimboloAux(exp.getTipo(), new StringBuilder(Tipos.valoreDefecto(exp.getTipo()))));
+                    } else {
+                        //Si ya esta asignada y no tiene valor la ignoramos
+                        variables.remove(i);
+                        i--;
+                    }
+                }
+
+            }
+        }
+    }
+
+    /**
      * Asegura la atomicidad entre las asignaciones
      *
      * @param asignaciones Asignaciones
@@ -271,16 +318,6 @@ public class GenIgual {
     public void atomicidad(List<StringBuilder> asignaciones, List<Expresion> variables, List<Simbolo> valores) {
         HashSet<String> escrituras = new HashSet<>(variables.size());
         List<Integer> noAtomica = new ArrayList<>(variables.size());
-        for (Expresion var : variables) {
-            Variable simbolo = Buscar.buscarVariable(var);
-            String alias = tabla.getTablaSimbolos().buscarVariable(simbolo.getVar().getValor(), Buscar.getContexto(simbolo)).getAlias();
-            if (simbolo instanceof VarMy || simbolo instanceof VarOur) {
-                StringBuilder ini = new StringBuilder(50);
-                ini.append(alias).append("=").append("null");
-                asignaciones.add(ini);
-            }
-            escrituras.add(alias);
-        }
         EXT:
         for (int i = 0; i < valores.size(); i++) {
             Simbolo valor = valores.get(i);
@@ -304,26 +341,25 @@ public class GenIgual {
         }
         if (!noAtomica.isEmpty()) {
             //Variable ausiliar para guardar valores
-            String aux = tabla.getGestorReservas().getAux();
+            String var = tabla.getGestorReservas().getAux();
             StringBuilder dec = new StringBuilder(20);
-            dec.append("Object[] ").append(aux).append(";");
+            dec.append("Object[] ").append(var).append(";");
             tabla.getDeclaraciones().add(dec);
             //Substituimos
             StringBuilder array = new StringBuilder(100);
             asignaciones.add(array);
-            array.append(aux).append(" = new Object[]{");
+            array.append(var).append(" = new Object[]{");
             for (int i : noAtomica) {
                 Simbolo exp = valores.get(i);
                 array.append(exp.getCodigoGenerado());
                 array.append(",");
                 //Substituto
-                Terminal t = new Terminal();
-                t.setTipo(exp.getTipo());
+                Simbolo aux = new SimboloAux(exp.getTipo());
                 StringBuilder nuevaExp = new StringBuilder(50);
-                nuevaExp.append("(").append(Tipos.declaracion(t.getTipo())).append(")");
-                nuevaExp.append(aux).append("[").append(i).append("]");
-                t.setCodigoGenerado(nuevaExp);
-                valores.set(i, t);
+                nuevaExp.append("(").append(Tipos.declaracion(aux.getTipo())).append(")");
+                nuevaExp.append(var).append("[").append(i).append("]");
+                aux.setCodigoGenerado(nuevaExp);
+                valores.set(i, aux);
             }
             array.setCharAt(array.length() - 1, '}');
         }

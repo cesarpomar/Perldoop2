@@ -1,6 +1,5 @@
 package perldoop.generacion.acceso;
 
-import perldoop.modelo.arbol.variable.VarSigil;
 import java.util.List;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
@@ -50,6 +49,8 @@ public class GenAcceso {
         if (uso instanceof Igual) {
             escritura = ((Igual) uso).getIzquierda() == s.getPadre();
             noRef = ((Igual) uso).getIzquierda() instanceof ExpAcceso;
+        } else if (Buscar.isAsignada(s)) {
+            noRef = escritura = true;
         } else if (uso instanceof Acceso) {
             noRef = true;
         } else {
@@ -127,7 +128,7 @@ public class GenAcceso {
             if (acceso.getAcceso() instanceof AccesoCol || acceso.getAcceso() instanceof AccesoColRef) {
                 return;
             }
-        }else if (exp instanceof ExpColeccion){
+        } else if (exp instanceof ExpColeccion) {
             return;
         }
         codigo.append(".get()");

@@ -94,6 +94,8 @@ public final class Tipos {
             case Tipo.LONG:
             case Tipo.FLOAT:
             case Tipo.DOUBLE:
+            case Tipo.NUMBER:
+            case Tipo.BOX:
                 return new Tipo(t);
             case Tipo.STRING:
                 return new Tipo(Tipo.DOUBLE);

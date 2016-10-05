@@ -1,6 +1,5 @@
 package perldoop.semantica.acceso;
 
-import perldoop.modelo.arbol.variable.VarSigil;
 import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
