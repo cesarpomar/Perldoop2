@@ -41,9 +41,9 @@ public class SemIgual {
     }
 
     public void visitar(Igual s) {
-        if (s.getIzquierda() instanceof ExpColeccion) {
+        if (s.getIzquierda() instanceof ExpColeccion && ((ExpColeccion)s.getIzquierda()).getColeccion() instanceof ColParentesis) {
             multiple(s);
-        } else if (s.getDerecha() instanceof ExpColeccion) {
+        } else if (s.getDerecha() instanceof ExpColeccion && ((ExpColeccion)s.getDerecha()).getColeccion() instanceof ColParentesis) {
             ExpColeccion expcol = (ExpColeccion) s.getDerecha();
             if (expcol.getColeccion().getLista().getElementos().isEmpty()) {
                 inicializacion(s);

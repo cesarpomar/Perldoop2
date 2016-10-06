@@ -18,6 +18,7 @@ import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.coleccion.Coleccion;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.semantica.Tipo;
@@ -49,8 +50,10 @@ public class GenColeccion {
      */
     private void genRef(Coleccion c, Tipo t) {
         Simbolo uso = Buscar.getPadre(c, 2);
-        //Si no va para otra colecion es una referencia
-        if (!(uso instanceof Coleccion) && !(c.getPadre() instanceof Acceso)) {
+        //Si no va para otra colecion o acceso es una referencia
+        List<Simbolo> acceso = Buscar.getCamino(c, ExpColeccion.class, Lista.class, ColLlave.class, ExpColeccion.class, Acceso.class);
+        if (!(uso instanceof Coleccion && uso.getTipo()!=null && uso.getTipo().isColeccion()) 
+                && !(c.getPadre() instanceof Acceso || !acceso.isEmpty())) {
             StringBuilder diamante = new StringBuilder();
             diamante.append("new Ref<").append(Tipos.declaracion(t)).append(">(");
             c.getCodigoGenerado().insert(0, diamante).append(")");

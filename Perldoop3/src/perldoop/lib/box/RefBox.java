@@ -53,12 +53,12 @@ public class RefBox implements Box {
     }
 
     @Override
-    public <T> Ref<T> RefValue() {
+    public Ref refValue() {
         return value;
     }
 
     @Override
-    public PerlFile FileValue() {
+    public PerlFile fileValue() {
         throw new ClassCastException();
     }
 

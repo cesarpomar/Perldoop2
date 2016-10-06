@@ -59,6 +59,7 @@ public class Errores extends Internacionalizacion {
     public static final String ARRAY_INICIALIZACION_TAM = "ARRAY_INICIALIZACION_TAM";
     public static final String IGUAL_COLECION_REQUERIDA = "IGUAL_COLECION_REQUERIDA";
     public static final String INICIALIZACION_SOLO_COLECIONES = "INICIALIZACION_SOLO_COLECIONES";
+    public static final String VARIABLE_COLECCION_MULTIASIGNACION = "VARIABLE_COLECCION_MULTIASIGNACION";
 
     public Errores() {
         super("errores");

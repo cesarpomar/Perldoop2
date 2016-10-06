@@ -1,4 +1,4 @@
-package perldoop.modelo.generacion;
+package perldoop.optimizaciones;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +30,7 @@ public class Optimizaciones {
      * @param codigo Codigo fuente
      */
     public void optimizar(StringBuilder codigo) {
-        //notacionDiamante(codigo);
-        //accesoReferenciacion(codigo);
+        //notacionDiamante, accesoRefencia, asignacionpartida, instanciasIgnoradas
     }
 
     /**

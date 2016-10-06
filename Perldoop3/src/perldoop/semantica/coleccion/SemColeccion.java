@@ -48,23 +48,26 @@ public class SemColeccion {
         }
         Simbolo exp = s.getPadre();
         Simbolo uso = exp.getPadre();
+        Simbolo multi;
         if (uso instanceof Igual) {//Uso para inicializar
             Igual igual = (Igual) uso;
             //Al otro lado tiene que haber un tipo de dato
             if (igual.getIzquierda().getTipo() != null) {
                 s.setTipo(new Tipo(igual.getIzquierda().getTipo()));
             }
+        } else if ((multi = Buscar.getVarMultivar(s)) != null) {//Uso para inicializar en multiasignacion
+            s.setTipo(multi.getTipo());
         } else if (uso instanceof Funcion) {//Uso argumentos funcion
             s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
         } else if (uso instanceof Lista && uso.getPadre() instanceof Coleccion) {//Coleccion anidada
             Coleccion col = (Coleccion) uso.getPadre();
             tipar(col);
             if (col.getTipo() != null) {
-                Tipo t = col.getTipo().getSubtipo(1);
+                Tipo t = new Tipo(col.getTipo());
                 if (s instanceof ColParentesis || t.isBox()) {
-                    s.setTipo(new Tipo(col.getTipo()));
-                } else {
                     s.setTipo(t);
+                } else {
+                    s.setTipo(col.getTipo().getSubtipo(1));
                 }
             }
         }
@@ -96,6 +99,21 @@ public class SemColeccion {
             }
             last = exp;
         }
+    }
+
+    /**
+     * Comprueba si la colección contiene una subcolección que debe ser desplegada y la retorna
+     *
+     * @param l Lista
+     * @return Coleccion
+     */
+    private Expresion contieneCol(Lista l) {
+        for (Expresion exp : l.getExpresiones()) {
+            if (exp.getTipo().isColeccion()) {
+                return exp;
+            }
+        }
+        return null;
     }
 
     /**
@@ -131,15 +149,23 @@ public class SemColeccion {
     public void visitar(ColParentesis s) {
         Simbolo uso = s.getPadre().getPadre();
         if (uso instanceof Igual && ((Igual) uso).getIzquierda() == s.getPadre()) {
+            if (contieneCol(s.getLista()) != null) {
+                tabla.getGestorErrores().error(Errores.VARIABLE_COLECCION_MULTIASIGNACION, Buscar.tokenInicio(contieneCol(s.getLista())));
+            }
+            s.setTipo(null);
             tabla.getAcciones().saltarGenerador();
         } else if (s.getLista().getElementos().size() == 1) {
             s.setTipo(new Tipo(s.getLista().getExpresiones().get(0).getTipo()));
         } else {
             tipar(s);
-            if (s.getTipo() == null) {
+            if (s.getTipo() == null && !(uso instanceof Igual && contieneCol(s.getLista()) == null)) {
                 s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-            } else {
+            } else if (s.getTipo() != null && s.getTipo().isBox()){
+                s.getTipo().add(0, Tipo.ARRAY);
+            } else if (s.getTipo() != null) {
                 comprobarElems(s.getTipo(), s.getLista());
+            } else {
+                tabla.getAcciones().saltarGenerador();
             }
         }
     }
@@ -157,6 +183,8 @@ public class SemColeccion {
             tipar(s);
             if (s.getTipo() == null) {
                 s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+            } else if (s.getTipo().isBox()) {
+                s.getTipo().add(0, Tipo.ARRAY);
             }
             comprobarElems(s.getTipo(), s.getLista());
             s.getTipo().add(0, Tipo.REF);
@@ -184,6 +212,8 @@ public class SemColeccion {
             tipar(s);
             if (s.getTipo() == null) {
                 s.setTipo(new Tipo(Tipo.MAP, Tipo.BOX));
+            } else if (s.getTipo().isBox()) {
+                s.getTipo().add(0, Tipo.MAP);
             }
             comprobarElems(s.getTipo(), s.getLista());
             s.getTipo().add(0, Tipo.REF);

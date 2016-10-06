@@ -88,9 +88,9 @@ public class GenIgual {
     private void multiple(Igual s) {
         List<Expresion> variables = ((ColParentesis) ((ExpColeccion) s.getIzquierda()).getColeccion()).getLista().getExpresiones();
         List<StringBuilder> asignaciones = new ArrayList<>(variables.size());
-        if (s.getDerecha() instanceof ExpColeccion) {
+        //Si la derecha es una coleccion y a la derecha hay un conjunto de expresiones o solo una entre parentesis
+        if (s.getDerecha() instanceof ExpColeccion && (s.getDerecha().getTipo() == null || !s.getDerecha().getTipo().isColeccion())) {
             List<Simbolo> valores = (List) ((ColParentesis) ((ExpColeccion) s.getDerecha()).getColeccion()).getLista().getExpresiones();
-            fixAcceso(variables, valores);
             checkInicializacion(variables, valores);
             atomicidad(asignaciones, variables, valores);
             for (int i = 0; i < variables.size() && i < valores.size(); i++) {
@@ -198,12 +198,17 @@ public class GenIgual {
     private StringBuilder asignacion(Simbolo izq, String igual, Simbolo der) {
         StringBuilder codigo = null;
         Simbolo derAux = new SimboloAux(der);
+        //si la derecha es un box y la izquierda una referencia, hacemos un pre casting
+        if(izq.getTipo().isRef() && der.getTipo().isBox()){
+            derAux.setCodigoGenerado(Casting.casting(derAux, izq.getTipo()));
+            derAux.setTipo(izq.getTipo());
+        }  
         //Si la izquierda es un acceso y la rerecha una referencia real, se hace el get
-        if (der.getTipo().isRef() && izq instanceof ExpAcceso && !(der instanceof ExpAcceso || der instanceof SimboloAux)) {
+        if (derAux.getTipo().isRef() && izq instanceof ExpAcceso && !(der instanceof ExpAcceso || der instanceof SimboloAux)) {
             derAux.getCodigoGenerado().append(".get()");
         }
         //Las variables de tipo colección se copian en su asignación
-        if (der.getTipo().isColeccion() && Buscar.isVariable(der)) {
+        if (derAux.getTipo().isColeccion() && Buscar.isVariable(der)) {
             derAux.getCodigoGenerado().insert(0, "Pd.copy(").append(")");
         }
         //Usar una funcion en lugar del operador =
@@ -266,24 +271,6 @@ public class GenIgual {
     }
 
     /**
-     * Soluciona los problemas de referencias en multiasignaciones debido a que la variable y la expresion no tienen acceso
-     * entre ellos.
-     *
-     * @param variables Variables
-     * @param valores Valores
-     */
-    public void fixAcceso(List<Expresion> variables, List<Simbolo> valores) {
-        for (int i = 0; i < variables.size() && i < valores.size(); i++) {
-            Simbolo var = variables.get(i);
-            Simbolo valor = valores.get(i);
-            if(valor instanceof ExpAcceso && !(var instanceof ExpAcceso)){
-                valor.getCodigoGenerado().insert(0, "new Ref<>(").append(")");
-            }
-            
-        }
-    }
-
-    /**
      * Asegura que no se colaran variables sin inicializar cuando hay mas variables que valores
      *
      * @param variables Variables
@@ -318,6 +305,11 @@ public class GenIgual {
     public void atomicidad(List<StringBuilder> asignaciones, List<Expresion> variables, List<Simbolo> valores) {
         HashSet<String> escrituras = new HashSet<>(variables.size());
         List<Integer> noAtomica = new ArrayList<>(variables.size());
+        for (Expresion exp : variables) {
+            Variable var = Buscar.buscarVariable(exp);
+            String alias = tabla.getTablaSimbolos().buscarVariable(var.getVar().getValor(), Buscar.getContexto(var)).getAlias();
+            escrituras.add(alias);
+        }
         EXT:
         for (int i = 0; i < valores.size(); i++) {
             Simbolo valor = valores.get(i);

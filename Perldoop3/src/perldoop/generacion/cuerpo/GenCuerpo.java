@@ -24,19 +24,7 @@ public class GenCuerpo {
     }
 
     public void visitar(Cuerpo s) {
-        StringBuilder codigo = new StringBuilder(50);
-        int tam = 0;
-        for (Sentencia sts : s.getSentencias()) {
-            tam += sts.getCodigoGenerado().length();
-        }
-        codigo = new StringBuilder(tam);
-        for (Sentencia sts : s.getSentencias()) {
-            codigo.append(sts.getCodigoGenerado());
-        }
-        s.setCodigoGenerado(codigo);
-        if(s.getPadre() instanceof Fuente){
-            tabla.getClase().getCodigoGlobal().add(codigo);
-        }
+
     }
 
 }

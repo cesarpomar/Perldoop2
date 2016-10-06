@@ -1,6 +1,7 @@
 package perldoop.generacion.fuente;
 
 import perldoop.modelo.arbol.fuente.Fuente;
+import perldoop.modelo.arbol.sentencia.Sentencia;
 import perldoop.modelo.generacion.TablaGenerador;
 
 /**
@@ -22,6 +23,8 @@ public class GenFuente {
     }
 
     public void visitar(Fuente s) {
-        //TODO borrar
+        for(Sentencia stc:s.getCuerpo().getSentencias()){
+            tabla.getCodigoGlobal().append(stc.getCodigoGenerado());
+        }
     }
 }

@@ -5,10 +5,7 @@ import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.Acceso;
-import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
-import perldoop.modelo.arbol.coleccion.ColCorchete;
-import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.preprocesador.EtiquetasTipo;
 import perldoop.modelo.semantica.EntradaVariable;
@@ -169,7 +166,7 @@ public class SemVariable {
         } else if (tipoLinea != null) {
             v.setTipo(SemanticaEtiquetas.parseTipo(tipoLinea.getTipos()));
         } else {
-            tabla.getGestorErrores().error(Errores.VARIABLE_SIN_TIPO, v.getVar().getToken(), v.getVar());
+            tabla.getGestorErrores().error(Errores.VARIABLE_SIN_TIPO, v.getVar().getToken(), v.getContexto().getValor(), v.getVar().getValor());
             throw new ExcepcionSemantica(Errores.VARIABLE_SIN_TIPO);
         }
     }

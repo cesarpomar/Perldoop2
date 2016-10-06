@@ -13,11 +13,11 @@ while len(carpetas) > 0:
 	for (path, folders, files) in walk(carpetas.pop(0)):
 		carpetas += folders
 		files.sort()
-		infile=""
+		infile=[]
 		
 		for file in files:
 			if file.endswith(".pl"):
-				infile+=file+" "	
+				infile.append(path+"/"+file)	
 
 		if len(infile) > 0:
-			call(['java','-jar','../Perldoop3/dist/Perldoop3.jar',path+"/"+infile,'-out','src'])
+			call(['java','-jar','../Perldoop3/dist/Perldoop3.jar']+infile+['-out','src'])

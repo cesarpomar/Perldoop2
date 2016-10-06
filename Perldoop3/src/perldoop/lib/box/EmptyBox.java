@@ -48,12 +48,12 @@ public final class EmptyBox implements Box {
     }
 
     @Override
-    public <T> Ref<T> RefValue() {
+    public Ref refValue() {
         return null;
     }
 
     @Override
-    public PerlFile FileValue() {
+    public PerlFile fileValue() {
         return null;
     }
 

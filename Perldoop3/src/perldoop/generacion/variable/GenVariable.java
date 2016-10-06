@@ -1,9 +1,17 @@
 package perldoop.generacion.variable;
 
+import java.util.Arrays;
+import java.util.List;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.generacion.util.Tipos;
+import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.asignacion.Igual;
+import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
+import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.util.Buscar;
@@ -97,7 +105,7 @@ public final class GenVariable {
             declaracion.append(";");
             //Generar atributo
             tabla.getClase().getAtributos().add(declaracion.toString());
-            if (!Buscar.isAsignada(v)) {
+            if (!isAsignada(v)) {
                 StringBuilder inicializacion = new StringBuilder(100);
                 inicializacion.append(e.getAlias()).append('=').append(Tipos.valoreDefecto(v.getTipo()));
                 v.setCodigoGenerado(inicializacion);
@@ -112,10 +120,25 @@ public final class GenVariable {
             v.setCodigoGenerado(declaracion);
         } else {
             tabla.getDeclaraciones().add(declaracion.append(";"));
-            if (!Buscar.isAsignada(v)) {
+            if (!isAsignada(v)) {
                 v.getCodigoGenerado().append("=").append(Tipos.valoreDefecto(v.getTipo())).insert(0, '(').append(')');
             }
         }
+    }
+
+    /**
+     * Comrpueba si Varriable sera asignado
+     *
+     * @param s Simbolo
+     * @return Asignada
+     */
+    private boolean isAsignada(Variable v) {
+        List<Simbolo> lista = Buscar.getCamino(v, Expresion.class, Igual.class);
+        if (lista.isEmpty()) {
+            lista = Buscar.getCamino(v, Expresion.class, Lista.class, ColParentesis.class, ExpColeccion.class, Igual.class);
+        }
+        int last = lista.size() - 1;
+        return last > 0 && ((Igual) lista.get(last)).getIzquierda().equals(lista.get(last - 1));
     }
 
 }

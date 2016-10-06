@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.generacion.ClaseJava;
-import perldoop.modelo.generacion.Optimizaciones;
+import perldoop.optimizaciones.Optimizaciones;
 
 /**
  * Clase para la impresion de las traducciones
@@ -71,10 +71,6 @@ public class CodeWriter {
         appendList(repr, java.getAtributos());
         //Funciones
         appendList(repr, java.getFunciones());
-        //Codigo global
-        repr.append("public static void global(){");
-        appendList(repr, java.getCodigoGlobal());
-        repr.append("}");
         //Fin clase
         repr.append("}");
         //Formatemos

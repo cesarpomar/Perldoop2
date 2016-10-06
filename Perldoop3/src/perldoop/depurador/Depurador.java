@@ -14,6 +14,11 @@ import perldoop.modelo.lexico.Token;
  */
 public class Depurador {
 
+    /**
+     * Imprime todos los tokens
+     *
+     * @param tokens Lista de tokens
+     */
     public static void tokens(List<Token> tokens) {
         StringBuilder salida;
         for (Token t : tokens) {
@@ -26,12 +31,22 @@ public class Depurador {
         }
     }
 
+    /**
+     * Imprime todos los terminales
+     *
+     * @param terminales
+     */
     public static void terminales(List<Terminal> terminales) {
-        for(Terminal t :terminales){
+        for (Terminal t : terminales) {
             imprimir(t, 0);
         }
     }
 
+    /**
+     * Imprime el arbol sintactico
+     *
+     * @param raiz
+     */
     public static void simbolos(Simbolo raiz) {
         int pila = 0;
         List<List<Simbolo>> simbolos = new ArrayList<>(100);
@@ -54,6 +69,12 @@ public class Depurador {
         }
     }
 
+    /**
+     * Imprime un Simbolo identando segun el nivel de anidamiento
+     *
+     * @param s Simbolo
+     * @param nivel nivel
+     */
     private static void imprimir(Simbolo s, int nivel) {
         StringBuilder salida = new StringBuilder(60);
         for (int i = 0; i < nivel; i++) {

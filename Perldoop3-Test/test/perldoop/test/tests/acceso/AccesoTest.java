@@ -10,7 +10,6 @@ public class AccesoTest {
     @BeforeClass
     public static void accesoTest() {
         System.out.println("accesoTest");
-        Acceso.global();
     }
 
     @Test

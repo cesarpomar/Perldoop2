@@ -10,6 +10,7 @@ import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.constante.CadenaComando;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
@@ -245,22 +246,26 @@ public final class Buscar {
     }
 
     /**
-     * Comrpueba si Varriable o Acceso sera asignado
+     * Obtiene la variable a la cual se asignara una expresion mediante una multiasignación, si el la variable es quien
+     * llava a la funcion se retornara su padre
      *
      * @param s Simbolo
-     * @return Asignada
+     * @return ExpVariable o ExpAcceso
      */
-    public static boolean isAsignada(Simbolo s) {
-        List<Simbolo> lista = null;
-        if (s.getPadre().getPadre() instanceof Igual) {
-            lista = Arrays.asList(s.getPadre(), s.getPadre().getPadre());
-
+    public static Expresion getVarMultivar(Simbolo s) {
+        List<Simbolo> lista = Buscar.getCamino(s, Expresion.class, Lista.class, ColParentesis.class, ExpColeccion.class, Igual.class);
+        if (!lista.isEmpty()) {
+            Igual igual = (Igual) lista.get(4);
+            int index = ((Lista) lista.get(1)).getExpresiones().indexOf(lista.get(0));
+            if (igual.getIzquierda() instanceof ExpColeccion) {
+                Coleccion col = ((ExpColeccion) igual.getIzquierda()).getColeccion();
+                List<Expresion> vars = col.getLista().getExpresiones();
+                if (col instanceof ColParentesis && vars.size() > index) {
+                    return vars.get(index);
+                }
+            }
         }
-        if (lista == null) {
-            lista = Buscar.getCamino(s.getPadre(),Lista.class, ColParentesis.class, ExpColeccion.class, Igual.class);
-        }
-        int last = lista.size() - 1;
-        return last > 0 && ((Igual) lista.get(last)).getIzquierda().equals(lista.get(last - 1));
+        return null;
     }
 
 }

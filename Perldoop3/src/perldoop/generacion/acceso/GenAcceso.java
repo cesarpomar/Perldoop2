@@ -12,6 +12,7 @@ import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
@@ -49,14 +50,19 @@ public class GenAcceso {
         if (uso instanceof Igual) {
             escritura = ((Igual) uso).getIzquierda() == s.getPadre();
             noRef = ((Igual) uso).getIzquierda() instanceof ExpAcceso;
-        } else if (Buscar.isAsignada(s)) {
-            noRef = escritura = true;
         } else if (uso instanceof Acceso) {
             noRef = true;
         } else {
-            Simbolo uso2 = Buscar.getPadre(s, 4);
-            if (uso2 instanceof AccesoRefEscalar || uso2 instanceof AccesoRefArray || uso2 instanceof AccesoRefMap) {
-                noRef = true;
+            Simbolo var = Buscar.getVarMultivar(s);
+            if (var != null) {
+                escritura = var == s.getPadre();
+                noRef = var instanceof ExpAcceso;
+            } else {
+                List<Simbolo> acceso = Buscar.getCamino(s, ExpAcceso.class, Lista.class, ColLlave.class, ExpColeccion.class, Acceso.class);
+                if (!acceso.isEmpty() && (acceso.get(4) instanceof AccesoRefEscalar || acceso.get(4) instanceof AccesoRefArray
+                        || acceso.get(4) instanceof AccesoRefMap)) {
+                    noRef = true;
+                }
             }
         }
         List<Expresion> lista = coleccion.getLista().getExpresiones();

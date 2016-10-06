@@ -19,6 +19,8 @@ public final class TablaGenerador {
     private GestorErrores gestorErrores;
     private ClaseJava clase;
     private List<StringBuilder> declaraciones;
+    private StringBuilder codigoGlobal;
+    private StringBuilder codigoMain;
 
     /**
      * Contruye la tabla del generador
@@ -33,6 +35,8 @@ public final class TablaGenerador {
         this.opciones = opciones;
         this.gestorErrores = gestorErrores;
         declaraciones = new ArrayList<>(10);
+        codigoGlobal = new StringBuilder(10000);
+        codigoMain = new StringBuilder(10000);
         clase = new ClaseJava();
     }
 
@@ -133,6 +137,42 @@ public final class TablaGenerador {
      */
     public void setDeclaraciones(List<StringBuilder> declaraciones) {
         this.declaraciones = declaraciones;
+    }
+
+    /**
+     * Obtiene el código global
+     *
+     * @return Código global
+     */
+    public StringBuilder getCodigoGlobal() {
+        return codigoGlobal;
+    }
+
+    /**
+     * Establece el código global
+     *
+     * @param codigoGlobal Código global
+     */
+    public void setCodigoGlobal(StringBuilder codigoGlobal) {
+        this.codigoGlobal = codigoGlobal;
+    }
+
+    /**
+     * Obtiene el código main
+     *
+     * @return Código main
+     */
+    public StringBuilder getCodigoMain() {
+        return codigoMain;
+    }
+
+    /**
+     * Establece el código main
+     *
+     * @param codigoMain Código main
+     */
+    public void setCodigoMain(StringBuilder codigoMain) {
+        this.codigoMain = codigoMain;
     }
 
 }

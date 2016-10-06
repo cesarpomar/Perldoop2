@@ -23,6 +23,10 @@ public class Interfaz extends Internacionalizacion {
     public static final String COMENTARIOS = "COMENTARIOS";
     //Argumentos depuración
     public static final String ARGS_DEPURACION = "ARGS_DEPURACION";
+    public static final String DEPURACION_TOKENS = "DEPURACION_TOKENS";
+    public static final String DEPURACION_TERMINALES = "DEPURACION_TERMINALES";
+    public static final String DEPURACION_ARBOL = "DEPURACION_ARBOL";
+    public static final String DEPURACION_TRADUCCION = "DEPURACION_TRADUCCION";
 
     public Interfaz() {
         super("interfaz");

@@ -93,6 +93,10 @@ public final class Consola {
         opcionales.addArgument("-c","--comments").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.COMENTARIOS));
         //Depuracion
         ArgumentGroup depuracion = parser.addArgumentGroup(interfaz.get(Interfaz.ARGS_DEPURACION));
+        depuracion.addArgument("-dtk","--debug-tokens").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TOKENS));
+        depuracion.addArgument("-dtl","--debug-terminal").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TERMINALES));
+        depuracion.addArgument("-dtr","--debug-tree").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_ARBOL));
+        depuracion.addArgument("-dtn","--debug-translation").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TRADUCCION));
     }
 
     /**

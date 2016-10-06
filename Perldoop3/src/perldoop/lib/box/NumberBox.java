@@ -53,12 +53,12 @@ public final class NumberBox implements Box {
     }
 
     @Override
-    public <T> Ref<T> RefValue() {
+    public Ref refValue() {
         throw new ClassCastException();
     }
 
     @Override
-    public PerlFile FileValue() {
+    public PerlFile fileValue() {
         throw new ClassCastException();
     }
 

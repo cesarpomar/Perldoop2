@@ -52,15 +52,14 @@ public interface Box {
     /**
      * Obtiene la representación referencia
      *
-     * @param <T> Tipo referencia
      * @return Referencia despues de la conversión
      */
-    <T> Ref<T> RefValue();
+    Ref refValue();
 
     /**
      * Obtiene la representación fichero
      *
      * @return Fichero despues de la conversión
      */
-    PerlFile FileValue();
+    PerlFile fileValue();
 }

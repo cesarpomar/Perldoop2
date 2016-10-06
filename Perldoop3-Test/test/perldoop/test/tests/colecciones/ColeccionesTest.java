@@ -10,7 +10,6 @@ public class ColeccionesTest {
     @BeforeClass
     public static void coleccionesTest() {
         System.out.println("coleccionesTest");
-        Colecciones.global();
     }
 
     @Test

@@ -50,6 +50,9 @@ public final class Tipos {
         if (tl2.size() == 1) {
             return true;
         }
+        if(t1.isRef() && t2.isBox() || t1.isBox() && t2.isRef()){
+            return true;
+        }
         return tl2.size() == tl1.size() && ((!t1.isRef() && !t2.isRef()) || igual(t1, t2));   
     }
 

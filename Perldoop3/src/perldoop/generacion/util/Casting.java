@@ -364,15 +364,18 @@ public final class Casting {
      * Castea una expresión a Referencia
      *
      * @param s Simbolo
+     * @param destino Tipo destino
      * @return Casting
      */
-    public static StringBuilder toRef(Simbolo s) {
+    public static StringBuilder toRef(Simbolo s, Tipo destino) {
         StringBuilder cst = new StringBuilder(50);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.REF:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".refValue()");
+                cst.append("((").append(Tipos.declaracion(destino));
+                cst.append(")").append(s.getCodigoGenerado());
+                return cst.append(".refValue())");
         }
         return null;
     }
@@ -558,7 +561,7 @@ public final class Casting {
             case Tipo.NUMBER:
                 return toNumber(origen);
             case Tipo.REF:
-                return toRef(origen);
+                return toRef(origen, destino);
             default:
                 if (!origen.getTipo().equals(destino)) {
                     if (origen.getTipo().isArrayOrList() && destino.isArrayOrList()
