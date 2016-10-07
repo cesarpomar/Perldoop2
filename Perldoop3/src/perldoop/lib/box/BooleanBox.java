@@ -29,27 +29,32 @@ public final class BooleanBox implements Box {
 
     @Override
     public Integer intValue() {
-        return value ? 1 : 0;
+        return value == null ? null : value ? 1 : 0;
     }
 
     @Override
     public Long longValue() {
-        return value ? 1l : 0l;
+        return value == null ? null : value ? 1l : 0l;
     }
 
     @Override
     public Float floatValue() {
-        return value ? 1f : 0f;
+        return value == null ? null : value ? 1f : 0f;
     }
 
     @Override
     public Double doubleValue() {
-        return value ? 1d : 0d;
+        return value == null ? null : value ? 1d : 0d;
+    }
+
+    @Override
+    public Number numberValue() {
+        return value == null ? null : value ? 1 : 0;
     }
 
     @Override
     public String stringValue() {
-        return value ? "1" : "0";
+        return value == null ? null : value ? "1" : "0";
     }
 
     @Override

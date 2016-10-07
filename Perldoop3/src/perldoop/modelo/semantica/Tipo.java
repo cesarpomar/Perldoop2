@@ -10,16 +10,15 @@ import java.util.List;
  */
 public final class Tipo {
 
-    public static final byte BOOLEAN = 1;
-    public static final byte INTEGER = 2;
-    public static final byte LONG = 3;
-    public static final byte FLOAT = 4;
-    public static final byte DOUBLE = 5;
-    public static final byte STRING = 6;
-    public static final byte FILE = 7;
-    public static final byte BOX = 8;
-    public static final byte NUMBER = 9;
-
+    public static final byte INTEGER = 1;
+    public static final byte LONG = 2;
+    public static final byte FLOAT = 3;
+    public static final byte DOUBLE = 4;
+    public static final byte STRING = 5;
+    public static final byte NUMBER = 6;
+    public static final byte BOOLEAN = 40;
+    public static final byte FILE = 50;
+    public static final byte BOX = 60;
     public static final byte ARRAY = 100;
     public static final byte LIST = 101;
     public static final byte MAP = 102;
@@ -240,12 +239,43 @@ public final class Tipo {
 
     /**
      * Obtiene si el tipo es Simple, se considera simple los siguientes tipos: Boolean, Integer, Long, Float, Double,
-     * String, File, Box, Number.
+     * String, File, Box o Number.
      *
      * @return Tipo es Simple
      */
     public boolean isSimple() {
         return !tipo.isEmpty() && tipo.size() == 1;
+    }
+
+    /**
+     * Obtiene si el tipo es Integer, Long, Float, Double o Number
+     *
+     * @return Tipo es un Numero
+     */
+    public boolean isNumberType() {
+        return !tipo.isEmpty() && tipo.get(0) >= INTEGER && tipo.get(0) <= NUMBER;
+    }
+
+    /**
+     * Retorna el tipo simple del tipo
+     *
+     * @return Tipo simple
+     */
+    public Tipo getSimple() {
+        return new Tipo(tipo.get(tipo.size() - 1));
+    }
+
+    /**
+     * Establece el tipo simple del Tipo
+     *
+     * @param t Tipo simple
+     */
+    public void setSimple(byte t) {
+        if (tipo.isEmpty()) {
+            tipo.add(t);
+        } else {
+            tipo.set(tipo.size() - 1, t);
+        }
     }
 
     @Override

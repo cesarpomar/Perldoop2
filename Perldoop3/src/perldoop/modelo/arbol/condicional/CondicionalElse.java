@@ -1,20 +1,18 @@
-package perldoop.modelo.arbol.elsif;
+package perldoop.modelo.arbol.condicional;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**
- * Clase que representa la reduccion -&gt; elsif : ELSE abrirBloque '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> condicional : ELSE '{' cuerpo '}'
  *
  * @author César Pomar
  */
-public final class ElsIfElse extends ElsIf {
+public final class CondicionalElse extends Condicional {
 
-    private Terminal elseT;
-    private AbrirBloque abrirBloque;
+    private Terminal id;
     private Terminal llaveI;
     private Cuerpo cuerpo;
     private Terminal llaveD;
@@ -22,56 +20,35 @@ public final class ElsIfElse extends ElsIf {
     /**
      * Único contructor de la clase
      *
-     * @param elseT If
-     * @param abrirBloque AbrirBloque
+     * @param id Else
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public ElsIfElse(Terminal elseT, AbrirBloque abrirBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        setElseT(elseT);
-        setAbrirBloque(abrirBloque);
+    public CondicionalElse(Terminal id, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        setId(id);
         setLlaveI(llaveI);
         setCuerpo(cuerpo);
         setLlaveD(llaveD);
     }
 
     /**
-     * Obtiene el else
+     * Obtiene el id de bloque
      *
-     * @return Else
+     * @return Id
      */
-    public Terminal getElseT() {
-        return elseT;
+    public final Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece el else
+     * Establece el id de bloque
      *
-     * @param elseT Else
+     * @param id Id
      */
-    public void setElseT(Terminal elseT) {
-        elseT.setPadre(this);
-        this.elseT = elseT;
-    }
-
-    /**
-     * Obtiene el abrirBloque
-     *
-     * @return AbrirBloque
-     */
-    public AbrirBloque getAbrirBloque() {
-        return abrirBloque;
-    }
-
-    /**
-     * Establece el abrirBloque
-     *
-     * @param abrirBloque AbrirBloque
-     */
-    public void setAbrirBloque(AbrirBloque abrirBloque) {
-        abrirBloque.setPadre(this);
-        this.abrirBloque = abrirBloque;
+    public final void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
@@ -138,6 +115,6 @@ public final class ElsIfElse extends ElsIf {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{elseT, abrirBloque, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, llaveI, cuerpo, llaveD};
     }
 }

@@ -1,67 +1,67 @@
 package perldoop.modelo.arbol.fuente;
 
+import java.util.ArrayList;
+import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.cuerpo.Cuerpo;
-import perldoop.modelo.arbol.masfuente.MasFuente;
 
 /**
- * Clase que representa la reduccion -&gt; fuente : cuerpo masFuente
+ * Clase que representa la reduccion -&gt; fuente : cuerpo masFuente <br>
+ * masFuente :<br>
+ * | funcionDef fuente
  *
  * @author César Pomar
  */
 public final class Fuente extends Simbolo {
 
-    private Cuerpo cuerpo;
-    private MasFuente masFuente;
+    private List<Simbolo> codigoFuente;
 
     /**
      * Único contructor de la clase
-     *
-     * @param cuerpo Cuerpo
-     * @param masFuente MasFuente
      */
-    public Fuente(Cuerpo cuerpo, MasFuente masFuente) {
-        setCuerpo(cuerpo);
-        setMasFuente(masFuente);
+    public Fuente() {
+        codigoFuente = new ArrayList<>(100);
     }
 
     /**
-     * Obtiene el Cuerpo
+     * Añade codigo fuente
      *
-     * @return Cuerpo
+     * @param codigo Codigo fuetne
+     * @return Esta instancia
      */
-    public Cuerpo getCuerpo() {
-        return cuerpo;
+    public Fuente add(Simbolo codigo) {
+        codigoFuente.add(codigo);
+        codigo.setPadre(this);
+        return this;
     }
 
     /**
-     * Establece el cuerpo
+     * Realiza la misma acción que invocar f.add(codigo)
      *
-     * @param cuerpo Cuerpo
+     * @param f Fuente
+     * @param codigo Codigo fuente
+     * @return Fuente f
      */
-    public void setCuerpo(Cuerpo cuerpo) {
-        cuerpo.setPadre(this);
-        this.cuerpo = cuerpo;
+    public static Fuente add(Fuente f, Simbolo codigo) {
+        return f.add(codigo);
     }
 
     /**
-     * Obtiene el masFuente
+     * Obtiene el codigo fuente
      *
-     * @return Mas Fuente
+     * @return Codigo fuente
      */
-    public MasFuente getMasFuente() {
-        return masFuente;
+    public List<Simbolo> getCodigoFuente() {
+        return codigoFuente;
     }
 
     /**
-     * Estabelce el masFuente
+     * Establece el codigo fuente
      *
-     * @param masFuente Masfuente
+     * @param codigoFuente Codigo fuente
      */
-    public void setMasFuente(MasFuente masFuente) {
-        masFuente.setPadre(this);
-        this.masFuente = masFuente;
+    public void setCodigoFuente(List<Simbolo> codigoFuente) {
+        this.codigoFuente = codigoFuente;
     }
 
     @Override
@@ -71,7 +71,7 @@ public final class Fuente extends Simbolo {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{cuerpo, masFuente};
+        return codigoFuente.toArray(new Simbolo[codigoFuente.size()]);
     }
 
 }

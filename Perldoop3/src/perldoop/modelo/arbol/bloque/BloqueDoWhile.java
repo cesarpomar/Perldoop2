@@ -8,220 +8,52 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -&gt;<br> bloque : DO abrirBloque '{' cuerpo
- * '}' WHILE '(' expresion ')' ';'
+ * Clase que representa la reduccion -&gt;<br> bloque : DO '{' cuerpo '}' WHILE '(' expresion ')' ';'
  *
  * @author César Pomar
  */
-public final class BloqueDoWhile extends Bloque {
+public final class BloqueDoWhile extends BloqueControlBasico {
 
-    private Terminal doT;
-    private AbrirBloque abrirBloque;
-    private Terminal llaveI;
-    private Cuerpo cuerpo;
-    private Terminal llaveD;
-    private Terminal parentesisI;
-    private Expresion expresion;
-    private Terminal parentesisD;
-    private Terminal whileT;
+    private Terminal idWhile;
     private Terminal puntoComa;
 
     /**
      * Único contructor de la clase
      *
-     * @param doT Do
-     * @param abrirBloque AbrirBloque
+     * @param id Do
+     * @param abrirBloque Abertura de bloque para la cabecera
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresiom
      * @param parentesisD Parentesis derecho
-     * @param whileT While
+     * @param idWhile While
      * @param puntoComa Punto y coma
      */
-    public BloqueDoWhile(Terminal doT, AbrirBloque abrirBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal whileT, Terminal puntoComa) {
-        setDoT(doT);
-        setAbrirBloque(abrirBloque);
-        setLlaveI(llaveI);
-        setCuerpo(cuerpo);
-        setLlaveD(llaveD);
-        setParentesisI(parentesisI);
-        setExpresion(expresion);
-        setParentesisD(parentesisD);
-        setWhileT(whileT);
+    public BloqueDoWhile(Terminal id, AbrirBloque abrirBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Terminal idWhile, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal puntoComa) {
+        super(id, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD);
+        setIdWhile(idWhile);
         setPuntoComa(puntoComa);
     }
 
     /**
-     * Obtiene el do
+     * Obtiene el idWhile
      *
-     * @return Do
+     * @return idWhile
      */
-    public Terminal getDoT() {
-        return doT;
+    public Terminal getIdWhile() {
+        return idWhile;
     }
 
     /**
-     * Establece el do
+     * Establece el idWhile
      *
-     * @param doT Do
+     * @param idWhile idWile
      */
-    public void setDoT(Terminal doT) {
-        doT.setPadre(this);
-        this.doT = doT;
-    }
-
-    /**
-     * Obtiene el abrirBloque
-     *
-     * @return AbrirBloque
-     */
-    public AbrirBloque getAbrirBloque() {
-        return abrirBloque;
-    }
-
-    /**
-     * Establece el abrirBloque
-     *
-     * @param abrirBloque AbrirBloque
-     */
-    public void setAbrirBloque(AbrirBloque abrirBloque) {
-        abrirBloque.setPadre(this);
-        this.abrirBloque = abrirBloque;
-    }
-
-    /**
-     * Obtiene la llave izquierda
-     *
-     * @return Llave izquierda
-     */
-    public Terminal getLlaveI() {
-        return llaveI;
-    }
-
-    /**
-     * Establece la llave izquierda
-     *
-     * @param llaveI Llave izquierda
-     */
-    public void setLlaveI(Terminal llaveI) {
-        llaveI.setPadre(this);
-        this.llaveI = llaveI;
-    }
-
-    /**
-     * Obtiene el cuerpo
-     *
-     * @return Cuerpo
-     */
-    public Cuerpo getCuerpo() {
-        return cuerpo;
-    }
-
-    /**
-     * Establece el cuerpo
-     *
-     * @param cuerpo Cuerpo
-     */
-    public void setCuerpo(Cuerpo cuerpo) {
-        cuerpo.setPadre(this);
-        this.cuerpo = cuerpo;
-    }
-
-    /**
-     * Obtiene la llave derecha
-     *
-     * @return Llave derecha
-     */
-    public Terminal getLlaveD() {
-        return llaveD;
-    }
-
-    /**
-     * Establece la llave derecha
-     *
-     * @param llaveD Llave derecha
-     */
-    public void setLlaveD(Terminal llaveD) {
-        llaveD.setPadre(this);
-        this.llaveD = llaveD;
-    }
-
-    /**
-     * Obtiene el parenteis izquierdo
-     *
-     * @return Parenteis izquierdo
-     */
-    public Terminal getParentesisI() {
-        return parentesisI;
-    }
-
-    /**
-     * Establece el parenteis izquierdo
-     *
-     * @param parentesisI Parenteis izquierdo
-     */
-    public void setParentesisI(Terminal parentesisI) {
-        parentesisI.setPadre(this);
-        this.parentesisI = parentesisI;
-    }
-
-    /**
-     * Obtiene la expresión
-     *
-     * @return Expresión
-     */
-    public Expresion getExpresion() {
-        return expresion;
-    }
-
-    /**
-     * Establece la expresión
-     *
-     * @param expresion Expresión
-     */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
-    }
-
-    /**
-     * Obtiene el parentesis derecho
-     *
-     * @return Parentesis derecho
-     */
-    public Terminal getParentesisD() {
-        return parentesisD;
-    }
-
-    /**
-     * Establece el parentesis derecho
-     *
-     * @param parentesisD Parentesis derecho
-     */
-    public void setParentesisD(Terminal parentesisD) {
-        parentesisD.setPadre(this);
-        this.parentesisD = parentesisD;
-    }
-
-    /**
-     * Obtiene el while
-     *
-     * @return While
-     */
-    public Terminal getWhileT() {
-        return whileT;
-    }
-
-    /**
-     * Establece el while
-     *
-     * @param whileT While
-     */
-    public void setWhileT(Terminal whileT) {
-        whileT.setPadre(this);
-        this.whileT = whileT;
+    public void setIdWhile(Terminal idWhile) {
+        idWhile.setPadre(this);
+        this.idWhile = idWhile;
     }
 
     /**
@@ -250,6 +82,6 @@ public final class BloqueDoWhile extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{doT, abrirBloque, llaveI, cuerpo, llaveD, parentesisI, expresion, parentesisD, puntoComa};
+        return new Simbolo[]{id, llaveI, cuerpo, llaveD, idWhile, parentesisI, expresion, parentesisD, puntoComa};
     }
 }

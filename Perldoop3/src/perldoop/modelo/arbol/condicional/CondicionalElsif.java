@@ -3,32 +3,29 @@ package perldoop.modelo.arbol.condicional;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -&gt;<br> condicional : UNLESS abrirBloque '('
- * expresion ')' '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> condicional : Elsif '(' expresion ')' '{' cuerpo '}'
  *
  * @author César Pomar
  */
-public final class CondicionalUnless extends Condicional{
+public final class CondicionalElsif extends Condicional {
 
-    private Terminal unlessT;
-    private AbrirBloque abrirBloque;
+    private Terminal id;
     private Terminal parentesisI;
     private Expresion expresion;
     private Terminal parentesisD;
     private Terminal llaveI;
     private Cuerpo cuerpo;
     private Terminal llaveD;
+    private Condicional bloqueElse;
 
     /**
      * Único contructor de la clase
      *
-     * @param unlessT If
-     * @param abrirBloque AbrirBloque
+     * @param id elsIf
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
      * @param parentesisD Parentesis derecho
@@ -36,9 +33,8 @@ public final class CondicionalUnless extends Condicional{
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public CondicionalUnless(Terminal unlessT, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        setUnlessT(unlessT);
-        setAbrirBloque(abrirBloque);
+    public CondicionalElsif(Terminal id, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        setId(id);
         setParentesisI(parentesisI);
         setExpresion(expresion);
         setParentesisD(parentesisD);
@@ -48,41 +44,22 @@ public final class CondicionalUnless extends Condicional{
     }
 
     /**
-     * Obtiene el unless
+     * Obtiene el id de bloque
      *
-     * @return Unless
+     * @return Id
      */
-    public Terminal getUnlessT() {
-        return unlessT;
+    public final Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece el unless
+     * Establece el id de bloque
      *
-     * @param unlessT Unless
+     * @param id Id
      */
-    public void setUnlessT(Terminal unlessT) {
-        unlessT.setPadre(this);
-        this.unlessT = unlessT;
-    }
-
-    /**
-     * Obtiene el abrirBloque
-     *
-     * @return AbrirBloque
-     */
-    public AbrirBloque getAbrirBloque() {
-        return abrirBloque;
-    }
-
-    /**
-     * Establece el abrirBloque
-     *
-     * @param abrirBloque AbrirBloque
-     */
-    public void setAbrirBloque(AbrirBloque abrirBloque) {
-        abrirBloque.setPadre(this);
-        this.abrirBloque = abrirBloque;
+    public final void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
@@ -90,7 +67,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @return Parenteis izquierdo
      */
-    public Terminal getParentesisI() {
+    public final Terminal getParentesisI() {
         return parentesisI;
     }
 
@@ -99,7 +76,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @param parentesisI Parenteis izquierdo
      */
-    public void setParentesisI(Terminal parentesisI) {
+    public final void setParentesisI(Terminal parentesisI) {
         parentesisI.setPadre(this);
         this.parentesisI = parentesisI;
     }
@@ -109,7 +86,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @return Expresión
      */
-    public Expresion getExpresion() {
+    public final Expresion getExpresion() {
         return expresion;
     }
 
@@ -118,7 +95,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @param expresion Expresión
      */
-    public void setExpresion(Expresion expresion) {
+    public final void setExpresion(Expresion expresion) {
         expresion.setPadre(this);
         this.expresion = expresion;
     }
@@ -128,7 +105,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @return Parentesis derecho
      */
-    public Terminal getParentesisD() {
+    public final Terminal getParentesisD() {
         return parentesisD;
     }
 
@@ -137,7 +114,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @param parentesisD Parentesis derecho
      */
-    public void setParentesisD(Terminal parentesisD) {
+    public final void setParentesisD(Terminal parentesisD) {
         parentesisD.setPadre(this);
         this.parentesisD = parentesisD;
     }
@@ -147,7 +124,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @return Llave izquierda
      */
-    public Terminal getLlaveI() {
+    public final Terminal getLlaveI() {
         return llaveI;
     }
 
@@ -156,7 +133,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @param llaveI Llave izquierda
      */
-    public void setLlaveI(Terminal llaveI) {
+    public final void setLlaveI(Terminal llaveI) {
         llaveI.setPadre(this);
         this.llaveI = llaveI;
     }
@@ -166,7 +143,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @return Cuerpo
      */
-    public Cuerpo getCuerpo() {
+    public final Cuerpo getCuerpo() {
         return cuerpo;
     }
 
@@ -175,7 +152,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @param cuerpo Cuerpo
      */
-    public void setCuerpo(Cuerpo cuerpo) {
+    public final void setCuerpo(Cuerpo cuerpo) {
         cuerpo.setPadre(this);
         this.cuerpo = cuerpo;
     }
@@ -185,7 +162,7 @@ public final class CondicionalUnless extends Condicional{
      *
      * @return Llave derecha
      */
-    public Terminal getLlaveD() {
+    public final Terminal getLlaveD() {
         return llaveD;
     }
 
@@ -194,9 +171,28 @@ public final class CondicionalUnless extends Condicional{
      *
      * @param llaveD Llave derecha
      */
-    public void setLlaveD(Terminal llaveD) {
+    public final void setLlaveD(Terminal llaveD) {
         llaveD.setPadre(this);
         this.llaveD = llaveD;
+    }
+
+    /**
+     * Obtiene el bloque Else
+     *
+     * @return Bloque Else
+     */
+    public Condicional getBloqueElse() {
+        return bloqueElse;
+    }
+
+    /**
+     * Establece el bloque Else
+     *
+     * @param bloqueElse Bloque Else
+     */
+    public void setBloqueElse(Condicional bloqueElse) {
+        bloqueElse.setPadre(this);
+        this.bloqueElse = bloqueElse;
     }
 
     @Override
@@ -206,6 +202,6 @@ public final class CondicionalUnless extends Condicional{
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{unlessT, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD};
     }
 }

@@ -80,7 +80,7 @@ public final class Perldoop {
             List<Simbolo> simbolos;
             Parser parser = new Parser(terminales, opciones, gestorErrores);
             simbolos = parser.parsear();
-            //Depurador.simbolos(simbolos.get(0));
+            //Depurador.simbolos(simbolos.get(simbolos.size()-1));
             if (parser.getErrores() > 0) {
                 gestorErrores.error(Errores.FALLOS_SINTACTICOS, parser.getErrores());
                 continue;

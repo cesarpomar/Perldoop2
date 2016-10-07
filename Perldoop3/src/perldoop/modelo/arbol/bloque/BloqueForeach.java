@@ -8,27 +8,23 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -&gt;<br> bloque : FOR abrirBloque '(' lista
- * ')' '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> bloque : FOR '(' lista ')' '{' cuerpo '}'
  *
  * @author César Pomar
  */
 public final class BloqueForeach extends Bloque {
 
-    private Terminal forT;
-    private AbrirBloque abrirBloque;
+    private Terminal id;
+    protected AbrirBloque abrirBloque;
     private Terminal parentesisI;
     private Lista lista;
     private Terminal parentesisD;
-    private Terminal llaveI;
-    private Cuerpo cuerpo;
-    private Terminal llaveD;
 
     /**
      * Único contructor de la clase
      *
-     * @param forT For
-     * @param abrirBloque AbrirBloque
+     * @param id Id
+     * @param abrirBloque Abertura de bloque para la cabecera
      * @param parentesisI Parentesis izquierdo
      * @param lista Lista
      * @param parentesisD Parentesis derecho
@@ -36,49 +32,47 @@ public final class BloqueForeach extends Bloque {
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueForeach(Terminal forT, AbrirBloque abrirBloque, Terminal parentesisI, Lista lista, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        setForT(forT);
+    public BloqueForeach(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Lista lista, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super(llaveI, cuerpo, llaveD);
+        setId(id);
         setAbrirBloque(abrirBloque);
         setParentesisI(parentesisI);
         setLista(lista);
         setParentesisD(parentesisD);
-        setLlaveI(llaveI);
-        setCuerpo(cuerpo);
-        setLlaveD(llaveD);
     }
 
     /**
-     * Obtiene el for
+     * Obtiene el id de bloque
      *
-     * @return For
+     * @return Id
      */
-    public Terminal getForT() {
-        return forT;
+    public final Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece el for
+     * Establece el id de bloque
      *
-     * @param forT For
+     * @param id Id
      */
-    public void setForT(Terminal forT) {
-        forT.setPadre(this);
-        this.forT = forT;
+    public final void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
-     * Obtiene el abrirBloque
+     * Obtiene la abertura de bloque
      *
-     * @return AbrirBloque
+     * @return Abertura de bloque
      */
     public AbrirBloque getAbrirBloque() {
         return abrirBloque;
     }
 
     /**
-     * Establece el abrirBloque
+     * Establece la abertura de bloque
      *
-     * @param abrirBloque AbrirBloque
+     * @param abrirBloque Abertura de bloque
      */
     public void setAbrirBloque(AbrirBloque abrirBloque) {
         abrirBloque.setPadre(this);
@@ -142,63 +136,6 @@ public final class BloqueForeach extends Bloque {
         this.parentesisD = parentesisD;
     }
 
-    /**
-     * Obtiene la llave izquierda
-     *
-     * @return Llave izquierda
-     */
-    public Terminal getLlaveI() {
-        return llaveI;
-    }
-
-    /**
-     * Establece la llave izquierda
-     *
-     * @param llaveI Llave izquierda
-     */
-    public void setLlaveI(Terminal llaveI) {
-        llaveI.setPadre(this);
-        this.llaveI = llaveI;
-    }
-
-    /**
-     * Obtiene el cuerpo
-     *
-     * @return Cuerpo
-     */
-    public Cuerpo getCuerpo() {
-        return cuerpo;
-    }
-
-    /**
-     * Establece el cuerpo
-     *
-     * @param cuerpo Cuerpo
-     */
-    public void setCuerpo(Cuerpo cuerpo) {
-        cuerpo.setPadre(this);
-        this.cuerpo = cuerpo;
-    }
-
-    /**
-     * Obtiene la llave derecha
-     *
-     * @return Llave derecha
-     */
-    public Terminal getLlaveD() {
-        return llaveD;
-    }
-
-    /**
-     * Establece la llave derecha
-     *
-     * @param llaveD Llave derecha
-     */
-    public void setLlaveD(Terminal llaveD) {
-        llaveD.setPadre(this);
-        this.llaveD = llaveD;
-    }
-
     @Override
     public void aceptar(Visitante v) {
         v.visitar(this);
@@ -206,6 +143,6 @@ public final class BloqueForeach extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{forT, abrirBloque, parentesisI, lista, parentesisD, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, parentesisI, lista, parentesisD, llaveI, cuerpo, llaveD};
     }
 }

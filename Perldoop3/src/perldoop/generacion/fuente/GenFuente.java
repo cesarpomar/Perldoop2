@@ -1,5 +1,7 @@
 package perldoop.generacion.fuente;
 
+import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.fuente.Fuente;
 import perldoop.modelo.arbol.sentencia.Sentencia;
 import perldoop.modelo.generacion.TablaGenerador;
@@ -23,8 +25,22 @@ public class GenFuente {
     }
 
     public void visitar(Fuente s) {
-        for(Sentencia stc:s.getCuerpo().getSentencias()){
-            tabla.getCodigoGlobal().append(stc.getCodigoGenerado());
+        StringBuilder global = new StringBuilder(10000);
+        global.append("private static void global(){");
+        int tam = global.length();
+        for (Simbolo codigo : s.getCodigoFuente()) {
+            if (codigo instanceof Cuerpo) {
+                //Codigo global
+                global.append(codigo.getCodigoGenerado());
+            } else {
+                //Funciones
+                tabla.getClase().getFunciones().add(codigo.getCodigoGenerado());
+            }
+        }
+        if (tam < global.length()) {
+            global.append("}");
+            tabla.getClase().getFunciones().add(global);
+            tabla.getClase().getFunciones().add(new StringBuilder("static{global();}"));
         }
     }
 }

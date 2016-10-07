@@ -41,6 +41,13 @@ public interface Box {
      * @return Flotante de doble precisión despues de la conversión
      */
     Double doubleValue();
+    
+    /**
+     * Obtiene la representación abstracta de un numero
+     *
+     * @return Representación abstracta de un numero
+     */
+    Number numberValue();
 
     /**
      * Obtiene la representación cadena

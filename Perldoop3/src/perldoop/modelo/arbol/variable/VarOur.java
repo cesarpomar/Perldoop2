@@ -53,6 +53,6 @@ public final class VarOur extends Variable {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{our, var};
+        return new Simbolo[]{our, contexto, var};
     }
 }

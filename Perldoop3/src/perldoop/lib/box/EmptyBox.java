@@ -43,6 +43,11 @@ public final class EmptyBox implements Box {
     }
 
     @Override
+    public Number numberValue() {
+        return 0;
+    }
+
+    @Override
     public String stringValue() {
         return "";
     }

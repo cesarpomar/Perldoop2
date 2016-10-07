@@ -24,32 +24,37 @@ public final class NumberBox implements Box {
 
     @Override
     public Boolean booleanValue() {
-        return value.floatValue() != 0;
+        return value == null ? null : value.floatValue() != 0;
     }
 
     @Override
     public Integer intValue() {
-        return value.intValue();
+        return value == null ? null : value.intValue();
     }
 
     @Override
     public Long longValue() {
-        return value.longValue();
+        return value == null ? null : value.longValue();
     }
 
     @Override
     public Float floatValue() {
-        return value.floatValue();
+        return value == null ? null : value.floatValue();
     }
 
     @Override
     public Double doubleValue() {
-        return value.doubleValue();
+        return value == null ? null : value.doubleValue();
+    }
+
+    @Override
+    public Number numberValue() {
+        return value;
     }
 
     @Override
     public String stringValue() {
-        return String.valueOf(value);
+        return value == null ? null : String.valueOf(value);
     }
 
     @Override

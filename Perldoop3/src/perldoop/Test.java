@@ -16,7 +16,7 @@ public class Test {
         Number[] na = new Number[0];
         List<Integer> il = new PerlList<>();
         List<Number> nl = new PerlList<>();
-        Pd.cast(new Casting() {
+        Casting.cast(new Casting() {
             @Override
             public Object casting(Object col) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

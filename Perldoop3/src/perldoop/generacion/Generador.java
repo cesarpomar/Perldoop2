@@ -7,7 +7,6 @@ import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
 import perldoop.modelo.arbol.fuente.*;
-import perldoop.modelo.arbol.masfuente.*;
 import perldoop.modelo.arbol.funciondef.*;
 import perldoop.modelo.arbol.funcionsub.*;
 import perldoop.modelo.arbol.cuerpo.*;
@@ -26,8 +25,6 @@ import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.abrirbloque.*;
 import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.arbol.condicional.*;
-import perldoop.modelo.arbol.elsif.*;
-import perldoop.modelo.arbol.bloqueelsif.*;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
@@ -129,16 +126,6 @@ public class Generador implements Visitante {
     @Override
     public void visitar(Fuente s) {
         fachada.getGenFuente().visitar(s);
-    }
-
-    @Override
-    public void visitar(MfNada s) {
-        //Sin semantica
-    }
-
-    @Override
-    public void visitar(MfFuente s) {
-        //Sin semantica
     }
 
     @Override
@@ -786,12 +773,6 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(BloqueCondicional s) {
-        fachada.getGenBloque().visitar(s);
-
-    }
-
-    @Override
     public void visitar(BloqueWhile s) {
         fachada.getGenBloque().visitar(s);
     }
@@ -827,35 +808,34 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(CondicionalIf s) {
+    public void visitar(BloqueIf s) {
+        fachada.getGenBloque().visitar(s);
+    }
+
+    @Override
+    public void visitar(BloqueUnless s) {
+        fachada.getGenBloque().visitar(s);
+    }
+
+    @Override
+    public void visitar(BloqueVacio s) {
+        fachada.getGenBloque().visitar(s);
+    }
+
+    @Override
+    public void visitar(CondicionalElse s) {
         fachada.getGenCondicional().visitar(s);
 
     }
 
     @Override
-    public void visitar(CondicionalUnless s) {
+    public void visitar(CondicionalElsif s) {
         fachada.getGenCondicional().visitar(s);
     }
 
     @Override
-    public void visitar(ElsIfNada s) {
-        fachada.getGenElsIf().visitar(s);
-
-    }
-
-    @Override
-    public void visitar(ElsIfElsIf s) {
-        fachada.getGenElsIf().visitar(s);
-    }
-
-    @Override
-    public void visitar(ElsIfElse s) {
-        fachada.getGenElsIf().visitar(s);
-    }
-
-    @Override
-    public void visitar(BloqueElsIf s) {
-        fachada.getGenBloqueElsIf().visitar(s);
+    public void visitar(CondicionalNada s) {
+        fachada.getGenCondicional().visitar(s);
     }
 
     @Override

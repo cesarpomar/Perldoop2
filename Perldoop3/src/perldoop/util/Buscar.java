@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
@@ -15,6 +16,7 @@ import perldoop.modelo.arbol.constante.CadenaComando;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpConstante;
+import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
@@ -134,6 +136,37 @@ public final class Buscar {
             }
         }
         return false;
+    }
+
+    /**
+     * Comprueba si el simbolo nunca sera nulo
+     *
+     * @param s Simbolo
+     * @return comprobacion
+     */
+    public static boolean isNotNull(Simbolo s) {
+        List lista = (List) Buscar.buscarClases(s, Acceso.class);
+        if (!lista.isEmpty()) {
+            return false;
+        }
+        lista = (List) Buscar.buscarClases(s, Variable.class);
+        if (!lista.isEmpty()) {
+            for (Variable var : (List<Variable>)lista) {
+                if (!(var instanceof VarSigil || var instanceof VarPaqueteSigil)) {
+                    return false;
+                }
+            }
+        }
+        lista = (List) Buscar.buscarClases(s, ExpFuncion.class);
+        if (!lista.isEmpty()) {
+            for (ExpFuncion fun : (List<ExpFuncion>) lista) {
+                if(fun.getFuncion().getIdentificador().getValor().equals("undef")){
+                    return false;
+                }
+            }
+
+        }
+        return true;
     }
 
     /**

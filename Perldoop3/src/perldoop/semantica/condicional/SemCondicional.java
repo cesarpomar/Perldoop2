@@ -21,9 +21,12 @@ public class SemCondicional {
         this.tabla = tabla;
     }
 
-    public void visitar(CondicionalIf s) {
+    public void visitar(CondicionalElse s) {
     }
 
-    public void visitar(CondicionalUnless s) {
+    public void visitar(CondicionalElsif s) {
+    }
+
+    public void visitar(CondicionalNada s) {
     }
 }

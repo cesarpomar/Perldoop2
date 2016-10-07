@@ -48,6 +48,11 @@ public class RefBox implements Box {
     }
 
     @Override
+    public Number numberValue() {
+        return (value != null) ? 1 : 0;
+    }
+
+    @Override
     public String stringValue() {
         return (value != null) ? "1" : "0";
     }

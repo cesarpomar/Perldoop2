@@ -7,13 +7,11 @@ import perldoop.semantica.aritmetica.*;
 import perldoop.semantica.asignacion.*;
 import perldoop.semantica.binario.*;
 import perldoop.semantica.bloque.*;
-import perldoop.semantica.bloqueelsif.*;
 import perldoop.semantica.coleccion.*;
 import perldoop.semantica.comparacion.*;
 import perldoop.semantica.condicional.*;
 import perldoop.semantica.constante.*;
 import perldoop.semantica.cuerpo.*;
-import perldoop.semantica.elsif.*;
 import perldoop.semantica.expresion.*;
 import perldoop.semantica.flujo.*;
 import perldoop.semantica.funcion.*;
@@ -44,13 +42,11 @@ public final class FachadaSemanticas {
     private SemAsignacion semAsignacion;
     private SemBinario semBinario;
     private SemBloque semBloque;
-    private SemBloqueElsIf semBloqueElsIf;
     private SemColeccion semColeccion;
     private SemComparacion semComparacion;
     private SemCondicional semCondicional;
     private SemConstante semConstante;
     private SemCuerpo semCuerpo;
-    private SemElsIf semElsIf;
     private SemExpresion semExpresion;
     private SemFlujo semFlujo;
     private SemFuncion semFuncion;
@@ -201,27 +197,6 @@ public final class FachadaSemanticas {
     }
 
     /**
-     * Obtiene la semantica de elsif
-     *
-     * @return Semantica de elsif
-     */
-    public SemBloqueElsIf getSemBloqueElsIf() {
-        if (semBloqueElsIf == null) {
-            semBloqueElsIf = new SemBloqueElsIf(tabla);
-        }
-        return semBloqueElsIf;
-    }
-
-    /**
-     * Establece la semantica de elsif
-     *
-     * @param semBloqueElsIf Semantica de elsif
-     */
-    public void setSemBloqueElsIf(SemBloqueElsIf semBloqueElsIf) {
-        this.semBloqueElsIf = semBloqueElsIf;
-    }
-
-    /**
      * Obtiene la semantica de coleccion
      *
      * @return Semantica de coleccion
@@ -324,27 +299,6 @@ public final class FachadaSemanticas {
      */
     public void setSemCuerpo(SemCuerpo semCuerpo) {
         this.semCuerpo = semCuerpo;
-    }
-
-    /**
-     * Obtiene la semantica de elsif
-     *
-     * @return Semantica de elsif
-     */
-    public SemElsIf getSemElsIf() {
-        if (semElsIf == null) {
-            semElsIf = new SemElsIf(tabla);
-        }
-        return semElsIf;
-    }
-
-    /**
-     * Establece la semantica de elsif
-     *
-     * @param semElsIf Semantica de elsif
-     */
-    public void setSemElsIf(SemElsIf semElsIf) {
-        this.semElsIf = semElsIf;
     }
 
     /**
@@ -601,10 +555,11 @@ public final class FachadaSemanticas {
 
     /**
      * Obtiene la semantica de variables multiples
-     * @return Variables multiples 
+     *
+     * @return Variables multiples
      */
     public SemVarMulti getSemVarMulti() {
-        if(semVarMulti ==null){
+        if (semVarMulti == null) {
             semVarMulti = new SemVarMulti(tabla);
         }
         return semVarMulti;
@@ -612,12 +567,11 @@ public final class FachadaSemanticas {
 
     /**
      * Establece la semantica de variables multiples
+     *
      * @param semVarMulti Variables multiples
      */
     public void setSemVarMulti(SemVarMulti semVarMulti) {
         this.semVarMulti = semVarMulti;
     }
-    
-    
-    
+
 }

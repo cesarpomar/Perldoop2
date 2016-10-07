@@ -2,8 +2,6 @@ package perldoop.generacion.util;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
-import perldoop.modelo.arbol.constante.CadenaComando;
-import perldoop.modelo.arbol.expresion.ExpConstante;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
@@ -21,55 +19,83 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toBoolean(Simbolo s) {
-        StringBuilder cst = new StringBuilder(50);
+        StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                return cst.append(s.getCodigoGenerado()).append(".length > 0");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append(".length > 0)");
+                } else {
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.LIST:
-                return cst.append("!").append(s.getCodigoGenerado()).append(".isEmpty()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(!").append(s.getCodigoGenerado()).append(".isEmpty())");
+                } else {
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.MAP:
-                return cst.append("!").append(s.getCodigoGenerado()).append(".isEmpty()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(!").append(s.getCodigoGenerado()).append(".isEmpty())");
+                } else {
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.REF:
-                return cst.append(s.getCodigoGenerado()).append(" != null");
+                return cst.append("(").append(s.getCodigoGenerado()).append("!=null)");
             case Tipo.BOOLEAN:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.INTEGER:
                 if (Buscar.isConstante(s)) {
                     return cst.append((Integer.parseInt(s.getCodigoGenerado().toString()) != 0) ? "true" : "false");
+                } else if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append("!=0)");
                 } else {
-                    return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.LONG:
                 if (Buscar.isConstante(s)) {
                     return cst.append((Long.parseLong(s.getCodigoGenerado().toString()) != 0) ? "true" : "false");
+                } else if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append("!=0)");
                 } else {
-                    return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.FLOAT:
                 if (Buscar.isConstante(s)) {
                     return cst.append((Float.parseFloat(s.getCodigoGenerado().toString()) != 0) ? "true" : "false");
+                } else if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append("!=0)");
                 } else {
-                    return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.DOUBLE:
                 if (Buscar.isConstante(s)) {
                     return cst.append((Double.parseDouble(s.getCodigoGenerado().toString()) != 0) ? "true" : "false");
+                } else if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append("!=0)");
                 } else {
-                    return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.STRING:
                 if (Buscar.isConstante(s)) {
                     String cad = s.getCodigoGenerado().substring(1, s.getCodigoGenerado().length() - 1);
                     return cst.append((cad.isEmpty() || cad.equals("0")) ? "false" : "true");
                 } else {
-                    return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.FILE:
-                return cst.append(s.getCodigoGenerado()).append(" != null");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null)");
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".booleanValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".booleanValue()");
+                } else {
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.NUMBER:
-                return cst.append(s.getCodigoGenerado()).append(".intValue() != 0");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append(".intValue() != 0)");
+                } else {
+                    return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
+                }
         }
         return null;
     }
@@ -81,46 +107,58 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toInteger(Simbolo s) {
-        StringBuilder cst = new StringBuilder(50);
+        StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                return cst.append(s.getCodigoGenerado()).append(".length");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".length");
+                } else {
+                    return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.LIST:
-                return cst.append(s.getCodigoGenerado()).append(".size()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".size()");
+                } else {
+                    return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.MAP:
-                return cst.append(s.getCodigoGenerado()).append(".size()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".size()");
+                } else {
+                    return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.REF:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null) ? 1 : 0");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null ? 1 : 0)");
             case Tipo.BOOLEAN:
-                return cst.append("(Perl.toBoolean(").append(s.getCodigoGenerado()).append(")) ? 1 : 0");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append(" ? 1 : 0)");
+                } else {
+                    return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.INTEGER:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.LONG:
-                if (Buscar.isConstante(s)) {
-                    return cst.append(s.getCodigoGenerado().toString()).append("l");
-                } else {
-                    return cst.append("Perl.toInteger(").append(s.getCodigoGenerado()).append(")");
-                }
+                return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FLOAT:
-                if (Buscar.isConstante(s)) {
-                    return cst.append(s.getCodigoGenerado().toString()).append("f");
-                } else {
-                    return cst.append("Perl.toInteger(").append(s.getCodigoGenerado()).append(")");
-                }
+                return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
             case Tipo.DOUBLE:
-                if (Buscar.isConstante(s)) {
-                    return cst.append(s.getCodigoGenerado().toString()).append("d");
-                } else {
-                    return cst.append("Perl.toInteger(").append(s.getCodigoGenerado()).append(")");
-                }
+                return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
             case Tipo.STRING:
-                return cst.append("Integer.parseInt(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1 : 0");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(" ? 1 : 0)");
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".intvalue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".intValue()");
+                } else {
+                    return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.NUMBER:
-                return cst.append(s.getCodigoGenerado()).append(".intValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".intValue()");
+                } else {
+                    return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
+                }
         }
         return null;
     }
@@ -132,35 +170,62 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toLong(Simbolo s) {
-        StringBuilder cst = new StringBuilder(50);
+        StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                return cst.append(s.getCodigoGenerado()).append(".length");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(long)").append(s.getCodigoGenerado()).append(".length");
+                } else {
+                    return cst.append("Casting.toLong(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.LIST:
-                return cst.append(s.getCodigoGenerado()).append(".size()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(long)").append(s.getCodigoGenerado()).append(".size()");
+                } else {
+                    return cst.append("Casting.toLong(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.MAP:
-                return cst.append(s.getCodigoGenerado()).append(".size()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(long)").append(s.getCodigoGenerado()).append(".size()");
+                } else {
+                    return cst.append("Casting.toLong(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.REF:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null) ? 1l : 0l");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null ? 1l : 0l)");
             case Tipo.BOOLEAN:
-                return cst.append("(Perl.toBoolean(").append(s.getCodigoGenerado()).append(")) ? 1l : 0l");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append(" ? 1l : 0l)");
+                } else {
+                    return cst.append("Casting.toLong(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.INTEGER:
-                return cst.append("Perl.toLong(").append(s.getCodigoGenerado()).append(")");
+                if (Buscar.isConstante(s)) {
+                    return cst.append(s.getCodigoGenerado().toString()).append("l");
+                } else {
+                    return cst.append("Perl.toLong(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.LONG:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.FLOAT:
-                return cst.append("Perl.toLong(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toLong(").append(s.getCodigoGenerado()).append(")");
             case Tipo.DOUBLE:
-                return cst.append("Perl.toLong(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toLong(").append(s.getCodigoGenerado()).append(")");
             case Tipo.STRING:
-                return cst.append("Long.parseLong(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toLong(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1l : 0l");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(" ? 1l : 0l)");
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".longValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".longValue()");
+                } else {
+                    return cst.append("Casting.toLong(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.NUMBER:
-                return cst.append(s.getCodigoGenerado()).append(".longValue()");
-
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".longValue()");
+                } else {
+                    return cst.append("Casting.toLong(").append(s.getCodigoGenerado()).append(")");
+                }
         }
         return null;
     }
@@ -172,38 +237,62 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toFloat(Simbolo s) {
-        StringBuilder cst = new StringBuilder(50);
+        StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                return cst.append(s.getCodigoGenerado()).append(".length");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(float)").append(s.getCodigoGenerado()).append(".length");
+                } else {
+                    return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.LIST:
-                return cst.append(s.getCodigoGenerado()).append(".size()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(float)").append(s.getCodigoGenerado()).append(".size()");
+                } else {
+                    return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.MAP:
-                return cst.append(s.getCodigoGenerado()).append(".size()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(float)").append(s.getCodigoGenerado()).append(".size()");
+                } else {
+                    return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.REF:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null) ? 1f : 0f");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null ? 1f : 0f)");
             case Tipo.BOOLEAN:
-                return cst.append("(Perl.toBoolean(").append(s.getCodigoGenerado()).append(")) ? 1f : 0f");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append(" ? 1l : 0l)");
+                } else {
+                    return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.INTEGER:
-                return cst.append("Perl.toFloat(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
             case Tipo.LONG:
-                return cst.append("Perl.toFloat(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FLOAT:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.DOUBLE:
                 if (Buscar.isConstante(s)) {
                     return cst.append(s.getCodigoGenerado().toString()).append("f");
                 } else {
-                    return cst.append("Perl.toFloat(").append(s.getCodigoGenerado()).append(")");
+                    return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.STRING:
-                return cst.append("Float.parseFloat(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1f : 0f");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(" ? 1f : 0f)");
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".floatValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".floatValue()");
+                } else {
+                    return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.NUMBER:
-                return cst.append(s.getCodigoGenerado()).append(".floatValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".floatValue()");
+                } else {
+                    return cst.append("Casting.toFloat(").append(s.getCodigoGenerado()).append(")");
+                }
         }
         return null;
     }
@@ -215,34 +304,58 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toDouble(Simbolo s) {
-        StringBuilder cst = new StringBuilder(50);
+        StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                return cst.append(s.getCodigoGenerado()).append(".length");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(double)").append(s.getCodigoGenerado()).append(".length");
+                } else {
+                    return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.LIST:
-                return cst.append(s.getCodigoGenerado()).append(".size()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(double)").append(s.getCodigoGenerado()).append(".size()");
+                } else {
+                    return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.MAP:
-                return cst.append(s.getCodigoGenerado()).append(".size()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(double)").append(s.getCodigoGenerado()).append(".size()");
+                } else {
+                    return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.REF:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null) ? 1d : 0d");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null ? 1d : 0d");
             case Tipo.BOOLEAN:
-                return cst.append("(Perl.toBoolean(").append(s.getCodigoGenerado()).append(")) ? 1d : 0d");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append(" ? 1d : 0d)");
+                } else {
+                    return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.INTEGER:
-                return cst.append("Perl.toDouble(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
             case Tipo.LONG:
-                return cst.append("Perl.toDouble(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FLOAT:
-                return cst.append("Perl.toDouble(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
             case Tipo.DOUBLE:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.STRING:
-                return cst.append("Double.parseDouble(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1d : 0d");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(" ? 1d : 0d)");
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".doubleValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".doubleValue()");
+                } else {
+                    return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.NUMBER:
-                return cst.append(s.getCodigoGenerado()).append(".doubleValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".doubleValue()");
+                } else {
+                    return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
+                }
         }
         return null;
     }
@@ -254,34 +367,46 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toString(Simbolo s) {
-        StringBuilder cst = new StringBuilder(50);
+        StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                return cst.append("String.valueOf(").append(s.getCodigoGenerado()).append(".length)");
+                return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(".length)");
             case Tipo.LIST:
-                return cst.append("String.valueOf(").append(s.getCodigoGenerado()).append(".size())");
+                return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(".size())");
             case Tipo.MAP:
-                return cst.append("String.valueOf(").append(s.getCodigoGenerado()).append(".size())");
+                return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(".size())");
             case Tipo.REF:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null) ? \"1\" : \"0\"");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null ? \"1\" : \"0\")");
             case Tipo.BOOLEAN:
-                return cst.append("(Perl.toBoolean(").append(s.getCodigoGenerado()).append(")) ? \"1\" : \"0\"");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append(" ? \"1\" : \"0\")");
+                } else {
+                    return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.INTEGER:
-                return cst.append("String.valueOf(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(")");
             case Tipo.LONG:
-                return cst.append("String.valueOf(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FLOAT:
-                return cst.append("String.valueOf(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(")");
             case Tipo.DOUBLE:
-                return cst.append("String.valueOf(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(")");
             case Tipo.STRING:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.FILE:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? \"1\" : \"0\"");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(" ? \"1\" : \"0\")");
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".stringValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".stringValue()");
+                } else {
+                    return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.NUMBER:
-                return cst.append(s.getCodigoGenerado()).append(".toString()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".toString()");
+                } else {
+                    return cst.append("Casting.toString(").append(s.getCodigoGenerado()).append(")");
+                }
         }
         return null;
     }
@@ -293,34 +418,34 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toBox(Simbolo s) {
-        StringBuilder cst = new StringBuilder(50);
+        StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(".length)");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(".length)");
             case Tipo.LIST:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(".size())");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(".size())");
             case Tipo.MAP:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(".size())");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(".size())");
             case Tipo.REF:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.BOOLEAN:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.INTEGER:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.LONG:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FLOAT:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.DOUBLE:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.STRING:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(")");
             case Tipo.BOX:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.NUMBER:
-                return cst.append("Pd.box(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.box(").append(s.getCodigoGenerado()).append(")");
         }
         return null;
     }
@@ -341,9 +466,13 @@ public final class Casting {
             case Tipo.MAP:
                 return cst.append(s.getCodigoGenerado()).append(".size()");
             case Tipo.REF:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null) ? 1d : 0d");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null ? 1 : 0)");
             case Tipo.BOOLEAN:
-                return cst.append("Perl.toBoolean(").append(s.getCodigoGenerado()).append(") ? 1d : 0d");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append("(").append(s.getCodigoGenerado()).append(" ? 1 : 0)");
+                } else {
+                    return cst.append("Casting.toInteger(").append(s.getCodigoGenerado()).append(")");
+                }
             case Tipo.INTEGER:
             case Tipo.LONG:
             case Tipo.FLOAT:
@@ -351,11 +480,15 @@ public final class Casting {
             case Tipo.NUMBER:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.STRING:
-                return cst.append("Double.parseDouble(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.parseDouble(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
-                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(") ? 1d : 0d");
+                return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(" ? 1 : 0)");
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".doubleValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".numberValue()");
+                } else {
+                    return cst.append("Casting.toNumber(").append(s.getCodigoGenerado()).append(")");
+                }
         }
         return null;
     }
@@ -373,9 +506,13 @@ public final class Casting {
             case Tipo.REF:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.BOX:
-                cst.append("((").append(Tipos.declaracion(destino));
-                cst.append(")").append(s.getCodigoGenerado());
-                return cst.append(".refValue())");
+                cst.append("((").append(Tipos.declaracion(destino)).append(")");
+                if (Buscar.isNotNull(s)) {
+                    cst.append(s.getCodigoGenerado()).append(".refValue()");
+                } else {
+                    return cst.append("Casting.toRef(").append(s.getCodigoGenerado()).append(")");
+                }
+                return cst.append(")");
         }
         return null;
     }
@@ -392,7 +529,11 @@ public final class Casting {
             case Tipo.FILE:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.BOX:
-                return cst.append(s.getCodigoGenerado()).append(".fileValue()");
+                if (Buscar.isNotNull(s)) {
+                    return cst.append(s.getCodigoGenerado()).append(".fileValue()");
+                } else {
+                    return cst.append("Casting.toFile(").append(s.getCodigoGenerado()).append(")");
+                }
         }
         return null;
     }
@@ -424,6 +565,25 @@ public final class Casting {
     }
 
     /**
+     * Castea una coleccion de Number a Number
+     *
+     * @param origen Expresion origen
+     * @param destino Tipo destino
+     * @return Casting
+     */
+    public static StringBuilder toColNumber(Simbolo origen, Tipo destino) {
+        StringBuilder cst = new StringBuilder(200);
+        cst.append("((").append(Tipos.declaracion(destino)).append(")");
+        if (destino.isList()) {
+            cst.append("(PerlList)");
+        }else if(destino.isMap()){
+            cst.append("(PerlMap)");
+        }
+        cst.append(origen.getCodigoGenerado()).append(")");
+        return cst;
+    }
+
+    /**
      * Castea entre colecciones
      *
      * @param origen Expresion origen
@@ -431,10 +591,18 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toCol(Simbolo origen, Tipo destino) {
+        //Si las colecciones son numericas y el casting es a Number
+        if (origen.getTipo().getSimple().isNumberType() && destino.getSimple().isNumber()) {
+            Tipo t = origen.getTipo().getSubtipo(0);
+            t.setSimple(Tipo.NUMBER);
+            if (t.equals(destino)) {
+                return toColNumber(origen, destino);
+            }
+        }
         StringBuilder cst = new StringBuilder(200);
         StringBuilder tipo = Tipos.declaracion(origen.getTipo());
         cst.append("(").append(Tipos.declaracion(destino)).append(")");
-        cst.append("Pd.cast(new Casting() { ");
+        cst.append("Casting.cast(new Casting() { ");
         cst.append("@Override ");
         cst.append("public Object casting(Object arg) {");
         String tam;

@@ -7,13 +7,11 @@ import perldoop.generacion.aritmetica.*;
 import perldoop.generacion.asignacion.*;
 import perldoop.generacion.binario.*;
 import perldoop.generacion.bloque.*;
-import perldoop.generacion.bloqueelsif.*;
 import perldoop.generacion.coleccion.*;
 import perldoop.generacion.comparacion.*;
 import perldoop.generacion.condicional.*;
 import perldoop.generacion.constante.*;
 import perldoop.generacion.cuerpo.*;
-import perldoop.generacion.elsif.*;
 import perldoop.generacion.expresion.*;
 import perldoop.generacion.flujo.*;
 import perldoop.generacion.fuente.*;
@@ -47,13 +45,11 @@ public final class FachadaGeneradores {
     private GenAsignacion genAsignacion;
     private GenBinario genBinario;
     private GenBloque genBloque;
-    private GenBloqueElsIf genBloqueElsIf;
     private GenColeccion genColeccion;
     private GenComparacion genComparacion;
     private GenCondicional genCondicional;
     private GenConstante genConstante;
     private GenCuerpo genCuerpo;
-    private GenElsIf genElsIf;
     private GenExpresion genExpresion;
     private GenFlujo genFlujo;
     private GenFuente genFuente;
@@ -207,27 +203,6 @@ public final class FachadaGeneradores {
     }
 
     /**
-     * Obtiene el generador de elsif
-     *
-     * @return Generador de elsif
-     */
-    public GenBloqueElsIf getGenBloqueElsIf() {
-        if (genBloqueElsIf == null) {
-            genBloqueElsIf = new GenBloqueElsIf(tabla);
-        }
-        return genBloqueElsIf;
-    }
-
-    /**
-     * Establece el generador de elsif
-     *
-     * @param genBloqueElsIf Generador de elsif
-     */
-    public void setGenBloqueElsIf(GenBloqueElsIf genBloqueElsIf) {
-        this.genBloqueElsIf = genBloqueElsIf;
-    }
-
-    /**
      * Obtiene el generador de coleccion
      *
      * @return Generador de coleccion
@@ -330,27 +305,6 @@ public final class FachadaGeneradores {
      */
     public void setGenCuerpo(GenCuerpo genCuerpo) {
         this.genCuerpo = genCuerpo;
-    }
-
-    /**
-     * Obtiene el generador de elsif
-     *
-     * @return Generador de elsif
-     */
-    public GenElsIf getGenElsIf() {
-        if (genElsIf == null) {
-            genElsIf = new GenElsIf(tabla);
-        }
-        return genElsIf;
-    }
-
-    /**
-     * Establece el generador de elsif
-     *
-     * @param genElsIf Generador de elsif
-     */
-    public void setGenElsIf(GenElsIf genElsIf) {
-        this.genElsIf = genElsIf;
     }
 
     /**

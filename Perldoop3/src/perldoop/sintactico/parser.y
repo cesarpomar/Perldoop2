@@ -8,7 +8,6 @@ import perldoop.modelo.lexico.Token;
 import perldoop.modelo.sintactico.ParserVal;
 import perldoop.modelo.arbol.*;
 import perldoop.modelo.arbol.fuente.*;
-import perldoop.modelo.arbol.masfuente.*;
 import perldoop.modelo.arbol.funciondef.*;
 import perldoop.modelo.arbol.funcionsub.*;
 import perldoop.modelo.arbol.cuerpo.*;
@@ -28,8 +27,6 @@ import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.abrirbloque.*;
 import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.arbol.condicional.*;
-import perldoop.modelo.arbol.elsif.*;
-import perldoop.modelo.arbol.bloqueelsif.*;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
@@ -77,23 +74,27 @@ import perldoop.modelo.arbol.aritmetica.*;
 
 
 %%
-raiz		:	fuente									{$$=set(new Raiz(s($1)));}
+raiz		:	fuente									{$$=set(new Raiz(add(s($1))));}
 
-fuente		:	cuerpo masFuente						{$$=set(new Fuente(s($1), s($2)));}
+fuente		:	masFuente cuerpo						{$$=set(Fuente.add(s($1), s($2)), false);}
 
-masFuente	:											{$$=set(new MfNada());}
-			|	funcionDef fuente						{$$=set(new MfFuente(s($1), s($2)));}
+masFuente	:											{$$=set(new Fuente(), false);}
+			|	fuente funcionDef						{$$=set(Fuente.add(s($1), s($2)), false);}
 
 funcionDef	:	funcionSub '{' cuerpo '}'				{$$=set(new FuncionDef(s($1), s($2), s($3), s($4)));}
 
 funcionSub	:	SUB ID									{$$=set(new FuncionSub(s($1), s($2)));}
 
-cuerpoR		:											{$$=set(new Cuerpo(),false);}
-			|	cuerpoR sentencia						{$$=set(Cuerpo.add(s($1), s($2)),false);}
+cuerpoR		:	sentencia								{$$=set(Cuerpo.add(new Cuerpo(add(new AbrirBloque())), s($1)), false);}
+			|	cuerpoR	sentencia				        {$$=set(Cuerpo.add(s($1), s($2)), false);}
 			
-cuerpo		:	cuerpoR									{$$=set(s($1));}
+cuerpoNV	:	cuerpoR									{$$=set(s($1));}
+
+cuerpo		:											{$$=set(new Cuerpo(add(new AbrirBloque())));}
+			|	cuerpoNV								{$$=$1;}
 
 sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)));}
+			|	';'										{$$=set(new StcLista(new Lista(), new ModNada(), s($1)));}
 			|	bloque									{$$=set(new StcBloque(s($1)));}
 			|	flujo									{$$=set(new StcFlujo(s($1)));}
 			|	PACKAGE paqueteID ID ';'				{$$=set(new StcPaquete(s($1), s($2), s($3), s($4)));}
@@ -254,8 +255,8 @@ aritmetica	:	expresion '+' expresion					{$$=set(new AritSuma(s($1),s($2),s($3))
 			|	expresion MENOS_MENOS					{$$=set(new AritPostDecremento(s($1),s($2)));}
 
 abrirBloque :											{$$=set(new AbrirBloque());}
-
-bloque		:	condicional elsif																{$$=set(new BloqueCondicional(s($1),s($2)));}
+			
+bloque		:	'{' cuerpoNV '}'																{$$=set(new BloqueVacio(s($1),s($2),s($3)));}
 			|	WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
 			|	UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
 			|	DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'						{$$=set(new BloqueDoWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
@@ -263,15 +264,16 @@ bloque		:	condicional elsif																{$$=set(new BloqueCondicional(s($1),s
 			|	FOR abrirBloque '(' expresion ';' expresion ';' expresion ')' '{' cuerpo '}'	{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11),s($12)));}
 			|	FOR abrirBloque expresion '(' lista ')' '{' cuerpo '}'							{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
 			|	FOR abrirBloque '(' lista ')' '{' cuerpo '}'									{$$=set(new BloqueForeach(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+			|	condicional elsif																{$$=set(Condicional.bloqueElse((Bloque)s($1),s($2)), false);}
 
-condicional	:	IF abrirBloque '(' expresion ')' '{' cuerpo '}'									{$$=set(new CondicionalIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
-			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new CondicionalUnless(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+condicional	:	IF abrirBloque '(' expresion ')' '{' cuerpo '}'									{$$=set(new BloqueIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueUnless(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
 	
-elsif		:																					{$$=set(new ElsIfNada());}
-			|	bloqueElsif elsif																{$$=set(new ElsIfElsIf(s($1),s($2)));}
-			|	ELSE abrirBloque '{' cuerpo '}'													{$$=set(new ElsIfElse(s($1),s($2),s($3),s($4),s($5)));}
+elsif		:																					{$$=set(new CondicionalNada());}
+			|	bloqueElsif elsif																{$$=set(Condicional.bloqueElse((CondicionalElsif)s($1),s($2)), false);}
+			|	ELSE '{' cuerpo '}'																{$$=set(new CondicionalElse(s($1),s($2),s($3),s($4)));}
 
-bloqueElsif :	ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueElsIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+bloqueElsif :	ELSIF '(' expresion ')' '{' cuerpo '}'											{$$=set(new CondicionalElsif(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
 
 
 %%

@@ -1,17 +1,11 @@
 package perldoop.generacion.bloque;
 
 import perldoop.modelo.generacion.TablaGenerador;
-import perldoop.modelo.arbol.bloque.BloqueCondicional;
-import perldoop.modelo.arbol.bloque.BloqueDoUntil;
-import perldoop.modelo.arbol.bloque.BloqueDoWhile;
-import perldoop.modelo.arbol.bloque.BloqueFor;
-import perldoop.modelo.arbol.bloque.BloqueForeach;
-import perldoop.modelo.arbol.bloque.BloqueForeachVar;
-import perldoop.modelo.arbol.bloque.BloqueUntil;
-import perldoop.modelo.arbol.bloque.BloqueWhile;
+import perldoop.modelo.arbol.bloque.*;
 
 /**
  * Clase generadora de bloque
+ *
  * @author César Pomar
  */
 public class GenBloque {
@@ -25,10 +19,6 @@ public class GenBloque {
      */
     public GenBloque(TablaGenerador tabla) {
         this.tabla = tabla;
-    }
-
-    public void visitar(BloqueCondicional s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void visitar(BloqueWhile s) {
@@ -56,6 +46,18 @@ public class GenBloque {
     }
 
     public void visitar(BloqueForeach s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void visitar(BloqueIf s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void visitar(BloqueUnless s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void visitar(BloqueVacio s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

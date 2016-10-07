@@ -4,20 +4,23 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
+import perldoop.modelo.arbol.condicional.Condicional;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -&gt;<br> bloque : UNTIL '(' expresion ')' '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> bloque : UNLESS '(' expresion ')' '{' cuerpo '}'
  *
  * @author César Pomar
  */
-public final class BloqueUntil extends BloqueControlBasico {
+public final class BloqueUnless extends BloqueControlBasico {
+
+    private Condicional bloqueElse;
 
     /**
      * Único contructor de la clase
      *
-     * @param id While
+     * @param id unless
      * @param abrirBloque Abertura de bloque para la cabecera
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
@@ -26,8 +29,26 @@ public final class BloqueUntil extends BloqueControlBasico {
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueUntil(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+    public BloqueUnless(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
         super(id, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD);
+    }
+
+    /**
+     * Obtiene el bloque Else
+     *
+     * @return Bloque Else
+     */
+    public Condicional getBloqueElse() {
+        return bloqueElse;
+    }
+
+    /**
+     * Establece el bloque Else
+     *
+     * @param bloqueElse Bloque Else
+     */
+    public void setBloqueElse(Condicional bloqueElse) {
+        this.bloqueElse = bloqueElse;
     }
 
     @Override

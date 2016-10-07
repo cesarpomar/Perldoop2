@@ -21,9 +21,6 @@ public class SemBloque {
         this.tabla = tabla;
     }
 
-    public void visitar(BloqueCondicional s) {
-    }
-
     public void visitar(BloqueWhile s) {
     }
 
@@ -43,5 +40,14 @@ public class SemBloque {
     }
 
     public void visitar(BloqueForeach s) {
+    }
+
+    public void visitar(BloqueIf s) {
+    }
+
+    public void visitar(BloqueUnless s) {
+    }
+
+    public void visitar(BloqueVacio s) {
     }
 }

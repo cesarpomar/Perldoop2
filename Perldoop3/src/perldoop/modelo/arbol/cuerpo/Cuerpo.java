@@ -4,28 +4,53 @@ import java.util.ArrayList;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.sentencia.Sentencia;
-
 
 /**
  * Clase que representa las reducciones -&gt; <br>
  * cuerpo :<br>
-          | cuerpo sentencia<br>							
+ * | cuerpo sentencia<br>
  *
  * @author César Pomar
  */
 public final class Cuerpo extends Simbolo {
+
+    private AbrirBloque abrirBloque;
     private List<Sentencia> sentencias;
 
     /**
      * Único contructor de la clase
+     *
+     * @param abrirBloque Abertura de bloque para el cuerpo
      */
-    public Cuerpo() {
+    public Cuerpo(AbrirBloque abrirBloque) {
+        setAbrirBloque(abrirBloque);
         sentencias = new ArrayList<>(100);
     }
 
     /**
+     * Obtiene la abertura de bloque
+     *
+     * @return Abertura de bloque
+     */
+    public AbrirBloque getAbrirBloque() {
+        return abrirBloque;
+    }
+
+    /**
+     * Establece la abertura de bloque
+     *
+     * @param abrirBloque Abertura de bloque
+     */
+    public void setAbrirBloque(AbrirBloque abrirBloque) {
+        abrirBloque.setPadre(this);
+        this.abrirBloque = abrirBloque;
+    }
+
+    /**
      * Obtiene las sentencias
+     *
      * @return Lista de sentencias
      */
     public List<Sentencia> getSentencias() {
@@ -34,6 +59,7 @@ public final class Cuerpo extends Simbolo {
 
     /**
      * Añade una sentencia
+     *
      * @param sentencia Sentecia
      * @return Esta instancia
      */
@@ -45,6 +71,7 @@ public final class Cuerpo extends Simbolo {
 
     /**
      * Realiza la misma acción que invocar c.add(sentencia)
+     *
      * @param c Cuerpo
      * @param sentencia Sencia
      * @return c
@@ -60,6 +87,11 @@ public final class Cuerpo extends Simbolo {
 
     @Override
     public Simbolo[] getHijos() {
-        return sentencias.toArray(new Simbolo[sentencias.size()]);
+        Simbolo[] hijos = new Simbolo[sentencias.size() + 1];
+        hijos[0] = abrirBloque;
+        for (int i = 1; i <= sentencias.size(); i++) {
+            hijos[i] = sentencias.get(i - 1);
+        }
+        return hijos;
     }
 }

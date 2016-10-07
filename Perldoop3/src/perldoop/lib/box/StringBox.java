@@ -29,22 +29,27 @@ public final class StringBox implements Box {
 
     @Override
     public Integer intValue() {
-        return (int) Double.parseDouble(value);
+        return value == null ? null : (int) Double.parseDouble(value);
     }
 
     @Override
     public Long longValue() {
-        return (long) Double.parseDouble(value);
+        return value == null ? null : (long) Double.parseDouble(value);
     }
 
     @Override
     public Float floatValue() {
-        return Float.parseFloat(value);
+        return value == null ? null : Float.parseFloat(value);
     }
 
     @Override
     public Double doubleValue() {
-        return Double.parseDouble(value);
+        return value == null ? null : Double.parseDouble(value);
+    }
+
+    @Override
+    public Number numberValue() {
+        return value == null ? null : Double.parseDouble(value);
     }
 
     @Override

@@ -34,18 +34,5 @@ public class GenRaiz {
         }
         //Import libreria
         tabla.getClase().getImports().add("import perldoop.lib.*;");
-        //Codigo global
-        if (tabla.getCodigoGlobal().length() > 0) {
-            tabla.getClase().getFunciones().add(new StringBuilder("static{global();}"));
-            StringBuilder global = new StringBuilder(tabla.getCodigoGlobal().length() + 50);
-            global.append("private static void global(){").append(tabla.getCodigoGlobal()).append("}");
-            tabla.getClase().getFunciones().add(global);
-        }
-        //Codigo main
-        if (tabla.getCodigoMain().length() > 0) {
-            StringBuilder main = new StringBuilder(tabla.getCodigoMain().length() + 50);
-            main.append("public static void main(String[] pd_args){").append(tabla.getCodigoMain()).append("}");
-            tabla.getClase().getFunciones().add(main);
-        }
     }
 }
