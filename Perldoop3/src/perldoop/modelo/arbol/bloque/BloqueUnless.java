@@ -9,7 +9,7 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -&gt;<br> bloque : UNLESS '(' expresion ')' '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> bloque : UNLESS '(' expresion ')' '{' cuerpo '}' condicional
  *
  * @author César Pomar
  */
@@ -28,9 +28,11 @@ public final class BloqueUnless extends BloqueControlBasico {
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
+     * @param bloqueElse BloqueElse
      */
-    public BloqueUnless(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+    public BloqueUnless(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Condicional bloqueElse) {
         super(id, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD);
+        setBloqueElse(bloqueElse);
     }
 
     /**
@@ -58,6 +60,6 @@ public final class BloqueUnless extends BloqueControlBasico {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD, bloqueElse};
     }
 }

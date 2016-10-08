@@ -7,7 +7,7 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -&gt;<br> condicional : Elsif '(' expresion ')' '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> condicional : Elsif '(' expresion ')' '{' cuerpo '}' condicional
  *
  * @author César Pomar
  */
@@ -32,8 +32,9 @@ public final class CondicionalElsif extends Condicional {
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
+     * @param bloqueElse BloqueElse
      */
-    public CondicionalElsif(Terminal id, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+    public CondicionalElsif(Terminal id, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Condicional bloqueElse) {
         setId(id);
         setParentesisI(parentesisI);
         setExpresion(expresion);
@@ -41,6 +42,7 @@ public final class CondicionalElsif extends Condicional {
         setLlaveI(llaveI);
         setCuerpo(cuerpo);
         setLlaveD(llaveD);
+        setBloqueElse(bloqueElse);
     }
 
     /**
@@ -202,6 +204,6 @@ public final class CondicionalElsif extends Condicional {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD, bloqueElse};
     }
 }

@@ -162,4 +162,14 @@ public class Pd {
         return new PerlMap<>(map);
     }
 
+    /**
+     * Comprueba que el Boolean no sea null y si lo es lo evalua como false
+     *
+     * @param bool Boolean
+     * @return Boolean no nulo
+     */
+    public static Boolean checkNull(Boolean bool) {
+        return bool == null ? false : bool;
+    }
+
 }

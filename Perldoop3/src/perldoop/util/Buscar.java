@@ -14,6 +14,7 @@ import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.constante.CadenaComando;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
+import perldoop.modelo.arbol.expresion.ExpAsignacion;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpConstante;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
@@ -145,26 +146,22 @@ public final class Buscar {
      * @return comprobacion
      */
     public static boolean isNotNull(Simbolo s) {
-        List lista = (List) Buscar.buscarClases(s, Acceso.class);
-        if (!lista.isEmpty()) {
+        if(!(s instanceof Expresion)){
+            s = s.getPadre();
+        }
+        if (s instanceof ExpAcceso) {
             return false;
         }
-        lista = (List) Buscar.buscarClases(s, Variable.class);
-        if (!lista.isEmpty()) {
-            for (Variable var : (List<Variable>)lista) {
-                if (!(var instanceof VarSigil || var instanceof VarPaqueteSigil)) {
-                    return false;
-                }
-            }
+        if (s instanceof ExpVariable) {
+            return false;
         }
-        lista = (List) Buscar.buscarClases(s, ExpFuncion.class);
-        if (!lista.isEmpty()) {
-            for (ExpFuncion fun : (List<ExpFuncion>) lista) {
-                if(fun.getFuncion().getIdentificador().getValor().equals("undef")){
-                    return false;
-                }
+        if (s instanceof ExpAsignacion && ((ExpAsignacion) s).getAsignacion() instanceof Igual) {
+            return isNotNull(((Igual) ((ExpAsignacion) s).getAsignacion()).getDerecha());
+        }
+        if (s instanceof ExpFuncion) {
+            if (((ExpFuncion) s).getFuncion().getIdentificador().getValor().equals("undef")) {
+                return false;
             }
-
         }
         return true;
     }

@@ -264,16 +264,13 @@ bloque		:	'{' cuerpoNV '}'																{$$=set(new BloqueVacio(s($1),s($2),s(
 			|	FOR abrirBloque '(' expresion ';' expresion ';' expresion ')' '{' cuerpo '}'	{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11),s($12)));}
 			|	FOR abrirBloque expresion '(' lista ')' '{' cuerpo '}'							{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
 			|	FOR abrirBloque '(' lista ')' '{' cuerpo '}'									{$$=set(new BloqueForeach(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
-			|	condicional elsif																{$$=set(Condicional.bloqueElse((Bloque)s($1),s($2)), false);}
-
-condicional	:	IF abrirBloque '(' expresion ')' '{' cuerpo '}'									{$$=set(new BloqueIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
-			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueUnless(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
-	
-elsif		:																					{$$=set(new CondicionalNada());}
-			|	bloqueElsif elsif																{$$=set(Condicional.bloqueElse((CondicionalElsif)s($1),s($2)), false);}
-			|	ELSE '{' cuerpo '}'																{$$=set(new CondicionalElse(s($1),s($2),s($3),s($4)));}
-
-bloqueElsif :	ELSIF '(' expresion ')' '{' cuerpo '}'											{$$=set(new CondicionalElsif(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
+			|	IF abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional						{$$=set(new BloqueIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional					{$$=set(new BloqueUnless(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			
+condicional	:																					{$$=set(new CondicionalNada());}
+			|	ELSIF '(' expresion ')' '{' cuerpo '}' condicional								{$$=set(new CondicionalElsif(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+			|	ELSE '{' cuerpo '}'																{$$=set(new CondicionalElse(s($1),s($2),s($3),s($4)));}			
+			
 
 
 %%

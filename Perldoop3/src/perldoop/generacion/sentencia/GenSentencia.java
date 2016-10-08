@@ -96,11 +96,11 @@ public class GenSentencia {
     }
 
     public void visitar(StcBloque s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getBloque().getCodigoGenerado());
     }
 
     public void visitar(StcFlujo s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(s.getFlujo().getCodigoGenerado());
     }
 
     public void visitar(StcPaquete s) {

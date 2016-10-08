@@ -9,6 +9,7 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.ExpAsignacion;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
@@ -115,13 +116,22 @@ public final class GenVariable {
             } else {
                 v.setCodigoGenerado(new StringBuilder(e.getAlias()));
             }
-        } else if (Buscar.getPadre(v, 2) instanceof StcLista) {
-            declaracion.append("=").append(Tipos.valoreDefecto(v.getTipo()));
-            v.setCodigoGenerado(declaracion);
         } else {
-            tabla.getDeclaraciones().add(declaracion.append(";"));
-            if (!isAsignada(v)) {
-                v.getCodigoGenerado().append("=").append(Tipos.valoreDefecto(v.getTipo())).insert(0, '(').append(')');
+            if (Buscar.getPadre(v, 2) instanceof StcLista) {
+                declaracion.append("=").append(Tipos.valoreDefecto(v.getTipo()));
+                v.setCodigoGenerado(declaracion);
+            } else {               
+                if(isAsignada(v)){
+                    if(Buscar.isCamino(v, Expresion.class,Igual.class,ExpAsignacion.class,Lista.class,StcLista.class)){
+                        v.setCodigoGenerado(declaracion);
+                    }else{
+                        v.setCodigoGenerado(new StringBuilder(e.getAlias()));
+                        tabla.getDeclaraciones().add(declaracion.append(";"));
+                    }           
+                }else{
+                    tabla.getDeclaraciones().add(declaracion.append(";"));
+                    v.getCodigoGenerado().append("=").append(Tipos.valoreDefecto(v.getTipo())).insert(0, '(').append(')');
+                }
             }
         }
     }
