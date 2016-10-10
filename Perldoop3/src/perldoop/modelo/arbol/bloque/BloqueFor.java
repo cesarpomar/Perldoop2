@@ -5,10 +5,10 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
-import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -&gt;<br> bloque : FOR '(' expresion ';' expresion ';' expresion ')' '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> bloque : FOR '(' listaFor ';' listaFor ';' listaFor ')' '{' cuerpo '}'
  *
  * @author César Pomar
  */
@@ -17,11 +17,11 @@ public final class BloqueFor extends Bloque {
     private Terminal id;
     protected AbrirBloque abrirBloque;
     private Terminal parentesisI;
-    private Expresion expresion1;
+    private Lista lista1;
     private Terminal puntoComa1;
-    private Expresion expresion2;
+    private Lista lista2;
     private Terminal puntoComa2;
-    private Expresion expresion3;
+    private Lista lista3;
     private Terminal parentesisD;
 
     /**
@@ -30,26 +30,26 @@ public final class BloqueFor extends Bloque {
      * @param id Id
      * @param abrirBloque Abertura de bloque para la cabecera
      * @param parentesisI Parentesis izquierdo
-     * @param expresion1 Expresión 1
+     * @param lista1 Lista 1
      * @param puntoComa1 Punto y coma 1
-     * @param expresion2 Expresión 2
+     * @param lista2 Lista 2
      * @param puntoComa2 Punto y coma 2
-     * @param expresion3 Expresión 3
+     * @param lista3 Lista 3
      * @param parentesisD Parentesis derecho
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueFor(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion1, Terminal puntoComa1, Expresion expresion2, Terminal puntoComa2, Expresion expresion3, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+    public BloqueFor(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Lista lista1, Terminal puntoComa1, Lista lista2, Terminal puntoComa2, Lista lista3, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
         super(llaveI, cuerpo, llaveD);
         setId(id);
         setAbrirBloque(abrirBloque);
         setParentesisI(parentesisI);
-        setExpresion1(expresion1);
+        setLista1(lista1);
         setPuntoComa1(puntoComa1);
-        setExpresion2(expresion2);
+        setLista2(lista2);
         setPuntoComa2(puntoComa2);
-        setExpresion3(expresion3);
+        setLista3(lista3);
         setParentesisI(parentesisI);
     }
 
@@ -109,22 +109,22 @@ public final class BloqueFor extends Bloque {
     }
 
     /**
-     * Obtiene la expresión 1
+     * Obtiene la lista 1
      *
-     * @return Expresión 1
+     * @return Lista 1
      */
-    public Expresion getExpresion1() {
-        return expresion1;
+    public Lista getLista1() {
+        return lista1;
     }
 
     /**
-     * Establece la expresión 1
+     * Establece la lista 1
      *
-     * @param expresion1 Expresión 1
+     * @param lista1 Lista 1
      */
-    public void setExpresion1(Expresion expresion1) {
-        expresion1.setPadre(this);
-        this.expresion1 = expresion1;
+    public void setLista1(Lista lista1) {
+        lista1.setPadre(this);
+        this.lista1 = lista1;
     }
 
     /**
@@ -147,22 +147,22 @@ public final class BloqueFor extends Bloque {
     }
 
     /**
-     * Obtiene la expresión 2
+     * Obtiene la lista 2
      *
-     * @return Expresión 2
+     * @return Lista 2
      */
-    public Expresion getExpresion2() {
-        return expresion2;
+    public Lista getLista2() {
+        return lista2;
     }
 
     /**
-     * Establece la expresión 2
+     * Establece la lista 2
      *
-     * @param expresion2 Expresión 2
+     * @param lista2 Lista 2
      */
-    public void setExpresion2(Expresion expresion2) {
-        expresion2.setPadre(this);
-        this.expresion2 = expresion2;
+    public void setLista2(Lista lista2) {
+        lista2.setPadre(this);
+        this.lista2 = lista2;
     }
 
     /**
@@ -185,22 +185,22 @@ public final class BloqueFor extends Bloque {
     }
 
     /**
-     * Obtiene la expresión 3
+     * Obtiene la lista 3
      *
-     * @return Expresión 3
+     * @return Lista 3
      */
-    public Expresion getExpresion3() {
-        return expresion3;
+    public Lista getLista3() {
+        return lista3;
     }
 
     /**
-     * Establece la expresión 3
+     * Establece la lista 3
      *
-     * @param expresion3 Expresión 3
+     * @param lista3 Lista 3
      */
-    public void setExpresion3(Expresion expresion3) {
-        expresion3.setPadre(this);
-        this.expresion3 = expresion3;
+    public void setLista3(Lista lista3) {
+        lista3.setPadre(this);
+        this.lista3 = lista3;
     }
 
     /**
@@ -229,7 +229,7 @@ public final class BloqueFor extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, expresion1, puntoComa1, expresion2, puntoComa2, expresion3, parentesisD, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, parentesisI, lista1, puntoComa1, lista2, puntoComa2, lista3, parentesisD, llaveI, cuerpo, llaveD};
     }
 
 }

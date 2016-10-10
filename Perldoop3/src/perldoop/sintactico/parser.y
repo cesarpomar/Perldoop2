@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import perldoop.modelo.Opciones;
 import perldoop.error.GestorErrores;
-import perldoop.modelo.lexico.Token;
 import perldoop.modelo.sintactico.ParserVal;
 import perldoop.modelo.arbol.*;
 import perldoop.modelo.arbol.fuente.*;
@@ -131,8 +130,8 @@ modificador :											{$$=set(new ModNada());}
 
 flujo		:	NEXT ';'								{$$=set(new Next(s($1), s($2)));}
 			|	LAST ';'								{$$=set(new Last(s($1), s($2)));}
-			|	RETURN ';'								{$$=set(new Return(s($1), null, s($2)));}
-			|	RETURN expresion ';'					{$$=set(new Return(s($1), s($2), s($3)));}
+			|	RETURN ';'								{$$=set(new Return(s($1), s($2)));}
+			|	RETURN expresion ';'					{$$=set(new Return(s($1), virtualCol(s($2)), s($3)));}
 
 asignacion	:   expresion '=' expresion					{$$=set(new Igual(s($1),s($2),s($3)));}
 			|	expresion MAS_IGUAL expresion			{$$=set(new MasIgual(s($1),s($2),s($3)));}
@@ -182,23 +181,27 @@ paqueteVar	:	paqueteVar VAR AMBITO					{$$=set(Paquetes.add(s($1),s($2),s($3)));
 paqueteID	:	paqueteID ID AMBITO						{$$=set(Paquetes.add(s($1),s($2),s($3)));} 
 			|	ID AMBITO								{$$=set(new Paquetes(s($1),s($2)));} 
 
-coleccion	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
+colParen	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
 			|	'('  ')'								{$$=set(new ColParentesis(s($1),new Lista(),s($2)));}
-			|	'[' lista ']'							{$$=set(new ColCorchete(s($1),s($2),s($3)));}
-			|	'[' ']'									{$$=set(new ColCorchete(s($1),new Lista(),s($2)));}
-			|	'{' lista '}'							{$$=set(new ColLlave(s($1),s($2),s($3)));}
-			|	'{' '}'									{$$=set(new ColLlave(s($1),new Lista(),s($2)));}
 			
-acceso		:	expresion coleccion						{$$=set(new AccesoCol(s($1),s($2)));}
-			|	expresion FLECHA coleccion				{$$=set(new AccesoColRef(s($1),s($2),s($3)));}
+colRef		:	'[' lista ']'							{$$=set(new ColCorchete(s($1),s($2),s($3)));}
+			|	'[' ']'									{$$=set(new ColCorchete(s($1),add(new Lista()),s($2)));}
+			|	'{' lista '}'							{$$=set(new ColLlave(s($1),s($2),s($3)));}
+			|	'{' '}'									{$$=set(new ColLlave(s($1),add(new Lista()),s($2)));}
+			
+coleccion	:	colParen								{$$=$1;}
+			|	colRef									{$$=$1;}
+			
+acceso		:	expresion colRef						{$$=set(new AccesoCol(s($1),s($2)));}
+			|	expresion FLECHA colRef					{$$=set(new AccesoColRef(s($1),s($2),s($3)));}
 			|	'$' expresion %prec UNITARIO			{$$=set(new AccesoRefEscalar(s($1),s($2)));} 
 			|	'@' expresion %prec UNITARIO			{$$=set(new AccesoRefArray(s($1),s($2)));} 
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 			
 			|	'\\' expresion %prec UNITARIO			{$$=set(new AccesoRef(s($1),s($2)));} 
 
-funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),add(new ColParentesis(add(new Terminal(new Token("("))),add(new Lista(s($3))),add(new Terminal(new Token(")")))))));}
+funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),virtualCol(s($3))));}
 			|	paqueteID ID							{$$=set(new FuncionPaqueteNoArgs(s($1),s($2)));}
-			|	ID expresion							{$$=set(new FuncionArgs(s($1),add(new ColParentesis(add(new Terminal(new Token("("))),add(new Lista(s($2))),add(new Terminal(new Token(")")))))));}
+			|	ID expresion							{$$=set(new FuncionArgs(s($1),virtualCol(s($2))));}
 			|	ID										{$$=set(new FuncionNoArgs(s($1)));}
 
 regulares	:	expresion STR_NO_REX M_REGEX			{$$=set(new RegularNoMatch(s($1),s($2),s($3)));}
@@ -256,14 +259,17 @@ aritmetica	:	expresion '+' expresion					{$$=set(new AritSuma(s($1),s($2),s($3))
 
 abrirBloque :											{$$=set(new AbrirBloque());}
 			
+listaFor	:											{$$=set(new Lista());}
+			|	lista									{$$=$1;}
+			
 bloque		:	'{' cuerpoNV '}'																{$$=set(new BloqueVacio(s($1),s($2),s($3)));}
 			|	WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
 			|	UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
 			|	DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'						{$$=set(new BloqueDoWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
 			|	DO abrirBloque '{' cuerpo '}' UNTIL '(' expresion ')' ';'						{$$=set(new BloqueDoUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
-			|	FOR abrirBloque '(' expresion ';' expresion ';' expresion ')' '{' cuerpo '}'	{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11),s($12)));}
-			|	FOR abrirBloque expresion '(' lista ')' '{' cuerpo '}'							{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
-			|	FOR abrirBloque '(' lista ')' '{' cuerpo '}'									{$$=set(new BloqueForeach(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+			|	FOR abrirBloque '(' listaFor ';' listaFor ';' listaFor ')' '{' cuerpo '}'		{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11),s($12)));}
+			|	FOR abrirBloque variable colParen '{' cuerpo '}'								{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
+			|	FOR abrirBloque colParen '{' cuerpo '}'											{$$=set(new BloqueForeach(s($1),s($2),s($3),s($4),s($5),s($6)));}
 			|	IF abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional						{$$=set(new BloqueIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
 			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional					{$$=set(new BloqueUnless(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
 			
@@ -397,16 +403,34 @@ condicional	:																					{$$=set(new CondicionalNada());}
 	 * Función interna auxiliar que añade el simbolo a la lista de analizador
 	 * y luego lo retorna.
 	 * @param s Simbolo
-	 * @return ParseVal
+	 * @return Simbolo s
 	 */
 	private <T extends Simbolo>  T add(T s){
 		simbolos.add(s);
 		return s;
 	}
+	
+	/**
+	 * Función interna auxiliar que simula que las expresiones estan dentro de parentesis
+	 * aunque no sea asi en el codigo fuente.
+	 * @param s Simbolo
+	 * @return Simbolo s
+	 */
+	private ExpColeccion virtualCol(Expresion s){
+		if(!(s instanceof ExpColeccion && ((ExpColeccion)s).getColeccion() instanceof ColParentesis)){
+            Lista l = new Lista((Expresion)s);
+            Coleccion col = new ColParentesis(l);
+			simbolos.add(col);
+			ExpColeccion expcol= new ExpColeccion(col);
+			simbolos.add(expcol);		
+			return expcol;
+		}
+		return (ExpColeccion)s;
+	}
 
 	/**
-	 * Función invocada por el analizador cada vez que necesita un token.
-	 * @return Tipo del token
+	 * Función invocada por el analizador cada vez que necesita un terminal.
+	 * @return Tipo del terminal
 	 */
 	private int yylex (){
 		if(iterator.hasNext()){

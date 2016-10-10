@@ -209,8 +209,6 @@ public interface Visitante {
 
     void visitar(FuncionNoArgs s);
 
-    void visitar(Argumentos s);
-
     //Regulares
     void visitar(RegularNoMatch s);
 

@@ -1,15 +1,20 @@
 package perldoop.semantica.funcion;
 
+import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
+import perldoop.internacionalizacion.Errores;
+import perldoop.modelo.arbol.FuncionNativa;
+import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.lista.Lista;
-import perldoop.modelo.arbol.sentencia.StcLista;
+import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.util.Buscar;
 
 /**
  * Clase para la semantica de funcion
@@ -30,73 +35,108 @@ public class SemFuncion {
     }
 
     public void visitar(FuncionPaqueteArgs s) {
-        Paquete paquete = tabla.getTablaSimbolos().getPaquete(s.getPaquetes().getRepresentancion());
-        if (paquete == null) {
-            //TODO error paquete no existe
-            throw new ExcepcionSemantica(null);
-        }
-        if (paquete.buscarFuncion(s.getIdentificador().getToken().getValor()) == null) {
-            //TODO error funcion no existe en paquete
-            throw new ExcepcionSemantica(null);
-        }
-        if (s.getColeccion().getParentesisI() == null) {
-            getArgumentos(s, s.getLista());
-            tabla.getAcciones().analizar(s.getColeccion());
-        }
-        s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+        comprobarFuncionPaquete(s, s.getPaquetes());
     }
 
     public void visitar(FuncionPaqueteNoArgs s) {
-        Paquete paquete = tabla.getTablaSimbolos().getPaquete(s.getPaquetes().getRepresentancion());
-        if (paquete == null) {
-            //TODO error paquete no existe
-            throw new ExcepcionSemantica(null);
-        }
-        if (paquete.buscarFuncion(s.getIdentificador().getToken().getValor()) == null) {
-            //TODO error funcion no existe en paquete
-            throw new ExcepcionSemantica(null);
-        }
-        s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+        comprobarFuncionPaquete(s, s.getPaquetes());
     }
 
     public void visitar(FuncionArgs s) {
-        if (tabla.getTablaSimbolos().buscarFuncion(s.getIdentificador().getToken().getValor()) == null) {
-            tabla.getTablaSimbolos().addFuncionNoDeclarada(s.getIdentificador().getToken());
-        }
-        if (s.getColeccion().getParentesisI() == null) {
-            getArgumentos(s, s.getLista());
-            tabla.getAcciones().analizar(s.getColeccion());
-        }
-        s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+        comprobarFuncion(s, (ColParentesis)s.getColeccion().getColeccion());
     }
 
     public void visitar(FuncionNoArgs s) {
-        if (tabla.getTablaSimbolos().buscarFuncion(s.getIdentificador().getToken().getValor()) == null) {
-            tabla.getTablaSimbolos().addFuncionNoDeclarada(s.getIdentificador().getToken());
-        }
-        s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+        comprobarFuncion(s, null);
     }
 
-    public void visitar(Argumentos s) {
-        //TODO borrar
-    }
-
-    private void getArgumentos(Funcion s, Lista args) {
-        StcLista sentencia = Buscar.buscarPadre(s, StcLista.class);
-        if (sentencia == null) {
-            return;
+    /**
+     * Comprueba una funcion
+     *
+     * @param f Funcion
+     * @param args Argumentos
+     */
+    private void comprobarFuncion(Funcion f, ColParentesis args) {
+        FuncionNativa fn = null;
+        if (f.getPadre() instanceof ExpFuncion) {
+            fn = getSemNativa(f.getIdentificador().getValor());
         }
-        Lista sts = sentencia.getLista();
-        int nargs = 0;
-        for (Expresion st : sts.getExpresiones()) {
-            if (st instanceof ExpFuncion) {
-                Funcion fun = (((ExpFuncion) st).getFuncion());
-                if (fun instanceof FuncionArgs || fun instanceof FuncionPaqueteArgs) {
-                    break;
-                }
+        if (args != null && args.isVirtual() && f.getTipo() == null && getArgumentos(f, args, fn != null)) {
+            f.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+        } else {
+            f.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+            if (fn != null) {
+                fn.visitar(f, args);
+            } else if (tabla.getTablaSimbolos().buscarFuncion(f.getIdentificador().getToken().getValor()) == null) {
+                tabla.getTablaSimbolos().addFuncionNoDeclarada(f.getIdentificador().getToken());
             }
-            nargs++;
         }
-        args.addLista(sts, nargs);
+    }
+
+    /**
+     * Comprueba una funcion de un paquete
+     *
+     * @param f Funcion
+     * @param paquetes Paquetes
+     */
+    private void comprobarFuncionPaquete(Funcion f, Paquetes paquetes) {
+        Paquete paquete = tabla.getTablaSimbolos().getPaquete(paquetes.getRepresentancion());
+        if (paquete == null) {
+            tabla.getGestorErrores().error(Errores.PAQUETE_NO_EXISTE, paquetes.getIdentificadores().get(0).getToken(),
+                    paquetes.getRepresentancion());
+            throw new ExcepcionSemantica(Errores.PAQUETE_NO_EXISTE);
+        }
+        if (paquete.buscarFuncion(f.getIdentificador().getToken().getValor()) == null) {
+            tabla.getGestorErrores().error(Errores.FUNCION_NO_EXISTE, f.getIdentificador().getToken(), f.getIdentificador().getValor());
+            throw new ExcepcionSemantica(Errores.FUNCION_NO_EXISTE);
+        }
+        f.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+    }
+
+    /**
+     * Obtiene las expresiones de una coleccion virtual
+     *
+     * @param f Funcion
+     * @param col Argumentos
+     * @param interpolar Interpolar argumentos
+     * @return Argumentos añadidos
+     */
+    private boolean getArgumentos(Funcion f, Coleccion col, boolean interpolar) {
+        Simbolo uso = f.getPadre().getPadre();
+        if (!(uso instanceof Lista)) {//Solo hay un argumento
+            return false;
+        }
+        Lista lista = (Lista) uso;
+        List<Expresion> expO = lista.getExpresiones();
+        List<Simbolo> elemO = lista.getElementos();
+        List<Expresion> expD = col.getLista().getExpresiones();
+        List<Simbolo> elemD = col.getLista().getElementos();
+        int exp = expO.indexOf(f.getPadre());
+        int elem = elemO.indexOf(f.getPadre());
+        while (exp < expO.size()) {
+            expD.add(expO.remove(exp));
+        }
+        while (elem < elemO.size()) {
+            elemD.add(elemO.remove(elem));
+        }
+        if (interpolar) {
+            tabla.getAcciones().reAnalizarDespuesDe(col);
+        } else {
+            tabla.getAcciones().reAnalizarDespuesDe(lista);
+        }
+        return true;
+    }
+
+    /**
+     * Obtiene la semantica nativa de una funcion
+     *
+     * @param id Nombre de la funcion
+     * @return Semantica nativa
+     */
+    private FuncionNativa getSemNativa(String id) {
+        switch (id) {
+            default:
+                return null;
+        }
     }
 }

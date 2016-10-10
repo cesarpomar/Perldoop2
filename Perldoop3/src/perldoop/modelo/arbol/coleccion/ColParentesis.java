@@ -14,9 +14,10 @@ public final class ColParentesis extends Coleccion {
 
     private Terminal parentesisI;
     private Terminal parentesisD;
+    private boolean virtual;
 
     /**
-     * Único contructor de la clase
+     * Constructor completo de una colección
      *
      * @param parentesisI Parentesis izquierdo
      * @param lista Lista
@@ -26,6 +27,17 @@ public final class ColParentesis extends Coleccion {
         super(lista);
         setParentesisI(parentesisI);
         setParentesisD(parentesisD);
+        virtual = false;
+    }
+
+    /**
+     * Constructor simplificado para colecciones virtuales
+     *
+     * @param lista Lista
+     */
+    public ColParentesis(Lista lista) {
+        super(lista);
+        virtual = true;
     }
 
     /**
@@ -66,6 +78,15 @@ public final class ColParentesis extends Coleccion {
         this.parentesisD = parentesisD;
     }
 
+    /**
+     * Comprueba si la coleccion es virtual, las colecciones virtuales no tienen terminales parentesis
+     *
+     * @return Es virtual
+     */
+    public boolean isVirtual() {
+        return virtual;
+    }
+
     @Override
     public void aceptar(Visitante v) {
         v.visitar(this);
@@ -73,7 +94,10 @@ public final class ColParentesis extends Coleccion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{parentesisI, lista, parentesisD};
+        if (parentesisI != null) {
+            return new Simbolo[]{parentesisI, lista, parentesisD};
+        }
+        return new Simbolo[]{lista};
     }
 
 }

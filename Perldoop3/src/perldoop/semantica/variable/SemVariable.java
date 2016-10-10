@@ -56,7 +56,7 @@ public class SemVariable {
         //Buscar entrada
         EntradaVariable e = p.buscarVariable(s.getVar().toString(), contexto);
         if (e == null) {
-            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), contexto);
+            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar().getValor(), contexto);
             throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
         }
         s.setTipo(e.getTipo());
@@ -86,7 +86,7 @@ public class SemVariable {
         //Buscar entrada
         EntradaVariable e = p.buscarVariable(s.getVar().toString(), contexto);
         if (e == null) {
-            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), contexto);
+            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar().getValor(), contexto);
             throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
         }
         s.setTipo(e.getTipo());
@@ -95,22 +95,24 @@ public class SemVariable {
 
     public void visitar(VarMy s) {
         noAccederDeclaracion(s);
-        obtenerTipo(s, (EtiquetasTipo) s.getMy().getEtiquetas());
-        validarTipo(s);
-        boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
-        EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), false);
-        entrada.setConflicto(confligto);
-        tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
+        if (obtenerTipo(s, (EtiquetasTipo) s.getMy().getEtiquetas())) {
+            validarTipo(s);
+            boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
+            EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), false);
+            entrada.setConflicto(confligto);
+            tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
+        }
     }
 
     public void visitar(VarOur s) {
         noAccederDeclaracion(s);
-        obtenerTipo(s, (EtiquetasTipo) s.getOur().getEtiquetas());
-        validarTipo(s);
-        boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
-        EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), true);
-        entrada.setConflicto(confligto);
-        tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
+        if (obtenerTipo(s, (EtiquetasTipo) s.getOur().getEtiquetas())) {
+            validarTipo(s);
+            boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
+            EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), true);
+            entrada.setConflicto(confligto);
+            tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
+        }
     }
 
     /**
@@ -146,21 +148,22 @@ public class SemVariable {
      *
      * @param v Variable
      * @param tipoLinea Tipo declarado en la linea
+     * @return Tipo asignado
      */
-    private void obtenerTipo(Variable v, EtiquetasTipo tipoLinea) {
+    private boolean obtenerTipo(Variable v, EtiquetasTipo tipoLinea) {
         Simbolo uso = Buscar.getPadre(v, 1);
         EtiquetasTipo predeclaracion = tabla.getTablaSimbolos().getDeclaracion(Buscar.getContexto(v) + v.getVar().getValor());
-        if (uso instanceof BloqueForeachVar) {
-            if (predeclaracion != null) {
+        if (v.getPadre() instanceof BloqueForeachVar) {
+            BloqueForeachVar foreach = (BloqueForeachVar) v.getPadre();
+            if (foreach.getColeccion().getTipo() == null) {
+                tabla.getAcciones().reAnalizarDespuesDe(foreach.getColeccion());
+                return false;
+            } else {
+                v.setTipo(foreach.getColeccion().getTipo().getSubtipo(1));
+            }
+            if (predeclaracion != null || tipoLinea != null) {
                 tabla.getGestorErrores().error(Errores.AVISO, Errores.TIPO_FOREACH, v.getVar().getToken());
             }
-            BloqueForeachVar foreach = (BloqueForeachVar) uso;
-            if (foreach.getLista().getTipo() == null) {
-                tabla.getAcciones().reAnalizarDespuesDe(foreach.getLista());
-            } else {
-                v.setTipo(new Tipo(foreach.getLista().getTipo()));
-            }
-
         } else if (predeclaracion != null) {
             v.setTipo(SemanticaEtiquetas.parseTipo(predeclaracion.getTipos()));
         } else if (tipoLinea != null) {
@@ -169,6 +172,7 @@ public class SemVariable {
             tabla.getGestorErrores().error(Errores.VARIABLE_SIN_TIPO, v.getVar().getToken(), v.getContexto().getValor(), v.getVar().getValor());
             throw new ExcepcionSemantica(Errores.VARIABLE_SIN_TIPO);
         }
+        return true;
     }
 
     /**

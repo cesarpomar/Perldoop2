@@ -1,6 +1,5 @@
 package perldoop.generacion.variable;
 
-import java.util.Arrays;
 import java.util.List;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.variable.*;
@@ -8,8 +7,9 @@ import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Igual;
+import perldoop.modelo.arbol.bloque.BloqueFor;
+import perldoop.modelo.arbol.bloque.BloqueForeachVar;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
-import perldoop.modelo.arbol.expresion.ExpAsignacion;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
@@ -116,22 +116,31 @@ public final class GenVariable {
             } else {
                 v.setCodigoGenerado(new StringBuilder(e.getAlias()));
             }
+        } else if (isAsignada(v)) {
+            Igual igual = (Igual) Buscar.getPadre(v, 1);
+            Simbolo uso = Buscar.getPadre(igual, 1);
+            if (uso.getPadre() instanceof StcLista) {
+                v.setCodigoGenerado(declaracion);
+            } else if (uso instanceof BloqueFor && ((BloqueFor) uso).getLista1().getExpresiones().size() == 1
+                    && ((BloqueFor) uso).getLista1().getExpresiones().get(0) == igual.getPadre()) {
+                v.setCodigoGenerado(declaracion);
+            } else {
+                v.setCodigoGenerado(new StringBuilder(e.getAlias()));
+                tabla.getDeclaraciones().add(declaracion.append(";"));
+            }
         } else {
-            if (Buscar.getPadre(v, 2) instanceof StcLista) {
+            Simbolo uso = Buscar.getPadre(v, 1);
+            if (uso.getPadre() instanceof StcLista) {
                 declaracion.append("=").append(Tipos.valoreDefecto(v.getTipo()));
                 v.setCodigoGenerado(declaracion);
-            } else {               
-                if(isAsignada(v)){
-                    if(Buscar.isCamino(v, Expresion.class,Igual.class,ExpAsignacion.class,Lista.class,StcLista.class)){
-                        v.setCodigoGenerado(declaracion);
-                    }else{
-                        v.setCodigoGenerado(new StringBuilder(e.getAlias()));
-                        tabla.getDeclaraciones().add(declaracion.append(";"));
-                    }           
-                }else{
-                    tabla.getDeclaraciones().add(declaracion.append(";"));
-                    v.getCodigoGenerado().append("=").append(Tipos.valoreDefecto(v.getTipo())).insert(0, '(').append(')');
-                }
+            } else if (v.getPadre() instanceof BloqueForeachVar) {
+                v.setCodigoGenerado(declaracion);
+            } else if (uso instanceof BloqueFor && ((BloqueFor) uso).getLista1().getExpresiones().size() == 1
+                    && ((BloqueFor) uso).getLista1().getExpresiones().get(0) == v.getPadre()) {
+                v.setCodigoGenerado(declaracion);
+            } else {
+                tabla.getDeclaraciones().add(declaracion.append(";"));
+                v.getCodigoGenerado().append("=").append(Tipos.valoreDefecto(v.getTipo())).insert(0, '(').append(')');
             }
         }
     }

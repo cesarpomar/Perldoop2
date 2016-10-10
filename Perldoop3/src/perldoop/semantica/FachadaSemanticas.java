@@ -21,6 +21,7 @@ import perldoop.semantica.lista.*;
 import perldoop.semantica.logico.*;
 import perldoop.semantica.modificador.*;
 import perldoop.semantica.paquetes.*;
+import perldoop.semantica.raiz.SemRaiz;
 import perldoop.semantica.regulares.*;
 import perldoop.semantica.sentencia.*;
 import perldoop.semantica.variable.*;
@@ -56,6 +57,7 @@ public final class FachadaSemanticas {
     private SemLogico semLogico;
     private SemPaquetes semPaquetes;
     private SemModificador semModificador;
+    private SemRaiz semRaiz;
     private SemRegulares semRegulares;
     private SemSentencia semSentencia;
     private SemVariable semVariable;
@@ -488,6 +490,27 @@ public final class FachadaSemanticas {
      */
     public void setSemModificador(SemModificador semModificador) {
         this.semModificador = semModificador;
+    }
+
+    /**
+     * Obtiene la semantica de raiz
+     *
+     * @return Semantica de raiz
+     */
+    public SemRaiz getSemRaiz() {
+        if (semRaiz == null) {
+            semRaiz = new SemRaiz(tabla);
+        }
+        return semRaiz;
+    }
+
+    /**
+     * Establece la semantica de raiz
+     *
+     * @param semRaiz Semantica de raiz
+     */
+    public void setSemRaiz(SemRaiz semRaiz) {
+        this.semRaiz = semRaiz;
     }
 
     /**

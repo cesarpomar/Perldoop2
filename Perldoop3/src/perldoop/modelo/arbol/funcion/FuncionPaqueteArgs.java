@@ -4,6 +4,7 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
@@ -17,8 +18,7 @@ import perldoop.modelo.arbol.paquete.Paquetes;
 public final class FuncionPaqueteArgs extends Funcion {
 
     private Paquetes paquetes;
-    private ColParentesis coleccion;
-    private Lista lista;
+    private ExpColeccion coleccion;
 
     /**
      * Único contructor de la clase
@@ -27,7 +27,7 @@ public final class FuncionPaqueteArgs extends Funcion {
      * @param coleccion Colección
      * @param identificador Identificador
      */
-    public FuncionPaqueteArgs(Paquetes paquetes, Terminal identificador, ColParentesis coleccion) {
+    public FuncionPaqueteArgs(Paquetes paquetes, Terminal identificador, ExpColeccion coleccion) {
         super(identificador);
         setPaquetes(paquetes);
         setColeccion(coleccion);
@@ -57,7 +57,7 @@ public final class FuncionPaqueteArgs extends Funcion {
      *
      * @return Colección
      */
-    public ColParentesis getColeccion() {
+    public ExpColeccion getColeccion() {
         return coleccion;
     }
 
@@ -66,20 +66,9 @@ public final class FuncionPaqueteArgs extends Funcion {
      *
      * @param coleccion Colección
      */
-    public void setColeccion(ColParentesis coleccion) {
+    public void setColeccion(ExpColeccion coleccion) {
         coleccion.setPadre(this);
-        lista = coleccion.getLista();
-        lista.setPadre(this);
         this.coleccion = coleccion;
-    }
-
-    /**
-     * Obtiene la lista de argumentos
-     *
-     * @return Argumentos
-     */
-    public Lista getLista() {
-        return lista;
     }
 
     @Override
@@ -89,7 +78,7 @@ public final class FuncionPaqueteArgs extends Funcion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{paquetes, identificador, lista};
+        return new Simbolo[]{paquetes, identificador, coleccion};
     }
 
 }

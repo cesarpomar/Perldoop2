@@ -3,31 +3,43 @@ package perldoop.modelo.arbol.flujo;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
  * Clase que representa la reduccion -&gt; <br>
  * flujo : RETURN ';'<br>
- | RETURN expresion ';'
+ * | RETURN expresion ';'
  *
  * @author César Pomar
  */
 public final class Return extends Flujo {
 
-    private Terminal returnF;
-    private Expresion expresion;
+    private Terminal id;
+    private ExpColeccion expresion;
     private Terminal puntoComa;
 
     /**
-     * Único contructor de la clase
+     * Constructor de return con argumentos
      *
-     * @param returnF Return
+     * @param id Return
      * @param expresion Expresión
      * @param puntoComa PuntoComa
      */
-    public Return(Terminal returnF, Expresion expresion, Terminal puntoComa) {
-        setReturnF(returnF);
+    public Return(Terminal id, ExpColeccion expresion, Terminal puntoComa) {
+        setId(id);
         setExpresion(expresion);
+        setPuntoComa(puntoComa);
+    }
+
+    /**
+     * Constructor de return sin argumentos
+     *
+     * @param id Return
+     * @param puntoComa PuntoComa
+     */
+    public Return(Terminal id, Terminal puntoComa) {
+        setId(id);
         setPuntoComa(puntoComa);
     }
 
@@ -36,18 +48,18 @@ public final class Return extends Flujo {
      *
      * @return Return
      */
-    public Terminal getReturnF() {
-        return returnF;
+    public Terminal getId() {
+        return id;
     }
 
     /**
      * Establece el return
      *
-     * @param returnF Return
+     * @param id Return
      */
-    public void setReturnF(Terminal returnF) {
-        returnF.setPadre(this);
-        this.returnF = returnF;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
@@ -55,7 +67,7 @@ public final class Return extends Flujo {
      *
      * @return Expresion
      */
-    public final Expresion getExpresion() {
+    public final ExpColeccion getExpresion() {
         return expresion;
     }
 
@@ -64,7 +76,7 @@ public final class Return extends Flujo {
      *
      * @param expresion Expresion
      */
-    public final void setExpresion(Expresion expresion) {
+    public final void setExpresion(ExpColeccion expresion) {
         expresion.setPadre(this);
         this.expresion = expresion;
     }
@@ -95,7 +107,11 @@ public final class Return extends Flujo {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{returnF};
+        if (expresion != null) {
+            return new Simbolo[]{id, expresion, puntoComa};
+        }else{
+            return new Simbolo[]{id, puntoComa};
+        }
     }
 
 }

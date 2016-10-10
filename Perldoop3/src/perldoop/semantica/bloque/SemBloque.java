@@ -1,6 +1,7 @@
 package perldoop.semantica.bloque;
 
 import perldoop.modelo.arbol.bloque.*;
+import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
@@ -23,51 +24,41 @@ public class SemBloque {
 
     public void visitar(BloqueWhile s) {
         tabla.getTablaSimbolos().cerrarBloque();
-        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueUntil s) {
-        tabla.getTablaSimbolos().cerrarBloque();
         tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueDoWhile s) {
         tabla.getTablaSimbolos().cerrarBloque();
-        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueDoUntil s) {
-        tabla.getTablaSimbolos().cerrarBloque();
         tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueFor s) {
         tabla.getTablaSimbolos().cerrarBloque();
-        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueForeachVar s) {
-        tabla.getTablaSimbolos().cerrarBloque();
         tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueForeach s) {
         tabla.getTablaSimbolos().cerrarBloque();
-        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueIf s) {
-        tabla.getTablaSimbolos().cerrarBloque();
         tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueUnless s) {
         tabla.getTablaSimbolos().cerrarBloque();
-        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueVacio s) {
-        //Como no tiene cabecera solo cerramos uno
-        tabla.getTablaSimbolos().cerrarBloque();
+        //No tiene cabecera
     }
 }

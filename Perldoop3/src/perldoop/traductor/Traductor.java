@@ -100,19 +100,37 @@ public final class Traductor implements Acciones {
     }
 
     @Override
+    public void reAnalizar(Simbolo s) throws ExcepcionSemantica {
+        int posicion = index;
+        while (posicion > 0 && !simbolos.get(posicion).equals(s)) {
+            posicion--;
+        }
+        List<Simbolo> l = simbolos.subList(posicion, index);
+        Simbolo sAnalizar = s;
+        while (l.indexOf(sAnalizar) < index) {
+            analizar(sAnalizar);
+            sAnalizar = sAnalizar.getPadre();
+        }
+    }
+
+    @Override
     public void reAnalizarDespuesDe(Simbolo s) {
         List<Simbolo> l = simbolos.subList(index, simbolos.size());
-        int posicion = simbolos.indexOf(s);
+        int posicion = l.indexOf(s);
         int distancia = 1;
-        Simbolo padre = simbolos.get(index).getPadre();
-        while (padre != null && l.indexOf(padre) + index < posicion) {
+        Simbolo padre = l.get(0).getPadre();
+        while (padre != null && l.indexOf(padre) < posicion) {
             distancia++;
             padre = padre.getPadre();
         }
-        for (int i = index; i < posicion - distancia + 1; i++) {
-            simbolos.set(i, simbolos.set(i + distancia, simbolos.get(i)));
+        int i = 0;
+        for (; distancia > 0; distancia--) {
+            for (; i < posicion - distancia + 1; i++) {
+                l.set(i, l.set(i + distancia, l.get(i)));
+            }
         }
         index--;
+        generar = false;
     }
 
     @Override

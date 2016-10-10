@@ -24,15 +24,27 @@ public class GenFlujo {
     }
 
     public void visitar(Next s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(s.getNext());
+        codigo.append(s.getPuntoComa());
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(Last s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append("continue").append(s.getLast().getComentario());
+        codigo.append(s.getPuntoComa());
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(Return s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(s.getId()).append(" ");
+        if (s.getExpresion() != null) {
+            codigo.append(s.getExpresion());
+        }
+        codigo.append(s.getPuntoComa());
+        s.setCodigoGenerado(codigo);
     }
 
 }

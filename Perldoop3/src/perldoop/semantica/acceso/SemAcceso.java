@@ -103,6 +103,10 @@ public class SemAcceso {
     public void visitar(AccesoRefArray s) {
         Tipo t = s.getExpresion().getTipo();
         Tipo st = t.getSubtipo(1);
+        if (t.isBox()) {
+            tabla.getGestorErrores().error(Errores.UNBOXING_SIN_TIPO, s.getArroba().getToken(), SemanticaEtiquetas.parseTipo(t));
+            throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
+        }
         if (!t.isRef()) {
             tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getArroba().getToken(), SemanticaEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
@@ -119,6 +123,10 @@ public class SemAcceso {
     public void visitar(AccesoRefMap s) {
         Tipo t = s.getExpresion().getTipo();
         Tipo st = t.getSubtipo(1);
+        if (t.isBox()) {
+            tabla.getGestorErrores().error(Errores.UNBOXING_SIN_TIPO, s.getPorcentaje().getToken(), SemanticaEtiquetas.parseTipo(t));
+            throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
+        }
         if (!t.isRef()) {
             tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getPorcentaje().getToken(), SemanticaEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
@@ -140,11 +148,11 @@ public class SemAcceso {
 
     public void visitar(AccesoRef s) {
         Tipo t = s.getExpresion().getTipo();
-        if(!t.isColeccion()){
+        if (!t.isColeccion()) {
             tabla.getGestorErrores().error(Errores.REFERENCIA_NO_COLECCION, s.getBarra().getToken());
             throw new ExcepcionSemantica(Errores.REFERENCIA_NO_COLECCION);
-        }        
-        s.setTipo(new Tipo(t).add(0,Tipo.REF));
+        }
+        s.setTipo(new Tipo(t).add(0, Tipo.REF));
     }
 
 }

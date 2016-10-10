@@ -4,12 +4,13 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
+import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.lista.Lista;
+import perldoop.modelo.arbol.variable.Variable;
 
 /**
- * Clase que representa la reduccion -&gt;<br> bloque : FOR expresion '(' lista ')' '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> bloque : FOR variable coleccion '{' cuerpo '}'
  *
  * @author César Pomar
  */
@@ -17,32 +18,26 @@ public final class BloqueForeachVar extends Bloque {
 
     private Terminal id;
     protected AbrirBloque abrirBloque;
-    private Expresion expresion;
-    private Terminal parentesisI;
-    private Lista lista;
-    private Terminal parentesisD;
+    private Variable variable;
+    private Coleccion coleccion;
 
     /**
      * Único contructor de la clase
      *
      * @param id Id
      * @param abrirBloque Abertura de bloque para la cabecera
-     * @param expresion Expresión
-     * @param parentesisI Parentesis izquierdo
-     * @param lista Lista
-     * @param parentesisD Parentesis derecho
+     * @param variable Variable
+     * @param coleccion Coleccion
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueForeachVar(Terminal id, AbrirBloque abrirBloque, Expresion expresion, Terminal parentesisI, Lista lista, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+    public BloqueForeachVar(Terminal id, AbrirBloque abrirBloque, Variable variable, Coleccion coleccion, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
         super(llaveI, cuerpo, llaveD);
         setId(id);
         setAbrirBloque(abrirBloque);
-        setExpresion(expresion);
-        setParentesisI(parentesisI);
-        setLista(lista);
-        setParentesisD(parentesisD);
+        setVariable(variable);
+        setColeccion(coleccion);
     }
 
     /**
@@ -84,79 +79,41 @@ public final class BloqueForeachVar extends Bloque {
     }
 
     /**
-     * Obtiene la expresión
+     * Obtiene la variable
      *
-     * @return Expresión
+     * @return Variable
      */
-    public Expresion getExpresion() {
-        return expresion;
+    public Variable getVariable() {
+        return variable;
     }
 
     /**
-     * Establece la expresión
+     * Establece la variable
      *
-     * @param expresion Expresión
+     * @param variable Variable
      */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
+    public void setVariable(Variable variable) {
+        variable.setPadre(this);
+        this.variable = variable;
     }
 
     /**
-     * Obtiene el parenteis izquierdo
+     * Obtiene la colección
      *
-     * @return Parenteis izquierdo
+     * @return Coleccion
      */
-    public Terminal getParentesisI() {
-        return parentesisI;
+    public Coleccion getColeccion() {
+        return coleccion;
     }
 
     /**
-     * Establece el parenteis izquierdo
+     * Establece la colección
      *
-     * @param parentesisI Parenteis izquierdo
+     * @param coleccion Coleccion
      */
-    public void setParentesisI(Terminal parentesisI) {
-        parentesisI.setPadre(this);
-        this.parentesisI = parentesisI;
-    }
-
-    /**
-     * Obtiene la lista
-     *
-     * @return Lista
-     */
-    public Lista getLista() {
-        return lista;
-    }
-
-    /**
-     * Establece la lista
-     *
-     * @param lista Lista
-     */
-    public void setLista(Lista lista) {
-        lista.setPadre(this);
-        this.lista = lista;
-    }
-
-    /**
-     * Obtiene el parentesis derecho
-     *
-     * @return Parentesis derecho
-     */
-    public Terminal getParentesisD() {
-        return parentesisD;
-    }
-
-    /**
-     * Establece el parentesis derecho
-     *
-     * @param parentesisD Parentesis derecho
-     */
-    public void setParentesisD(Terminal parentesisD) {
-        parentesisD.setPadre(this);
-        this.parentesisD = parentesisD;
+    public void setColeccion(Coleccion coleccion) {
+        coleccion.setPadre(this);
+        this.coleccion = coleccion;
     }
 
     @Override
@@ -166,6 +123,6 @@ public final class BloqueForeachVar extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, expresion, parentesisI, lista, parentesisD, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, variable, coleccion, llaveI, cuerpo, llaveD};
     }
 }

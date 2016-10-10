@@ -41,11 +41,13 @@ public class Errores extends Internacionalizacion {
     public static final String ACCESO_DECLARACION = "ACCESO_DECLARACION";
     public static final String VARIABLE_SIN_TIPO = "VARIABLE_SIN_TIPO";
     public static final String VARIABLE_NO_EXISTE = "VARIABLE_NO_EXISTE";
+    public static final String FUNCION_NO_EXISTE = "FUNCION_NO_EXISTE";
     public static final String PAQUETE_NO_EXISTE = "PAQUETE_NO_EXISTE";
     public static final String ETIQUETA_SIN_USO = "ETIQUETA_SIN_USO";
     public static final String TIPO_INCORRECTO = "TIPO_INCORRECTO";
     public static final String VARIABLE_ENMASCARADA = "VARIABLE_ENMASCARADA";
     public static final String ERROR_CASTING = "ERROR_CASTING";
+    public static final String UNBOXING_SIN_TIPO = "UNBOXING_SIN_TIPO";
     public static final String ACCESO_NO_COLECCION = "ACCESO_NO_COLECCION";
     public static final String ACCESO_ERRONEO = "ACCESO_ERRONEO";
     public static final String ACCESO_VACIO = "ACCESO_VACIO";

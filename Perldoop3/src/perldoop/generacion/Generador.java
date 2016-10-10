@@ -521,12 +521,6 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(Argumentos s) {
-        fachada.getGenFuncion().visitar(s);
-
-    }
-
-    @Override
     public void visitar(RegularNoMatch s) {
         fachada.getGenRegulares().visitar(s);
     }

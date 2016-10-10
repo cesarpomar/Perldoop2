@@ -20,6 +20,8 @@ import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.flujo.Return;
+import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
@@ -52,7 +54,7 @@ public class GenColeccion {
         Simbolo uso = Buscar.getPadre(c, 2);
         //Si no va para otra colecion o acceso es una referencia
         List<Simbolo> acceso = Buscar.getCamino(c, ExpColeccion.class, Lista.class, ColLlave.class, ExpColeccion.class, Acceso.class);
-        if (!(uso instanceof Coleccion && uso.getTipo()!=null && uso.getTipo().isColeccion()) 
+        if (!(uso instanceof Coleccion && uso.getTipo() != null && uso.getTipo().isColeccion())
                 && !(c.getPadre() instanceof Acceso || !acceso.isEmpty())) {
             StringBuilder diamante = new StringBuilder();
             diamante.append("new Ref<").append(Tipos.declaracion(t)).append(">(");
@@ -69,8 +71,8 @@ public class GenColeccion {
      */
     private StringBuilder genArrayList(Lista l, Tipo t) {
         if (l.getExpresiones().isEmpty()) {
-            if(t.isArray()){
-                return Tipos.inicializacion(t,"0");
+            if (t.isArray()) {
+                return Tipos.inicializacion(t, "0");
             }
             return Tipos.inicializacion(t);
         }
@@ -236,7 +238,8 @@ public class GenColeccion {
 
     public void visitar(ColParentesis s) {
         //Expresion entre parentesis
-        if (s.getLista().getElementos().size() == 1) {
+        Simbolo uso= Buscar.getPadre(s, 1);
+        if (s.getLista().getElementos().size() == 1 && !(uso instanceof Funcion) && !(uso instanceof Return)) {
             Expresion exp = s.getLista().getExpresiones().get(0);
             StringBuilder codigo = new StringBuilder(50);
             codigo.append(s.getParentesisI()).append(Casting.casting(exp, s.getTipo())).append(s.getParentesisD());
@@ -249,6 +252,10 @@ public class GenColeccion {
             } else if (t.isMap()) {
                 s.setCodigoGenerado(genMap(s.getLista(), t));
             }
+        }
+        if (!s.isVirtual()) {
+            s.getCodigoGenerado().insert(0, s.getParentesisI().getComentario());
+            s.getCodigoGenerado().append(s.getParentesisD().getComentario());
         }
     }
 
@@ -267,6 +274,8 @@ public class GenColeccion {
             s.setCodigoGenerado(genArrayList(s.getLista(), t));
             genRef(s, t);
         }
+        s.getCodigoGenerado().insert(0, s.getCorcheteI().getComentario());
+        s.getCodigoGenerado().append(s.getCorcheteD().getComentario());
     }
 
     public void visitar(ColLlave s) {
@@ -288,6 +297,8 @@ public class GenColeccion {
             }
             genRef(s, t);
         }
+        s.getCodigoGenerado().insert(0, s.getLlaveI().getComentario());
+        s.getCodigoGenerado().append(s.getLlaveD().getComentario());
     }
 
 }

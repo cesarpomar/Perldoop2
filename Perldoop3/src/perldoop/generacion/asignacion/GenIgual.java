@@ -195,7 +195,7 @@ public class GenIgual {
      * @param der Simbolo derecho
      * @return Codigo asignacion
      */
-    private StringBuilder asignacion(Simbolo izq, String igual, Simbolo der) {
+    public static StringBuilder asignacion(Simbolo izq, String igual, Simbolo der) {
         StringBuilder codigo = null;
         Simbolo derAux = new SimboloAux(der);
         //si la derecha es un box y la izquierda una referencia, hacemos un pre casting

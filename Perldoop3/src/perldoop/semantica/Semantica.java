@@ -74,7 +74,7 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(Raiz s) {
-        //Sin semantica
+       fachada.getSemRaiz().visitar(s);
     }
 
     @Override
@@ -470,11 +470,6 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(FuncionNoArgs s) {
-        fachada.getSemFuncion().visitar(s);
-    }
-
-    @Override
-    public void visitar(Argumentos s) {
         fachada.getSemFuncion().visitar(s);
     }
 

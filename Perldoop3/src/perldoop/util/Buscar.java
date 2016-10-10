@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
-import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColCorchete;

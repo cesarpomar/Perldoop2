@@ -9,7 +9,7 @@ import perldoop.modelo.arbol.comparacion.Comparacion;
  *
  * @author César Pomar
  */
-public final class ExpComparacion extends Simbolo {
+public final class ExpComparacion extends Expresion {
 
     private Comparacion comparacion;
 

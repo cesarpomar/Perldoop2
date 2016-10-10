@@ -22,16 +22,11 @@ public class SemCondicional {
     }
 
     public void visitar(CondicionalElse s) {
-        tabla.getTablaSimbolos().cerrarBloque();
-
     }
 
     public void visitar(CondicionalElsif s) {
-        tabla.getTablaSimbolos().cerrarBloque();
-        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(CondicionalNada s) {
-        tabla.getTablaSimbolos().cerrarBloque();
     }
 }

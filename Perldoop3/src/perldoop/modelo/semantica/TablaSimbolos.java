@@ -190,6 +190,15 @@ public final class TablaSimbolos {
     }
 
     /**
+     * Obtiene las funciones no declaradas, con su token de donde
+     *
+     * @return Funciones no declaradas
+     */
+    public Map<String, Token> getFuncionesNoDeclaradas() {
+        return funcionesNoDeclaradas;
+    }
+
+    /**
      * Obtiene el alias de una función si existe
      *
      * @param identificador Identificador
@@ -206,7 +215,9 @@ public final class TablaSimbolos {
      * @return Alias de la función
      */
     public String addFuncionNoDeclarada(Token t) {
-        funcionesNoDeclaradas.put(t.getValor(), t);
+        if (!funcionesNoDeclaradas.containsKey(t.getValor())) {
+            funcionesNoDeclaradas.put(t.getValor(), t);
+        }
         return t.getValor();
     }
 

@@ -1,7 +1,9 @@
 package perldoop.generacion.funcion;
 
+import perldoop.modelo.arbol.FuncionNativa;
+import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.generacion.TablaGenerador;
-import perldoop.modelo.arbol.funcion.Argumentos;
 import perldoop.modelo.arbol.funcion.FuncionArgs;
 import perldoop.modelo.arbol.funcion.FuncionNoArgs;
 import perldoop.modelo.arbol.funcion.FuncionPaqueteArgs;
@@ -27,34 +29,57 @@ public class GenFuncion {
 
     public void visitar(FuncionPaqueteArgs s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append(s.getPaquetes().getCodigoGenerado()).append(s.getIdentificador().getCodigoGenerado());
-        codigo.append("(").append(s.getColeccion().getCodigoGenerado()).append(")");
+        codigo.append(s.getPaquetes()).append(s.getIdentificador());
+        codigo.append("(").append(s.getColeccion()).append(")");
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(FuncionPaqueteNoArgs s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append(s.getPaquetes().getCodigoGenerado()).append(s.getIdentificador().getCodigoGenerado());
+        codigo.append(s.getPaquetes()).append(s.getIdentificador());
         codigo.append("(").append(")");
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(FuncionArgs s) {
+        if (s.getPadre() instanceof ExpFuncion) {
+            FuncionNativa fn = getGenNativa(s.getIdentificador().getValor());
+            if (fn != null) {
+                fn.visitar(s, (ColParentesis) s.getColeccion().getColeccion());
+                return;
+            }
+        }
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append(s.getIdentificador().getCodigoGenerado());
-        codigo.append("(").append(s.getColeccion().getCodigoGenerado()).append(")");
+        codigo.append(s.getIdentificador());
+        codigo.append("(").append(s.getColeccion()).append(")");
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(FuncionNoArgs s) {
+        if (s.getPadre() instanceof ExpFuncion) {
+            FuncionNativa fn = getGenNativa(s.getIdentificador().getValor());
+            if (fn != null) {
+                fn.visitar(s, null);
+                return;
+            }
+        }
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append(s.getIdentificador().getCodigoGenerado());
+        codigo.append(s.getIdentificador());
         codigo.append("(").append(")");
         s.setCodigoGenerado(codigo);
     }
 
-    public void visitar(Argumentos s) {
-        //TODO borrar
+    /**
+     * Obtiene la semantica nativa de una funcion
+     *
+     * @param id Nombre de la funcion
+     * @return Semantica nativa
+     */
+    private FuncionNativa getGenNativa(String id) {
+        switch (id) {
+            default:
+                return null;
+        }
     }
 
 }

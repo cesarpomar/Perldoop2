@@ -11,11 +11,18 @@ import perldoop.modelo.arbol.Simbolo;
 public interface Acciones {
 
     /**
-     * Analiza un simbolo
+     * Analiza un simbolo.
      *
      * @param s Simbolo
      */
     void analizar(Simbolo s) throws ExcepcionSemantica;
+
+    /**
+     * Vuelve a analizar un simbolo y todos los simbolos ya analizados que dependen de el.
+     *
+     * @param s Simbolo
+     */
+    void reAnalizar(Simbolo s) throws ExcepcionSemantica;
 
     /**
      * Vuelve a analizar el simbolo despues de analizar s
@@ -23,7 +30,7 @@ public interface Acciones {
      * @param s Simbolo anterior al reanalisis
      */
     void reAnalizarDespuesDe(Simbolo s);
-    
+
     /**
      * Salta la etapa de generación del simbolo actual
      */

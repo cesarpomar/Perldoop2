@@ -39,8 +39,8 @@ public class GenFuncionDef {
                 codigo.append(new StringBuilder("return new Box[0];"));
             }
         }
-        codigo.append(s.getLlaveD().getCodigoGenerado());
-        tabla.getClase().getFunciones().add(codigo);
+        codigo.append(s.getLlaveD());
+        s.setCodigoGenerado(codigo);
     }
 
 }
