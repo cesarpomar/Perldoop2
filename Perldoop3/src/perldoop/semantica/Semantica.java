@@ -29,6 +29,7 @@ import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
 import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.rexpatron.RexPatron;
 import perldoop.modelo.semantica.TablaSimbolos;
 import perldoop.traductor.Acciones;
 
@@ -74,7 +75,7 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(Raiz s) {
-       fachada.getSemRaiz().visitar(s);
+        fachada.getSemRaiz().visitar(s);
     }
 
     @Override
@@ -190,6 +191,11 @@ public class Semantica implements Visitante {
     @Override
     public void visitar(ExpRegulares s) {
         fachada.getSemExpresion().visitar(s);
+    }
+
+    @Override
+    public void visitar(RexPatron s) {
+        fachada.getSemRexPatron().visitar(s);
     }
 
     @Override

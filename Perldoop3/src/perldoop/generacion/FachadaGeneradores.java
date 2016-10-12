@@ -24,6 +24,7 @@ import perldoop.generacion.modificador.*;
 import perldoop.generacion.paquetes.*;
 import perldoop.generacion.raiz.GenRaiz;
 import perldoop.generacion.regulares.*;
+import perldoop.generacion.rexpatron.GenRexPatron;
 import perldoop.generacion.sentencia.*;
 import perldoop.generacion.variable.*;
 import perldoop.generacion.varmulti.*;
@@ -62,6 +63,7 @@ public final class FachadaGeneradores {
     private GenRaiz genRaiz;
     private GenModificador genModificador;
     private GenRegulares genRegulares;
+    private GenRexPatron genRexPatron;
     private GenSentencia genSentencia;
     private GenVariable genVariable;
     private GenVarMulti genVarMulti;
@@ -557,6 +559,27 @@ public final class FachadaGeneradores {
      */
     public void setGenRegulares(GenRegulares genRegulares) {
         this.genRegulares = genRegulares;
+    }
+
+    /**
+     * Obtiene el generador de rexPatron
+     *
+     * @return Generador de rexPatron
+     */
+    public GenRexPatron getGenRexPatron() {
+        if (genRexPatron == null) {
+            genRexPatron = new GenRexPatron(tabla);
+        }
+        return genRexPatron;
+    }
+
+    /**
+     * Establece el generador de rexPatron
+     *
+     * @param genRexPatron Generador de rexPatron
+     */
+    public void setGenRexPatron(GenRexPatron genRexPatron) {
+        this.genRexPatron = genRexPatron;
     }
 
     /**

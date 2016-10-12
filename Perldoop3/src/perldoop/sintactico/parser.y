@@ -27,6 +27,7 @@ import perldoop.modelo.arbol.abrirbloque.*;
 import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.regulares.*;
+import perldoop.modelo.arbol.rexpatron.*;
 import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
@@ -39,7 +40,7 @@ import perldoop.modelo.arbol.aritmetica.*;
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
 %token ID VAR
-%token ENTERO DECIMAL CADENA_SIMPLE CADENA_DOBLE CADENA_COMANDO M_REGEX S_REGEX Y_REGEX STDIN STDOUT STDERR
+%token ENTERO DECIMAL CADENA_SIMPLE CADENA_DOBLE CADENA_COMANDO M_REX S_REX Y_REX PATRON REX_MOD REX_SEP STDIN STDOUT STDERR
 
 /*Palabras reservadas*/
 %token MY SUB OUR PACKAGE WHILE DO FOR UNTIL
@@ -204,11 +205,6 @@ funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2)
 			|	ID expresion							{$$=set(new FuncionArgs(s($1),virtualCol(s($2))));}
 			|	ID										{$$=set(new FuncionNoArgs(s($1)));}
 
-regulares	:	expresion STR_NO_REX M_REGEX			{$$=set(new RegularNoMatch(s($1),s($2),s($3)));}
-			|	expresion STR_REX M_REGEX				{$$=set(new RegularMatch(s($1),s($2),s($3)));}
-			|	expresion STR_REX S_REGEX				{$$=set(new RegularSubs(s($1),s($2),s($3)));}
-			|	expresion STR_REX Y_REGEX				{$$=set(new RegularTrans(s($1),s($2),s($3)));}
-
 binario		:	expresion '|' expresion					{$$=set(new BinOr(s($1),s($2),s($3)));}
 			|	expresion '&' expresion					{$$=set(new BinAnd(s($1),s($2),s($3)));}
 			|	'~' expresion							{$$=set(new BinNot(s($1),s($2)));}
@@ -256,11 +252,27 @@ aritmetica	:	expresion '+' expresion					{$$=set(new AritSuma(s($1),s($2),s($3))
 			|	MENOS_MENOS expresion					{$$=set(new AritPreDecremento(s($1),s($2)));}
 			|	expresion MAS_MAS						{$$=set(new AritPostIncremento(s($1),s($2)));}
 			|	expresion MENOS_MENOS					{$$=set(new AritPostDecremento(s($1),s($2)));}
-
-abrirBloque :											{$$=set(new AbrirBloque());}
 			
-listaFor	:											{$$=set(new Lista());}
-			|	lista									{$$=$1;}
+regulares	:	expresion STR_REX M_REX REX_SEP rexPatron REX_SEP rexMod						{$$=set(new RegularMatch(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
+			|	expresion STR_REX REX_SEP rexPatron REX_SEP rexMod								{$$=set(new RegularMatch(s($1),s($2),null ,s($3),s($4),s($5),s($6)));}
+			|	expresion STR_NO_REX M_REX REX_SEP rexPatron REX_SEP rexMod						{$$=set(new RegularNoMatch(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
+			|	expresion STR_NO_REX REX_SEP rexPatron REX_SEP rexMod							{$$=set(new RegularNoMatch(s($1),s($2),null ,s($3),s($4),s($5),s($6)));}
+			|	expresion STR_REX S_REX REX_SEP rexPatron REX_SEP rexPatron REX_SEP rexMod		{$$=set(new RegularSubs(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			|	expresion STR_REX Y_REX REX_SEP rexPatron REX_SEP rexPatron REX_SEP rexMod		{$$=set(new RegularTrans(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			
+rexPatron	:	rexPatronR																		{$$=set(s($1));}		
+			
+rexPatronR	:																					{$$=set(new RexPatron(),false);}
+			|	PATRON rexPatronR																{$$=set(RexPatron.add(s($2),s($1)),false);}
+			|	PATRON expresion rexPatronR 													{$$=set(RexPatron.add(s($3),s($1)).add(s($2)),false);}
+			
+rexMod		:																					{$$=null;}
+			|	REX_MOD																			{$$=$1;}
+
+abrirBloque :																					{$$=set(new AbrirBloque());}
+			
+listaFor	:																					{$$=set(new Lista());}
+			|	lista																			{$$=$1;}
 			
 bloque		:	'{' cuerpoNV '}'																{$$=set(new BloqueVacio(s($1),s($2),s($3)));}
 			|	WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}

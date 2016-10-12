@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Raiz;
 import perldoop.modelo.generacion.TablaGenerador;
 
 /**
- * Clase generadora de paquetes
+ * Clase generadora de raiz
  *
  * @author César Pomar
  */

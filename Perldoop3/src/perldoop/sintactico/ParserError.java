@@ -72,9 +72,6 @@ public class ParserError {
             case Parser.CADENA_SIMPLE:
             case Parser.CADENA_DOBLE:
             case Parser.CADENA_COMANDO:
-            case Parser.M_REGEX:
-            case Parser.S_REGEX:
-            case Parser.Y_REGEX:
                 return "EXP";
             case Parser.STDIN:
                 return "<STDIN>";

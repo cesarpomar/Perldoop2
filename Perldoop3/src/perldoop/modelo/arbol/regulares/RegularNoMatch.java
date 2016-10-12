@@ -3,86 +3,53 @@ package perldoop.modelo.arbol.regulares;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.rexpatron.RexPatron;
 
 /**
- * Clase que representa la reduccion -&gt; regulares : expresion STR_NO_REX M_REGEX
+ * Clase que representa la reduccion -&gt;
+ * <br>regulares : expresion STR_NO_REX M_REX REX_SEP rexPatron REX_SEP rexMod
+ * <br>| expresion STR_NO_REX REX_SEP rexPatron REX_SEP rexMod
  *
  * @author César Pomar
  */
-public final class RegularNoMatch extends Regulares{
+public final class RegularNoMatch extends Regulares {
 
-    private Terminal expresion;
-    private Terminal noMatch;
-    private Terminal regular;
+    private Terminal id;
 
     /**
-     * Único contructor de la clase
+     * Unico contructor de la clase
      *
      * @param expresion Expresión
-     * @param noMatch No Match
-     * @param regular Expresión regular
+     * @param operador Operador
+     * @param id Id
+     * @param separadorIni Separador inicial
+     * @param patron Patron
+     * @param separadorFin Separador final
+     * @param modificadores Modificadores
      */
-    public RegularNoMatch(Terminal expresion, Terminal noMatch, Terminal regular) {
-        setExpresion(expresion);
-        setNoMatch(noMatch);
-        setRegular(regular);
+    public RegularNoMatch(Expresion expresion, Terminal operador, Terminal id, Terminal separadorIni, RexPatron patron, Terminal separadorFin, Terminal modificadores) {
+        super(expresion, operador, separadorIni, patron, separadorFin, modificadores);
+        setId(id);
     }
 
     /**
-     * Obtiene la expresión
+     * Obtiene el id
      *
-     * @return Expresión
+     * @return Id
      */
-    public Terminal getExpresion() {
-        return expresion;
+    public Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece la expresión
+     * Establece el id
      *
-     * @param expresion Expresión
+     * @param id Id
      */
-    public void setExpresion(Terminal expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
-    }
-
-    /**
-     * Obtiene el no Match
-     *
-     * @return No match
-     */
-    public Terminal getNoMatch() {
-        return noMatch;
-    }
-
-    /**
-     * Establece el noMatch
-     *
-     * @param noMatch No match
-     */
-    public void setNoMatch(Terminal noMatch) {
-        noMatch.setPadre(this);
-        this.noMatch = noMatch;
-    }
-
-    /**
-     * Obtiene la expresión regular
-     *
-     * @return Expresión regular
-     */
-    public Terminal getRegular() {
-        return regular;
-    }
-
-    /**
-     * Establece la expresión regular
-     *
-     * @param regular Expresión regular
-     */
-    public void setRegular(Terminal regular) {
-        regular.setPadre(this);
-        this.regular = regular;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     @Override
@@ -92,6 +59,6 @@ public final class RegularNoMatch extends Regulares{
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{expresion, noMatch, regular};
+        return new Simbolo[]{expresion, operador, id, separadorIni, patron, separadorFin, modificadores};
     }
 }

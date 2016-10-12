@@ -3,86 +3,96 @@ package perldoop.modelo.arbol.regulares;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.rexpatron.RexPatron;
 
 /**
- * Clase que representa la reduccion -&gt; regulares : expresion STR_REX Y_REGEX
+ * Clase que representa la reduccion -&gt;
+ * <br>regulares : expresion STR_REX Y_REX REX_SEP rexPatron REX_SEP rexPatron REX_SEP rexMod
  *
  * @author César Pomar
  */
 public final class RegularTrans extends Regulares {
 
-    private Terminal expresion;
-    private Terminal trans;
-    private Terminal regular;
+    private Terminal id;
+    private Terminal separador;
+    private RexPatron remplazo;
 
     /**
-     * Único contructor de la clase
+     * Unico contructor de la clase
      *
      * @param expresion Expresión
-     * @param trans Transposición
-     * @param regular Expresión regular
+     * @param operador Operador
+     * @param id Id
+     * @param separadorIni Separador inicial
+     * @param patron Patron
+     * @param separador Separador
+     * @param remplazo Patron remplazo
+     * @param separadorFin Separador final
+     * @param modificadores Modificadores
      */
-    public RegularTrans(Terminal expresion, Terminal trans, Terminal regular) {
-        setExpresion(expresion);
-        setTrans(trans);
-        setRegular(regular);
+    public RegularTrans(Expresion expresion, Terminal operador, Terminal id, Terminal separadorIni, RexPatron patron, Terminal separador, RexPatron remplazo, Terminal separadorFin, Terminal modificadores) {
+        super(expresion, operador, separadorIni, patron, separadorFin, modificadores);
+        setId(id);
+        setSeparador(separador);
+        setRemplazo(remplazo);
     }
 
     /**
-     * Obtiene la expresión
+     * Obtiene el id
      *
-     * @return Expresión
+     * @return Id
      */
-    public Terminal getExpresion() {
-        return expresion;
+    public Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece la expresión
+     * Establece el id
      *
-     * @param expresion Expresión
+     * @param id Id
      */
-    public void setExpresion(Terminal expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
-     * Obtiene el transposición
+     * Obtiene el separador
      *
-     * @return Transposición
+     * @return Separador
      */
-    public Terminal getTrans() {
-        return trans;
+    public Terminal getSeparador() {
+        return separador;
     }
 
     /**
-     * Establece el transposición
+     * Establece el separador
      *
-     * @param trans Transposición
+     * @param separador Separador
      */
-    public void setTrans(Terminal trans) {
-        trans.setPadre(this);
-        this.trans = trans;
+    public void setSeparador(Terminal separador) {
+        separador.setPadre(this);
+        this.separador = separador;
     }
 
     /**
-     * Obtiene la expresión regular
+     * Obtiene el patron remplazo
      *
-     * @return Expresión regular
+     * @return Patron remplazo
      */
-    public Terminal getRegular() {
-        return regular;
+    public RexPatron getRemplazo() {
+        return remplazo;
     }
 
     /**
-     * Establece la expresión regular
+     * Establece el patron remplazo
      *
-     * @param regular Expresión regular
+     * @param remplazo Patron remplazo
      */
-    public void setRegular(Terminal regular) {
-        regular.setPadre(this);
-        this.regular = regular;
+    public void setRemplazo(RexPatron remplazo) {
+        remplazo.setPadre(this);
+        this.remplazo = remplazo;
     }
 
     @Override
@@ -92,7 +102,7 @@ public final class RegularTrans extends Regulares {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{expresion, trans, regular};
+        return new Simbolo[]{expresion, operador, id, separadorIni, patron, separador, remplazo, separadorFin, modificadores};
     }
 
 }

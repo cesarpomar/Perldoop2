@@ -3,86 +3,96 @@ package perldoop.modelo.arbol.regulares;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.rexpatron.RexPatron;
 
 /**
- * Clase que representa la reduccion -&gt; regulares : expresion STR_REX S_REGEX
+ * Clase que representa la reduccion -&gt;
+ * <br>regulares : expresion STR_REX S_REX REX_SEP rexPatron REX_SEP rexPatron REX_SEP rexMod
  *
  * @author César Pomar
  */
 public final class RegularSubs extends Regulares {
 
-    private Terminal expresion;
-    private Terminal subs;
-    private Terminal regular;
+    private Terminal id;
+    private Terminal separador;
+    private RexPatron remplazo;
 
     /**
-     * Único contructor de la clase
+     * Unico contructor de la clase
      *
      * @param expresion Expresión
-     * @param subs Substitución
-     * @param regular Expresión regular
+     * @param operador Operador
+     * @param id Id
+     * @param separadorIni Separador inicial
+     * @param patron Patron
+     * @param separador Separador
+     * @param remplazo Patron remplazo
+     * @param separadorFin Separador final
+     * @param modificadores Modificadores
      */
-    public RegularSubs(Terminal expresion, Terminal subs, Terminal regular) {
-        setExpresion(expresion);
-        setSubs(subs);
-        setRegular(regular);
+    public RegularSubs(Expresion expresion, Terminal operador, Terminal id, Terminal separadorIni, RexPatron patron, Terminal separador, RexPatron remplazo, Terminal separadorFin, Terminal modificadores) {
+        super(expresion, operador, separadorIni, patron, separadorFin, modificadores);
+        setId(id);
+        setSeparador(separador);
+        setRemplazo(remplazo);
     }
 
     /**
-     * Obtiene la expresión
+     * Obtiene el id
      *
-     * @return Expresión
+     * @return Id
      */
-    public Terminal getExpresion() {
-        return expresion;
+    public Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece la expresión
+     * Establece el id
      *
-     * @param expresion Expresión
+     * @param id Id
      */
-    public void setExpresion(Terminal expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
-     * Obtiene el substitución
+     * Obtiene el separador
      *
-     * @return Substitución
+     * @return Separador
      */
-    public Terminal getSubs() {
-        return subs;
+    public Terminal getSeparador() {
+        return separador;
     }
 
     /**
-     * Establece el substitución
+     * Establece el separador
      *
-     * @param subs Substitución
+     * @param separador Separador
      */
-    public void setSubs(Terminal subs) {
-        subs.setPadre(this);
-        this.subs = subs;
+    public void setSeparador(Terminal separador) {
+        separador.setPadre(this);
+        this.separador = separador;
     }
 
     /**
-     * Obtiene la expresión regular
+     * Obtiene el patron remplazo
      *
-     * @return Expresión regular
+     * @return Patron remplazo
      */
-    public Terminal getRegular() {
-        return regular;
+    public RexPatron getRemplazo() {
+        return remplazo;
     }
 
     /**
-     * Establece la expresión regular
+     * Establece el patron remplazo
      *
-     * @param regular Expresión regular
+     * @param remplazo Patron remplazo
      */
-    public void setRegular(Terminal regular) {
-        regular.setPadre(this);
-        this.regular = regular;
+    public void setRemplazo(RexPatron remplazo) {
+        remplazo.setPadre(this);
+        this.remplazo = remplazo;
     }
 
     @Override
@@ -92,6 +102,6 @@ public final class RegularSubs extends Regulares {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{expresion, subs, regular};
+        return new Simbolo[]{expresion, operador, id, separadorIni, patron, separador, remplazo, separadorFin, modificadores};
     }
 }

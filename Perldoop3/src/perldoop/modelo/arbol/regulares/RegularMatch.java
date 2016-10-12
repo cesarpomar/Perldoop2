@@ -3,86 +3,52 @@ package perldoop.modelo.arbol.regulares;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.rexpatron.RexPatron;
 
 /**
- * Clase que representa la reduccion -&gt; regulares : expresion STR_REX M_REGEX
+ * Clase que representa la reduccion -&gt;
+ * <br>regulares : expresion STR_REX M_REX REX_SEP rexPatron REX_SEP rexMod
+ * <br>| expresion STR_REX REX_SEP rexPatron REX_SEP rexMod
  *
  * @author César Pomar
  */
-public final class RegularMatch extends Regulares{
+public final class RegularMatch extends Regulares {
 
-    private Terminal expresion;
-    private Terminal match;
-    private Terminal regular;
+    private Terminal id;
 
     /**
-     * Único contructor de la clase
-     *
+     * Unico contructor de la clase
      * @param expresion Expresión
-     * @param match Match
-     * @param regular Expresión regular
+     * @param operador Operador
+     * @param id Id
+     * @param separadorIni Separador inicial
+     * @param patron Patron
+     * @param separadorFin Separador final
+     * @param modificadores Modificadores
      */
-    public RegularMatch(Terminal expresion, Terminal match, Terminal regular) {
-        setExpresion(expresion);
-        setMatch(match);
-        setRegular(regular);
+    public RegularMatch(Expresion expresion, Terminal operador, Terminal id, Terminal separadorIni, RexPatron patron, Terminal separadorFin, Terminal modificadores) {
+        super(expresion,operador, separadorIni, patron, separadorFin, modificadores);
+        setId(id);
     }
 
     /**
-     * Obtiene la expresión
+     * Obtiene el id
      *
-     * @return Expresión
+     * @return Id
      */
-    public Terminal getExpresion() {
-        return expresion;
+    public Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece la expresión
+     * Establece el id
      *
-     * @param expresion Expresión
+     * @param id Id
      */
-    public void setExpresion(Terminal expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
-    }
-
-    /**
-     * Obtiene el match
-     *
-     * @return Match
-     */
-    public Terminal getMatch() {
-        return match;
-    }
-
-    /**
-     * Establece el match
-     *
-     * @param match Match
-     */
-    public void setMatch(Terminal match) {
-        match.setPadre(this);
-        this.match = match;
-    }
-
-    /**
-     * Obtiene la expresión regular
-     *
-     * @return Expresión regular
-     */
-    public Terminal getRegular() {
-        return regular;
-    }
-
-    /**
-     * Establece la expresión regular
-     *
-     * @param regular Expresión regular
-     */
-    public void setRegular(Terminal regular) {
-        regular.setPadre(this);
-        this.regular = regular;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     @Override
@@ -92,6 +58,6 @@ public final class RegularMatch extends Regulares{
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{expresion, match, regular};
+        return new Simbolo[]{expresion, id, separadorIni, patron, separadorFin, modificadores};
     }
 }

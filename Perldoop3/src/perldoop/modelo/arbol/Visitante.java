@@ -25,6 +25,7 @@ import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
 import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.rexpatron.RexPatron;
 
 /**
  * Interfaz para el patron Visitor
@@ -62,8 +63,8 @@ public interface Visitante {
     void visitar(StcDeclaracion s);
 
     void visitar(StcError s);
+    
     //Expresion
-
     void visitar(ExpConstante s);
 
     void visitar(ExpVariable s);
@@ -217,6 +218,9 @@ public interface Visitante {
     void visitar(RegularSubs s);
 
     void visitar(RegularTrans s);
+    
+    //RexPatron
+    void visitar(RexPatron s);
 
     //Binario
     void visitar(BinOr s);

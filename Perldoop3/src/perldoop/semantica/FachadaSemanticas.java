@@ -23,6 +23,7 @@ import perldoop.semantica.modificador.*;
 import perldoop.semantica.paquetes.*;
 import perldoop.semantica.raiz.SemRaiz;
 import perldoop.semantica.regulares.*;
+import perldoop.semantica.rexpatron.SemRexPatron;
 import perldoop.semantica.sentencia.*;
 import perldoop.semantica.variable.*;
 import perldoop.semantica.varmulti.*;
@@ -59,6 +60,7 @@ public final class FachadaSemanticas {
     private SemModificador semModificador;
     private SemRaiz semRaiz;
     private SemRegulares semRegulares;
+    private SemRexPatron semRexPatron;
     private SemSentencia semSentencia;
     private SemVariable semVariable;
     private SemVarMulti semVarMulti;
@@ -532,6 +534,27 @@ public final class FachadaSemanticas {
      */
     public void setSemRegulares(SemRegulares semRegulares) {
         this.semRegulares = semRegulares;
+    }
+
+    /**
+     * Obtiene la semantica de rexPatron
+     *
+     * @return Semantica de rexPatron
+     */
+    public SemRexPatron getSemRexPatron() {
+        if (semRexPatron == null) {
+            semRexPatron = new SemRexPatron(tabla);
+        }
+        return semRexPatron;
+    }
+
+    /**
+     * Establece la semantica de rexPatron
+     *
+     * @param semRexPatron Semantica de rexPatron
+     */
+    public void setRexPatron(SemRexPatron semRexPatron) {
+        this.semRexPatron = semRexPatron;
     }
 
     /**

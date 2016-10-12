@@ -31,12 +31,14 @@ import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
 import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.rexpatron.RexPatron;
 import perldoop.modelo.generacion.ClaseJava;
 import perldoop.modelo.semantica.TablaSimbolos;
 
 /**
+ * Generador de codigo java
  *
- * @author César
+ * @author César Pomar
  */
 public class Generador implements Visitante {
 
@@ -236,6 +238,11 @@ public class Generador implements Visitante {
     @Override
     public void visitar(ExpRegulares s) {
         fachada.getGenExpresion().visitar(s);
+    }
+
+    @Override
+    public void visitar(RexPatron s) {
+        fachada.getGenRexPatron().visitar(s);
     }
 
     @Override
