@@ -11,7 +11,6 @@ import perldoop.modelo.arbol.lista.*;
 import perldoop.modelo.arbol.modificador.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.asignacion.*;
-import perldoop.modelo.arbol.constante.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.acceso.*;
@@ -24,8 +23,10 @@ import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.numero.*;
+import perldoop.modelo.arbol.cadena.*;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.arbol.paquete.*;
-import perldoop.modelo.arbol.rexpatron.RexPatron;
 
 /**
  * Interfaz para el patron Visitor
@@ -65,9 +66,13 @@ public interface Visitante {
     void visitar(StcError s);
     
     //Expresion
-    void visitar(ExpConstante s);
+    void visitar(ExpNumero s);
+    
+    void visitar(ExpCadena s);
 
     void visitar(ExpVariable s);
+    
+    void visitar(ExpVarMulti s);
 
     void visitar(ExpAsignacion s);
 
@@ -149,16 +154,27 @@ public interface Visitante {
 
     void visitar(ConcatIgual s);
 
-    //Constante
+    //Numero
     void visitar(Entero s);
 
-    void visitar(Decimal s);
-
+    void visitar(Decimal s);    
+    
+    //Cadena
     void visitar(CadenaSimple s);
 
     void visitar(CadenaDoble s);
 
     void visitar(CadenaComando s);
+
+    void visitar(CadenaQ s);
+
+    void visitar(CadenaQW s);
+
+    void visitar(CadenaQQ s);
+
+    void visitar(CadenaQX s);
+
+    void visitar(CadenaQR s);
 
     //Variable
     void visitar(VarExistente s);
@@ -219,8 +235,8 @@ public interface Visitante {
 
     void visitar(RegularTrans s);
     
-    //RexPatron
-    void visitar(RexPatron s);
+    //CadenaTexto
+    void visitar(CadenaTexto s);
 
     //Binario
     void visitar(BinOr s);

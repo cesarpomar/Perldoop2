@@ -5,18 +5,21 @@ import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpAritmetica;
 import perldoop.modelo.arbol.expresion.ExpAsignacion;
 import perldoop.modelo.arbol.expresion.ExpBinario;
+import perldoop.modelo.arbol.expresion.ExpCadena;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpComparacion;
-import perldoop.modelo.arbol.expresion.ExpConstante;
+import perldoop.modelo.arbol.expresion.ExpNumero;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpFuncion5;
 import perldoop.modelo.arbol.expresion.ExpLogico;
 import perldoop.modelo.arbol.expresion.ExpRango;
 import perldoop.modelo.arbol.expresion.ExpRegulares;
+import perldoop.modelo.arbol.expresion.ExpVarMulti;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 
 /**
  * Clase generadora de expresion
+ *
  * @author César Pomar
  */
 public class GenExpresion {
@@ -32,8 +35,12 @@ public class GenExpresion {
         this.tabla = tabla;
     }
 
-    public void visitar(ExpConstante s) {
-        s.setCodigoGenerado(s.getConstante().getCodigoGenerado());
+    public void visitar(ExpCadena s) {
+        s.setCodigoGenerado(s.getCadena().getCodigoGenerado());
+    }
+
+    public void visitar(ExpNumero s) {
+        s.setCodigoGenerado(s.getNumero().getCodigoGenerado());
     }
 
     public void visitar(ExpVariable s) {
@@ -78,6 +85,10 @@ public class GenExpresion {
 
     public void visitar(ExpRegulares s) {
         s.setCodigoGenerado(s.getRegulares().getCodigoGenerado());
+    }
+
+    public void visitar(ExpVarMulti s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void visitar(ExpRango s) {

@@ -16,7 +16,8 @@ import perldoop.modelo.arbol.lista.*;
 import perldoop.modelo.arbol.modificador.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.asignacion.*;
-import perldoop.modelo.arbol.constante.*;
+import perldoop.modelo.arbol.numero.*;
+import perldoop.modelo.arbol.cadena.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.arbol.coleccion.*;
@@ -31,7 +32,7 @@ import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
 import perldoop.modelo.arbol.paquete.*;
-import perldoop.modelo.arbol.rexpatron.RexPatron;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.generacion.ClaseJava;
 import perldoop.modelo.semantica.TablaSimbolos;
 
@@ -181,7 +182,12 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(ExpConstante s) {
+    public void visitar(ExpNumero s) {
+        fachada.getGenExpresion().visitar(s);
+    }
+
+    @Override
+    public void visitar(ExpCadena s) {
         fachada.getGenExpresion().visitar(s);
     }
 
@@ -241,8 +247,8 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(RexPatron s) {
-        fachada.getGenRexPatron().visitar(s);
+    public void visitar(ExpVarMulti s) {
+        fachada.getGenExpresion().visitar(s);
     }
 
     @Override
@@ -387,38 +393,62 @@ public class Generador implements Visitante {
 
     @Override
     public void visitar(Entero s) {
-        fachada.getGenConstante().visitar(s);
-
+        fachada.getGenNumero().visitar(s);
     }
 
     @Override
     public void visitar(Decimal s) {
-        fachada.getGenConstante().visitar(s);
-
+        fachada.getGenNumero().visitar(s);
     }
 
     @Override
     public void visitar(CadenaSimple s) {
-        fachada.getGenConstante().visitar(s);
-
+        fachada.getGenCadena().visitar(s);
     }
 
     @Override
     public void visitar(CadenaDoble s) {
-        fachada.getGenConstante().visitar(s);
-
+        fachada.getGenCadena().visitar(s);
     }
 
     @Override
     public void visitar(CadenaComando s) {
-        fachada.getGenConstante().visitar(s);
+        fachada.getGenCadena().visitar(s);
+    }
 
+    @Override
+    public void visitar(CadenaQ s) {
+        fachada.getGenCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaQW s) {
+        fachada.getGenCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaQQ s) {
+        fachada.getGenCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaQX s) {
+        fachada.getGenCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaQR s) {
+        fachada.getGenCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaTexto s) {
+        fachada.getGenCadenaTexto().visitar(s);
     }
 
     @Override
     public void visitar(VarExistente s) {
         fachada.getGenVariable().visitar(s);
-
     }
 
     @Override

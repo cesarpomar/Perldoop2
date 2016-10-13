@@ -3,7 +3,7 @@ package perldoop.modelo.arbol.regulares;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.rexpatron.RexPatron;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 
 /**
  * Clase abtracta que representa todas las reduciones de regulares
@@ -15,7 +15,7 @@ public abstract class Regulares extends Simbolo {
     protected Expresion expresion;
     protected Terminal operador;
     protected Terminal separadorIni;
-    protected RexPatron patron;
+    protected CadenaTexto patron;
     protected Terminal separadorFin;
     protected Terminal modificadores;
 
@@ -29,7 +29,7 @@ public abstract class Regulares extends Simbolo {
      * @param separadorFin Separador final
      * @param modificadores Modificadores
      */
-    public Regulares(Expresion expresion, Terminal operador, Terminal separadorIni, RexPatron patron, Terminal separadorFin, Terminal modificadores) {
+    public Regulares(Expresion expresion, Terminal operador, Terminal separadorIni, CadenaTexto patron, Terminal separadorFin, Terminal modificadores) {
         setExpresion(expresion);
         setOperador(operador);
         setSeparadorIni(separadorIni);
@@ -99,7 +99,7 @@ public abstract class Regulares extends Simbolo {
      *
      * @return patron
      */
-    public final RexPatron getPatron() {
+    public final CadenaTexto getPatron() {
         return patron;
     }
 
@@ -108,7 +108,7 @@ public abstract class Regulares extends Simbolo {
      *
      * @param patron Patron
      */
-    public final void setPatron(RexPatron patron) {
+    public final void setPatron(CadenaTexto patron) {
         patron.setPadre(this);
         this.patron = patron;
     }
@@ -147,8 +147,10 @@ public abstract class Regulares extends Simbolo {
      * @param modificadores Modificiadores
      */
     public final void setModificadores(Terminal modificadores) {
-        modificadores.setPadre(this);
-        this.modificadores = modificadores;
+        if (modificadores != null) {
+            modificadores.setPadre(this);
+            this.modificadores = modificadores;
+        }
     }
 
 }

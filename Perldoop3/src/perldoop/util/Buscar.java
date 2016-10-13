@@ -7,15 +7,19 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.asignacion.Igual;
+import perldoop.modelo.arbol.cadena.Cadena;
+import perldoop.modelo.arbol.cadena.CadenaComando;
+import perldoop.modelo.arbol.cadena.CadenaDoble;
+import perldoop.modelo.arbol.cadena.CadenaSimple;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.coleccion.Coleccion;
-import perldoop.modelo.arbol.constante.CadenaComando;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpAsignacion;
+import perldoop.modelo.arbol.expresion.ExpCadena;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.ExpConstante;
+import perldoop.modelo.arbol.expresion.ExpNumero;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
@@ -109,9 +113,15 @@ public final class Buscar {
      * @return comprobacion
      */
     public static boolean isConstante(Simbolo s) {
-        if (s instanceof ExpConstante) {
-            if (!(((ExpConstante) s).getConstante() instanceof CadenaComando)) {
+        if (s instanceof ExpNumero) {
+            return true;
+        } else if (s instanceof ExpCadena) {
+            Cadena c = ((ExpCadena) s).getCadena();
+            if (c instanceof CadenaSimple) {
                 return true;
+            } else if (c instanceof CadenaDoble) {
+                List<Simbolo> elems = ((CadenaDoble) c).getTexto().getElementos();
+                return elems.isEmpty() || (elems.size() == 1 && elems.get(0) instanceof Terminal);
             }
         }
         return false;
@@ -145,7 +155,7 @@ public final class Buscar {
      * @return comprobacion
      */
     public static boolean isNotNull(Simbolo s) {
-        if(!(s instanceof Expresion)){
+        if (!(s instanceof Expresion)) {
             s = s.getPadre();
         }
         if (s instanceof ExpAcceso) {

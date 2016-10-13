@@ -21,8 +21,12 @@ public class SemExpresion {
         this.tabla = tabla;
     }
 
-    public void visitar(ExpConstante s) {
-        s.setTipo(s.getConstante().getTipo());
+    public void visitar(ExpNumero s) {
+        s.setTipo(s.getNumero().getTipo());
+    }
+
+    public void visitar(ExpCadena s) {
+        s.setTipo(s.getCadena().getTipo());
     }
 
     public void visitar(ExpVariable s) {
@@ -67,6 +71,10 @@ public class SemExpresion {
 
     public void visitar(ExpRegulares s) {
         s.setTipo(s.getRegulares().getTipo());
+    }
+
+    public void visitar(ExpVarMulti s) {
+        s.setTipo(s.getVariables().getTipo());
     }
 
     public void visitar(ExpRango s) {

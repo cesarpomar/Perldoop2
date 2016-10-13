@@ -16,7 +16,8 @@ import perldoop.modelo.arbol.lista.*;
 import perldoop.modelo.arbol.modificador.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.asignacion.*;
-import perldoop.modelo.arbol.constante.*;
+import perldoop.modelo.arbol.numero.*;
+import perldoop.modelo.arbol.cadena.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.arbol.paquete.*;
@@ -27,11 +28,11 @@ import perldoop.modelo.arbol.abrirbloque.*;
 import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.regulares.*;
-import perldoop.modelo.arbol.rexpatron.*;
 import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 %}
 
 /*Tokens etiquetas del preprocesador, nunca deben llegar al analizador*/
@@ -40,11 +41,12 @@ import perldoop.modelo.arbol.aritmetica.*;
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
 %token ID VAR
-%token ENTERO DECIMAL CADENA_SIMPLE CADENA_DOBLE CADENA_COMANDO M_REX S_REX Y_REX PATRON REX_MOD REX_SEP STDIN STDOUT STDERR
+%token ENTERO DECIMAL M_REX S_REX Y_REX TEXTO REX_MOD SEP STDIN STDOUT STDERR
 
 /*Palabras reservadas*/
 %token MY SUB OUR PACKAGE WHILE DO FOR UNTIL
 %token IF ELSIF ELSE UNLESS LAST NEXT RETURN
+%token Q QQ QR QW QX 
 
 /*Prioridades*/
 %left LLOR LLXOR
@@ -103,9 +105,10 @@ sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)
 			|	DECLARACION_TIPO						{$$=set(new StcDeclaracion(s($1)));}
 			|	error	';'								{$$=set(new StcError());}
 
-expresion	:	constante								{$$=set(new ExpConstante(s($1)));} 
+expresion	:	numero									{$$=set(new ExpNumero(s($1)));} 
+			|	cadena									{$$=set(new ExpCadena(s($1)));} 
 			|	variable								{$$=set(new ExpVariable(s($1)));} 
-			|	varMulti								{}
+			|	varMulti								{$$=set(new ExpVarMulti(s($1)));}
 			|	asignacion								{$$=set(new ExpAsignacion(s($1)));}  
 			|	binario									{$$=set(new ExpBinario(s($1)));} 
 			|	aritmetica								{$$=set(new ExpAritmetica(s($1)));} 
@@ -115,12 +118,14 @@ expresion	:	constante								{$$=set(new ExpConstante(s($1)));}
 			|	acceso									{$$=set(new ExpAcceso(s($1)));} 
 			|	funcion									{$$=set(new ExpFuncion(s($1)));} 
 			|	'&' funcion %prec UNITARIO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
-			|	regulares								{$$=set(new ExpRegulares(s($1)));} 
+			|	regulares								{$$=set(new ExpRegulares(s($1)));}
 			|	expresion DOS_PUNTOS expresion			{$$=set(new ExpRango(s($1),s($2),s($3)));}
+			
+lista		:	listaR									{$$=set(s($1));}
 
-lista		:	expresion ',' lista						{$$=set(Lista.add(s($1), s($2), s($3)), false);}
-			|	expresion ','							{$$=set(new Lista(s($1), s($2)));}
-			|	expresion								{$$=set(new Lista(s($1)));}
+listaR		:	expresion ',' listaR					{$$=set(Lista.add(s($1), s($2), s($3)), false);}
+			|	expresion ','							{$$=set(new Lista(s($1), s($2)), false);}
+			|	expresion								{$$=set(new Lista(s($1)), false);}
 
 modificador :											{$$=set(new ModNada());}
 			|	IF expresion							{$$=set(new ModIf(s($1), s($2)));}
@@ -152,11 +157,23 @@ asignacion	:   expresion '=' expresion					{$$=set(new Igual(s($1),s($2),s($3)))
 			|	expresion X_IGUAL expresion				{$$=set(new XIgual(s($1),s($2),s($3)));}
 			|	expresion CONCAT_IGUAL expresion		{$$=set(new ConcatIgual(s($1),s($2),s($3)));}
 
-constante	:	ENTERO									{$$=set(new Entero(s($1)));}
+numero		:	ENTERO									{$$=set(new Entero(s($1)));}
 			|	DECIMAL									{$$=set(new Decimal(s($1)));}
-			|	CADENA_SIMPLE							{$$=set(new CadenaSimple(s($1)));}
-			|	CADENA_DOBLE							{$$=set(new CadenaDoble(s($1)));}
-			|	CADENA_COMANDO 							{$$=set(new CadenaComando(s($1)));}  
+			
+cadena		:	'\'' TEXTO '\''							{$$=set(new CadenaSimple(s($1),s($2),s($3)));}
+			|	'"' cadenaTexto '"'						{$$=set(new CadenaDoble(s($1),s($2),s($3)));}
+			|	'`' cadenaTexto '`'						{$$=set(new CadenaComando(s($1),s($2),s($3)));}	
+			|	Q SEP TEXTO SEP							{$$=set(new CadenaQ(s($1),s($2),s($3),s($4)));}	 
+			|	QW SEP TEXTO SEP						{$$=set(new CadenaQW(s($1),s($2),s($3),s($4)));}	  
+			|	QQ SEP cadenaTexto SEP					{$$=set(new CadenaQQ(s($1),s($2),s($3),s($4)));}	  
+			|	QR SEP cadenaTexto SEP					{$$=set(new CadenaQR(s($1),s($2),s($3),s($4)));}	  
+			|	QX SEP cadenaTexto SEP					{$$=set(new CadenaQX(s($1),s($2),s($3),s($4)));}	  
+
+cadenaTexto :	cadenaTextoR							{$$=set(s($1));}	
+			
+cadenaTextoR:											{$$=set(new CadenaTexto(),false);}
+			|	cadenaTextoR variable 					{$$=set(CadenaTexto.add(s($1),s($2)),false);}
+			|	cadenaTextoR TEXTO						{$$=set(CadenaTexto.add(s($1),s($2)),false);}			
 
 variable	:	'$' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
 			|	'@' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
@@ -253,20 +270,14 @@ aritmetica	:	expresion '+' expresion					{$$=set(new AritSuma(s($1),s($2),s($3))
 			|	expresion MAS_MAS						{$$=set(new AritPostIncremento(s($1),s($2)));}
 			|	expresion MENOS_MENOS					{$$=set(new AritPostDecremento(s($1),s($2)));}
 			
-regulares	:	expresion STR_REX M_REX REX_SEP rexPatron REX_SEP rexMod						{$$=set(new RegularMatch(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
-			|	expresion STR_REX REX_SEP rexPatron REX_SEP rexMod								{$$=set(new RegularMatch(s($1),s($2),null ,s($3),s($4),s($5),s($6)));}
-			|	expresion STR_NO_REX M_REX REX_SEP rexPatron REX_SEP rexMod						{$$=set(new RegularNoMatch(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
-			|	expresion STR_NO_REX REX_SEP rexPatron REX_SEP rexMod							{$$=set(new RegularNoMatch(s($1),s($2),null ,s($3),s($4),s($5),s($6)));}
-			|	expresion STR_REX S_REX REX_SEP rexPatron REX_SEP rexPatron REX_SEP rexMod		{$$=set(new RegularSubs(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
-			|	expresion STR_REX Y_REX REX_SEP rexPatron REX_SEP rexPatron REX_SEP rexMod		{$$=set(new RegularTrans(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+regulares	:	expresion STR_REX M_REX SEP cadenaTexto SEP rexMod								{$$=set(new RegularMatch(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
+			|	expresion STR_REX SEP cadenaTexto SEP rexMod									{$$=set(new RegularMatch(s($1),s($2),null ,s($3),s($4),s($5),s($6)));}
+			|	expresion STR_NO_REX M_REX SEP cadenaTexto SEP rexMod							{$$=set(new RegularNoMatch(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
+			|	expresion STR_NO_REX SEP cadenaTexto SEP rexMod									{$$=set(new RegularNoMatch(s($1),s($2),null ,s($3),s($4),s($5),s($6)));}
+			|	expresion STR_REX S_REX SEP cadenaTexto SEP cadenaTexto SEP rexMod				{$$=set(new RegularSubs(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			|	expresion STR_REX Y_REX SEP cadenaTexto SEP cadenaTexto SEP rexMod				{$$=set(new RegularTrans(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
 			
-rexPatron	:	rexPatronR																		{$$=set(s($1));}		
-			
-rexPatronR	:																					{$$=set(new RexPatron(),false);}
-			|	PATRON rexPatronR																{$$=set(RexPatron.add(s($2),s($1)),false);}
-			|	PATRON expresion rexPatronR 													{$$=set(RexPatron.add(s($3),s($1)).add(s($2)),false);}
-			
-rexMod		:																					{$$=null;}
+rexMod		:																					{$$=set(null,false);}
 			|	REX_MOD																			{$$=$1;}
 
 abrirBloque :																					{$$=set(new AbrirBloque());}

@@ -9,7 +9,7 @@ import perldoop.lib.file.Fwrite;
  *
  * @author César Pomar
  */
-public class PerlFile {
+public final class PerlFile {
 
     private Fread read;
     private Fwrite write;

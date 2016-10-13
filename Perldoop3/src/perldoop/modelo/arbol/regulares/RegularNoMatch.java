@@ -3,8 +3,8 @@ package perldoop.modelo.arbol.regulares;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.rexpatron.RexPatron;
 
 /**
  * Clase que representa la reduccion -&gt;
@@ -28,7 +28,7 @@ public final class RegularNoMatch extends Regulares {
      * @param separadorFin Separador final
      * @param modificadores Modificadores
      */
-    public RegularNoMatch(Expresion expresion, Terminal operador, Terminal id, Terminal separadorIni, RexPatron patron, Terminal separadorFin, Terminal modificadores) {
+    public RegularNoMatch(Expresion expresion, Terminal operador, Terminal id, Terminal separadorIni, CadenaTexto patron, Terminal separadorFin, Terminal modificadores) {
         super(expresion, operador, separadorIni, patron, separadorFin, modificadores);
         setId(id);
     }
@@ -48,8 +48,10 @@ public final class RegularNoMatch extends Regulares {
      * @param id Id
      */
     public void setId(Terminal id) {
-        id.setPadre(this);
-        this.id = id;
+        if (id != null) {
+            id.setPadre(this);
+            this.id = id;
+        }
     }
 
     @Override
@@ -59,6 +61,9 @@ public final class RegularNoMatch extends Regulares {
 
     @Override
     public Simbolo[] getHijos() {
+        if (id == null) {
+            return new Simbolo[]{expresion, operador, separadorIni, patron, separadorFin, modificadores};
+        }
         return new Simbolo[]{expresion, operador, id, separadorIni, patron, separadorFin, modificadores};
     }
 }

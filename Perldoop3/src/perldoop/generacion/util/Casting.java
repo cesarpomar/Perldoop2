@@ -2,6 +2,8 @@ package perldoop.generacion.util;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.expresion.ExpRegulares;
+import perldoop.modelo.arbol.regulares.RegularMatch;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
@@ -22,7 +24,10 @@ public final class Casting {
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                if (Buscar.isNotNull(s)) {
+                if(s instanceof ExpRegulares && ((ExpRegulares)s).getRegulares() instanceof RegularMatch){
+                    //Optimizacion para expresiones regulares, en caso de boolean usamos un match rapido
+                    return cst.append("simpleM").append(s.getCodigoGenerado().substring(1));
+                }else if (Buscar.isNotNull(s)) {
                     return cst.append("(").append(s.getCodigoGenerado()).append(".length > 0)");
                 } else {
                     return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");

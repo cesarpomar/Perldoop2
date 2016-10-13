@@ -1,7 +1,9 @@
 package perldoop.lib;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Scanner;
 import perldoop.lib.util.Union;
 
 /**
@@ -9,7 +11,7 @@ import perldoop.lib.util.Union;
  *
  * @author César Pomar
  */
-public class Pd {
+public final class Pd {
 
     /**
      * Crea una union para concatenar
@@ -170,6 +172,23 @@ public class Pd {
      */
     public static Boolean checkNull(Boolean bool) {
         return bool == null ? false : bool;
+    }
+
+    /**
+     * Ejecuta un comando en el shell del sistema
+     *
+     * @param cmd Comando
+     * @return Salida del comando
+     */
+    public static String cmd(String cmd) {
+        try {
+            Process exec = Runtime.getRuntime().exec(cmd);
+            exec.waitFor();
+            Scanner s = new Scanner(exec.getInputStream()).useDelimiter("\\A");
+            return s.hasNext() ? s.next() : "";
+        } catch (IOException | InterruptedException ex) {
+            return "";
+        }
     }
 
 }

@@ -6,13 +6,13 @@ import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Asignacion;
-import perldoop.modelo.arbol.constante.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
+import perldoop.util.Buscar;
 
 /**
  * Clase generadora de sentencia
@@ -50,9 +50,8 @@ public class GenSentencia {
                 } else {
                     continue;//Las lecturas de variables no sirven para nada
                 }
-            } else if (exp instanceof ExpConstante) {
-                Constante cst = ((ExpConstante) exp).getConstante();
-                if (cst instanceof CadenaComando) {
+            } else if (exp instanceof ExpNumero || exp instanceof ExpCadena) {
+                if (!Buscar.isConstante(exp)) {
                     sentencia = true;
                 } else {
                     continue;//Las constantes no sirven para nada

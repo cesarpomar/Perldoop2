@@ -1,5 +1,6 @@
 package perldoop.semantica;
 
+import perldoop.semantica.cadena.SemCadena;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.semantica.abrirbloque.*;
 import perldoop.semantica.acceso.*;
@@ -7,10 +8,10 @@ import perldoop.semantica.aritmetica.*;
 import perldoop.semantica.asignacion.*;
 import perldoop.semantica.binario.*;
 import perldoop.semantica.bloque.*;
+import perldoop.semantica.cadenatexto.SemCadenaTexto;
 import perldoop.semantica.coleccion.*;
 import perldoop.semantica.comparacion.*;
 import perldoop.semantica.condicional.*;
-import perldoop.semantica.constante.*;
 import perldoop.semantica.cuerpo.*;
 import perldoop.semantica.expresion.*;
 import perldoop.semantica.flujo.*;
@@ -20,10 +21,10 @@ import perldoop.semantica.funcionsub.*;
 import perldoop.semantica.lista.*;
 import perldoop.semantica.logico.*;
 import perldoop.semantica.modificador.*;
+import perldoop.semantica.numero.SemNumero;
 import perldoop.semantica.paquetes.*;
 import perldoop.semantica.raiz.SemRaiz;
 import perldoop.semantica.regulares.*;
-import perldoop.semantica.rexpatron.SemRexPatron;
 import perldoop.semantica.sentencia.*;
 import perldoop.semantica.variable.*;
 import perldoop.semantica.varmulti.*;
@@ -47,7 +48,8 @@ public final class FachadaSemanticas {
     private SemColeccion semColeccion;
     private SemComparacion semComparacion;
     private SemCondicional semCondicional;
-    private SemConstante semConstante;
+    private SemNumero semNumero;
+    private SemCadena semCadena;
     private SemCuerpo semCuerpo;
     private SemExpresion semExpresion;
     private SemFlujo semFlujo;
@@ -60,7 +62,7 @@ public final class FachadaSemanticas {
     private SemModificador semModificador;
     private SemRaiz semRaiz;
     private SemRegulares semRegulares;
-    private SemRexPatron semRexPatron;
+    private SemCadenaTexto semCadenaTexto;
     private SemSentencia semSentencia;
     private SemVariable semVariable;
     private SemVarMulti semVarMulti;
@@ -264,24 +266,45 @@ public final class FachadaSemanticas {
     }
 
     /**
-     * Obtiene la semantica de constante
+     * Obtiene la semantica de numero
      *
-     * @return Semantica de constante
+     * @return Semantica de numero
      */
-    public SemConstante getSemConstante() {
-        if (semConstante == null) {
-            semConstante = new SemConstante(tabla);
+    public SemNumero getSemNumero() {
+        if (semNumero == null) {
+            semNumero = new SemNumero(tabla);
         }
-        return semConstante;
+        return semNumero;
     }
 
     /**
-     * Establece la semantica de constante
+     * Establece la semantica de numero
      *
-     * @param semConstante Semantica de constante
+     * @param semCadena Semantica de numero
      */
-    public void setSemConstante(SemConstante semConstante) {
-        this.semConstante = semConstante;
+    public void setSemNumero(SemNumero semCadena) {
+        this.semNumero = semCadena;
+    }
+
+    /**
+     * Obtiene la semantica de cadena
+     *
+     * @return Semantica de cadena
+     */
+    public SemCadena getSemCadena() {
+        if (semCadena == null) {
+            semCadena = new SemCadena(tabla);
+        }
+        return semCadena;
+    }
+
+    /**
+     * Establece la semantica de cadena
+     *
+     * @param semCadena Semantica de cadena
+     */
+    public void setSemCadena(SemCadena semCadena) {
+        this.semCadena = semCadena;
     }
 
     /**
@@ -537,24 +560,24 @@ public final class FachadaSemanticas {
     }
 
     /**
-     * Obtiene la semantica de rexPatron
+     * Obtiene la semantica de cadenaTexto
      *
-     * @return Semantica de rexPatron
+     * @return Semantica de cadenaTexto
      */
-    public SemRexPatron getSemRexPatron() {
-        if (semRexPatron == null) {
-            semRexPatron = new SemRexPatron(tabla);
+    public SemCadenaTexto getSemCadenaTexto() {
+        if (semCadenaTexto == null) {
+            semCadenaTexto = new SemCadenaTexto(tabla);
         }
-        return semRexPatron;
+        return semCadenaTexto;
     }
 
     /**
-     * Establece la semantica de rexPatron
+     * Establece la semantica de cadenaTexto
      *
-     * @param semRexPatron Semantica de rexPatron
+     * @param semCadenaTexto Semantica de cadenaTexto
      */
-    public void setRexPatron(SemRexPatron semRexPatron) {
-        this.semRexPatron = semRexPatron;
+    public void setRexPatron(SemCadenaTexto semCadenaTexto) {
+        this.semCadenaTexto = semCadenaTexto;
     }
 
     /**

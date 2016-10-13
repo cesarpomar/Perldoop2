@@ -17,20 +17,24 @@ import perldoop.modelo.Opciones;
 %line
 %column
 %char
-%state VAR FUN PD REX_T REX_SEP REX_SEP_BLOCK REX_P REX_M REX_VAR
+%state VAR FUN PD IGNORAR DELIMITADOR DELIMITADOR_DOBLE ANALISIS ANALISIS_VAR REX_T REX_MOD
 
 %{
+	private Token yyval;
+	private Token tokenAux;
+	private Opciones opciones;
+	private GestorErrores gestorErrores;
+	private int errores;
+	
+	/*Atributos para interpolar*/
 	private StringBuilder buffer;
 	private Character sepBlock;
 	private char sep;
 	private int stack;
 	private int rexN;
 	private boolean interpola;
-	private Token yyval;
-	private Token tokenAux;
-	private Opciones opciones;
-	private GestorErrores gestorErrores;
-	private int errores;
+	private int estadoReturn;
+	private int analisisTipo;
 
 	/**
 	 * Constructor del analizador léxico
@@ -149,6 +153,30 @@ import perldoop.modelo.Opciones;
 		errores++;
 		token(0);
 		gestorErrores.error(Errores.CARACTER_INVALIDO, yyval);	
+		yybegin(YYINITIAL);
+	}
+
+	/**
+	 * Analiza el interior de una expresion delimitada
+	 *
+	 * @param analisisTipo Tipo de tokens a retornar
+	 * @param estadoReturn Estado de cambio al terminar
+	 * @param rexN Numero de delimitadores
+	 * @param interpola Interpolar las variables
+	 */	
+	private void analizar(int analisisTipo, int estadoReturn, int rexN, Character sep, boolean interpola){
+		stack=0;
+		tokenAux=null;
+		this.analisisTipo = analisisTipo;
+		this.estadoReturn = estadoReturn;
+		this.rexN = rexN;
+		this.interpola = interpola;	
+		if(sep==null){
+			yybegin(DELIMITADOR);	
+		}else{
+			this.sep=sep;
+			yybegin(ANALISIS);			
+		}
 	}
 	
 %}
@@ -161,12 +189,9 @@ ENTERO			=	({NATURAL} | {HEXADECIMAL} | {OCTAL} | {BINARIO} | 0)
 FLOTANTE		=	(([0-9]*\.[0-9]+)|([0-9]+\.[0-9]*))
 CIENTIFICO		=	({NATURAL}|{FLOTANTE})[eE](\+-)?{NATURAL}
 DECIMAL			=	({FLOTANTE}|{CIENTIFICO})
-CADENA_SIMPLE	=	\'([^\'\n]|(\\.))*\'
-CADENA_DOBLE	=	\"([^\"\n]|(\\.))*\"
-CADENA_COMANDO	=	`([^`\n]|(\\.))*`
 
 IGNORAR_LINEA	=	.*\#<ignore-line>
-IGNORAR_BLOQUE	=	\#<ignore-block>\n[^]*\#<ignore-block>
+IGNORAR_BLOQUE	=	<ignore-block>
 IMPORT_JAVA		=	\#<java-import>.*
 LINEA_JAVA		=	\#<java-line>.*
 
@@ -192,6 +217,17 @@ PD_NUM			=	<{ENTERO}>
 }
 
 <YYINITIAL>{
+
+		/*----Quote-Like Operators----*/
+	"'"					{analizar('\'', YYINITIAL, 1, '\'', false);return token('\'');}
+	"\""				{analizar('"',  YYINITIAL, 1, '"',  true); return token('"');}
+	"`"					{analizar('`',  YYINITIAL, 1, '`',  true); return token('`');}
+	"q"					{analizar(Parser.SEP, YYINITIAL, 2, null, false);return token(Parser.Q);}
+	"qw"				{analizar(Parser.SEP, YYINITIAL, 2, null, false);return token(Parser.QW);}
+	"qq"				{analizar(Parser.SEP, YYINITIAL, 2, null, true);return token(Parser.QQ);}
+	"qr"				{analizar(Parser.SEP, YYINITIAL, 2, null, true);return token(Parser.QR);}
+	"qx"				{analizar(Parser.SEP, YYINITIAL, 2, null, true);return token(Parser.QX);}
+
 		/*----Identificador----*/
 	"\$"				{yybegin(VAR);return token('$');}
 	"@"					{yybegin(VAR);return token('@');}
@@ -202,12 +238,9 @@ PD_NUM			=	<{ENTERO}>
 						if(tipo==Parser.SUB) yybegin(VAR);
 						return token(txt, tipo);}
 
-		/*----Constantes----*/
+		/*----Numeros----*/
 	{ENTERO}			{return token(Parser.ENTERO);}
 	{DECIMAL}			{return token(Parser.DECIMAL);}
-	{CADENA_SIMPLE}		{return token(Parser.CADENA_SIMPLE);}
-	{CADENA_DOBLE}		{return token(Parser.CADENA_DOBLE);}
-	{CADENA_COMANDO}	{return token(Parser.CADENA_COMANDO);}
 
 		/*----Operadores----*/
 	"\+"				{return token('+');}
@@ -270,7 +303,7 @@ PD_NUM			=	<{ENTERO}>
 	"::"				{return token(Parser.AMBITO);}
 	"\\"				{return token('\\');}
 	"->"				{return token(Parser.FLECHA);}
-
+	
 		/*----Expresiones regualares----*/
 	"=~"				{yybegin(REX_T);return token(Parser.STR_REX);}
 	"!~"				{yybegin(REX_T);return token(Parser.STR_NO_REX);}	
@@ -285,28 +318,39 @@ PD_NUM			=	<{ENTERO}>
 	"\#"				{yybegin(PD);token("", Parser.COMENTARIO, true);
 						tokenAux=yyval;buffer.setLength(0);}
 	{IGNORAR_LINEA}		{}
-	{IGNORAR_BLOQUE}	{}
+	\#{IGNORAR_BLOQUE}	{yybegin(IGNORAR);}
 	{IMPORT_JAVA}		{return token(Parser.IMPORT_JAVA);}
 	{LINEA_JAVA}		{return token(Parser.LINEA_JAVA);}
 }
 
+<IGNORAR>{
+	[^]					{}
+	{IGNORAR_BLOQUE}.*	{yybegin(YYINITIAL);}
+}
 
-<REX_T>{
-	"m"					{tokenAux=null;yybegin(REX_SEP);rexN=2;stack=0;interpola=true;return token(Parser.M_REX);}
-	"/"					{tokenAux=null;yybegin(REX_P);sep='/';rexN=1;stack=0;interpola=true;return token(Parser.REX_SEP);}
-	"\""				{tokenAux=null;yybegin(REX_P);sep='"';rexN=1;stack=0;interpola=true;return token(Parser.REX_SEP);}
-	"s"					{tokenAux=null;yybegin(REX_SEP);rexN=3;stack=0;interpola=true;return token(Parser.S_REX);}
-	"y"					{tokenAux=null;yybegin(REX_SEP);rexN=3;stack=0;interpola=false;return token(Parser.Y_REX);}
-	"tr"				{tokenAux=null;yybegin(REX_SEP);rexN=3;stack=0;interpola=false;return token(Parser.Y_REX);}
+
+<REX_T>{				
+	"m"					{analizar(Parser.SEP, REX_MOD, 2, null, true);return token(Parser.M_REX);}
+	"/"					{analizar(Parser.SEP, REX_MOD, 1, '/', true);return token(Parser.SEP);}
+	"\""				{analizar(Parser.SEP, REX_MOD, 1, '"', true);return token(Parser.SEP);}
+	"s"					{analizar(Parser.SEP, REX_MOD, 3, null, true);return token(Parser.S_REX);}
+	"y"					{analizar(Parser.SEP, REX_MOD, 3, null, false);return token(Parser.Y_REX);}
+	"tr"				{analizar(Parser.SEP, REX_MOD, 3, null, false);return token(Parser.Y_REX);}
 	[\s]				{}
 	[^]					{error();}
 }
 
-<REX_SEP>{
+<REX_MOD>{
+	[a-z]+				{yybegin(YYINITIAL);return token(Parser.REX_MOD);}
+	[^]					{yybegin(YYINITIAL);yypushback(1);}
+}
+
+<DELIMITADOR>{
+	[\s]				{}
 	.					{
-							yybegin(REX_P);
+							yybegin(ANALISIS);
 							rexN--;
-							sep=yytext().charAt(0);
+							sep=yycharat(0);
 							switch(sep){
 								case '(': sepBlock='('; sep=')'; break;
 								case '{': sepBlock='{'; sep='}'; break;
@@ -314,18 +358,28 @@ PD_NUM			=	<{ENTERO}>
 								case '\'': interpola=false; break;
 								default: sepBlock=null;
 							}
-							return token(Parser.REX_SEP);}
-	[\s]				{}
+							return token(analisisTipo);}
 }
 
-<REX_SEP_BLOCK>{
-	[^]					{if(yytext().charAt(0) == sepBlock){yybegin(REX_P);yyval.setValor(""+sep+sepBlock); return yyval.getTipo();}else{errores++;token(0);gestorErrores.error(Errores.CARACTER_INVALIDO, yyval);}}
-}
-
-<REX_P>{
-	\\[^]				{if(tokenAux==null){token(Parser.PATRON);tokenAux=yyval;buffer.setLength(0);}buffer.append(yytext());}
+<DELIMITADOR_DOBLE>{
 	[^]					{
-							char c = yytext().charAt(0);
+							if(yycharat(0) == sepBlock){
+								yybegin(ANALISIS);
+								yyval.setValor(""+sep+sepBlock); 
+								return yyval.getTipo();}else{error();
+							}
+						}
+}
+
+<ANALISIS>{
+	\\[^]				{
+							if(tokenAux==null){
+								token(Parser.TEXTO);
+								tokenAux=yyval;buffer.setLength(0);
+							}
+							buffer.append(yytext());}
+	[^]					{
+							char c = yycharat(0);
 							if((c == sep && stack==0) || (interpola && (c == '$' || c == '@' || c == '%'))){
 								if(tokenAux!=null){
 									yyval=tokenAux;
@@ -335,15 +389,15 @@ PD_NUM			=	<{ENTERO}>
 									return yyval.getTipo();								
 								}else if(c == sep){
 									rexN--;
-									token(Parser.REX_SEP);
+									token(analisisTipo);
 									if(rexN>0 && sepBlock!=null){
-										yybegin(REX_SEP_BLOCK);
+										yybegin(DELIMITADOR_DOBLE);
 									}else if(rexN==0){
-										yybegin(REX_M);
+										yybegin(estadoReturn);
 										return yyval.getTipo();
 									}
 								}else{
-									yybegin(REX_VAR);return token(c);
+									yybegin(ANALISIS_VAR);return token(c);
 								}
 							}else{
 								if(sepBlock!=null){
@@ -353,37 +407,50 @@ PD_NUM			=	<{ENTERO}>
 										stack--;							
 									}								
 								}
-								if(tokenAux==null){token(Parser.PATRON);tokenAux=yyval;buffer.setLength(0);}buffer.append(yytext());						
+								if(tokenAux==null){
+									token(Parser.TEXTO);
+									tokenAux=yyval;
+									buffer.setLength(0);
+								}
+								buffer.append(yytext());						
 							}
 						}
 }
 
-<REX_M>{
-	[a-z]+				{yybegin(YYINITIAL);return token(Parser.REX_MOD);}
-	[^]					{yybegin(YYINITIAL);yypushback(1);}
-}
-
-<REX_VAR>{
+<ANALISIS_VAR>{
 	{ID}				{return token(Parser.VAR);}
 	"::"				{return token(Parser.AMBITO);}
 	"\#"				{return token('#');}
-	[^]					{yypushback(1);yybegin(REX_P);}
+	[^]					{yypushback(1);yybegin(ANALISIS);}
 }
 
 
 
 	/*----Etiquetas----*/
 <PD> {
-	{PD_ID}				{String t = yytext(); Integer tipo = Reservados.buscarEtiqueta(t);
-						if (tipo == null){buffer.append(t);token(t, 0);
-						gestorErrores.error(Errores.AVISO,Errores.ETIQUETA_IGNORADA, yyval, t);}
-						else{return token(t, tipo, true);}}
+	{PD_ID}				{
+							String t = yytext(); 
+							Integer tipo = Reservados.buscarEtiqueta(t);
+							if (tipo == null){
+								buffer.append(t);
+								token(t, 0);
+								gestorErrores.error(Errores.AVISO,Errores.ETIQUETA_IGNORADA, yyval, t);
+							}else{
+								return token(t, tipo, true);
+							}
+						}
 	{PD_NUM}			{return token(yytext(), Parser.PD_NUM, true);}
 	{PD_VAR}			{return token(yytext(), Parser.PD_VAR, true);}
 	[^\n\r]				{buffer.append(yytext());}
 	"\r"				{}
-	"\n"				{yybegin(YYINITIAL);tokenAux.setValor(buffer.toString());
-						if(!tokenAux.getValor().trim().isEmpty()){yyval=tokenAux;return tokenAux.getTipo();}}
+	"\n"				{
+							yybegin(YYINITIAL);
+							tokenAux.setValor(buffer.toString());
+							if(!tokenAux.getValor().trim().isEmpty()){
+								yyval=tokenAux;
+								return tokenAux.getTipo();
+							}
+						}
 }
 
 <YYINITIAL>{

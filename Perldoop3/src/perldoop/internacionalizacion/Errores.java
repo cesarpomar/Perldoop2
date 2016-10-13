@@ -62,6 +62,8 @@ public class Errores extends Internacionalizacion {
     public static final String IGUAL_COLECION_REQUERIDA = "IGUAL_COLECION_REQUERIDA";
     public static final String INICIALIZACION_SOLO_COLECIONES = "INICIALIZACION_SOLO_COLECIONES";
     public static final String VARIABLE_COLECCION_MULTIASIGNACION = "VARIABLE_COLECCION_MULTIASIGNACION";
+    public static final String REGEX_NO_VARIABLE = "REGEX_NO_VARIABLE";
+    public static final String REGEX_MODIFICADOR_DESCONOCIDO = "REGEX_MODIFICADOR_DESCONOCIDO";
 
     public Errores() {
         super("errores");

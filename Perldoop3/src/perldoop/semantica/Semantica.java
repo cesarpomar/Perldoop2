@@ -14,7 +14,8 @@ import perldoop.modelo.arbol.lista.*;
 import perldoop.modelo.arbol.modificador.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.asignacion.*;
-import perldoop.modelo.arbol.constante.*;
+import perldoop.modelo.arbol.numero.*;
+import perldoop.modelo.arbol.cadena.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.arbol.coleccion.*;
@@ -29,7 +30,7 @@ import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
 import perldoop.modelo.arbol.paquete.*;
-import perldoop.modelo.arbol.rexpatron.RexPatron;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.semantica.TablaSimbolos;
 import perldoop.traductor.Acciones;
 
@@ -134,7 +135,12 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(ExpConstante s) {
+    public void visitar(ExpNumero s) {
+        fachada.getSemExpresion().visitar(s);
+    }
+
+    @Override
+    public void visitar(ExpCadena s) {
         fachada.getSemExpresion().visitar(s);
     }
 
@@ -194,8 +200,8 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(RexPatron s) {
-        fachada.getSemRexPatron().visitar(s);
+    public void visitar(ExpVarMulti s) {
+        fachada.getSemExpresion().visitar(s);
     }
 
     @Override
@@ -340,31 +346,60 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(Entero s) {
-        fachada.getSemConstante().visitar(s);
+        fachada.getSemNumero().visitar(s);
 
     }
 
     @Override
     public void visitar(Decimal s) {
-        fachada.getSemConstante().visitar(s);
+        fachada.getSemNumero().visitar(s);
 
     }
 
     @Override
     public void visitar(CadenaSimple s) {
-        fachada.getSemConstante().visitar(s);
+        fachada.getSemCadena().visitar(s);
 
     }
 
     @Override
     public void visitar(CadenaDoble s) {
-        fachada.getSemConstante().visitar(s);
+        fachada.getSemCadena().visitar(s);
     }
 
     @Override
     public void visitar(CadenaComando s) {
-        fachada.getSemConstante().visitar(s);
+        fachada.getSemCadena().visitar(s);
+    }
 
+    @Override
+    public void visitar(CadenaQ s) {
+        fachada.getSemCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaQW s) {
+        fachada.getSemCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaQQ s) {
+        fachada.getSemCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaQX s) {
+        fachada.getSemCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaQR s) {
+        fachada.getSemCadena().visitar(s);
+    }
+
+    @Override
+    public void visitar(CadenaTexto s) {
+        fachada.getSemCadenaTexto().visitar(s);
     }
 
     @Override

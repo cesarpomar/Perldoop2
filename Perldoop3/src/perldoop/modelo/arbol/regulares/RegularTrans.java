@@ -3,8 +3,8 @@ package perldoop.modelo.arbol.regulares;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.rexpatron.RexPatron;
 
 /**
  * Clase que representa la reduccion -&gt;
@@ -16,7 +16,7 @@ public final class RegularTrans extends Regulares {
 
     private Terminal id;
     private Terminal separador;
-    private RexPatron remplazo;
+    private CadenaTexto remplazo;
 
     /**
      * Unico contructor de la clase
@@ -31,7 +31,7 @@ public final class RegularTrans extends Regulares {
      * @param separadorFin Separador final
      * @param modificadores Modificadores
      */
-    public RegularTrans(Expresion expresion, Terminal operador, Terminal id, Terminal separadorIni, RexPatron patron, Terminal separador, RexPatron remplazo, Terminal separadorFin, Terminal modificadores) {
+    public RegularTrans(Expresion expresion, Terminal operador, Terminal id, Terminal separadorIni, CadenaTexto patron, Terminal separador, CadenaTexto remplazo, Terminal separadorFin, Terminal modificadores) {
         super(expresion, operador, separadorIni, patron, separadorFin, modificadores);
         setId(id);
         setSeparador(separador);
@@ -81,7 +81,7 @@ public final class RegularTrans extends Regulares {
      *
      * @return Patron remplazo
      */
-    public RexPatron getRemplazo() {
+    public CadenaTexto getRemplazo() {
         return remplazo;
     }
 
@@ -90,7 +90,7 @@ public final class RegularTrans extends Regulares {
      *
      * @param remplazo Patron remplazo
      */
-    public void setRemplazo(RexPatron remplazo) {
+    public void setRemplazo(CadenaTexto remplazo) {
         remplazo.setPadre(this);
         this.remplazo = remplazo;
     }

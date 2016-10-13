@@ -69,9 +69,9 @@ public class ParserError {
                 return "ID";
             case Parser.ENTERO:
             case Parser.DECIMAL:
-            case Parser.CADENA_SIMPLE:
-            case Parser.CADENA_DOBLE:
-            case Parser.CADENA_COMANDO:
+            case '\'':
+            case '"':
+            case '`':
                 return "EXP";
             case Parser.STDIN:
                 return "<STDIN>";

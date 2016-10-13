@@ -10,7 +10,8 @@ import perldoop.generacion.bloque.*;
 import perldoop.generacion.coleccion.*;
 import perldoop.generacion.comparacion.*;
 import perldoop.generacion.condicional.*;
-import perldoop.generacion.constante.*;
+import perldoop.generacion.numero.*;
+import perldoop.generacion.cadena.*;
 import perldoop.generacion.cuerpo.*;
 import perldoop.generacion.expresion.*;
 import perldoop.generacion.flujo.*;
@@ -24,7 +25,7 @@ import perldoop.generacion.modificador.*;
 import perldoop.generacion.paquetes.*;
 import perldoop.generacion.raiz.GenRaiz;
 import perldoop.generacion.regulares.*;
-import perldoop.generacion.rexpatron.GenRexPatron;
+import perldoop.generacion.cadenatexto.GenCadenaTexto;
 import perldoop.generacion.sentencia.*;
 import perldoop.generacion.variable.*;
 import perldoop.generacion.varmulti.*;
@@ -49,7 +50,8 @@ public final class FachadaGeneradores {
     private GenColeccion genColeccion;
     private GenComparacion genComparacion;
     private GenCondicional genCondicional;
-    private GenConstante genConstante;
+    private GenNumero genNumero;
+    private GenCadena genCadena;
     private GenCuerpo genCuerpo;
     private GenExpresion genExpresion;
     private GenFlujo genFlujo;
@@ -63,7 +65,7 @@ public final class FachadaGeneradores {
     private GenRaiz genRaiz;
     private GenModificador genModificador;
     private GenRegulares genRegulares;
-    private GenRexPatron genRexPatron;
+    private GenCadenaTexto genCadenaTexto;
     private GenSentencia genSentencia;
     private GenVariable genVariable;
     private GenVarMulti genVarMulti;
@@ -268,24 +270,66 @@ public final class FachadaGeneradores {
     }
 
     /**
-     * Obtiene el generador de constante
+     * Obtiene el generador de numero
      *
-     * @return Generador de constante
+     * @return Generador de numero
      */
-    public GenConstante getGenConstante() {
-        if (genConstante == null) {
-            genConstante = new GenConstante(tabla);
+    public GenNumero getGenNumero() {
+        if (genNumero == null) {
+            genNumero = new GenNumero(tabla);
         }
-        return genConstante;
+        return genNumero;
     }
 
     /**
-     * Establece el generador de constante
+     * Establece el generador de numero
      *
-     * @param genConstante Generador de constante
+     * @param genNumero Generador de numero
      */
-    public void setGenConstante(GenConstante genConstante) {
-        this.genConstante = genConstante;
+    public void setGenNumero(GenNumero genNumero) {
+        this.genNumero = genNumero;
+    }
+
+    /**
+     * Obtiene el generador de cadena
+     *
+     * @return Generador de cadena
+     */
+    public GenCadena getGenCadena() {
+        if (genCadena == null) {
+            genCadena = new GenCadena(tabla);
+        }
+        return genCadena;
+    }
+
+    /**
+     * Establece el generador de cadena
+     *
+     * @param genCadena Generador de cadena
+     */
+    public void setGenCadena(GenCadena genCadena) {
+        this.genCadena = genCadena;
+    }
+
+    /**
+     * Obtiene el generador de cadena texto
+     *
+     * @return Generador de cadena texto
+     */
+    public GenCadenaTexto getGenCadenaTexto() {
+        if (genCadenaTexto == null) {
+            genCadenaTexto = new GenCadenaTexto(tabla);
+        }
+        return genCadenaTexto;
+    }
+
+    /**
+     * Establece el generador de cadena texto
+     *
+     * @param genCadenaTexto Generador de cadena texto
+     */
+    public void setGenCadenaTexto(GenCadenaTexto genCadenaTexto) {
+        this.genCadenaTexto = genCadenaTexto;
     }
 
     /**
@@ -559,27 +603,6 @@ public final class FachadaGeneradores {
      */
     public void setGenRegulares(GenRegulares genRegulares) {
         this.genRegulares = genRegulares;
-    }
-
-    /**
-     * Obtiene el generador de rexPatron
-     *
-     * @return Generador de rexPatron
-     */
-    public GenRexPatron getGenRexPatron() {
-        if (genRexPatron == null) {
-            genRexPatron = new GenRexPatron(tabla);
-        }
-        return genRexPatron;
-    }
-
-    /**
-     * Establece el generador de rexPatron
-     *
-     * @param genRexPatron Generador de rexPatron
-     */
-    public void setGenRexPatron(GenRexPatron genRexPatron) {
-        this.genRexPatron = genRexPatron;
     }
 
     /**
