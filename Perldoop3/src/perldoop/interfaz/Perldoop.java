@@ -21,8 +21,8 @@ import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSimbolos;
 import perldoop.preprocesador.Preprocesador;
 import perldoop.semantica.Semantica;
-import perldoop.traductor.Traductor;
 import perldoop.sintactico.Parser;
+import perldoop.traductor.Traductor;
 
 /**
  * Clase para gestionar el funcionamiento de la herramienta
@@ -37,26 +37,29 @@ public final class Perldoop {
      * @param args Argumentos de ejecución
      */
     public static void main(String[] args) {
-        GestorErrores gestorErrores;
-        Opciones opciones;
-        CodeWriter writer;
-        Consola consola = new Consola(args);
         Map<String, Paquete> paquetes = new HashMap<>();
+        Consola consola = new Consola(args);
         consola.parse();
-        opciones = consola.getOpciones();
-        writer = new CodeWriter(opciones);
+        Opciones opciones = consola.getOpciones();
+        CodeWriter writer = new CodeWriter(opciones);
+        GestorErrores gestorErrores;
         for (String ruta : consola.getFicheros()) {
-            gestorErrores = new GestorErrores(ruta.trim());
+            gestorErrores = new GestorErrores(ruta.trim(), opciones);
             File fichero = new File(ruta);
-            //Lexico
+            /*--------------------------------Lexico---------------------------------*/
             List<Token> tokens;
             try (CodeReader codeReader = new CodeReader(fichero)) {
                 gestorErrores.setCodigo(codeReader.getCodigo());
                 Lexer lexer = new Lexer(codeReader, opciones, gestorErrores);
                 tokens = lexer.getTokens();
-                //Depurador.tokens(tokens);
-                if (lexer.getErrores() > 0) {
-                    gestorErrores.error(Errores.FALLOS_LEXICOS, lexer.getErrores());
+                if (opciones.isDepTokens()) {
+                    Depurador.tokens(tokens);
+                }
+                if (gestorErrores.getErrores() > 0) {
+                    gestorErrores.error(Errores.FALLOS_LEXICOS, gestorErrores.getErrores());
+                    continue;
+                }
+                if (opciones.getDepEtapas() == 1) {
                     continue;
                 }
             } catch (FileNotFoundException ex) {
@@ -67,34 +70,48 @@ public final class Perldoop {
                 gestorErrores.error(Errores.ERROR_LECTURA);
                 continue;
             }
-            //Preprocesador
+            /*--------------------------------Preprocesador---------------------------------*/
             List<Terminal> terminales;
             Preprocesador preprocesador = new Preprocesador(tokens, opciones, gestorErrores);
             terminales = preprocesador.procesar();
-            //Depurador.terminales(terminales);
-            if (preprocesador.getErrores() > 0) {
-                gestorErrores.error(Errores.FALLOS_PREPROCESADOR, preprocesador.getErrores());
+            if (opciones.isDepTerminales()) {
+                Depurador.terminales(terminales);
+            }
+            if (gestorErrores.getErrores() > 0) {
+                gestorErrores.error(Errores.FALLOS_PREPROCESADOR, gestorErrores.getErrores());
                 continue;
             }
-            //Sintactico
+            if (opciones.getDepEtapas() == 2) {
+                continue;
+            }
+            /*--------------------------------Sintactico---------------------------------*/
             List<Simbolo> simbolos;
             Parser parser = new Parser(terminales, opciones, gestorErrores);
             simbolos = parser.parsear();
-            //Depurador.simbolos(simbolos.get(simbolos.size()-1));
-            if (parser.getErrores() > 0) {
-                gestorErrores.error(Errores.FALLOS_SINTACTICOS, parser.getErrores());
+            if (opciones.isDepTree()) {
+                Depurador.arbol(simbolos.get(simbolos.size() - 1), false);
+            }
+            if (gestorErrores.getErrores() > 0) {
+                gestorErrores.error(Errores.FALLOS_SINTACTICOS, gestorErrores.getErrores());
                 continue;
             }
-            //Traductor
+            if (opciones.getDepEtapas() == 3) {
+                continue;
+            }
+            /*--------------------------------Traductor---------------------------------*/
             TablaSimbolos tablaSimbolos = new TablaSimbolos(paquetes);
             Semantica semantica = new Semantica(tablaSimbolos, opciones, gestorErrores);
             Generador generador = new Generador(tablaSimbolos, opciones, gestorErrores);
-            Traductor traductor = new Traductor(simbolos, semantica, generador, opciones);        
-            if (traductor.traducir() > 0) {
-                gestorErrores.error(Errores.FALLOS_SEMANTICO, traductor.getErrores());
+            Traductor traductor = new Traductor(simbolos, semantica, generador, opciones);
+            traductor.traducir();
+            if (opciones.isDepTraduccion()) {
+                Depurador.arbol(simbolos.get(simbolos.size() - 1), true);
+            }
+            if (gestorErrores.getErrores() > 0) {
+                gestorErrores.error(Errores.FALLOS_SEMANTICO, gestorErrores.getErrores());
                 continue;
             }
-            //Escritura
+            /*--------------------------------Escritura---------------------------------*/
             try {
                 writer.escribir(generador.getClase());
             } catch (IOException ex) {

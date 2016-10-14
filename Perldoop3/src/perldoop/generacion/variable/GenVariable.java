@@ -1,8 +1,6 @@
 package perldoop.generacion.variable;
 
 import java.util.List;
-import perldoop.modelo.generacion.TablaGenerador;
-import perldoop.modelo.arbol.variable.*;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
@@ -14,6 +12,8 @@ import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.sentencia.StcLista;
+import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.util.Buscar;
 

@@ -11,8 +11,8 @@ import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.semantica.util.SemanticaEtiquetas;
 import perldoop.util.Buscar;
+import perldoop.util.ParserEtiquetas;
 
 /**
  * Clase para la semantica de acceso
@@ -49,18 +49,18 @@ public class SemAcceso {
             List<Expresion> lista = coleccion.getLista().getExpresiones();
             if (coleccion instanceof ColCorchete && !t.isArrayOrList()) {
                 tabla.getGestorErrores().error(Errores.ACCESO_ERRONEO, Buscar.tokenInicio(coleccion),
-                        SemanticaEtiquetas.parseTipo(new Tipo(Tipo.MAP)),
-                        SemanticaEtiquetas.parseTipo(new Tipo(Tipo.ARRAY)));
+                        ParserEtiquetas.parseTipo(new Tipo(Tipo.MAP)),
+                        ParserEtiquetas.parseTipo(new Tipo(Tipo.ARRAY)));
                 throw new ExcepcionSemantica(Errores.ACCESO_ERRONEO);
             } else if (coleccion instanceof ColLlave && !t.isMap()) {
                 if (t.isArray()) {
                     tabla.getGestorErrores().error(Errores.ACCESO_ERRONEO, Buscar.tokenInicio(coleccion),
-                            SemanticaEtiquetas.parseTipo(new Tipo(Tipo.ARRAY)),
-                            SemanticaEtiquetas.parseTipo(new Tipo(Tipo.MAP)));
+                            ParserEtiquetas.parseTipo(new Tipo(Tipo.ARRAY)),
+                            ParserEtiquetas.parseTipo(new Tipo(Tipo.MAP)));
                 } else {
                     tabla.getGestorErrores().error(Errores.ACCESO_ERRONEO, Buscar.tokenInicio(coleccion),
-                            SemanticaEtiquetas.parseTipo(new Tipo(Tipo.LIST)),
-                            SemanticaEtiquetas.parseTipo(new Tipo(Tipo.MAP)));
+                            ParserEtiquetas.parseTipo(new Tipo(Tipo.LIST)),
+                            ParserEtiquetas.parseTipo(new Tipo(Tipo.MAP)));
                 }
                 throw new ExcepcionSemantica(Errores.ACCESO_ERRONEO);
             } else if (lista.isEmpty()) {
@@ -77,7 +77,7 @@ public class SemAcceso {
                 s.setTipo(t.getSubtipo(1).add(0, Tipo.LIST));
             }
         } else {
-            tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, Buscar.tokenInicio(coleccion), SemanticaEtiquetas.parseTipo(t));
+            tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, Buscar.tokenInicio(coleccion), ParserEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
         }
     }
@@ -89,7 +89,7 @@ public class SemAcceso {
     public void visitar(AccesoColRef s) {
         Tipo t = s.getExpresion().getTipo();
         if (!t.isRef()) {
-            tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getFlecha().getToken(), SemanticaEtiquetas.parseTipo(t));
+            tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getFlecha().getToken(), ParserEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
         }
         accesoColeccion(s, s.getExpresion().getTipo().getSubtipo(1), s.getColeccion());
@@ -104,17 +104,17 @@ public class SemAcceso {
         Tipo t = s.getExpresion().getTipo();
         Tipo st = t.getSubtipo(1);
         if (t.isBox()) {
-            tabla.getGestorErrores().error(Errores.UNBOXING_SIN_TIPO, s.getArroba().getToken(), SemanticaEtiquetas.parseTipo(t));
+            tabla.getGestorErrores().error(Errores.UNBOXING_SIN_TIPO, s.getArroba().getToken(), ParserEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
         }
         if (!t.isRef()) {
-            tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getArroba().getToken(), SemanticaEtiquetas.parseTipo(t));
+            tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getArroba().getToken(), ParserEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
         }
         if (!st.isArrayOrList()) {
             tabla.getGestorErrores().error(Errores.ACCESO_ERRONEO, s.getArroba().getToken(),
-                    SemanticaEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.MAP)),
-                    SemanticaEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.ARRAY)));
+                    ParserEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.MAP)),
+                    ParserEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.ARRAY)));
             throw new ExcepcionSemantica(Errores.ACCESO_ERRONEO);
         }
         s.setTipo(st);
@@ -124,22 +124,22 @@ public class SemAcceso {
         Tipo t = s.getExpresion().getTipo();
         Tipo st = t.getSubtipo(1);
         if (t.isBox()) {
-            tabla.getGestorErrores().error(Errores.UNBOXING_SIN_TIPO, s.getPorcentaje().getToken(), SemanticaEtiquetas.parseTipo(t));
+            tabla.getGestorErrores().error(Errores.UNBOXING_SIN_TIPO, s.getPorcentaje().getToken(), ParserEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
         }
         if (!t.isRef()) {
-            tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getPorcentaje().getToken(), SemanticaEtiquetas.parseTipo(t));
+            tabla.getGestorErrores().error(Errores.ACCESO_NO_COLECCION, s.getPorcentaje().getToken(), ParserEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
         }
         if (!st.isMap()) {
             if (st.isArray()) {
                 tabla.getGestorErrores().error(Errores.ACCESO_ERRONEO, s.getPorcentaje().getToken(),
-                        SemanticaEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.ARRAY)),
-                        SemanticaEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.MAP)));
+                        ParserEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.ARRAY)),
+                        ParserEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.MAP)));
             } else {
                 tabla.getGestorErrores().error(Errores.ACCESO_ERRONEO, s.getPorcentaje().getToken(),
-                        SemanticaEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.LIST)),
-                        SemanticaEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.MAP)));
+                        ParserEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.LIST)),
+                        ParserEtiquetas.parseTipo(new Tipo(Tipo.REF, Tipo.MAP)));
             }
             throw new ExcepcionSemantica(Errores.ACCESO_ERRONEO);
         }

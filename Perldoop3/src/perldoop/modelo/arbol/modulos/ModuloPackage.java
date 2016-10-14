@@ -1,4 +1,4 @@
-package perldoop.modelo.arbol.sentencia;
+package perldoop.modelo.arbol.modulos;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
@@ -6,30 +6,49 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -&gt; sentencia : PACKAGE paqueteID ID ';'
+ * Clase que representa la reduccion -&gt; modulos : PACKAGE paqueteID ID ';'
  *
  * @author César Pomar
  */
-public final class StcPaquete extends Sentencia {
+public final class ModuloPackage extends Modulo {
 
-    private Terminal paquete;
+    private Terminal idPackage;
     private Paquetes paquetes;
     private Terminal id;
     private Terminal puntoComa;
 
     /**
-     * nico contructor de la clase
+     * Constructor unico de la clase
      *
-     * @param paquete Paquete
-     * @param paquetes paquetes
+     * @param idPackage idPackage
+     * @param paquetes Paquetes
      * @param id Id
      * @param puntoComa PuntoComa
      */
-    public StcPaquete(Terminal paquete, Paquetes paquetes, Terminal id, Terminal puntoComa) {
-        setPaquete(paquete);
+    public ModuloPackage(Terminal idPackage, Paquetes paquetes, Terminal id, Terminal puntoComa) {
+        setIdPackage(idPackage);
         setPaquetes(paquetes);
         setId(id);
         setPuntoComa(puntoComa);
+    }
+
+    /**
+     * Obtiene el idPackage
+     *
+     * @return IdPackage
+     */
+    public Terminal getIdPackage() {
+        return idPackage;
+    }
+
+    /**
+     * Establece el idPackage
+     *
+     * @param idPackage IdPackage
+     */
+    public void setIdPackage(Terminal idPackage) {
+        idPackage.setPadre(this);
+        this.idPackage = idPackage;
     }
 
     /**
@@ -52,26 +71,7 @@ public final class StcPaquete extends Sentencia {
     }
 
     /**
-     * Obtiene el paquete
-     *
-     * @return paquete
-     */
-    public Terminal getPaquete() {
-        return paquete;
-    }
-
-    /**
-     * Establece el paquete
-     *
-     * @param paquete Paquete
-     */
-    public void setPaquete(Terminal paquete) {
-        paquete.setPadre(this);
-        this.paquete = paquete;
-    }
-
-    /**
-     * obtiene el id
+     * Obtiene el id
      *
      * @return Id
      */
@@ -80,7 +80,7 @@ public final class StcPaquete extends Sentencia {
     }
 
     /**
-     * Establece elid
+     * Establece el id
      *
      * @param id Id
      */
@@ -94,7 +94,7 @@ public final class StcPaquete extends Sentencia {
      *
      * @return PuntoComa
      */
-    public final Terminal getPuntoComa() {
+    public Terminal getPuntoComa() {
         return puntoComa;
     }
 
@@ -103,7 +103,7 @@ public final class StcPaquete extends Sentencia {
      *
      * @param puntoComa PuntoComa
      */
-    public final void setPuntoComa(Terminal puntoComa) {
+    public void setPuntoComa(Terminal puntoComa) {
         puntoComa.setPadre(this);
         this.puntoComa = puntoComa;
     }
@@ -115,6 +115,7 @@ public final class StcPaquete extends Sentencia {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{paquete, id, puntoComa};
+        return new Simbolo[]{idPackage, paquetes, id, puntoComa};
     }
+
 }

@@ -5,8 +5,8 @@ import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.aritmetica.*;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.util.Buscar;
 import perldoop.semantica.util.Tipos;
+import perldoop.util.Buscar;
 
 /**
  * Clase para la semantica de aritmetica

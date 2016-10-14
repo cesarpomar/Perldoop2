@@ -20,7 +20,7 @@ import perldoop.optimizaciones.Optimizaciones;
  *
  * @author César Pomar
  */
-public class CodeWriter {
+public final class CodeWriter {
 
     private File directorio;
     private Opciones opciones;
@@ -106,7 +106,7 @@ public class CodeWriter {
      * @param col Colección de cadenas
      * @param separador Separador
      */
-    public <T> void appendList(StringBuilder sb, Collection<T> col, String separador) {
+    private <T> void appendList(StringBuilder sb, Collection<T> col, String separador) {
         Iterator<T> it = col.iterator();
         while (it.hasNext()) {
             sb.append(it.next());
@@ -123,7 +123,7 @@ public class CodeWriter {
      * @param sb Cadenas
      * @param col Colección de cadenas
      */
-    public <T> void appendList(StringBuilder sb, Collection<T> col) {
+    private <T> void appendList(StringBuilder sb, Collection<T> col) {
         appendList(sb, col, "");
     }
 

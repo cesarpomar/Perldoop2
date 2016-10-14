@@ -3,15 +3,11 @@ package perldoop.modelo.arbol.funcion;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -&gt; <br>
- * variable : paquete ID expresion<br>
- * | ID expresion<br>
+ * Clase que representa la reduccion -&gt; funcion : paqueteID ID expresion
  *
  * @author César Pomar
  */

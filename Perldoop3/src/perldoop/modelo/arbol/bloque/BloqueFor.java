@@ -58,7 +58,7 @@ public final class BloqueFor extends Bloque {
      *
      * @return Id
      */
-    public final Terminal getId() {
+    public Terminal getId() {
         return id;
     }
 
@@ -67,7 +67,7 @@ public final class BloqueFor extends Bloque {
      *
      * @param id Id
      */
-    public final void setId(Terminal id) {
+    public void setId(Terminal id) {
         id.setPadre(this);
         this.id = id;
     }

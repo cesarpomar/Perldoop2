@@ -50,7 +50,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @return Id
      */
-    public final Terminal getId() {
+    public Terminal getId() {
         return id;
     }
 
@@ -59,7 +59,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @param id Id
      */
-    public final void setId(Terminal id) {
+    public void setId(Terminal id) {
         id.setPadre(this);
         this.id = id;
     }
@@ -69,7 +69,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @return Parenteis izquierdo
      */
-    public final Terminal getParentesisI() {
+    public Terminal getParentesisI() {
         return parentesisI;
     }
 
@@ -78,7 +78,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @param parentesisI Parenteis izquierdo
      */
-    public final void setParentesisI(Terminal parentesisI) {
+    public void setParentesisI(Terminal parentesisI) {
         parentesisI.setPadre(this);
         this.parentesisI = parentesisI;
     }
@@ -88,7 +88,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @return Expresión
      */
-    public final Expresion getExpresion() {
+    public Expresion getExpresion() {
         return expresion;
     }
 
@@ -97,7 +97,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @param expresion Expresión
      */
-    public final void setExpresion(Expresion expresion) {
+    public void setExpresion(Expresion expresion) {
         expresion.setPadre(this);
         this.expresion = expresion;
     }
@@ -107,7 +107,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @return Parentesis derecho
      */
-    public final Terminal getParentesisD() {
+    public Terminal getParentesisD() {
         return parentesisD;
     }
 
@@ -116,7 +116,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @param parentesisD Parentesis derecho
      */
-    public final void setParentesisD(Terminal parentesisD) {
+    public void setParentesisD(Terminal parentesisD) {
         parentesisD.setPadre(this);
         this.parentesisD = parentesisD;
     }
@@ -126,7 +126,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @return Llave izquierda
      */
-    public final Terminal getLlaveI() {
+    public Terminal getLlaveI() {
         return llaveI;
     }
 
@@ -135,7 +135,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @param llaveI Llave izquierda
      */
-    public final void setLlaveI(Terminal llaveI) {
+    public void setLlaveI(Terminal llaveI) {
         llaveI.setPadre(this);
         this.llaveI = llaveI;
     }
@@ -145,7 +145,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @return Cuerpo
      */
-    public final Cuerpo getCuerpo() {
+    public Cuerpo getCuerpo() {
         return cuerpo;
     }
 
@@ -154,7 +154,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @param cuerpo Cuerpo
      */
-    public final void setCuerpo(Cuerpo cuerpo) {
+    public void setCuerpo(Cuerpo cuerpo) {
         cuerpo.setPadre(this);
         this.cuerpo = cuerpo;
     }
@@ -164,7 +164,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @return Llave derecha
      */
-    public final Terminal getLlaveD() {
+    public Terminal getLlaveD() {
         return llaveD;
     }
 
@@ -173,7 +173,7 @@ public final class CondicionalElsif extends Condicional {
      *
      * @param llaveD Llave derecha
      */
-    public final void setLlaveD(Terminal llaveD) {
+    public void setLlaveD(Terminal llaveD) {
         llaveD.setPadre(this);
         this.llaveD = llaveD;
     }

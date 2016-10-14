@@ -1,6 +1,5 @@
 package perldoop.generacion.aritmetica;
 
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.aritmetica.AritConcat;
 import perldoop.modelo.arbol.aritmetica.AritDiv;
 import perldoop.modelo.arbol.aritmetica.AritMod;
@@ -15,6 +14,7 @@ import perldoop.modelo.arbol.aritmetica.AritPreIncremento;
 import perldoop.modelo.arbol.aritmetica.AritResta;
 import perldoop.modelo.arbol.aritmetica.AritSuma;
 import perldoop.modelo.arbol.aritmetica.AritX;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de aritmetica

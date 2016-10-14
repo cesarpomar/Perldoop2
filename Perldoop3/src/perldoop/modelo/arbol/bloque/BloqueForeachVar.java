@@ -6,7 +6,6 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
-import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.variable.Variable;
 
 /**
@@ -45,7 +44,7 @@ public final class BloqueForeachVar extends Bloque {
      *
      * @return Id
      */
-    public final Terminal getId() {
+    public Terminal getId() {
         return id;
     }
 
@@ -54,7 +53,7 @@ public final class BloqueForeachVar extends Bloque {
      *
      * @param id Id
      */
-    public final void setId(Terminal id) {
+    public void setId(Terminal id) {
         id.setPadre(this);
         this.id = id;
     }

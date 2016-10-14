@@ -1,6 +1,5 @@
 package perldoop.generacion.expresion;
 
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpAritmetica;
 import perldoop.modelo.arbol.expresion.ExpAsignacion;
@@ -8,14 +7,15 @@ import perldoop.modelo.arbol.expresion.ExpBinario;
 import perldoop.modelo.arbol.expresion.ExpCadena;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpComparacion;
-import perldoop.modelo.arbol.expresion.ExpNumero;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpFuncion5;
 import perldoop.modelo.arbol.expresion.ExpLogico;
+import perldoop.modelo.arbol.expresion.ExpNumero;
 import perldoop.modelo.arbol.expresion.ExpRango;
 import perldoop.modelo.arbol.expresion.ExpRegulares;
 import perldoop.modelo.arbol.expresion.ExpVarMulti;
 import perldoop.modelo.arbol.expresion.ExpVariable;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de expresion

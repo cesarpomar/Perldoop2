@@ -62,7 +62,13 @@ public final class RegularNoMatch extends Regulares {
     @Override
     public Simbolo[] getHijos() {
         if (id == null) {
+            if (modificadores == null) {
+                return new Simbolo[]{expresion, operador, separadorIni, patron, separadorFin};
+            }
             return new Simbolo[]{expresion, operador, separadorIni, patron, separadorFin, modificadores};
+        }
+        if (modificadores == null) {
+            return new Simbolo[]{expresion, operador, id, separadorIni, patron, separadorFin,};
         }
         return new Simbolo[]{expresion, operador, id, separadorIni, patron, separadorFin, modificadores};
     }

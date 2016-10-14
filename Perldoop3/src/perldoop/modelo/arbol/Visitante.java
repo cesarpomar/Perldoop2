@@ -1,32 +1,34 @@
 package perldoop.modelo.arbol;
 
-import perldoop.modelo.arbol.varmulti.*;
-import perldoop.modelo.arbol.fuente.*;
-import perldoop.modelo.arbol.funciondef.*;
-import perldoop.modelo.arbol.funcionsub.*;
-import perldoop.modelo.arbol.cuerpo.*;
-import perldoop.modelo.arbol.sentencia.*;
-import perldoop.modelo.arbol.expresion.*;
-import perldoop.modelo.arbol.lista.*;
-import perldoop.modelo.arbol.modificador.*;
-import perldoop.modelo.arbol.flujo.*;
-import perldoop.modelo.arbol.asignacion.*;
-import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.arbol.coleccion.*;
-import perldoop.modelo.arbol.acceso.*;
-import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.abrirbloque.*;
-import perldoop.modelo.arbol.bloque.*;
-import perldoop.modelo.arbol.condicional.*;
-import perldoop.modelo.arbol.regulares.*;
-import perldoop.modelo.arbol.binario.*;
-import perldoop.modelo.arbol.logico.*;
-import perldoop.modelo.arbol.comparacion.*;
+import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.aritmetica.*;
-import perldoop.modelo.arbol.numero.*;
+import perldoop.modelo.arbol.asignacion.*;
+import perldoop.modelo.arbol.binario.*;
+import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.arbol.cadena.*;
 import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
+import perldoop.modelo.arbol.coleccion.*;
+import perldoop.modelo.arbol.comparacion.*;
+import perldoop.modelo.arbol.condicional.*;
+import perldoop.modelo.arbol.cuerpo.*;
+import perldoop.modelo.arbol.expresion.*;
+import perldoop.modelo.arbol.flujo.*;
+import perldoop.modelo.arbol.fuente.*;
+import perldoop.modelo.arbol.funcion.*;
+import perldoop.modelo.arbol.funciondef.*;
+import perldoop.modelo.arbol.funcionsub.*;
+import perldoop.modelo.arbol.lectura.*;
+import perldoop.modelo.arbol.lista.*;
+import perldoop.modelo.arbol.logico.*;
+import perldoop.modelo.arbol.modificador.*;
+import perldoop.modelo.arbol.modulos.*;
+import perldoop.modelo.arbol.numero.*;
 import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.regulares.*;
+import perldoop.modelo.arbol.sentencia.*;
+import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.arbol.varmulti.*;
 
 /**
  * Interfaz para el patron Visitor
@@ -57,21 +59,30 @@ public interface Visitante {
 
     void visitar(StcFlujo s);
 
-    void visitar(StcPaquete s);
+    void visitar(StcModulos s);
 
     void visitar(StcComentario s);
 
-    void visitar(StcDeclaracion s);
+    void visitar(StcTipado s);
+
+    void visitar(StcImport s);
+
+    void visitar(StcLineaJava s);
 
     void visitar(StcError s);
-    
+
+    //Modulos
+    void visitar(ModuloPackage s);
+
+    void visitar(ModuloUse s);
+
     //Expresion
     void visitar(ExpNumero s);
-    
+
     void visitar(ExpCadena s);
 
     void visitar(ExpVariable s);
-    
+
     void visitar(ExpVarMulti s);
 
     void visitar(ExpAsignacion s);
@@ -91,6 +102,8 @@ public interface Visitante {
     void visitar(ExpFuncion s);
 
     void visitar(ExpFuncion5 s);
+
+    void visitar(ExpLectura s);
 
     void visitar(ExpRegulares s);
 
@@ -145,7 +158,7 @@ public interface Visitante {
     void visitar(DespIIgual s);
 
     void visitar(LOrIgual s);
-    
+
     void visitar(DLOrIgual s);
 
     void visitar(LAndIgual s);
@@ -157,8 +170,8 @@ public interface Visitante {
     //Numero
     void visitar(Entero s);
 
-    void visitar(Decimal s);    
-    
+    void visitar(Decimal s);
+
     //Cadena
     void visitar(CadenaSimple s);
 
@@ -226,6 +239,13 @@ public interface Visitante {
 
     void visitar(FuncionNoArgs s);
 
+    void visitar(FuncionEspecial s);
+
+    //Lectura
+    void visitar(LecturaIn s);
+
+    void visitar(LecturaFile s);
+
     //Regulares
     void visitar(RegularNoMatch s);
 
@@ -234,7 +254,7 @@ public interface Visitante {
     void visitar(RegularSubs s);
 
     void visitar(RegularTrans s);
-    
+
     //CadenaTexto
     void visitar(CadenaTexto s);
 
@@ -253,7 +273,7 @@ public interface Visitante {
 
     //Logico
     void visitar(LogOr s);
-    
+
     void visitar(DLogOr s);
 
     void visitar(LogAnd s);
@@ -347,18 +367,18 @@ public interface Visitante {
     void visitar(BloqueForeachVar s);
 
     void visitar(BloqueForeach s);
-    
+
     void visitar(BloqueIf s);
-    
+
     void visitar(BloqueUnless s);
-    
+
     void visitar(BloqueVacio s);
 
     //Condicional
     void visitar(CondicionalElse s);
 
     void visitar(CondicionalElsif s);
-    
+
     void visitar(CondicionalNada s);
 
     //Terminal

@@ -5,9 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -&gt; <br>
- * variable : paquete ID<br>
- * | ID<br>
+ * Clase que representa la reduccion -&gt; funcion : ID
  *
  * @author César Pomar
  */

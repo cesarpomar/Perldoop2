@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Asignacion;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.regulares.*;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.util.Buscar;
 
 /**
@@ -69,7 +68,7 @@ public class GenSentencia {
                 }
             }
             //Analizamos todo en subarbol en busca de algo que merezca ser ejecutado
-            if (tabla.getOpciones().isSentenciasEstrictas() && !sentencia) {
+            if (tabla.getOpciones().isOptSentencias() && !sentencia) {
                 List<Simbolo> hijos = new ArrayList<>(100);
                 hijos.add(exp);
                 while (!hijos.isEmpty()) {
@@ -86,9 +85,9 @@ public class GenSentencia {
             }
             //Si es sentencia la escribimos, si no usamos la funcion auxiliar para evaluarla
             if (sentencia) {
-                codigo.append(exp.getCodigoGenerado()).append(";");
+                codigo.append(exp.getCodigoGenerado()).append(s.getPuntoComa());
             } else {
-                codigo.append("Perl.eval(").append(exp.getCodigoGenerado()).append(");");
+                codigo.append("Perl.eval(").append(exp.getCodigoGenerado()).append(s.getPuntoComa());
             }
         }
         s.setCodigoGenerado(codigo);
@@ -102,20 +101,25 @@ public class GenSentencia {
         s.setCodigoGenerado(s.getFlujo().getCodigoGenerado());
     }
 
-    public void visitar(StcPaquete s) {
-        tabla.getClase().setNombre(s.getId().toString());
-        for (Terminal p : s.getPaquetes().getIdentificadores()) {
-            tabla.getClase().getPaquetes().add(p.toString());
-        }
-        s.setCodigoGenerado(new StringBuilder(0));
-    }
-
     public void visitar(StcComentario s) {
         s.setCodigoGenerado(new StringBuilder(s.getComentario().getCodigoGenerado()).insert(0, '\n'));
     }
 
-    public void visitar(StcDeclaracion s) {
+    public void visitar(StcTipado s) {
         //No genera codigo
+    }
+
+    public void visitar(StcModulos s) {
+
+    }
+
+    public void visitar(StcImport s) {
+    }
+
+    public void visitar(StcLineaJava s) {
+    }
+
+    public void visitar(ExpLectura s) {
     }
 
 }

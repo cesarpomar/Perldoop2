@@ -1,17 +1,16 @@
 package perldoop.generacion;
 
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.generacion.abrirbloque.*;
 import perldoop.generacion.acceso.*;
 import perldoop.generacion.aritmetica.*;
 import perldoop.generacion.asignacion.*;
 import perldoop.generacion.binario.*;
 import perldoop.generacion.bloque.*;
+import perldoop.generacion.cadena.*;
+import perldoop.generacion.cadenatexto.GenCadenaTexto;
 import perldoop.generacion.coleccion.*;
 import perldoop.generacion.comparacion.*;
 import perldoop.generacion.condicional.*;
-import perldoop.generacion.numero.*;
-import perldoop.generacion.cadena.*;
 import perldoop.generacion.cuerpo.*;
 import perldoop.generacion.expresion.*;
 import perldoop.generacion.flujo.*;
@@ -19,17 +18,20 @@ import perldoop.generacion.fuente.*;
 import perldoop.generacion.funcion.*;
 import perldoop.generacion.funciondef.*;
 import perldoop.generacion.funcionsub.*;
+import perldoop.generacion.lectura.GenLectura;
 import perldoop.generacion.lista.*;
 import perldoop.generacion.logico.*;
 import perldoop.generacion.modificador.*;
+import perldoop.generacion.modulos.GenModulo;
+import perldoop.generacion.numero.*;
 import perldoop.generacion.paquetes.*;
 import perldoop.generacion.raiz.GenRaiz;
 import perldoop.generacion.regulares.*;
-import perldoop.generacion.cadenatexto.GenCadenaTexto;
 import perldoop.generacion.sentencia.*;
+import perldoop.generacion.terminal.*;
 import perldoop.generacion.variable.*;
 import perldoop.generacion.varmulti.*;
-import perldoop.generacion.terminal.*;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Fachada de los generadores
@@ -59,11 +61,13 @@ public final class FachadaGeneradores {
     private GenFuncion genFuncion;
     private GenFuncionDef genFuncionDef;
     private GenFuncionSub genFuncionSub;
+    private GenLectura genLectura;
     private GenLista genLista;
     private GenLogico genLogico;
     private GenPaquetes genPaquetes;
     private GenRaiz genRaiz;
     private GenModificador genModificador;
+    private GenModulo genModulo;
     private GenRegulares genRegulares;
     private GenCadenaTexto genCadenaTexto;
     private GenSentencia genSentencia;
@@ -480,6 +484,27 @@ public final class FachadaGeneradores {
     }
 
     /**
+     * Obtiene el generador de lectura
+     *
+     * @return Generador de lectura
+     */
+    public GenLectura getGenLectura() {
+        if (genLectura == null) {
+            genLectura = new GenLectura(tabla);
+        }
+        return genLectura;
+    }
+
+    /**
+     * Establece el generador de lectura
+     *
+     * @param genLectura Generador de lectura
+     */
+    public void setGenLectura(GenLectura genLectura) {
+        this.genLectura = genLectura;
+    }
+
+    /**
      * Obtiene el generador de lista
      *
      * @return Generador de lista
@@ -582,6 +607,27 @@ public final class FachadaGeneradores {
      */
     public void setGenModificador(GenModificador genModificador) {
         this.genModificador = genModificador;
+    }
+
+    /**
+     * Obtiene el generador de modulos
+     *
+     * @return Generador de modulos
+     */
+    public GenModulo getGenModulo() {
+        if (genModulo == null) {
+            genModulo = new GenModulo(tabla);
+        }
+        return genModulo;
+    }
+
+    /**
+     * Establece el generador de modulos
+     *
+     * @param genModulo Generador de modulos
+     */
+    public void setGenModificador(GenModulo genModulo) {
+        this.genModulo = genModulo;
     }
 
     /**

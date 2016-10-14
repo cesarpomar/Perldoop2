@@ -3,11 +3,12 @@ package perldoop.generacion.funcion;
 import perldoop.modelo.arbol.FuncionNativa;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.funcion.FuncionArgs;
+import perldoop.modelo.arbol.funcion.FuncionEspecial;
 import perldoop.modelo.arbol.funcion.FuncionNoArgs;
 import perldoop.modelo.arbol.funcion.FuncionPaqueteArgs;
 import perldoop.modelo.arbol.funcion.FuncionPaqueteNoArgs;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de funcion
@@ -67,6 +68,10 @@ public class GenFuncion {
         codigo.append(s.getIdentificador());
         codigo.append("(").append(")");
         s.setCodigoGenerado(codigo);
+    }
+
+    public void visitar(FuncionEspecial s) {
+
     }
 
     /**

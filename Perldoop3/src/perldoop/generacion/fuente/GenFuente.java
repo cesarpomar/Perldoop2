@@ -3,7 +3,6 @@ package perldoop.generacion.fuente;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.fuente.Fuente;
-import perldoop.modelo.arbol.sentencia.Sentencia;
 import perldoop.modelo.generacion.TablaGenerador;
 
 /**

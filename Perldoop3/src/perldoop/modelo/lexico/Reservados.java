@@ -50,6 +50,15 @@ public class Reservados {
                     return Parser.NEXT;
                 case "return":
                     return Parser.RETURN;
+                case "use":
+                case "require":
+                    return Parser.USE;
+                case "STDIN":
+                    return Parser.STDIN;
+                case "STDOUT":
+                    return Parser.STDOUT;
+                case "STDERR":
+                    return Parser.STDERR;
             }
         }
         return defecto;

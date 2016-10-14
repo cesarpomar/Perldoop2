@@ -49,7 +49,7 @@ public final class Last extends Flujo {
      *
      * @return PuntoComa
      */
-    public final Terminal getPuntoComa() {
+    public Terminal getPuntoComa() {
         return puntoComa;
     }
 
@@ -58,7 +58,7 @@ public final class Last extends Flujo {
      *
      * @param puntoComa PuntoComa
      */
-    public final void setPuntoComa(Terminal puntoComa) {
+    public void setPuntoComa(Terminal puntoComa) {
         puntoComa.setPadre(this);
         this.puntoComa = puntoComa;
     }

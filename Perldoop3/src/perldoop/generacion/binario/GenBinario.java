@@ -1,12 +1,12 @@
 package perldoop.generacion.binario;
 
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.binario.BinAnd;
 import perldoop.modelo.arbol.binario.BinDespD;
 import perldoop.modelo.arbol.binario.BinDespI;
 import perldoop.modelo.arbol.binario.BinNot;
 import perldoop.modelo.arbol.binario.BinOr;
 import perldoop.modelo.arbol.binario.BinXor;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de binario

@@ -2,27 +2,33 @@ package perldoop.error;
 
 import java.util.List;
 import perldoop.internacionalizacion.Errores;
+import perldoop.modelo.Opciones;
 import perldoop.modelo.lexico.Token;
 
 /**
- * Gestiona la salida de errores del programa
+ * Gestiona la salida de msgs del programa
  *
  * @author César Pomar
  */
-public class GestorErrores {
+public final class GestorErrores {
 
     private String fichero;
     private StringBuilder codigo;
-    private Errores errores;
+    private Errores msgs;
+    private Opciones opciones;
+    private int errores;
+    private int avisos;
 
     /**
-     * Crear el gestor de errores
+     * Crear el gestor de msgs
      *
      * @param fichero Nombre del fichero del codigo fuente
+     * @param opciones Opciones
      */
-    public GestorErrores(String fichero) {
+    public GestorErrores(String fichero, Opciones opciones) {
         this.fichero = fichero;
-        errores = new Errores();
+        this.opciones = opciones;
+        msgs = new Errores();
     }
 
     /**
@@ -32,6 +38,33 @@ public class GestorErrores {
      */
     public void setCodigo(StringBuilder codigo) {
         this.codigo = codigo;
+    }
+
+    /**
+     * Obtiene los errores
+     *
+     * @return Numero de errores
+     */
+    public int getErrores() {
+        return errores;
+    }
+
+    /**
+     * Obtiene los avisos
+     *
+     * @return Avisos
+     */
+    public int getAvisos() {
+        return avisos;
+    }
+
+    /**
+     * Obtiene el nombre del fichero
+     *
+     * @return Nombre del fichero
+     */
+    public String getFichero() {
+        return fichero;
     }
 
     /**
@@ -54,8 +87,9 @@ public class GestorErrores {
      * @param args Valores para el mensaje de error
      */
     public void error(String tipo, String codigo, Token t, Object... args) {
-        System.err.println(fichero + ":" + (t.getLinea() + 1) + ":" + (t.getColumna()) + ": " + errores.get(tipo) + ": " + errores.get(codigo, args));
-        mostrarCodigo(t);
+        if(error(tipo, (t.getLinea() + 1) + ":" + (t.getColumna()) + ": " + msgs.get(tipo) + ": " + msgs.get(codigo, args))){
+            mostrarCodigo(t);
+        }
     }
 
     /**
@@ -76,7 +110,31 @@ public class GestorErrores {
      * @param args Valores para el mensaje de error
      */
     public void error(String codigo, Object... args) {
-        System.err.println(fichero + ":" + errores.get(codigo, args));
+        error(Errores.ERROR, fichero + ":" + msgs.get(codigo, args));
+    }
+
+    /**
+     * Muestra un error al usuario
+     *
+     * @param tipo Tipo error
+     * @param msg Mensaje
+     * @return Error lanzado
+     */
+    public boolean error(String tipo, String msg) {
+        if (Errores.AVISO.equals(tipo)) {
+            if (!opciones.isOcultarAvisos()) {
+                System.out.println(fichero + ":" + msg);
+                return true;
+            }
+            avisos++;
+        } else {
+            errores++;
+            if (opciones.getMostrarErrores() == null || opciones.getMostrarErrores() < errores) {
+                System.out.println(fichero + ":" + msg);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -84,7 +142,7 @@ public class GestorErrores {
      *
      * @param t Token
      */
-    public void mostrarCodigo(Token t) {
+    private void mostrarCodigo(Token t) {
         int inicio = 0;
         int pos = t.getPosicion();
         int fin = codigo.length();
@@ -113,15 +171,6 @@ public class GestorErrores {
         }
         System.err.println("\t" + codigo.subSequence(inicio, fin));
         System.err.println("\t" + String.format("%" + (pos - inicio + 1) + "s", "^"));
-    }
-
-    /**
-     * Obtiene el nombre del fichero
-     *
-     * @return Nombre del fichero
-     */
-    public String getFichero() {
-        return fichero;
     }
 
 }

@@ -49,4 +49,8 @@ public final class EtiquetasPredeclaracion implements Etiquetas {
         return tipo;
     }
 
+    @Override
+    public String toString() {
+        return "EtiquetasPredeclaracion( variables(" + variables + "), " + tipo + ')';
+    }
 }

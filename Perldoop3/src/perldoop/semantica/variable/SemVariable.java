@@ -13,7 +13,7 @@ import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
-import perldoop.semantica.util.SemanticaEtiquetas;
+import perldoop.util.ParserEtiquetas;
 
 /**
  * Clase para la semantica de variable
@@ -165,9 +165,9 @@ public class SemVariable {
                 tabla.getGestorErrores().error(Errores.AVISO, Errores.TIPO_FOREACH, v.getVar().getToken());
             }
         } else if (predeclaracion != null) {
-            v.setTipo(SemanticaEtiquetas.parseTipo(predeclaracion.getTipos()));
+            v.setTipo(ParserEtiquetas.parseTipo(predeclaracion.getTipos()));
         } else if (tipoLinea != null) {
-            v.setTipo(SemanticaEtiquetas.parseTipo(tipoLinea.getTipos()));
+            v.setTipo(ParserEtiquetas.parseTipo(tipoLinea.getTipos()));
         } else {
             tabla.getGestorErrores().error(Errores.VARIABLE_SIN_TIPO, v.getVar().getToken(), v.getContexto().getValor(), v.getVar().getValor());
             throw new ExcepcionSemantica(Errores.VARIABLE_SIN_TIPO);
@@ -187,21 +187,21 @@ public class SemVariable {
             case '$':
                 if (t.isArrayOrList() || t.isMap()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar().getValor(), SemanticaEtiquetas.parseTipo(t).get(0));
+                            contexto, v.getVar().getValor(), ParserEtiquetas.parseTipo(t).get(0));
                     throw new ExcepcionSemantica(Errores.TIPO_INCORRECTO);
                 }
                 break;
             case '@':
                 if (!t.isArrayOrList()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar().getValor(), SemanticaEtiquetas.parseTipo(t).get(0));
+                            contexto, v.getVar().getValor(), ParserEtiquetas.parseTipo(t).get(0));
                     throw new ExcepcionSemantica(Errores.TIPO_INCORRECTO);
                 }
                 break;
             case '%':
                 if (!t.isMap()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar().getValor(), SemanticaEtiquetas.parseTipo(t).get(0));
+                            contexto, v.getVar().getValor(), ParserEtiquetas.parseTipo(t).get(0));
                     throw new ExcepcionSemantica(Errores.TIPO_INCORRECTO);
                 }
                 break;

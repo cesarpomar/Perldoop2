@@ -1,9 +1,9 @@
 package perldoop.generacion.condicional;
 
 import perldoop.generacion.util.Casting;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 

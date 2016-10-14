@@ -1,12 +1,12 @@
 package perldoop.generacion.modificador;
 
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.modificador.ModFor;
 import perldoop.modelo.arbol.modificador.ModIf;
 import perldoop.modelo.arbol.modificador.ModNada;
 import perldoop.modelo.arbol.modificador.ModUnless;
 import perldoop.modelo.arbol.modificador.ModUntil;
 import perldoop.modelo.arbol.modificador.ModWhile;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de modificador

@@ -2,7 +2,6 @@ package perldoop;
 
 import java.util.List;
 import perldoop.lib.Casting;
-import perldoop.lib.Pd;
 import perldoop.lib.PerlList;
 
 /**

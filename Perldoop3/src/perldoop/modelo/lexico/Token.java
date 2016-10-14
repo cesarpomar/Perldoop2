@@ -1,7 +1,5 @@
 package perldoop.modelo.lexico;
 
-import java.util.List;
-
 /**
  * Token del analizador lexico
  *

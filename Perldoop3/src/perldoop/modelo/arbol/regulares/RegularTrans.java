@@ -102,6 +102,9 @@ public final class RegularTrans extends Regulares {
 
     @Override
     public Simbolo[] getHijos() {
+        if (modificadores == null) {
+            return new Simbolo[]{expresion, operador, id, separadorIni, patron, separador, remplazo, separadorFin};
+        }
         return new Simbolo[]{expresion, operador, id, separadorIni, patron, separador, remplazo, separadorFin, modificadores};
     }
 

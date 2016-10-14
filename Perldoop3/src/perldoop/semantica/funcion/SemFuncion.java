@@ -43,11 +43,14 @@ public class SemFuncion {
     }
 
     public void visitar(FuncionArgs s) {
-        comprobarFuncion(s, (ColParentesis)s.getColeccion().getColeccion());
+        comprobarFuncion(s, (ColParentesis) s.getColeccion().getColeccion());
     }
 
     public void visitar(FuncionNoArgs s) {
         comprobarFuncion(s, null);
+    }
+
+    public void visitar(FuncionEspecial s) {
     }
 
     /**
@@ -139,4 +142,5 @@ public class SemFuncion {
                 return null;
         }
     }
+
 }

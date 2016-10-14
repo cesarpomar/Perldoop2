@@ -13,7 +13,6 @@ import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.acceso.AccesoRefArray;
 import perldoop.modelo.arbol.acceso.AccesoRefEscalar;
 import perldoop.modelo.arbol.acceso.AccesoRefMap;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
@@ -23,6 +22,7 @@ import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.flujo.Return;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 

@@ -1,6 +1,5 @@
 package perldoop.semantica;
 
-import perldoop.semantica.cadena.SemCadena;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.semantica.abrirbloque.*;
 import perldoop.semantica.acceso.*;
@@ -8,6 +7,7 @@ import perldoop.semantica.aritmetica.*;
 import perldoop.semantica.asignacion.*;
 import perldoop.semantica.binario.*;
 import perldoop.semantica.bloque.*;
+import perldoop.semantica.cadena.SemCadena;
 import perldoop.semantica.cadenatexto.SemCadenaTexto;
 import perldoop.semantica.coleccion.*;
 import perldoop.semantica.comparacion.*;
@@ -18,9 +18,11 @@ import perldoop.semantica.flujo.*;
 import perldoop.semantica.funcion.*;
 import perldoop.semantica.funciondef.*;
 import perldoop.semantica.funcionsub.*;
+import perldoop.semantica.lectura.SemLectura;
 import perldoop.semantica.lista.*;
 import perldoop.semantica.logico.*;
 import perldoop.semantica.modificador.*;
+import perldoop.semantica.modulos.SemModulo;
 import perldoop.semantica.numero.SemNumero;
 import perldoop.semantica.paquetes.*;
 import perldoop.semantica.raiz.SemRaiz;
@@ -56,10 +58,12 @@ public final class FachadaSemanticas {
     private SemFuncion semFuncion;
     private SemFuncionDef semFuncionDef;
     private SemFuncionSub semFuncionSub;
+    private SemLectura semLectura;
     private SemLista semLista;
     private SemLogico semLogico;
     private SemPaquetes semPaquetes;
     private SemModificador semModificador;
+    private SemModulo semModulo;
     private SemRaiz semRaiz;
     private SemRegulares semRegulares;
     private SemCadenaTexto semCadenaTexto;
@@ -434,6 +438,27 @@ public final class FachadaSemanticas {
     }
 
     /**
+     * Obtiene la semantica de lectura
+     *
+     * @return Semantica de lectura
+     */
+    public SemLectura getSemLectura() {
+        if (semLectura == null) {
+            semLectura = new SemLectura(tabla);
+        }
+        return semLectura;
+    }
+
+    /**
+     * Establece la semantica de lectura
+     *
+     * @param semLectura Semantica de lectura
+     */
+    public void setSemLectura(SemLectura semLectura) {
+        this.semLectura = semLectura;
+    }
+
+    /**
      * Obtiene la semantica de lista
      *
      * @return Semantica de lista
@@ -515,6 +540,27 @@ public final class FachadaSemanticas {
      */
     public void setSemModificador(SemModificador semModificador) {
         this.semModificador = semModificador;
+    }
+
+    /**
+     * Obtiene la semantica de modulos
+     *
+     * @return Semantica de modulos
+     */
+    public SemModulo getSemModulo() {
+        if (semModulo == null) {
+            semModulo = new SemModulo(tabla);
+        }
+        return semModulo;
+    }
+
+    /**
+     * Establece la semantica de modulos
+     *
+     * @param semModulo Semantica de modulos
+     */
+    public void setSemModulo(SemModulo semModulo) {
+        this.semModulo = semModulo;
     }
 
     /**

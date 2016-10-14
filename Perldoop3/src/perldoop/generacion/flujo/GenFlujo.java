@@ -1,9 +1,9 @@
 package perldoop.generacion.flujo;
 
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.flujo.Last;
 import perldoop.modelo.arbol.flujo.Next;
 import perldoop.modelo.arbol.flujo.Return;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de flujo

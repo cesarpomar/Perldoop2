@@ -1,7 +1,7 @@
 package perldoop.generacion.abrirbloque;
 
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de abrirBloque

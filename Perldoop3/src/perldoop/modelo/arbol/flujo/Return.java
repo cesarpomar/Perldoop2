@@ -4,7 +4,6 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
  * Clase que representa la reduccion -&gt; <br>
@@ -67,7 +66,7 @@ public final class Return extends Flujo {
      *
      * @return Expresion
      */
-    public final ExpColeccion getExpresion() {
+    public ExpColeccion getExpresion() {
         return expresion;
     }
 
@@ -76,7 +75,7 @@ public final class Return extends Flujo {
      *
      * @param expresion Expresion
      */
-    public final void setExpresion(ExpColeccion expresion) {
+    public void setExpresion(ExpColeccion expresion) {
         expresion.setPadre(this);
         this.expresion = expresion;
     }
@@ -86,7 +85,7 @@ public final class Return extends Flujo {
      *
      * @return PuntoComa
      */
-    public final Terminal getPuntoComa() {
+    public Terminal getPuntoComa() {
         return puntoComa;
     }
 
@@ -95,7 +94,7 @@ public final class Return extends Flujo {
      *
      * @param puntoComa PuntoComa
      */
-    public final void setPuntoComa(Terminal puntoComa) {
+    public void setPuntoComa(Terminal puntoComa) {
         puntoComa.setPadre(this);
         this.puntoComa = puntoComa;
     }

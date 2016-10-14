@@ -1,9 +1,9 @@
 package perldoop.semantica.numero;
 
-import perldoop.modelo.arbol.numero.Entero;
 import perldoop.modelo.arbol.numero.Decimal;
-import perldoop.modelo.semantica.Tipo;
+import perldoop.modelo.arbol.numero.Entero;
 import perldoop.modelo.semantica.TablaSemantica;
+import perldoop.modelo.semantica.Tipo;
 
 /**
  * Clase para la semantica de numeros

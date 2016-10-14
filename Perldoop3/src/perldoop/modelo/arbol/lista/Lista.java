@@ -70,7 +70,7 @@ public final class Lista extends Simbolo {
      *
      * @return Lista de elementos
      */
-    public final List<Simbolo> getElementos() {
+    public List<Simbolo> getElementos() {
         invertida(false);
         return elementos;
     }
@@ -80,7 +80,7 @@ public final class Lista extends Simbolo {
      *
      * @return Lista de expresiones
      */
-    public final List<Expresion> getExpresiones() {
+    public List<Expresion> getExpresiones() {
         invertida(false);
         return expresiones;
     }
@@ -92,7 +92,7 @@ public final class Lista extends Simbolo {
      * @param coma Coma
      * @return Esta instancia
      */
-    public final Lista add(Expresion exp, Terminal coma) {
+    public Lista add(Expresion exp, Terminal coma) {
         invertida(true);
         elementos.add(coma);
         add(exp);
@@ -106,7 +106,7 @@ public final class Lista extends Simbolo {
      * @param exp Expresión
      * @return Esta lista
      */
-    public final Lista add(Expresion exp) {
+    public Lista add(Expresion exp) {
         invertida(true);
         elementos.add(exp);
         expresiones.add(exp);
@@ -122,7 +122,7 @@ public final class Lista extends Simbolo {
      * @param l Lista
      * @return l
      */
-    public static final Lista add(Expresion exp, Terminal coma, Lista l) {
+    public static Lista add(Expresion exp, Terminal coma, Lista l) {
         return l.add(exp, coma);
     }
 
@@ -133,7 +133,7 @@ public final class Lista extends Simbolo {
      * @param l Lista
      * @return Lista l
      */
-    public static final Lista add(Expresion exp, Lista l) {
+    public static Lista add(Expresion exp, Lista l) {
         return l.add(exp);
     }
 

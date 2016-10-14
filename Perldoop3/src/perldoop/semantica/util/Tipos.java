@@ -7,6 +7,7 @@ import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
+import perldoop.util.ParserEtiquetas;
 
 /**
  * Clase para la gestion semantica de tipos
@@ -78,7 +79,7 @@ public final class Tipos {
      */
     public static void casting(Simbolo s, Tipo ts, Tipo t, GestorErrores ge) {
         if (!compatible(ts, t)) {
-            ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), SemanticaEtiquetas.parseTipo(s.getTipo()), SemanticaEtiquetas.parseTipo(t));
+            ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), ParserEtiquetas.parseTipo(s.getTipo()), ParserEtiquetas.parseTipo(t));
             throw new ExcepcionSemantica(Errores.ERROR_CASTING);
         }
     }

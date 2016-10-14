@@ -3,12 +3,12 @@ package perldoop.generacion.regulares;
 import perldoop.generacion.asignacion.GenIgual;
 import perldoop.generacion.util.Casting;
 import perldoop.modelo.arbol.SimboloAux;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.regulares.RegularMatch;
 import perldoop.modelo.arbol.regulares.RegularNoMatch;
 import perldoop.modelo.arbol.regulares.RegularSubs;
 import perldoop.modelo.arbol.regulares.RegularTrans;
 import perldoop.modelo.arbol.regulares.Regulares;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de regulares

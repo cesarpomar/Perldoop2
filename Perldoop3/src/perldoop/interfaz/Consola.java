@@ -88,15 +88,23 @@ public final class Consola {
         ArgumentGroup opcionales = parser.addArgumentGroup(interfaz.get(Interfaz.ARGS_OPCIONAL));
         opcionales.addArgument("-h", "--help").action(new HelpArgumentActionExt()).help(interfaz.get(Interfaz.AYUDA));
         opcionales.addArgument("-v", "--version").action(new VersionArgumentAction()).help(interfaz.get(Interfaz.VERSION));
-        opcionales.addArgument("-out").metavar("dir").action(new StoreArgumentAction()).help(interfaz.get(Interfaz.OUT));
+        opcionales.addArgument("-out").metavar("dir").setDefault(new File(".")).action(new StoreArgumentAction()).help(interfaz.get(Interfaz.OUT));
         opcionales.addArgument("-nf", "--not-formatting").action(new StoreFalseArgumentAction()).help(interfaz.get(Interfaz.NO_FORMATEAR));
-        opcionales.addArgument("-c","--comments").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.COMENTARIOS));
+        opcionales.addArgument("-cc", "--copy-comments").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.COPIAR_COMENTARIOS));
+        opcionales.addArgument("-hide", "--hide-warnings").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OCULTAR_AVISOS));
+        opcionales.addArgument("-se", "--show-errors").metavar("n").action(new StoreArgumentAction()).type(Integer.class).help(interfaz.get(Interfaz.MOSTRAR_ERRORES));
+        //Optimizaciones
+        ArgumentGroup optimizacion = parser.addArgumentGroup(interfaz.get(Interfaz.ARGS_OPTIMIZACION));
+        optimizacion.addArgument("-oi", "--optimize-instance").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_INSTANCIAS));
+        optimizacion.addArgument("-ol", "--optimize-diamond").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_DIAMANTE));
+        optimizacion.addArgument("-os", "--optimize-statements").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_SENTENCIAS));
         //Depuracion
         ArgumentGroup depuracion = parser.addArgumentGroup(interfaz.get(Interfaz.ARGS_DEPURACION));
-        depuracion.addArgument("-dtk","--debug-tokens").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TOKENS));
-        depuracion.addArgument("-dtl","--debug-terminal").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TERMINALES));
-        depuracion.addArgument("-dtr","--debug-tree").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_ARBOL));
-        depuracion.addArgument("-dtn","--debug-translation").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TRADUCCION));
+        depuracion.addArgument("-dtk", "--debug-tokens").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TOKENS));
+        depuracion.addArgument("-dtl", "--debug-terminal").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TERMINALES));
+        depuracion.addArgument("-dtr", "--debug-tree").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_ARBOL));
+        depuracion.addArgument("-dtn", "--debug-translation").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TRADUCCION));
+        depuracion.addArgument("-ds", "--debug-stages").metavar("stage").choices(1, 2, 3).type(Integer.class).action(new StoreArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_ESTADOS));
     }
 
     /**
@@ -118,17 +126,20 @@ public final class Consola {
      */
     private void opciones() {
         opciones = new Opciones();
-        //Directorio salida
-        String dir=comandos.getString("out");
-        if(dir==null){
-            opciones.setDirectorioSalida(new File("."));
-        }else{
-            opciones.setDirectorioSalida(new File(dir));
-        }
-        //No formatear
+        opciones.setDirectorioSalida(new File(comandos.getString("out")));
         opciones.setFormatearCodigo(comandos.getBoolean("not_formatting"));
-        //Traducir comentarios
-        opciones.setComentarios(comandos.getBoolean("comments"));
+        opciones.setCopiarComentarios(comandos.getBoolean("copy_comments"));
+        opciones.setOcultarAvisos(comandos.getBoolean("hide_warnings"));
+        opciones.setMostrarErrores(comandos.getInt("show_errors"));
+        opciones.setOptIntancias(comandos.getBoolean("optimize_instance"));
+        opciones.setOptDiamante(comandos.getBoolean("optimize_diamond"));
+        opciones.setOptSentencias(comandos.getBoolean("optimize_statements"));
+        opciones.setDepTokens(comandos.getBoolean("debug_tokens"));
+        opciones.setDepTerminales(comandos.getBoolean("debug_terminal"));
+        opciones.setDepTree(comandos.getBoolean("debug_tree"));
+        opciones.setDepTraduccion(comandos.getBoolean("debug_translation"));
+        Integer stages = comandos.getInt("debug_stages");
+        opciones.setDepEtapas(stages != null ? stages : 4);
     }
 
 }

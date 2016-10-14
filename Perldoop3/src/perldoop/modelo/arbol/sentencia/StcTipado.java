@@ -9,7 +9,7 @@ import perldoop.modelo.arbol.Visitante;
  *
  * @author César Pomar
  */
-public final class StcDeclaracion extends Sentencia {
+public final class StcTipado extends Sentencia {
 
     private Terminal declaracion;
 
@@ -18,7 +18,7 @@ public final class StcDeclaracion extends Sentencia {
      *
      * @param declaracion Declaración
      */
-    public StcDeclaracion(Terminal declaracion) {
+    public StcTipado(Terminal declaracion) {
         setDeclaracion(declaracion);
     }
 

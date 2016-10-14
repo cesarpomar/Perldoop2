@@ -54,7 +54,7 @@ public final class Terminal extends Simbolo {
      *
      * @return Valor
      */
-    public final String getValor() {
+    public String getValor() {
         return token.getValor();
     }
 

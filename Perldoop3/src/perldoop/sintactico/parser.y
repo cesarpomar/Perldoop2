@@ -32,6 +32,8 @@ import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.lectura.*;
+import perldoop.modelo.arbol.modulos.*;
 import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 %}
 
@@ -44,7 +46,7 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 %token ENTERO DECIMAL M_REX S_REX Y_REX TEXTO REX_MOD SEP STDIN STDOUT STDERR
 
 /*Palabras reservadas*/
-%token MY SUB OUR PACKAGE WHILE DO FOR UNTIL
+%token MY SUB OUR PACKAGE WHILE DO FOR UNTIL USE
 %token IF ELSIF ELSE UNLESS LAST NEXT RETURN
 %token Q QQ QR QW QX 
 
@@ -96,14 +98,21 @@ cuerpo		:											{$$=set(new Cuerpo(add(new AbrirBloque())));}
 			|	cuerpoNV								{$$=$1;}
 
 sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)));}
-			|	';'										{$$=set(new StcLista(new Lista(), new ModNada(), s($1)));}
+			|	';'										{$$=set(new StcLista(new Lista(), add(new ModNada()), s($1)));}
 			|	bloque									{$$=set(new StcBloque(s($1)));}
 			|	flujo									{$$=set(new StcFlujo(s($1)));}
-			|	PACKAGE paqueteID ID ';'				{$$=set(new StcPaquete(s($1), s($2), s($3), s($4)));}
-			|	PACKAGE ID ';'							{$$=set(new StcPaquete(s($1), new Paquetes(), s($2), s($3)));}
+			|	modulos									{$$=set(new StcModulos(s($1)));}
+			|	IMPORT_JAVA								{$$=set(new StcImport(s($1)));}
+			|	LINEA_JAVA								{$$=set(new StcLineaJava(s($1)));}
 			|	COMENTARIO								{$$=set(new StcComentario(s($1)));}
-			|	DECLARACION_TIPO						{$$=set(new StcDeclaracion(s($1)));}
+			|	DECLARACION_TIPO						{$$=set(new StcTipado(s($1)));}
 			|	error	';'								{$$=set(new StcError());}
+			|	error	'}'								{$$=set(new StcError());}
+			
+modulos		:	USE paqueteID ID ';'					{$$=set(new ModuloUse(s($1),s($2),s($3),s($4)));}
+			|	USE ID ';'								{$$=set(new ModuloUse(s($1),add(new Paquetes()),s($2),s($3)));}
+			|	PACKAGE paqueteID ID ';'				{$$=set(new ModuloPackage(s($1),s($2),s($3),s($4)));}
+			|	PACKAGE ID ';'							{$$=set(new ModuloPackage(s($1),add(new Paquetes()),s($2),s($3)));}
 
 expresion	:	numero									{$$=set(new ExpNumero(s($1)));} 
 			|	cadena									{$$=set(new ExpCadena(s($1)));} 
@@ -118,6 +127,7 @@ expresion	:	numero									{$$=set(new ExpNumero(s($1)));}
 			|	acceso									{$$=set(new ExpAcceso(s($1)));} 
 			|	funcion									{$$=set(new ExpFuncion(s($1)));} 
 			|	'&' funcion %prec UNITARIO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
+			|	lectura									{$$=set(new ExpLectura(s($1)));} 
 			|	regulares								{$$=set(new ExpRegulares(s($1)));}
 			|	expresion DOS_PUNTOS expresion			{$$=set(new ExpRango(s($1),s($2),s($3)));}
 			
@@ -220,7 +230,13 @@ acceso		:	expresion colRef						{$$=set(new AccesoCol(s($1),s($2)));}
 funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),virtualCol(s($3))));}
 			|	paqueteID ID							{$$=set(new FuncionPaqueteNoArgs(s($1),s($2)));}
 			|	ID expresion							{$$=set(new FuncionArgs(s($1),virtualCol(s($2))));}
-			|	ID										{$$=set(new FuncionNoArgs(s($1)));}
+			|	ID 										{$$=set(new FuncionNoArgs(s($1)));}
+			|	ID '{' lista '}' expresion				{$$=set(new FuncionEspecial(s($1),s($2),s($3),s($4),virtualCol(s($5))));}
+			|	ID '{' STDOUT '}' expresion				{$$=set(new FuncionEspecial(s($1),s($2),add(new Lista(s($3))),s($4),virtualCol(s($5))));}
+			|	ID '{' STDERR '}' expresion				{$$=set(new FuncionEspecial(s($1),s($2),add(new Lista(s($3))),s($4),virtualCol(s($5))));}
+			
+lectura		:	'<' STDIN '>'							{$$=set(new LecturaIn(s($1),s($2),s($3)));}
+			|	'<' expresion '>'						{$$=set(new LecturaFile(s($1),s($2),s($3)));}
 
 binario		:	expresion '|' expresion					{$$=set(new BinOr(s($1),s($2),s($3)));}
 			|	expresion '&' expresion					{$$=set(new BinAnd(s($1),s($2),s($3)));}

@@ -4,7 +4,6 @@ import java.util.List;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColLlave;
@@ -13,6 +12,7 @@ import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 

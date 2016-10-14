@@ -1,17 +1,14 @@
 package perldoop.generacion.bloque;
 
-import java.util.Iterator;
-import perldoop.generacion.asignacion.GenIgual;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.variable.VarMy;
-import perldoop.modelo.arbol.variable.Variable;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 

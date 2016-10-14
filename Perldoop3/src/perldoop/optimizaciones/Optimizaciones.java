@@ -30,7 +30,12 @@ public class Optimizaciones {
      * @param codigo Codigo fuente
      */
     public void optimizar(StringBuilder codigo) {
-        //notacionDiamante, accesoRefencia, asignacionpartida, instanciasIgnoradas
+        if (opciones.isOptDiamante()) {
+            notacionDiamante(codigo);
+        }
+        if (opciones.isOptIntancias()) {
+            instancias(codigo);
+        }
     }
 
     /**
@@ -44,11 +49,11 @@ public class Optimizaciones {
     }
 
     /**
-     * Elimina las referencias que siguen el patron new Ref<...>(...).get()
+     * Elimina las referencias que siguen el patron new Ref<...>(...).get() o new ...();
      *
      * @param codigo Codigo fuente
      */
-    private void accesoReferenciacion(StringBuilder codigo) {
+    private void instancias(StringBuilder codigo) {
         Pattern pattern = Pattern.compile("new Ref<[^(]*>\\(");
         String end = ".get()";
         List<Integer[]> cortes = new ArrayList<>(100);

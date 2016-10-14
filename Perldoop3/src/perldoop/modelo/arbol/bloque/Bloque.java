@@ -2,7 +2,6 @@ package perldoop.modelo.arbol.bloque;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
-import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**

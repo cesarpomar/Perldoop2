@@ -37,4 +37,8 @@ public final class EtiquetasInicializacion implements Etiquetas {
         return sizes;
     }
 
+    @Override
+    public String toString() {
+        return "EtiquetasInicializacion(" + sizes + ')';
+    }
 }

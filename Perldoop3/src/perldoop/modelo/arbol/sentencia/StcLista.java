@@ -35,7 +35,7 @@ public final class StcLista extends Sentencia {
      *
      * @return Lista
      */
-    public final Lista getLista() {
+    public Lista getLista() {
         return lista;
     }
 
@@ -44,7 +44,7 @@ public final class StcLista extends Sentencia {
      *
      * @param lista Tabla
      */
-    public final void setLista(Lista lista) {
+    public void setLista(Lista lista) {
         lista.setPadre(this);
         this.lista = lista;
     }
@@ -73,7 +73,7 @@ public final class StcLista extends Sentencia {
      *
      * @return PuntoComa
      */
-    public final Terminal getPuntoComa() {
+    public Terminal getPuntoComa() {
         return puntoComa;
     }
 
@@ -82,7 +82,7 @@ public final class StcLista extends Sentencia {
      *
      * @param puntoComa PuntoComa
      */
-    public final void setPuntoComa(Terminal puntoComa) {
+    public void setPuntoComa(Terminal puntoComa) {
         puntoComa.setPadre(this);
         this.puntoComa = puntoComa;
     }

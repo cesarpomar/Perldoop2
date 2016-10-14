@@ -4,12 +4,9 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -&gt; <br>
- * variable : paquete ID expresion<br>
- * | ID expresion<br>
+ * Clase que representa la reduccion -&gt; funcion : ID expresion
  *
  * @author César Pomar
  */

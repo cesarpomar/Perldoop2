@@ -1,7 +1,6 @@
 package perldoop.semantica.bloque;
 
 import perldoop.modelo.arbol.bloque.*;
-import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**

@@ -1,8 +1,6 @@
 package perldoop.semantica.raiz;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Raiz;

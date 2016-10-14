@@ -9,28 +9,22 @@ import java.io.File;
  */
 public class Opciones {
 
-    private boolean sentenciasEstrictas;
+    //Argumentos opcionales
     private File DirectorioSalida;
     private boolean formatearCodigo;
-    private boolean comentarios;
-
-    /**
-     * Obtiene si las sentencias son estrictas
-     *
-     * @return Sentencias estrictas
-     */
-    public boolean isSentenciasEstrictas() {
-        return sentenciasEstrictas;
-    }
-
-    /**
-     * Establece si las sentencias son estrictas
-     *
-     * @param sentenciasEstrictas Sentencias estrictas
-     */
-    public void setSentenciasEstrictas(boolean sentenciasEstrictas) {
-        this.sentenciasEstrictas = sentenciasEstrictas;
-    }
+    private boolean copiarComentarios;
+    private boolean ocultarAvisos;
+    private Integer mostrarErrores;
+    //Argumentos Optimización
+    private boolean optIntancias;
+    private boolean optDiamante;
+    private boolean optSentencias;
+    //Argumentos depuración
+    private boolean depTokens;
+    private boolean depTerminales;
+    private boolean depTree;
+    private boolean depTraduccion;
+    private int depEtapas;
 
     /**
      * Obtiene el directorio de salida
@@ -69,21 +63,201 @@ public class Opciones {
     }
 
     /**
-     * Establece la traducción de comentarios
+     * Obtiene copiar comentarios
      *
-     * @return Traducción de comentarios
+     * @return Copiar comentario
      */
-    public boolean isComentarios() {
-        return comentarios;
+    public boolean isCopiarComentarios() {
+        return copiarComentarios;
     }
 
     /**
-     * Obtiene la traducción de comentarios
+     * Establece copiar comentarios
      *
-     * @param comentarios Traducción de comentarios
+     * @param copiarComentarios Copiar comentarios
      */
-    public void setComentarios(boolean comentarios) {
-        this.comentarios = comentarios;
+    public void setCopiarComentarios(boolean copiarComentarios) {
+        this.copiarComentarios = copiarComentarios;
+    }
+
+    /**
+     * Obtiene ocultar avisos
+     *
+     * @return Ocultar avisos
+     */
+    public boolean isOcultarAvisos() {
+        return ocultarAvisos;
+    }
+
+    /**
+     * Establece ocultar avisos
+     *
+     * @param ocultarAvisos Ocultar avisos
+     */
+    public void setOcultarAvisos(boolean ocultarAvisos) {
+        this.ocultarAvisos = ocultarAvisos;
+    }
+
+    /**
+     * Obtiene mostrar errores
+     *
+     * @return Mostar errores
+     */
+    public Integer getMostrarErrores() {
+        return mostrarErrores;
+    }
+
+    /**
+     * Establece mostrar errores
+     *
+     * @param mostrarErrores Mostrar errores
+     */
+    public void setMostrarErrores(Integer mostrarErrores) {
+        this.mostrarErrores = mostrarErrores;
+    }
+
+    /**
+     * Obtiene optimizar instancias
+     *
+     * @return Optimizar instancias
+     */
+    public boolean isOptIntancias() {
+        return optIntancias;
+    }
+
+    /**
+     * Establece optimizar instancias
+     *
+     * @param optIntancias Optimizar instancias
+     */
+    public void setOptIntancias(boolean optIntancias) {
+        this.optIntancias = optIntancias;
+    }
+
+    /**
+     * Obtiene optimizar diamante
+     *
+     * @return Optimizar diamante
+     */
+    public boolean isOptDiamante() {
+        return optDiamante;
+    }
+
+    /**
+     * Establece optimizar diamante
+     *
+     * @param optDiamante Optimizar diamante
+     */
+    public void setOptDiamante(boolean optDiamante) {
+        this.optDiamante = optDiamante;
+    }
+
+    /**
+     * Obtiene optimizar sentencias
+     *
+     * @return Optimizar sentencias
+     */
+    public boolean isOptSentencias() {
+        return optSentencias;
+    }
+
+    /**
+     * Establece optimizar sentencias
+     *
+     * @param optSentencias Optimizar sentencias
+     */
+    public void setOptSentencias(boolean optSentencias) {
+        this.optSentencias = optSentencias;
+    }
+
+    /**
+     * Obtiene depuracion tokens
+     *
+     * @return Depuracion tokens
+     */
+    public boolean isDepTokens() {
+        return depTokens;
+    }
+
+    /**
+     * Establece depuracion tokens
+     *
+     * @param depTokens Depuracion tokens
+     */
+    public void setDepTokens(boolean depTokens) {
+        this.depTokens = depTokens;
+    }
+
+    /**
+     * Obtiene depuracion terminales
+     *
+     * @return Depuracion terminales
+     */
+    public boolean isDepTerminales() {
+        return depTerminales;
+    }
+
+    /**
+     * Establece depuracion terminales
+     *
+     * @param depTerminales Depuracion terminales
+     */
+    public void setDepTerminales(boolean depTerminales) {
+        this.depTerminales = depTerminales;
+    }
+
+    /**
+     * Establece depuracion arbol
+     *
+     * @return Depuracion arbol
+     */
+    public boolean isDepTree() {
+        return depTree;
+    }
+
+    /**
+     * Obtiene depuracion arbol
+     *
+     * @param depTree Depuracion arbol
+     */
+    public void setDepTree(boolean depTree) {
+        this.depTree = depTree;
+    }
+
+    /**
+     * Obtiene depuracion traduccion
+     *
+     * @return Depuracion traduccion
+     */
+    public boolean isDepTraduccion() {
+        return depTraduccion;
+    }
+
+    /**
+     * Establece depuracion traduccion
+     *
+     * @param depTraduccion Depuracion traduccion
+     */
+    public void setDepTraduccion(boolean depTraduccion) {
+        this.depTraduccion = depTraduccion;
+    }
+
+    /**
+     * Obtiene depuracion etapas
+     *
+     * @return Depuracion etapas
+     */
+    public int getDepEtapas() {
+        return depEtapas;
+    }
+
+    /**
+     * Establece depuracion etapas
+     *
+     * @param depEtapas Depuracion etapas
+     */
+    public void setDepEtapas(int depEtapas) {
+        this.depEtapas = depEtapas;
     }
 
 }

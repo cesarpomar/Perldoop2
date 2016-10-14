@@ -2,8 +2,8 @@ package perldoop.modelo.arbol.regulares;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
-import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
+import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
  * Clase abtracta que representa todas las reduciones de regulares

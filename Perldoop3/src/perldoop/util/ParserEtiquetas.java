@@ -1,23 +1,21 @@
-package perldoop.semantica.util;
+package perldoop.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import perldoop.error.GestorErrores;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.semantica.Tipo;
 
 /**
- * Clase para la gestion semantica de etiquetas
+ * Clase para la gestion de etiquetas
  *
  * @author César Pomar
  */
-public final class SemanticaEtiquetas {
+public final class ParserEtiquetas {
 
     /**
      * Convierte las etiquetas a un tipo
      *
-     * @param etiquetas SemanticaEtiquetas
-     * @param ge Gestor de errores
+     * @param etiquetas ParserEtiquetas
      * @return Tipo
      */
     public static Tipo parseTipo(List<Token> etiquetas) {
@@ -31,6 +29,7 @@ public final class SemanticaEtiquetas {
                     tipo.add(Tipo.LIST);
                     break;
                 case "<hash>":
+                case "<map>":
                     tipo.add(Tipo.MAP);
                     break;
                 case "<ref>":

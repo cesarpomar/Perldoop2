@@ -2,10 +2,10 @@ package perldoop.generacion.funciondef;
 
 import java.util.List;
 import perldoop.modelo.arbol.flujo.Return;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.funciondef.FuncionDef;
 import perldoop.modelo.arbol.sentencia.Sentencia;
 import perldoop.modelo.arbol.sentencia.StcFlujo;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de funcionDef

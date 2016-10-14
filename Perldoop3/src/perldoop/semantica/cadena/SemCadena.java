@@ -1,8 +1,8 @@
 package perldoop.semantica.cadena;
 
 import perldoop.modelo.arbol.cadena.*;
-import perldoop.modelo.semantica.Tipo;
 import perldoop.modelo.semantica.TablaSemantica;
+import perldoop.modelo.semantica.Tipo;
 
 /**
  * Clase para la semantica de cadenas

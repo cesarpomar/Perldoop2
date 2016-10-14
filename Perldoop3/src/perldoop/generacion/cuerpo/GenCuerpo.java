@@ -1,8 +1,8 @@
 package perldoop.generacion.cuerpo;
 
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.sentencia.Sentencia;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de cuerpo

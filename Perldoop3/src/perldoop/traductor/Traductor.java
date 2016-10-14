@@ -1,12 +1,12 @@
 package perldoop.traductor;
 
 import java.util.List;
+import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.generacion.Generador;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.sentencia.Sentencia;
 import perldoop.semantica.Semantica;
-import perldoop.excepciones.ExcepcionSemantica;
 
 /**
  * Clase que verifica la semanca del arbol de simbolos.

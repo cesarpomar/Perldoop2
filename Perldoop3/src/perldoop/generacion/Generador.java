@@ -1,39 +1,39 @@
 package perldoop.generacion;
 
-import perldoop.modelo.arbol.variable.VarSigil;
-import perldoop.modelo.arbol.expresion.ExpRango;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
+import perldoop.modelo.arbol.abrirbloque.*;
+import perldoop.modelo.arbol.acceso.*;
+import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.asignacion.*;
+import perldoop.modelo.arbol.binario.*;
+import perldoop.modelo.arbol.bloque.*;
+import perldoop.modelo.arbol.cadena.*;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
+import perldoop.modelo.arbol.coleccion.*;
+import perldoop.modelo.arbol.comparacion.*;
+import perldoop.modelo.arbol.condicional.*;
+import perldoop.modelo.arbol.cuerpo.*;
+import perldoop.modelo.arbol.expresion.*;
+import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.*;
+import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.funciondef.*;
 import perldoop.modelo.arbol.funcionsub.*;
-import perldoop.modelo.arbol.cuerpo.*;
-import perldoop.modelo.arbol.sentencia.*;
-import perldoop.modelo.arbol.expresion.*;
+import perldoop.modelo.arbol.lectura.*;
 import perldoop.modelo.arbol.lista.*;
+import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.modificador.*;
-import perldoop.modelo.arbol.flujo.*;
-import perldoop.modelo.arbol.asignacion.*;
+import perldoop.modelo.arbol.modulos.*;
 import perldoop.modelo.arbol.numero.*;
-import perldoop.modelo.arbol.cadena.*;
+import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.regulares.*;
+import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.varmulti.*;
-import perldoop.modelo.arbol.coleccion.*;
-import perldoop.modelo.arbol.acceso.*;
-import perldoop.modelo.arbol.funcion.*;
-import perldoop.modelo.arbol.abrirbloque.*;
-import perldoop.modelo.arbol.bloque.*;
-import perldoop.modelo.arbol.condicional.*;
-import perldoop.modelo.arbol.regulares.*;
-import perldoop.modelo.arbol.binario.*;
-import perldoop.modelo.arbol.logico.*;
-import perldoop.modelo.arbol.comparacion.*;
-import perldoop.modelo.arbol.aritmetica.*;
-import perldoop.modelo.arbol.paquete.*;
-import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.generacion.ClaseJava;
+import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.TablaSimbolos;
 
 /**
@@ -162,7 +162,7 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(StcPaquete s) {
+    public void visitar(StcModulos s) {
         fachada.getGenSentencia().visitar(s);
     }
 
@@ -172,7 +172,22 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(StcDeclaracion s) {
+    public void visitar(StcTipado s) {
+        fachada.getGenSentencia().visitar(s);
+    }
+
+    @Override
+    public void visitar(StcImport s) {
+        fachada.getGenSentencia().visitar(s);
+    }
+
+    @Override
+    public void visitar(StcLineaJava s) {
+        fachada.getGenSentencia().visitar(s);
+    }
+
+    @Override
+    public void visitar(ExpLectura s) {
         fachada.getGenSentencia().visitar(s);
     }
 
@@ -289,6 +304,16 @@ public class Generador implements Visitante {
     @Override
     public void visitar(ModFor s) {
         fachada.getGenModificador().visitar(s);
+    }
+
+    @Override
+    public void visitar(ModuloPackage s) {
+        fachada.getGenModulo().visitar(s);
+    }
+
+    @Override
+    public void visitar(ModuloUse s) {
+        fachada.getGenModulo().visitar(s);
     }
 
     @Override
@@ -555,6 +580,19 @@ public class Generador implements Visitante {
     @Override
     public void visitar(FuncionNoArgs s) {
         fachada.getGenFuncion().visitar(s);
+    }
+
+    @Override
+    public void visitar(FuncionEspecial s) {
+        fachada.getGenFuncion().visitar(s);
+    }
+
+    public void visitar(LecturaIn s) {
+        fachada.getGenLectura().visitar(s);
+    }
+
+    public void visitar(LecturaFile s) {
+        fachada.getGenLectura().visitar(s);
     }
 
     @Override

@@ -1,36 +1,40 @@
 package perldoop.semantica;
 
-import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
+import perldoop.modelo.arbol.abrirbloque.*;
+import perldoop.modelo.arbol.acceso.*;
+import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.asignacion.*;
+import perldoop.modelo.arbol.binario.*;
+import perldoop.modelo.arbol.bloque.*;
+import perldoop.modelo.arbol.cadena.*;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
+import perldoop.modelo.arbol.coleccion.*;
+import perldoop.modelo.arbol.comparacion.*;
+import perldoop.modelo.arbol.condicional.*;
+import perldoop.modelo.arbol.cuerpo.*;
+import perldoop.modelo.arbol.expresion.*;
+import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.*;
+import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.funciondef.*;
 import perldoop.modelo.arbol.funcionsub.*;
-import perldoop.modelo.arbol.cuerpo.*;
-import perldoop.modelo.arbol.sentencia.*;
-import perldoop.modelo.arbol.expresion.*;
+import perldoop.modelo.arbol.lectura.LecturaFile;
+import perldoop.modelo.arbol.lectura.LecturaIn;
 import perldoop.modelo.arbol.lista.*;
+import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.modificador.*;
-import perldoop.modelo.arbol.flujo.*;
-import perldoop.modelo.arbol.asignacion.*;
+import perldoop.modelo.arbol.modulos.ModuloPackage;
+import perldoop.modelo.arbol.modulos.ModuloUse;
 import perldoop.modelo.arbol.numero.*;
-import perldoop.modelo.arbol.cadena.*;
+import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.regulares.*;
+import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.varmulti.*;
-import perldoop.modelo.arbol.coleccion.*;
-import perldoop.modelo.arbol.acceso.*;
-import perldoop.modelo.arbol.funcion.*;
-import perldoop.modelo.arbol.abrirbloque.*;
-import perldoop.modelo.arbol.bloque.*;
-import perldoop.modelo.arbol.condicional.*;
-import perldoop.modelo.arbol.regulares.*;
-import perldoop.modelo.arbol.binario.*;
-import perldoop.modelo.arbol.logico.*;
-import perldoop.modelo.arbol.comparacion.*;
-import perldoop.modelo.arbol.aritmetica.*;
-import perldoop.modelo.arbol.paquete.*;
-import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
+import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.TablaSimbolos;
 import perldoop.traductor.Acciones;
 
@@ -115,7 +119,17 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(StcPaquete s) {
+    public void visitar(StcModulos s) {
+        fachada.getSemSentencia().visitar(s);
+    }
+
+    @Override
+    public void visitar(StcImport s) {
+        fachada.getSemSentencia().visitar(s);
+    }
+
+    @Override
+    public void visitar(StcLineaJava s) {
         fachada.getSemSentencia().visitar(s);
     }
 
@@ -125,7 +139,7 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(StcDeclaracion s) {
+    public void visitar(StcTipado s) {
         fachada.getSemSentencia().visitar(s);
     }
 
@@ -195,6 +209,11 @@ public class Semantica implements Visitante {
     }
 
     @Override
+    public void visitar(ExpLectura s) {
+        fachada.getSemExpresion().visitar(s);
+    }
+
+    @Override
     public void visitar(ExpRegulares s) {
         fachada.getSemExpresion().visitar(s);
     }
@@ -242,6 +261,16 @@ public class Semantica implements Visitante {
     @Override
     public void visitar(ModFor s) {
         fachada.getSemModificador().visitar(s);
+    }
+
+    @Override
+    public void visitar(ModuloPackage s) {
+        fachada.getSemModulo().visitar(s);
+    }
+
+    @Override
+    public void visitar(ModuloUse s) {
+        fachada.getSemModulo().visitar(s);
     }
 
     @Override
@@ -512,6 +541,21 @@ public class Semantica implements Visitante {
     @Override
     public void visitar(FuncionNoArgs s) {
         fachada.getSemFuncion().visitar(s);
+    }
+
+    @Override
+    public void visitar(FuncionEspecial s) {
+        fachada.getSemFuncion().visitar(s);
+    }
+
+    @Override
+    public void visitar(LecturaIn s) {
+        fachada.getSemLectura().visitar(s);
+    }
+
+    @Override
+    public void visitar(LecturaFile s) {
+        fachada.getSemLectura().visitar(s);
     }
 
     @Override

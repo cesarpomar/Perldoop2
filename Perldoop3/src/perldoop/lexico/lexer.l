@@ -307,16 +307,12 @@ PD_NUM			=	<{ENTERO}>
 		/*----Expresiones regualares----*/
 	"=~"				{yybegin(REX_T);return token(Parser.STR_REX);}
 	"!~"				{yybegin(REX_T);return token(Parser.STR_NO_REX);}	
-		
-		/*----Entrada y Salida----*/
-	"<STDIN>"			{return token(Parser.STDIN);}
-	"<STDOUT>"			{return token(Parser.STDOUT);}
-	"<STDERR>"			{return token(Parser.STDERR);}
 
 		/*----Comentarios----*/
 
 	"\#"				{yybegin(PD);token("", Parser.COMENTARIO, true);
 						tokenAux=yyval;buffer.setLength(0);}
+	"\#!.*"				{}
 	{IGNORAR_LINEA}		{}
 	\#{IGNORAR_BLOQUE}	{yybegin(IGNORAR);}
 	{IMPORT_JAVA}		{return token(Parser.IMPORT_JAVA);}

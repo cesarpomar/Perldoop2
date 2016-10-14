@@ -2,7 +2,6 @@ package perldoop.semantica.sentencia;
 
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.lexico.Token;
-import perldoop.modelo.preprocesador.Etiquetas;
 import perldoop.modelo.preprocesador.EtiquetasPredeclaracion;
 import perldoop.modelo.semantica.TablaSemantica;
 
@@ -35,25 +34,24 @@ public class SemSentencia {
     public void visitar(StcFlujo s) {
     }
 
-    public void visitar(StcPaquete s) {
-        if(tabla.getTablaSimbolos().isPaquete()){
-            //TODO Dar error paqute ya creado
-        }
-        if(!tabla.getTablaSimbolos().isVacia()){
-            //TODO Dar error paquete tiene que ser declarado al principio
-        }
-        tabla.getTablaSimbolos().crerPaquete(s.getPaquetes().getRepresentancion());
-    }
-
     public void visitar(StcComentario s) {
         //Nada que comprobar
     }
 
-    public void visitar(StcDeclaracion s) {
+    public void visitar(StcTipado s) {
         EtiquetasPredeclaracion etiquetas = (EtiquetasPredeclaracion) s.getDeclaracion().getEtiquetas();
-        for(Token t:etiquetas.getVariables()){
-            tabla.getTablaSimbolos().addDeclaracion(t.getValor().substring(1, t.getValor().length()-1), etiquetas.getTipo());
-        }    
+        for (Token t : etiquetas.getVariables()) {
+            tabla.getTablaSimbolos().addDeclaracion(t.getValor().substring(1, t.getValor().length() - 1), etiquetas.getTipo());
+        }
+    }
+
+    public void visitar(StcModulos s) {
+    }
+
+    public void visitar(StcImport s) {
+    }
+
+    public void visitar(StcLineaJava s) {
     }
 
     public void visitar(StcError s) {

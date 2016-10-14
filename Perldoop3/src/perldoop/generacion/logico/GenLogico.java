@@ -1,7 +1,6 @@
 package perldoop.generacion.logico;
 
 import perldoop.modelo.arbol.logico.DLogOr;
-import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.arbol.logico.LogAnd;
 import perldoop.modelo.arbol.logico.LogAndBajo;
 import perldoop.modelo.arbol.logico.LogNot;
@@ -10,6 +9,7 @@ import perldoop.modelo.arbol.logico.LogOr;
 import perldoop.modelo.arbol.logico.LogOrBajo;
 import perldoop.modelo.arbol.logico.LogTernario;
 import perldoop.modelo.arbol.logico.LogXorBajo;
+import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de logico

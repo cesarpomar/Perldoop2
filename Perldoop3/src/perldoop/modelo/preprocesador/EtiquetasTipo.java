@@ -9,7 +9,7 @@ import perldoop.modelo.lexico.Token;
  *
  * @author César Pomar
  */
-public final class EtiquetasTipo implements Etiquetas{
+public final class EtiquetasTipo implements Etiquetas {
 
     private List<Token> tipos;
     private List<Token> sizes;
@@ -57,6 +57,20 @@ public final class EtiquetasTipo implements Etiquetas{
      */
     public List<Token> getSizes() {
         return sizes;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder(100);
+        str.append("EtiquetasTipo(");
+        for (int i = 0; i < tipos.size(); i++) {
+            str.append(tipos.get(i));
+            if (sizes.get(i) != null) {
+                str.append(sizes.get(i));
+            }
+        }
+        str.append(")");
+        return str.toString();
     }
 
 }

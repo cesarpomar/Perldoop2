@@ -25,7 +25,7 @@ public class GenTerminal {
 
     public void visitar(Terminal s) {
         s.setCodigoGenerado(new StringBuilder(s.getValor()));
-        if (tabla.getOpciones().isComentarios() && s.getTokensComentario() != null) {
+        if (tabla.getOpciones().isCopiarComentarios() && s.getTokensComentario() != null) {
             StringBuilder comentario = new StringBuilder(200);
             if (s.getTokensComentario().get(0).getLinea() != s.getToken().getLinea()) {
                 comentario.append("\n");
