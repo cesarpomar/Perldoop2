@@ -110,7 +110,7 @@ public final class GestorErrores {
      * @param args Valores para el mensaje de error
      */
     public void error(String codigo, Object... args) {
-        error(Errores.ERROR, fichero + ":" + msgs.get(codigo, args));
+        error(Errores.ERROR, msgs.get(codigo, args));
     }
 
     /**
@@ -120,17 +120,17 @@ public final class GestorErrores {
      * @param msg Mensaje
      * @return Error lanzado
      */
-    public boolean error(String tipo, String msg) {
+    private boolean error(String tipo, String msg) {
         if (Errores.AVISO.equals(tipo)) {
             if (!opciones.isOcultarAvisos()) {
-                System.out.println(fichero + ":" + msg);
+                System.err.println(fichero + ":" + msg);
                 return true;
             }
             avisos++;
         } else {
             errores++;
             if (opciones.getMostrarErrores() == null || opciones.getMostrarErrores() < errores) {
-                System.out.println(fichero + ":" + msg);
+                System.err.println(fichero + ":" + msg);
                 return true;
             }
         }

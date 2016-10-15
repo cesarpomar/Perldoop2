@@ -14,8 +14,10 @@ public class Errores extends Internacionalizacion {
     public static final String FICHERO_NO_EXISTE = "FICHERO_NO_EXISTE";
     public static final String ERROR_LECTURA = "ERROR_LECTURA";
     public static final String ERROR_ESCRITURA = "ERROR_ESCRITURA";
+    public static final String ERROR_CODIFICACION = "ERROR_CODIFICACION";
     //Lexicos
     public static final String CARACTER_INVALIDO = "CARACTER_INVALIDO";
+    public static final String ACCESO_CADENA = "ACCESO_CADENA";
     public static final String FALLOS_LEXICOS = "FALLOS_LEXICOS";
     public static final String ETIQUETA_IGNORADA = "ETIQUETA_IGNORADA";
     //Preprocesador

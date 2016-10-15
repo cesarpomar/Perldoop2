@@ -3,6 +3,7 @@ package perldoop.interfaz;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ public final class Perldoop {
             File fichero = new File(ruta);
             /*--------------------------------Lexico---------------------------------*/
             List<Token> tokens;
-            try (CodeReader codeReader = new CodeReader(fichero)) {
+            try (CodeReader codeReader = new CodeReader(fichero, opciones.getCodificacion())) {
                 gestorErrores.setCodigo(codeReader.getCodigo());
                 Lexer lexer = new Lexer(codeReader, opciones, gestorErrores);
                 tokens = lexer.getTokens();
@@ -65,7 +66,9 @@ public final class Perldoop {
             } catch (FileNotFoundException ex) {
                 gestorErrores.error(Errores.FICHERO_NO_EXISTE);
                 continue;
-
+            }catch (UnsupportedEncodingException ex) {
+                gestorErrores.error(Errores.ERROR_CODIFICACION, opciones.getCodificacion());
+                return;//La codificacion fallara en todos
             } catch (IOException ex) {
                 gestorErrores.error(Errores.ERROR_LECTURA);
                 continue;

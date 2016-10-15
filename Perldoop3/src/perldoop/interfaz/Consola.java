@@ -91,8 +91,9 @@ public final class Consola {
         opcionales.addArgument("-out").metavar("dir").setDefault(new File(".")).action(new StoreArgumentAction()).help(interfaz.get(Interfaz.OUT));
         opcionales.addArgument("-nf", "--not-formatting").action(new StoreFalseArgumentAction()).help(interfaz.get(Interfaz.NO_FORMATEAR));
         opcionales.addArgument("-cc", "--copy-comments").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.COPIAR_COMENTARIOS));
-        opcionales.addArgument("-hide", "--hide-warnings").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OCULTAR_AVISOS));
+        opcionales.addArgument("-hw", "--hide-warnings").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OCULTAR_AVISOS));
         opcionales.addArgument("-se", "--show-errors").metavar("n").action(new StoreArgumentAction()).type(Integer.class).help(interfaz.get(Interfaz.MOSTRAR_ERRORES));
+        opcionales.addArgument("-en", "--encoding").metavar("e").action(new StoreArgumentAction()).help(interfaz.get(Interfaz.CODIFICACION));
         //Optimizaciones
         ArgumentGroup optimizacion = parser.addArgumentGroup(interfaz.get(Interfaz.ARGS_OPTIMIZACION));
         optimizacion.addArgument("-oi", "--optimize-instance").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_INSTANCIAS));
@@ -131,6 +132,7 @@ public final class Consola {
         opciones.setCopiarComentarios(comandos.getBoolean("copy_comments"));
         opciones.setOcultarAvisos(comandos.getBoolean("hide_warnings"));
         opciones.setMostrarErrores(comandos.getInt("show_errors"));
+        opciones.setCodificacion(comandos.get("encoding"));
         opciones.setOptIntancias(comandos.getBoolean("optimize_instance"));
         opciones.setOptDiamante(comandos.getBoolean("optimize_diamond"));
         opciones.setOptSentencias(comandos.getBoolean("optimize_statements"));

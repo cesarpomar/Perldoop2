@@ -23,6 +23,7 @@ public class Interfaz extends Internacionalizacion {
     public static final String COPIAR_COMENTARIOS = "COPIAR_COMENTARIOS";
     public static final String OCULTAR_AVISOS = "OCULTAR_AVISOS";
     public static final String MOSTRAR_ERRORES = "MOSTRAR_ERRORES";  
+    public static final String CODIFICACION = "CODIFICACION"; 
     
     //Argumentos Optimización
     public static final String ARGS_OPTIMIZACION = "ARGS_OPTIMIZACION";

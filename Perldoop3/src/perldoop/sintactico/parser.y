@@ -108,6 +108,7 @@ sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)
 			|	DECLARACION_TIPO						{$$=set(new StcTipado(s($1)));}
 			|	error	';'								{$$=set(new StcError());}
 			|	error	'}'								{$$=set(new StcError());}
+			|	error	'{'								{$$=set(new StcError());}
 			
 modulos		:	USE paqueteID ID ';'					{$$=set(new ModuloUse(s($1),s($2),s($3),s($4)));}
 			|	USE ID ';'								{$$=set(new ModuloUse(s($1),add(new Paquetes()),s($2),s($3)));}
@@ -325,7 +326,6 @@ condicional	:																					{$$=set(new CondicionalNada());}
 	private Iterator<Terminal> iterator;
 	private Opciones opciones;
 	private GestorErrores gestorErrores;
-	private int errores;
 	
 	/**
 	 * Constructor del analizador sintactico
@@ -339,7 +339,6 @@ condicional	:																					{$$=set(new CondicionalNada());}
 		iterator = terminales.iterator();
 		this.opciones = opciones;
 		this.gestorErrores = gestorErrores;
-		errores = 0;
 	}
 
 	/**
@@ -372,15 +371,6 @@ condicional	:																					{$$=set(new CondicionalNada());}
 	 */
 	public void setOpciones(Opciones opciones) {
 		this.opciones = opciones;
-	}
-
-	/**
-	 * Obtiene el número de errores sintacticos, si no hay errores el analisis
-	 * se ha realizado correctamente.
-	 * @return Número de errores
-	 */
-	public int getErrores(){
-		return errores;
 	}
 	
 	/**
@@ -485,7 +475,6 @@ condicional	:																					{$$=set(new CondicionalNada());}
 	 * @param descripcion String con el mensaje "Syntax error"
 	 */
 	private void yyerror (String descripcion){
-		errores++;
 		List<Integer> tokens = new ArrayList<>(YYMAXTOKEN);
 		int yychar, yyn;
 		//Reducir

@@ -4,8 +4,12 @@ import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -92,9 +96,18 @@ public final class CodeWriter {
             ruta = new File(ruta, p);
         }
         ruta.mkdirs();
-        try (FileWriter escritura = new FileWriter(new File(ruta, fichero + ".java"));
-                BufferedWriter buffer = new BufferedWriter(escritura);) {
-            buffer.append(codigo);
+        File archivo = new File(ruta, fichero + ".java");
+        if (opciones.getCodificacion() == null) {
+            try (FileWriter escritura = new FileWriter(archivo);
+                    BufferedWriter buffer = new BufferedWriter(escritura);) {
+                buffer.append(codigo);
+            }
+        } else {
+            try (OutputStream out = new FileOutputStream(archivo);
+                    Writer escritura = new OutputStreamWriter(out, opciones.getCodificacion());
+                    BufferedWriter buffer = new BufferedWriter(escritura);) {
+                buffer.append(codigo);
+            }
         }
     }
 

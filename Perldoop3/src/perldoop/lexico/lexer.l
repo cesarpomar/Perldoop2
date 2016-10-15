@@ -24,14 +24,13 @@ import perldoop.modelo.Opciones;
 	private Token tokenAux;
 	private Opciones opciones;
 	private GestorErrores gestorErrores;
-	private int errores;
 	
 	/*Atributos para interpolar*/
 	private StringBuilder buffer;
 	private Character sepBlock;
 	private char sep;
 	private int stack;
-	private int rexN;
+	private int sepN;
 	private boolean interpola;
 	private int estadoReturn;
 	private int analisisTipo;
@@ -44,7 +43,6 @@ import perldoop.modelo.Opciones;
 	 */
 	public Lexer(java.io.Reader in, Opciones opciones, GestorErrores gestorErrores){
 		this(in);
-		errores = 0;
 		this.opciones = opciones;
 		this.gestorErrores = gestorErrores;
 		buffer = new StringBuilder(100);
@@ -80,15 +78,6 @@ import perldoop.modelo.Opciones;
 	 */
 	public void setOpciones(Opciones opciones) {
 		this.opciones = opciones;
-	}
-
-	/**
-	 * Obtiene el número de errores léxicos, si no hay errores el analisis
-	 * se ha realizado correctamente.
-	 * @return Número de errores
-	 */
-	public int getErrores(){
-		return errores;
 	}
 
 	/**
@@ -150,9 +139,8 @@ import perldoop.modelo.Opciones;
 	 * Función invocada en caso de error
 	 */	
 	private void error(){
-		errores++;
 		token(0);
-		gestorErrores.error(Errores.CARACTER_INVALIDO, yyval);	
+		gestorErrores.error(Errores.CARACTER_INVALIDO, yyval, yytext());	
 		yybegin(YYINITIAL);
 	}
 
@@ -161,15 +149,15 @@ import perldoop.modelo.Opciones;
 	 *
 	 * @param analisisTipo Tipo de tokens a retornar
 	 * @param estadoReturn Estado de cambio al terminar
-	 * @param rexN Numero de delimitadores
+	 * @param sepN Numero de delimitadores
 	 * @param interpola Interpolar las variables
 	 */	
-	private void analizar(int analisisTipo, int estadoReturn, int rexN, Character sep, boolean interpola){
+	private void analizar(int analisisTipo, int estadoReturn, int sepN, Character sep, boolean interpola){
 		stack=0;
 		tokenAux=null;
 		this.analisisTipo = analisisTipo;
 		this.estadoReturn = estadoReturn;
-		this.rexN = rexN;
+		this.sepN = sepN;
 		this.interpola = interpola;	
 		if(sep==null){
 			yybegin(DELIMITADOR);	
@@ -190,7 +178,7 @@ FLOTANTE		=	(([0-9]*\.[0-9]+)|([0-9]+\.[0-9]*))
 CIENTIFICO		=	({NATURAL}|{FLOTANTE})[eE](\+-)?{NATURAL}
 DECIMAL			=	({FLOTANTE}|{CIENTIFICO})
 
-IGNORAR_LINEA	=	.*\#<ignore-line>
+IGNORAR_LINEA	=	<ignore-line>
 IGNORAR_BLOQUE	=	<ignore-block>
 IMPORT_JAVA		=	\#<java-import>.*
 LINEA_JAVA		=	\#<java-line>.*
@@ -310,13 +298,14 @@ PD_NUM			=	<{ENTERO}>
 
 		/*----Comentarios----*/
 
-	"\#"				{yybegin(PD);token("", Parser.COMENTARIO, true);
-						tokenAux=yyval;buffer.setLength(0);}
-	"\#!.*"				{}
-	{IGNORAR_LINEA}		{}
-	\#{IGNORAR_BLOQUE}	{yybegin(IGNORAR);}
-	{IMPORT_JAVA}		{return token(Parser.IMPORT_JAVA);}
-	{LINEA_JAVA}		{return token(Parser.LINEA_JAVA);}
+	"\#!.*"					{}
+	^.*\#{IGNORAR_LINEA}.*	{}
+	\#{IGNORAR_BLOQUE}		{yybegin(IGNORAR);}
+	{IMPORT_JAVA}			{return token(Parser.IMPORT_JAVA);}
+	{LINEA_JAVA}			{return token(Parser.LINEA_JAVA);}
+	"\#"					{yybegin(PD);token("", Parser.COMENTARIO, true);
+							tokenAux=yyval;buffer.setLength(0);}
+						
 }
 
 <IGNORAR>{
@@ -345,7 +334,7 @@ PD_NUM			=	<{ENTERO}>
 	[\s]				{}
 	.					{
 							yybegin(ANALISIS);
-							rexN--;
+							sepN--;
 							sep=yycharat(0);
 							switch(sep){
 								case '(': sepBlock='('; sep=')'; break;
@@ -374,9 +363,14 @@ PD_NUM			=	<{ENTERO}>
 								tokenAux=yyval;buffer.setLength(0);
 							}
 							buffer.append(yytext());}
-	[^]					{
+	[^][a-zA-Z_]?		{
 							char c = yycharat(0);
-							if((c == sep && stack==0) || (interpola && (c == '$' || c == '@' || c == '%'))){
+							boolean c2 = false;
+							if(yylength()>1){ 
+								yypushback(1);	
+								c2 = true;								
+							}	
+							if((c == sep && stack==0) || (interpola && c2 && (c == '$' || c == '@'))){
 								if(tokenAux!=null){
 									yyval=tokenAux;
 									tokenAux=null;
@@ -384,14 +378,17 @@ PD_NUM			=	<{ENTERO}>
 									yyval.setValor(buffer.toString());
 									return yyval.getTipo();								
 								}else if(c == sep){
-									rexN--;
+									sepN--;
 									token(analisisTipo);
-									if(rexN>0 && sepBlock!=null){
+									if(sepN>0 && sepBlock!=null){
 										yybegin(DELIMITADOR_DOBLE);
-									}else if(rexN==0){
-										yybegin(estadoReturn);
+									}else {
+										if(sepN==0){
+											yybegin(estadoReturn);
+										}
 										return yyval.getTipo();
 									}
+									
 								}else{
 									yybegin(ANALISIS_VAR);return token(c);
 								}
@@ -417,6 +414,7 @@ PD_NUM			=	<{ENTERO}>
 	{ID}				{return token(Parser.VAR);}
 	"::"				{return token(Parser.AMBITO);}
 	"\#"				{return token('#');}
+	[\{\[]				{token(0);gestorErrores.error(Errores.ACCESO_CADENA, yyval, yytext());}
 	[^]					{yypushback(1);yybegin(ANALISIS);}
 }
 

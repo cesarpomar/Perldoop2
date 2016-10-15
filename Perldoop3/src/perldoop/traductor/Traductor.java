@@ -60,15 +60,6 @@ public final class Traductor implements Acciones {
     }
 
     /**
-     * Obtiene el número de errores, si no hay errores el analisis se ha realizado correctamente.
-     *
-     * @return Número de errores
-     */
-    public int getErrores() {
-        return errores;
-    }
-
-    /**
      * Inicia la verificacion y generacion del codigo.
      *
      * @return Número de errores

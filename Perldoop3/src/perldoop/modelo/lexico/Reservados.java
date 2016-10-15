@@ -53,6 +53,28 @@ public class Reservados {
                 case "use":
                 case "require":
                     return Parser.USE;
+                case "and":
+                    return Parser.LLAND;
+                case "not":
+                    return Parser.LLNOT;
+                case "or":
+                    return Parser.LLOR;
+                case "xor":
+                    return Parser.LLXOR;
+                case "eq":
+                    return Parser.STR_EQ;
+                case "ge":
+                    return Parser.STR_GE;
+                case "gt":
+                    return Parser.STR_GT;
+                case "le":
+                    return Parser.STR_LE;
+                case "lt":
+                    return Parser.STR_LT;
+                case "ne":
+                    return Parser.STR_NE;
+                case "cmp":
+                    return Parser.CMP;
                 case "STDIN":
                     return Parser.STDIN;
                 case "STDOUT":

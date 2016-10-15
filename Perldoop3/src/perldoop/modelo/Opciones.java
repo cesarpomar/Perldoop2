@@ -15,6 +15,7 @@ public class Opciones {
     private boolean copiarComentarios;
     private boolean ocultarAvisos;
     private Integer mostrarErrores;
+    private String codificacion;
     //Argumentos Optimización
     private boolean optIntancias;
     private boolean optDiamante;
@@ -114,6 +115,24 @@ public class Opciones {
      */
     public void setMostrarErrores(Integer mostrarErrores) {
         this.mostrarErrores = mostrarErrores;
+    }
+
+    /**
+     * Obtiene la codificacion
+     *
+     * @return Codificacion
+     */
+    public String getCodificacion() {
+        return codificacion;
+    }
+
+    /**
+     * Establece la codificacion
+     *
+     * @param codificacion Codificacion
+     */
+    public void setCodificacion(String codificacion) {
+        this.codificacion = codificacion;
     }
 
     /**
