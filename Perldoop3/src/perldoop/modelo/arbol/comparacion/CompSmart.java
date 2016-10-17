@@ -13,9 +13,6 @@ import perldoop.modelo.arbol.expresion.Expresion;
  */
 public final class CompSmart extends Comparacion {
 
-    private Expresion izquierda;
-    private Expresion derecha;
-
     /**
      * Único contructor de la clase
      *
@@ -24,47 +21,7 @@ public final class CompSmart extends Comparacion {
      * @param derecha Simbolo derecho
      */
     public CompSmart(Expresion izquierda, Terminal operador, Expresion derecha) {
-        super(operador);
-        setIzquierda(izquierda);
-        setDerecha(derecha);
-    }
-
-    /**
-     * Obtiene el Simbolo izquierdo
-     *
-     * @return Simbolo izquierdo
-     */
-    public Expresion getIzquierda() {
-        return izquierda;
-    }
-
-    /**
-     * Establece el simbolo izquierdo
-     *
-     * @param izquierda Simbolo izquierdo
-     */
-    public void setIzquierda(Expresion izquierda) {
-        izquierda.setPadre(this);
-        this.izquierda = izquierda;
-    }
-
-    /**
-     * Establece el simbolo derecho
-     *
-     * @return Simbolo derecho
-     */
-    public Expresion getDerecha() {
-        return derecha;
-    }
-
-    /**
-     * Obtiene el simbolo derecho
-     *
-     * @param derecha Simbolo derecho
-     */
-    public void setDerecha(Expresion derecha) {
-        derecha.setPadre(this);
-        this.derecha = derecha;
+        super(izquierda, operador, derecha);
     }
 
     @Override

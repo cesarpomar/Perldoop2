@@ -12,37 +12,37 @@ import perldoop.modelo.arbol.expresion.Expresion;
  */
 public final class ModUntil extends Modificador {
 
-    private Terminal untilT;
+    private Terminal id;
     private Expresion expresion;
 
     /**
      * Único contructor de la clase
      *
-     * @param until Until
+     * @param id For
      * @param expresion Expresión
      */
-    public ModUntil(Terminal until, Expresion expresion) {
-        setUntilT(until);
+    public ModUntil(Terminal id, Expresion expresion) {
+        setId(id);
         setExpresion(expresion);
     }
 
     /**
-     * Obtiene el until
+     * Obtiene el for
      *
-     * @return Until
+     * @return For
      */
-    public Terminal getUntilT() {
-        return untilT;
+    public Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece el until
+     * Estabelce el for
      *
-     * @param untilT Until
+     * @param id For
      */
-    public void setUntilT(Terminal untilT) {
-        untilT.setPadre(this);
-        this.untilT = untilT;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
@@ -71,6 +71,6 @@ public final class ModUntil extends Modificador {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{untilT, expresion};
+        return new Simbolo[]{id, expresion};
     }
 }

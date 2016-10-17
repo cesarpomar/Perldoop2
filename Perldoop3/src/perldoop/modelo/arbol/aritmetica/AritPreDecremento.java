@@ -10,9 +10,7 @@ import perldoop.modelo.arbol.expresion.Expresion;
  *
  * @author César Pomar
  */
-public final class AritPreDecremento extends Aritmetica {
-
-    private Expresion expresion;
+public final class AritPreDecremento extends AritOpUnitario {
 
     /**
      * Único contructor de la clase
@@ -21,27 +19,7 @@ public final class AritPreDecremento extends Aritmetica {
      * @param expresion Expresión
      */
     public AritPreDecremento(Terminal operador, Expresion expresion) {
-        super(operador);
-        setExpresion(expresion);
-    }
-
-    /**
-     * Obtiene la expresión
-     *
-     * @return Expresión
-     */
-    public Expresion getExpresion() {
-        return expresion;
-    }
-
-    /**
-     * Establece la expresión
-     *
-     * @param expresion Expresión
-     */
-    public void setExpresion(Expresion expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
+        super(operador,expresion);
     }
 
     @Override

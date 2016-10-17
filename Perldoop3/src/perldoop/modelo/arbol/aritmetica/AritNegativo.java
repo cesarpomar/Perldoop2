@@ -3,15 +3,14 @@ package perldoop.modelo.arbol.aritmetica;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
  * Clase que representa la reduccion -&gt; aritmetica : '-' expresion
  *
  * @author César Pomar
  */
-public final class AritNegativo extends Aritmetica {
-
-    private Terminal expresion;
+public final class AritNegativo extends AritOpUnitario {
 
     /**
      * Único contructor de la clase
@@ -19,28 +18,8 @@ public final class AritNegativo extends Aritmetica {
      * @param operador Operador
      * @param expresion Expresión
      */
-    public AritNegativo(Terminal operador, Terminal expresion) {
-        super(operador);
-        setExpresion(expresion);
-    }
-
-    /**
-     * Obtiene la expresión
-     *
-     * @return Expresión
-     */
-    public Terminal getExpresion() {
-        return expresion;
-    }
-
-    /**
-     * Establece la expresión
-     *
-     * @param expresion Expresión
-     */
-    public void setExpresion(Terminal expresion) {
-        expresion.setPadre(this);
-        this.expresion = expresion;
+    public AritNegativo(Terminal operador, Expresion expresion) {
+        super(operador, expresion);
     }
 
     @Override

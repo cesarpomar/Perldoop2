@@ -23,7 +23,7 @@ public final class Tipos {
      * @param t2 Tipo 1
      * @return Tipo 1 igual a tipo 2
      */
-    public static boolean igual(Tipo t1, Tipo t2) {
+    private static boolean igual(Tipo t1, Tipo t2) {
         List<Byte> tl1 = t1.getTipo();
         List<Byte> tl2 = t2.getTipo();
         if (tl1.size() != tl2.size()) {
@@ -45,7 +45,7 @@ public final class Tipos {
      * @param t2 Tipo 2
      * @return Tipo 1 compatible con tipo 2
      */
-    public static boolean compatible(Tipo t1, Tipo t2) {
+    private static boolean compatible(Tipo t1, Tipo t2) {
         List<Byte> tl1 = t1.getTipo();
         List<Byte> tl2 = t2.getTipo();
         if (tl2.size() == 1) {
@@ -85,12 +85,12 @@ public final class Tipos {
     }
 
     /**
-     * Conversion del tipo a numero
+     * Conversion del tipo a un numero
      *
      * @param t Tipo
      * @return Tipo numerico
      */
-    public static Tipo numero(Tipo t) {
+    public static Tipo toNumber(Tipo t) {
         switch (t.getTipo().get(0)) {
             case Tipo.BOOLEAN:
                 return new Tipo(Tipo.INTEGER);
@@ -112,7 +112,7 @@ public final class Tipos {
             case Tipo.REF:
                 return new Tipo(Tipo.INTEGER);
         }
-        return null;
+        return new Tipo(Tipo.DOUBLE);
     }
 
 }

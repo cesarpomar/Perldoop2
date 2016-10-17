@@ -135,14 +135,14 @@ public class GenBloque {
             aux.setCodigoGenerado(new StringBuilder(var));
             codigo.append(Tipos.declaracion(aux.getTipo()));
             codigo.append(" ").append(var);
-            asignacion= new StringBuilder(100);
+            asignacion = new StringBuilder(100);
             asignacion.append(s.getVariable()).append("=");
             asignacion.append(Casting.casting(aux, s.getVariable().getTipo()));
         }
         codigo.append(":");
-        if(s.getColeccion().getTipo().isMap()){
+        if (s.getColeccion().getTipo().isMap()) {
             codigo.append(Casting.casting(s.getColeccion(), s.getTipo().getSubtipo(1).add(0, Tipo.LIST)));
-        }else{
+        } else {
             codigo.append(s.getColeccion());
         }
         codigo.append(")");
@@ -215,7 +215,7 @@ public class GenBloque {
      *
      * @param codigo Codigo bloque
      */
-    public void genDeclaraciones(StringBuilder codigo) {
+    private void genDeclaraciones(StringBuilder codigo) {
         for (StringBuilder dec : tabla.getDeclaraciones()) {
             codigo.append(dec);
         }
@@ -228,13 +228,22 @@ public class GenBloque {
      * @param exp Expresion
      * @return Codigo expresion
      */
-    public StringBuilder genExpresion(Expresion exp) {
-        StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(Casting.casting(exp, new Tipo(Tipo.BOOLEAN)));
-        if (!Buscar.isNotNull(exp)) {
-            codigo.insert(0, "Pd.checkNull(").append(")");
+    private StringBuilder genExpresion(Expresion exp) {
+        return genExpresion(tabla, exp);
+    }
+
+    /**
+     * Genera la expresion que evalua el bloque de control para su ejecucion
+     *
+     * @param tabla Tabla
+     * @param exp Expresion
+     * @return Codigo expresion
+     */
+    public static StringBuilder genExpresion(TablaGenerador tabla, Expresion exp) {
+        if(!tabla.getOpciones().isOptNulos()){
+            return Casting.castingNotNull(exp, new Tipo(Tipo.BOOLEAN));
         }
-        return codigo;
+        return exp.getCodigoGenerado();
     }
 
 }

@@ -17,6 +17,7 @@ public class Opciones {
     private Integer mostrarErrores;
     private String codificacion;
     //Argumentos Optimización
+    private boolean optNulos;
     private boolean optIntancias;
     private boolean optDiamante;
     private boolean optSentencias;
@@ -277,6 +278,24 @@ public class Opciones {
      */
     public void setDepEtapas(int depEtapas) {
         this.depEtapas = depEtapas;
+    }
+
+    /**
+     * Obtiene optimizar nulos
+     *
+     * @return Optimizar nulos
+     */
+    public boolean isOptNulos() {
+        return optNulos;
+    }
+
+    /**
+     * Establece optimizar
+     *
+     * @param optNulos Optimizar nulos
+     */
+    public void setOptNulos(boolean optNulos) {
+        this.optNulos = optNulos;
     }
 
 }

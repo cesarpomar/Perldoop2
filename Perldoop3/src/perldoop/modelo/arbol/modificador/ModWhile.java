@@ -12,37 +12,37 @@ import perldoop.modelo.arbol.expresion.Expresion;
  */
 public final class ModWhile extends Modificador {
 
-    private Terminal whileT;
+    private Terminal id;
     private Expresion expresion;
 
     /**
      * Único contructor de la clase
      *
-     * @param whileT While
+     * @param id For
      * @param expresion Expresión
      */
-    public ModWhile(Terminal whileT, Expresion expresion) {
-        setWhileT(whileT);
+    public ModWhile(Terminal id, Expresion expresion) {
+        setId(id);
         setExpresion(expresion);
     }
 
     /**
-     * Obtiene el while
+     * Obtiene el for
      *
-     * @return While
+     * @return For
      */
-    public Terminal getWhileT() {
-        return whileT;
+    public Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece el while
+     * Estabelce el for
      *
-     * @param whileT While
+     * @param id For
      */
-    public void setWhileT(Terminal whileT) {
-        whileT.setPadre(this);
-        this.whileT = whileT;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
@@ -71,6 +71,6 @@ public final class ModWhile extends Modificador {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{whileT, expresion};
+        return new Simbolo[]{id, expresion};
     }
 }

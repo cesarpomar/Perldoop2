@@ -1,24 +1,15 @@
 package perldoop.generacion.comparacion;
 
-import perldoop.modelo.arbol.comparacion.CompNumCmp;
-import perldoop.modelo.arbol.comparacion.CompNumEq;
-import perldoop.modelo.arbol.comparacion.CompNumGe;
-import perldoop.modelo.arbol.comparacion.CompNumGt;
-import perldoop.modelo.arbol.comparacion.CompNumLe;
-import perldoop.modelo.arbol.comparacion.CompNumLt;
-import perldoop.modelo.arbol.comparacion.CompNumNe;
-import perldoop.modelo.arbol.comparacion.CompSmart;
-import perldoop.modelo.arbol.comparacion.CompStrCmp;
-import perldoop.modelo.arbol.comparacion.CompStrEq;
-import perldoop.modelo.arbol.comparacion.CompStrGe;
-import perldoop.modelo.arbol.comparacion.CompStrGt;
-import perldoop.modelo.arbol.comparacion.CompStrLe;
-import perldoop.modelo.arbol.comparacion.CompStrLt;
-import perldoop.modelo.arbol.comparacion.CompStrNe;
+import perldoop.generacion.util.Casting;
+import perldoop.modelo.arbol.comparacion.*;
+import perldoop.modelo.arbol.comparacion.Comparacion;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.modelo.semantica.Tipo;
+import perldoop.util.Buscar;
 
 /**
  * Clase generadora de comparacion
+ *
  * @author César Pomar
  */
 public class GenComparacion {
@@ -34,64 +25,132 @@ public class GenComparacion {
         this.tabla = tabla;
     }
 
+    /**
+     * Comapara dos numeros
+     *
+     * @param s Comparacion
+     */
+    private void compNum(Comparacion s) {
+        StringBuilder codigo = new StringBuilder(100);
+        if (tabla.getOpciones().isOptNulos() || (Buscar.isNotNull(s.getIzquierda()) && Buscar.isNotNull(s.getDerecha()))) {
+            codigo.append(Casting.toNumber(s.getIzquierda()));
+            codigo.append(s.getOperador());
+            codigo.append(Casting.toNumber(s.getDerecha()));
+        } else {
+            Tipo t = new Tipo(Tipo.NUMBER);
+            codigo.append("Pd.compare(");
+            codigo.append(Casting.castingNotNull(s.getIzquierda(), t));
+            codigo.append(',');
+            codigo.append(Casting.castingNotNull(s.getDerecha(), t));
+            codigo.append(")");
+            codigo.append(s.getOperador());
+            codigo.append("0");
+        }
+        s.setCodigoGenerado(codigo);
+    }
+
+    /**
+     * Compara dos cadenas
+     *
+     * @param s Comparacion
+     * @param operacion Operacion
+     */
+    private void compSrt(Comparacion s, String operacion) {
+        StringBuilder codigo = new StringBuilder(100);
+        Tipo t = new Tipo(Tipo.STRING);
+        codigo.append("Pd.compare(");
+        codigo.append(Casting.castingNotNull(s.getIzquierda(), t));
+        codigo.append(',');
+        codigo.append(Casting.castingNotNull(s.getDerecha(), t));
+        codigo.append(")");
+        codigo.append(operacion).append(s.getOperador().getComentario());
+        codigo.append("0");
+        s.setCodigoGenerado(codigo);
+    }
+
     public void visitar(CompNumEq s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compNum(s);
     }
 
     public void visitar(CompNumNe s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compNum(s);
     }
 
     public void visitar(CompNumLt s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compNum(s);
     }
 
     public void visitar(CompNumLe s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compNum(s);
     }
 
     public void visitar(CompNumGt s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compNum(s);
     }
 
     public void visitar(CompNumGe s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compNum(s);
     }
 
     public void visitar(CompNumCmp s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append("Pd.compare(");
+        if (tabla.getOpciones().isOptNulos() || (Buscar.isNotNull(s.getIzquierda()) && Buscar.isNotNull(s.getDerecha()))) {
+            codigo.append(Casting.toNumber(s.getIzquierda()));
+            codigo.append(',');
+            codigo.append(Casting.toNumber(s.getDerecha()));
+        } else {
+            Tipo t = new Tipo(Tipo.NUMBER);
+            codigo.append(Casting.castingNotNull(s.getIzquierda(), t));
+            codigo.append(',');
+            codigo.append(Casting.castingNotNull(s.getDerecha(), t));
+        }
+        codigo.append(")").append(s.getOperador().getComentario());
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(CompStrEq s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compSrt(s, "==");
     }
 
     public void visitar(CompStrNe s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compSrt(s, "!=");
     }
 
     public void visitar(CompStrLt s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compSrt(s, "<");
     }
 
     public void visitar(CompStrLe s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compSrt(s, "<=");
     }
 
     public void visitar(CompStrGt s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compSrt(s, ">");
     }
 
     public void visitar(CompStrGe s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        compSrt(s, ">=");
     }
 
     public void visitar(CompStrCmp s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append("Pd.compare(");
+        if (tabla.getOpciones().isOptNulos() || (Buscar.isNotNull(s.getIzquierda()) && Buscar.isNotNull(s.getDerecha()))) {
+            codigo.append(Casting.toString(s.getIzquierda()));
+            codigo.append(',');
+            codigo.append(Casting.toString(s.getDerecha()));
+        } else {
+            Tipo t = new Tipo(Tipo.STRING);
+            codigo.append(Casting.castingNotNull(s.getIzquierda(), t));
+            codigo.append(',');
+            codigo.append(Casting.castingNotNull(s.getDerecha(), t));
+        }
+        codigo.append(")").append(s.getOperador().getComentario());
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(CompSmart s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -165,16 +165,6 @@ public final class Pd {
     }
 
     /**
-     * Comprueba que el Boolean no sea null y si lo es lo evalua como false
-     *
-     * @param bool Boolean
-     * @return Boolean no nulo
-     */
-    public static Boolean checkNull(Boolean bool) {
-        return bool == null ? false : bool;
-    }
-
-    /**
      * Ejecuta un comando en el shell del sistema
      *
      * @param cmd Comando
@@ -189,6 +179,59 @@ public final class Pd {
         } catch (IOException | InterruptedException ex) {
             return "";
         }
+    }
+
+    /**
+     * Compara dos cadenas
+     *
+     * @param str1 Cadena 1
+     * @param str2 Cadena 2
+     * @return 0 si str1 == str2, 1 si str1 '-&gt' str2, -1 si str1 '-&lt' str1
+     */
+    public static int compare(String str1, String str2) {
+        return str1.compareTo(str2) % 2;
+    }
+
+    /**
+     * Compara dos numeros
+     *
+     * @param n1 Numero 1
+     * @param n2 Numero 2
+     * @return 0 si n1 == n2, 1 si n1 '-&gt' n2, -1 si n1 '-&lt' n1
+     */
+    public static int compare(Number n1, Number n2) {
+        return Double.compare(n1.doubleValue(), n2.doubleValue()) % 2;
+    }
+
+    /**
+     * Comprueba que el Boolean no sea null y si lo es lo evalua como false
+     *
+     * @param bool Boolean
+     * @return Boolean no nulo
+     */
+    public static Boolean checkNull(Boolean bool) {
+        return bool == null ? false : bool;
+    }
+
+    /**
+     * Comprueba que el Boolean no sea null y si lo es retorna el valor por defecto
+     *
+     * @param <T> Tipo de numero
+     * @param n Numero
+     * @return Numero no nulo
+     */
+    public static <T extends Number> T checkNull(T n) {
+        return (T)(n == null ? 0 : n);
+    }
+
+    /**
+     * Comprueba que el Boolean no sea null y si lo es retorna el valor por defecto
+     *
+     * @param str String
+     * @return String no nulo
+     */
+    public static String checkNull(String str) {
+        return str == null ? "" : str;
     }
 
 }

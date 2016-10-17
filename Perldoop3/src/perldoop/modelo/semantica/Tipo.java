@@ -229,6 +229,15 @@ public final class Tipo {
     }
 
     /**
+     * Obtiene si el tipo es float o double
+     *
+     * @return Tipo es float o double
+     */
+    public boolean isDecimal() {
+        return !tipo.isEmpty() && tipo.get(0) == FLOAT || tipo.get(0) == DOUBLE;
+    }
+
+    /**
      * Obtiene si el tipo es Box
      *
      * @return Tipo es Box

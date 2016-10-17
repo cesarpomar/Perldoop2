@@ -66,6 +66,10 @@ public class Errores extends Internacionalizacion {
     public static final String VARIABLE_COLECCION_MULTIASIGNACION = "VARIABLE_COLECCION_MULTIASIGNACION";
     public static final String REGEX_NO_VARIABLE = "REGEX_NO_VARIABLE";
     public static final String REGEX_MODIFICADOR_DESCONOCIDO = "REGEX_MODIFICADOR_DESCONOCIDO";
+    public static final String RETURN_SIN_FUNCION = "RETURN_SIN_FUNCION";
+    public static final String NEXT_LAST_SIN_BUCLE = "NEXT_LAST_SIN_BUCLE";
+    public static final String SENTENCIA_MUERTA = "SENTENCIA_MUERTA";
+    public static final String OPERADOR_SMART= "OPERADOR_SMART";
 
     public Errores() {
         super("errores");

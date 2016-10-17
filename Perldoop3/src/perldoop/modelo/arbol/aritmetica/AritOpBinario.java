@@ -1,52 +1,33 @@
-package perldoop.modelo.arbol.comparacion;
+package perldoop.modelo.arbol.aritmetica;
 
-import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.expresion.Expresion;
 
+
 /**
- * Clase abtracta que representa todas las reduciones de comparacion
+ * Clase abtracta que representa todas las reduciones de aritmetica con dos expresiones
  *
  * @author César Pomar
  */
-public abstract class Comparacion extends Simbolo {
+public abstract class AritOpBinario extends Aritmetica {
 
     protected Expresion izquierda;
-    protected Terminal operador;
     protected Expresion derecha;
-
-    /**
+    
+        /**
      * Único contructor de la clase
      *
      * @param izquierda Simbolo izquierdo
      * @param operador Operador
      * @param derecha Simbolo derecho
      */
-    public Comparacion(Expresion izquierda, Terminal operador, Expresion derecha) {
+    public AritOpBinario(Expresion izquierda, Terminal operador, Expresion derecha) {
+        super(operador);
         setIzquierda(izquierda);
-        setOperador(operador);
         setDerecha(derecha);
     }
-
-    /**
-     * Obtiene el operador
-     *
-     * @return Operador
-     */
-    public final Terminal getOperador() {
-        return operador;
-    }
-
-    /**
-     * Establece el operador
-     *
-     * @param operador Operador
-     */
-    public final void setOperador(Terminal operador) {
-        operador.setPadre(this);
-        this.operador = operador;
-    }
-
+    
+    
     /**
      * Obtiene el Simbolo izquierdo
      *
@@ -84,4 +65,5 @@ public abstract class Comparacion extends Simbolo {
         derecha.setPadre(this);
         this.derecha = derecha;
     }
+    
 }

@@ -12,17 +12,17 @@ import perldoop.modelo.arbol.expresion.Expresion;
  */
 public final class ModFor extends Modificador {
 
-    private Terminal forT;
+    private Terminal id;
     private Expresion expresion;
 
     /**
      * Único contructor de la clase
      *
-     * @param forT For
+     * @param id For
      * @param expresion Expresión
      */
-    public ModFor(Terminal forT, Expresion expresion) {
-        setForT(forT);
+    public ModFor(Terminal id, Expresion expresion) {
+        setId(id);
         setExpresion(expresion);
     }
 
@@ -31,18 +31,18 @@ public final class ModFor extends Modificador {
      *
      * @return For
      */
-    public Terminal getForT() {
-        return forT;
+    public Terminal getId() {
+        return id;
     }
 
     /**
      * Estabelce el for
      *
-     * @param forT For
+     * @param id For
      */
-    public void setForT(Terminal forT) {
-        forT.setPadre(this);
-        this.forT = forT;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
@@ -71,6 +71,6 @@ public final class ModFor extends Modificador {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{forT, expresion};
+        return new Simbolo[]{id, expresion};
     }
 }

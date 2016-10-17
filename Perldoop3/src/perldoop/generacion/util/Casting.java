@@ -24,10 +24,10 @@ public final class Casting {
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                if(s instanceof ExpRegulares && ((ExpRegulares)s).getRegulares() instanceof RegularMatch){
+                if (s instanceof ExpRegulares && ((ExpRegulares) s).getRegulares() instanceof RegularMatch) {
                     //Optimizacion para expresiones regulares, en caso de boolean usamos un match rapido
                     return cst.append("simpleM").append(s.getCodigoGenerado().substring(1));
-                }else if (Buscar.isNotNull(s)) {
+                } else if (Buscar.isNotNull(s)) {
                     return cst.append("(").append(s.getCodigoGenerado()).append(".length > 0)");
                 } else {
                     return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
@@ -544,7 +544,7 @@ public final class Casting {
     }
 
     /**
-     * Castea un array a list del mismo tipo
+     * Castea un list a un array del mismo tipo
      *
      * @param s Simbolo
      * @return Casting
@@ -557,7 +557,7 @@ public final class Casting {
     }
 
     /**
-     * Castea un list a un array del mismo tipo
+     * Castea un array a list del mismo tipo
      *
      * @param s Simbolo
      * @return Casting
@@ -581,7 +581,7 @@ public final class Casting {
         cst.append("((").append(Tipos.declaracion(destino)).append(")");
         if (destino.isList()) {
             cst.append("(PerlList)");
-        }else if(destino.isMap()){
+        } else if (destino.isMap()) {
             cst.append("(PerlMap)");
         }
         cst.append(origen.getCodigoGenerado()).append(")");
@@ -705,6 +705,34 @@ public final class Casting {
         }
         cst.append("}");
     }
+
+    /**
+     * Evita que un valor no sea nulo siempre que no se trate de una colección
+     *
+     * @param s Simbolo
+     * @return Codigo no nulo
+     */
+    public static StringBuilder checkNull(Simbolo s) {
+        if(!Buscar.isNotNull(s)){
+            return new StringBuilder(100).append("Pd.checkNull(").append(s.getCodigoGenerado()).append(")");
+        }
+        return s.getCodigoGenerado();
+    }
+    
+    /**
+     * Castea la expresion origen al destino y luego comprueba que no sea nula (Solo tipos numericos y cadenas)
+     *
+     * @param origen Expresion origen
+     * @param destino Tipo destino
+     * @return Casting
+     */
+    public static StringBuilder castingNotNull(Simbolo origen, Tipo destino) {
+        StringBuilder codigo = casting(origen, destino);       
+        if((destino.isNumberType() || destino.isString()) && !Buscar.isNotNull(origen)){
+            return new StringBuilder(100).append("Pd.checkNull(").append(codigo).append(")");
+        }
+        return codigo;
+    }    
 
     /**
      * Castea la expresion origen al destino

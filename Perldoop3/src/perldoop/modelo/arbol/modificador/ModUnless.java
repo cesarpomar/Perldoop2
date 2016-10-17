@@ -12,37 +12,37 @@ import perldoop.modelo.arbol.expresion.Expresion;
  */
 public final class ModUnless extends Modificador {
 
-    private Terminal unlessT;
+    private Terminal id;
     private Expresion expresion;
 
     /**
      * Único contructor de la clase
      *
-     * @param unless Unless
+     * @param id For
      * @param expresion Expresión
      */
-    public ModUnless(Terminal unless, Expresion expresion) {
-        setUnlessT(unless);
+    public ModUnless(Terminal id, Expresion expresion) {
+        setId(id);
         setExpresion(expresion);
     }
 
     /**
-     * Obtiene el unless
+     * Obtiene el for
      *
-     * @return Unless
+     * @return For
      */
-    public Terminal getUnlessT() {
-        return unlessT;
+    public Terminal getId() {
+        return id;
     }
 
     /**
-     * Establece el unless
+     * Estabelce el for
      *
-     * @param unlessT Unless
+     * @param id For
      */
-    public void setUnlessT(Terminal unlessT) {
-        unlessT.setPadre(this);
-        this.unlessT = unlessT;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
@@ -71,7 +71,7 @@ public final class ModUnless extends Modificador {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{unlessT, expresion};
+        return new Simbolo[]{id, expresion};
     }
 
 }

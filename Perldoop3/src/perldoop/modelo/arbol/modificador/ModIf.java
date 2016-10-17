@@ -12,37 +12,37 @@ import perldoop.modelo.arbol.expresion.Expresion;
  */
 public final class ModIf extends Modificador {
 
-    private Terminal ifT;
+    private Terminal id;
     private Expresion expresion;
 
     /**
      * Único contructor de la clase
      *
-     * @param ifT If
+     * @param id For
      * @param expresion Expresión
      */
-    public ModIf(Terminal ifT, Expresion expresion) {
-        setIfT(ifT);
+    public ModIf(Terminal id, Expresion expresion) {
+        setId(id);
         setExpresion(expresion);
     }
 
     /**
-     * Obtiene el if
+     * Obtiene el for
      *
-     * @return If
+     * @return For
      */
-    public Terminal getIfT() {
-        return ifT;
+    public Terminal getId() {
+        return id;
     }
 
     /**
-     * Estabelce el if
+     * Estabelce el for
      *
-     * @param ifT If
+     * @param id For
      */
-    public void setIfT(Terminal ifT) {
-        ifT.setPadre(this);
-        this.ifT = ifT;
+    public void setId(Terminal id) {
+        id.setPadre(this);
+        this.id = id;
     }
 
     /**
@@ -71,6 +71,6 @@ public final class ModIf extends Modificador {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{ifT, expresion};
+        return new Simbolo[]{id, expresion};
     }
 }

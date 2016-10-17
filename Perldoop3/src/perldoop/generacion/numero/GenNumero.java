@@ -23,11 +23,11 @@ public class GenNumero {
     }
 
     public void visitar(Entero s) {
-
+        s.setCodigoGenerado(new StringBuilder(s.getNumero().getCodigoGenerado()));
     }
 
     public void visitar(Decimal s) {
-
+        s.setCodigoGenerado(new StringBuilder(s.getNumero().getCodigoGenerado()));
     }
 
 }
