@@ -13,11 +13,13 @@ import perldoop.semantica.coleccion.*;
 import perldoop.semantica.comparacion.*;
 import perldoop.semantica.condicional.*;
 import perldoop.semantica.cuerpo.*;
+import perldoop.semantica.escritura.SemEscritura;
 import perldoop.semantica.expresion.*;
 import perldoop.semantica.flujo.*;
 import perldoop.semantica.funcion.*;
 import perldoop.semantica.funciondef.*;
 import perldoop.semantica.funcionsub.*;
+import perldoop.semantica.handle.SemHandle;
 import perldoop.semantica.lectura.SemLectura;
 import perldoop.semantica.lista.*;
 import perldoop.semantica.logico.*;
@@ -58,6 +60,8 @@ public final class FachadaSemanticas {
     private SemFuncion semFuncion;
     private SemFuncionDef semFuncionDef;
     private SemFuncionSub semFuncionSub;
+    private SemHandle semHandle;
+    private SemEscritura semEscritura;
     private SemLectura semLectura;
     private SemLista semLista;
     private SemLogico semLogico;
@@ -435,6 +439,48 @@ public final class FachadaSemanticas {
      */
     public void setSemFuncionSub(SemFuncionSub semFuncionSub) {
         this.semFuncionSub = semFuncionSub;
+    }
+
+    /**
+     * Obtiene la semantica de handle
+     *
+     * @return Semantica de handle
+     */
+    public SemHandle getSemHandle() {
+        if (semHandle == null) {
+            semHandle = new SemHandle(tabla);
+        }
+        return semHandle;
+    }
+
+    /**
+     * Establece la semantica de handle
+     *
+     * @param semHandle Semantica de handle
+     */
+    public void setSemHandle(SemHandle semHandle) {
+        this.semHandle = semHandle;
+    }
+
+    /**
+     * Obtiene la semantica de escritura
+     *
+     * @return Semantica de escritura
+     */
+    public SemEscritura getSemEscritura() {
+        if (semEscritura == null) {
+            semEscritura = new SemEscritura(tabla);
+        }
+        return semEscritura;
+    }
+
+    /**
+     * Establece la semantica de escritura
+     *
+     * @param semEscritura Semantica de escritura
+     */
+    public void setSemEscritura(SemEscritura semEscritura) {
+        this.semEscritura = semEscritura;
     }
 
     /**

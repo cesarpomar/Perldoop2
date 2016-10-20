@@ -94,7 +94,7 @@ public final class ColParentesis extends Coleccion {
 
     @Override
     public Simbolo[] getHijos() {
-        if (parentesisI != null) {
+        if (!virtual) {
             return new Simbolo[]{parentesisI, lista, parentesisD};
         }
         return new Simbolo[]{lista};

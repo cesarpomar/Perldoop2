@@ -32,7 +32,9 @@ import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.escritura.*;
 import perldoop.modelo.arbol.lectura.*;
+import perldoop.modelo.arbol.handle.*;
 import perldoop.modelo.arbol.modulos.*;
 import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 %}
@@ -42,8 +44,8 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
-%token ID VAR
-%token ENTERO DECIMAL M_REX S_REX Y_REX TEXTO REX_MOD SEP STDIN STDOUT STDERR
+%token VAR FILE
+%token ENTERO DECIMAL M_REX S_REX Y_REX TEXTO REX_MOD SEP STDIN STDOUT STDERR STDOUT_H STDERR_H
 
 /*Palabras reservadas*/
 %token MY SUB OUR PACKAGE WHILE DO FOR UNTIL USE
@@ -54,8 +56,7 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 %left LLOR LLXOR
 %left LLAND
 %left LLNOT
-%left ','
-%left ID
+%left ',' ID
 %right '=' MULTI_IGUAL DIV_IGUAL MOD_IGUAL SUMA_IGUAL MAS_IGUAL MENOS_IGUAL DESP_I_IGUAL DESP_D_IGUAL AND_IGUAL OR_IGUAL XOR_IGUAL POW_IGUAL LAND_IGUAL LOR_IGUAL DLOR_IGUAL CONCAT_IGUAL X_IGUAL
 %right ':' '?'
 %nonassoc DOS_PUNTOS
@@ -73,7 +74,7 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 %right POW
 %nonassoc MAS_MAS MENOS_MENOS
 %left FLECHA
-%right '(' ')' '[' ']' '{' '}'
+%right '(' ')' '[' ']' '{' '}' ID_P
 %left AMBITO
 
 
@@ -129,6 +130,7 @@ expresion	:	numero									{$$=set(new ExpNumero(s($1)));}
 			|	funcion									{$$=set(new ExpFuncion(s($1)));} 
 			|	'&' funcion %prec UNITARIO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
 			|	lectura									{$$=set(new ExpLectura(s($1)));} 
+			|	escritura								{}
 			|	regulares								{$$=set(new ExpRegulares(s($1)));}
 			|	expresion DOS_PUNTOS expresion			{$$=set(new ExpRango(s($1),s($2),s($3)));}
 			
@@ -148,7 +150,7 @@ modificador :											{$$=set(new ModNada());}
 flujo		:	NEXT ';'								{$$=set(new Next(s($1), s($2)));}
 			|	LAST ';'								{$$=set(new Last(s($1), s($2)));}
 			|	RETURN ';'								{$$=set(new Return(s($1), s($2)));}
-			|	RETURN expresion ';'					{$$=set(new Return(s($1), virtualCol(s($2)), s($3)));}
+			|	RETURN expresion ';'					{$$=set(new Return(s($1), s($2), s($3)));}
 
 asignacion	:   expresion '=' expresion					{$$=set(new Igual(s($1),s($2),s($3)));}
 			|	expresion MAS_IGUAL expresion			{$$=set(new MasIgual(s($1),s($2),s($3)));}
@@ -211,7 +213,7 @@ paqueteID	:	paqueteID ID AMBITO						{$$=set(Paquetes.add(s($1),s($2),s($3)));}
 			|	ID AMBITO								{$$=set(new Paquetes(s($1),s($2)));} 
 
 colParen	:	'(' lista ')'							{$$=set(new ColParentesis(s($1),s($2),s($3)));}
-			|	'('  ')'								{$$=set(new ColParentesis(s($1),new Lista(),s($2)));}
+			|	'('  ')'								{$$=set(new ColParentesis(s($1),add(new Lista()),s($2)));}
 			
 colRef		:	'[' lista ']'							{$$=set(new ColCorchete(s($1),s($2),s($3)));}
 			|	'[' ']'									{$$=set(new ColCorchete(s($1),add(new Lista()),s($2)));}
@@ -228,13 +230,22 @@ acceso		:	expresion colRef						{$$=set(new AccesoCol(s($1),s($2)));}
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 			
 			|	'\\' expresion %prec UNITARIO			{$$=set(new AccesoRef(s($1),s($2)));} 
 
-funcion		:	paqueteID ID expresion					{$$=set(new FuncionPaqueteArgs(s($1),s($2),virtualCol(s($3))));}
-			|	paqueteID ID							{$$=set(new FuncionPaqueteNoArgs(s($1),s($2)));}
-			|	ID expresion							{$$=set(new FuncionArgs(s($1),virtualCol(s($2))));}
-			|	ID 										{$$=set(new FuncionNoArgs(s($1)));}
-			|	ID '{' lista '}' expresion				{$$=set(new FuncionEspecial(s($1),s($2),s($3),s($4),virtualCol(s($5))));}
-			|	ID '{' STDOUT '}' expresion				{$$=set(new FuncionEspecial(s($1),s($2),add(new Lista(s($3))),s($4),virtualCol(s($5))));}
-			|	ID '{' STDERR '}' expresion				{$$=set(new FuncionEspecial(s($1),s($2),add(new Lista(s($3))),s($4),virtualCol(s($5))));}
+funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(add(new Lista(s($2)))))));}
+			|	ID_P colParen							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),s($2)));}
+			|	ID										{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(add(new Lista())))));}
+			|	paqueteID ID expresion					{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(new Lista(s($3)))))));}
+			|	paqueteID ID_P colParen					{$$=set(new FuncionBasica(s($1),s($2),s($3)));}
+			|	paqueteID ID							{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(new Lista())))));}	
+			|	ID handle expresion						{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($2),add(new ColParentesis(add(new Lista(s($3)))))));}
+			|	ID_P '(' handle expresion ')'			{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($3),add(new ColParentesis(s($2),add(new Lista(s($4))),s($5)))));}
+			|	ID '{' lista '}' expresion				{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(add(new Lista(s($5)))))));}
+
+handle		:	STDOUT_H								{$$=set(new HandleOut(s($1)));}
+			|	STDERR_H								{$$=set(new HandleErr(s($1)));}
+			|	FILE VAR								{$$=set(new HandleFile(s($1),s($2)));}
+			
+escritura	:	STDOUT									{$$=set(new EscrituraOut(s($1)));}
+			|	STDERR									{$$=set(new EscrituraErr(s($1)));}
 			
 lectura		:	'<' STDIN '>'							{$$=set(new LecturaIn(s($1),s($2),s($3)));}
 			|	'<' expresion '>'						{$$=set(new LecturaFile(s($1),s($2),s($3)));}
@@ -322,8 +333,7 @@ condicional	:																					{$$=set(new CondicionalNada());}
 %%
 
 	private List<Simbolo> simbolos;
-	private List<Terminal> terminales;
-	private Iterator<Terminal> iterator;
+	private PreParser preParser;
 	private Opciones opciones;
 	private GestorErrores gestorErrores;
 	
@@ -334,9 +344,8 @@ condicional	:																					{$$=set(new CondicionalNada());}
 	 * @param gestorErrores Gestor de errores
 	 */
 	public Parser(List<Terminal> terminales, Opciones opciones,GestorErrores gestorErrores) {
-		this.terminales = terminales;
+		preParser = new PreParser(terminales);
 		simbolos = new ArrayList<>(terminales.size()*10);
-		iterator = terminales.iterator();
 		this.opciones = opciones;
 		this.gestorErrores = gestorErrores;
 	}
@@ -438,36 +447,16 @@ condicional	:																					{$$=set(new CondicionalNada());}
 		simbolos.add(s);
 		return s;
 	}
-	
-	/**
-	 * Función interna auxiliar que simula que las expresiones estan dentro de parentesis
-	 * aunque no sea asi en el codigo fuente.
-	 * @param s Simbolo
-	 * @return Simbolo s
-	 */
-	private ExpColeccion virtualCol(Expresion s){
-		if(!(s instanceof ExpColeccion && ((ExpColeccion)s).getColeccion() instanceof ColParentesis)){
-            Lista l = new Lista((Expresion)s);
-            Coleccion col = new ColParentesis(l);
-			simbolos.add(col);
-			ExpColeccion expcol= new ExpColeccion(col);
-			simbolos.add(expcol);		
-			return expcol;
-		}
-		return (ExpColeccion)s;
-	}
 
 	/**
 	 * Función invocada por el analizador cada vez que necesita un terminal.
 	 * @return Tipo del terminal
 	 */
 	private int yylex (){
-		if(iterator.hasNext()){
-			Terminal t = iterator.next();
-			yylval = set(t);
-			return t.getToken().getTipo();
-		}
-		return 0;
+		yylval = new ParserVal();
+		int tipo = preParser.next(yylval);
+		set(yylval.get());
+		return tipo;
 	}
 
 	/**

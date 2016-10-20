@@ -103,8 +103,9 @@ public class SemAritmetica {
 
     public void visitar(AritMod s) {
         Tipo t = Tipos.toNumber(s.getIzquierda().getTipo());
-        if (t.isInteger() || t.isLong()) {
-            s.setTipo(new Tipo(t));
+        Tipo t2 = Tipos.toNumber(s.getDerecha().getTipo());
+        if (t.isInteger() && t2.isInteger()) {
+            s.setTipo(t);
         } else {
             s.setTipo(new Tipo(Tipo.LONG));
         }

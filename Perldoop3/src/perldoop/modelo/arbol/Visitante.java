@@ -12,12 +12,14 @@ import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.cuerpo.*;
+import perldoop.modelo.arbol.escritura.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.*;
 import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.funciondef.*;
 import perldoop.modelo.arbol.funcionsub.*;
+import perldoop.modelo.arbol.handle.*;
 import perldoop.modelo.arbol.lectura.*;
 import perldoop.modelo.arbol.lista.*;
 import perldoop.modelo.arbol.logico.*;
@@ -231,16 +233,24 @@ public interface Visitante {
     void visitar(AccesoRef s);
 
     //Funcion
-    void visitar(FuncionPaqueteArgs s);
+    void visitar(FuncionBasica s);
 
-    void visitar(FuncionPaqueteNoArgs s);
+    void visitar(FuncionHandle s);
 
-    void visitar(FuncionArgs s);
+    void visitar(FuncionBloque s);
 
-    void visitar(FuncionNoArgs s);
-
-    void visitar(FuncionEspecial s);
-
+    //Handle
+    void visitar(HandleErr s);
+    
+    void visitar(HandleOut s);
+    
+    void visitar(HandleFile s);
+    
+    //Escritura
+    void visitar(EscrituraErr s);
+    
+    void visitar(EscrituraOut s);
+    
     //Lectura
     void visitar(LecturaIn s);
 

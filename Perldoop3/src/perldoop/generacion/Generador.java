@@ -15,12 +15,14 @@ import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.cuerpo.*;
+import perldoop.modelo.arbol.escritura.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.*;
 import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.funciondef.*;
 import perldoop.modelo.arbol.funcionsub.*;
+import perldoop.modelo.arbol.handle.*;
 import perldoop.modelo.arbol.lectura.*;
 import perldoop.modelo.arbol.lista.*;
 import perldoop.modelo.arbol.logico.*;
@@ -563,34 +565,51 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(FuncionPaqueteArgs s) {
+    public void visitar(FuncionBasica s) {
         fachada.getGenFuncion().visitar(s);
     }
 
     @Override
-    public void visitar(FuncionPaqueteNoArgs s) {
+    public void visitar(FuncionHandle s) {
         fachada.getGenFuncion().visitar(s);
     }
 
     @Override
-    public void visitar(FuncionArgs s) {
+    public void visitar(FuncionBloque s) {
         fachada.getGenFuncion().visitar(s);
     }
 
     @Override
-    public void visitar(FuncionNoArgs s) {
-        fachada.getGenFuncion().visitar(s);
+    public void visitar(HandleErr s) {
+        fachada.getGenHandle().visitar(s);
     }
 
     @Override
-    public void visitar(FuncionEspecial s) {
-        fachada.getGenFuncion().visitar(s);
+    public void visitar(HandleOut s) {
+        fachada.getGenHandle().visitar(s);
     }
 
+    @Override
+    public void visitar(HandleFile s) {
+        fachada.getGenHandle().visitar(s);
+    }
+
+    @Override
+    public void visitar(EscrituraOut s) {
+        fachada.getGenEscritura().visitar(s);
+    }
+    
+        @Override
+    public void visitar(EscrituraErr s) {
+        fachada.getGenEscritura().visitar(s);
+    }
+
+    @Override
     public void visitar(LecturaIn s) {
         fachada.getGenLectura().visitar(s);
     }
 
+    @Override
     public void visitar(LecturaFile s) {
         fachada.getGenLectura().visitar(s);
     }

@@ -13,8 +13,6 @@ import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.ExpFuncion;
-import perldoop.modelo.arbol.expresion.ExpFuncion5;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.sentencia.StcLista;
@@ -69,15 +67,7 @@ public class GenIgual {
      * @param s Simbolo de asignacion
      */
     private void simple(Igual s) {
-        Simbolo derAux = s.getDerecha();
-        if (s.getDerecha() instanceof ExpFuncion || s.getDerecha() instanceof ExpFuncion5) {
-            if (!s.getIzquierda().getTipo().isColeccion()) {
-                derAux = new SimboloAux(s.getDerecha());
-                derAux.getCodigoGenerado().append("[0]");
-                derAux.setTipo(new Tipo(Tipo.BOX));
-            }
-        }
-        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(), derAux));
+        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(),s.getDerecha()));
     }
 
     /**
@@ -197,7 +187,7 @@ public class GenIgual {
      */
     public static StringBuilder asignacion(Simbolo izq, String igual, Simbolo der) {
         StringBuilder codigo = null;
-        Simbolo derAux = new SimboloAux(der);
+        Simbolo derAux = Casting.ColtoScalar(der,izq);
         //si la derecha es un box y la izquierda una referencia, hacemos un pre casting
         if(izq.getTipo().isRef() && der.getTipo().isBox()){
             derAux.setCodigoGenerado(Casting.casting(derAux, izq.getTipo()));

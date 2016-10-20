@@ -1,8 +1,8 @@
 package perldoop;
 
-import java.util.List;
 import perldoop.lib.Casting;
-import perldoop.lib.PerlList;
+import perldoop.lib.Pd;
+
 
 /**
  *
@@ -10,16 +10,8 @@ import perldoop.lib.PerlList;
  */
 public class Test {
 
-    static void pruebas() {
-        Integer[] ia = new Integer[0];
-        Number[] na = new Number[0];
-        List<Integer> il = new PerlList<>();
-        List<Number> nl = new PerlList<>();
-        Casting.cast(new Casting() {
-            @Override
-            public Object casting(Object col) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        }, ia);
+    public static void pruebas() {
+        System.out.println(Casting.toDouble(".1e2"));
+        System.exit(0);
     }
 }

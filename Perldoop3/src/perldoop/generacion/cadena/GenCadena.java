@@ -38,7 +38,7 @@ public class GenCadena {
 
     public void visitar(CadenaComando s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("pd.cmd(");
+        codigo.append("Pd.cmd(");
         codigo.append(s.getTexto());
         codigo.append(s.getComillaD().getComentario());
         codigo.append(")");
@@ -75,7 +75,7 @@ public class GenCadena {
 
     public void visitar(CadenaQX s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("pd.cmd(");
+        codigo.append("Pd.cmd(");
         codigo.append(s.getId().getComentario());
         codigo.append(s.getTexto());
         codigo.append(s.getSepD().getComentario());

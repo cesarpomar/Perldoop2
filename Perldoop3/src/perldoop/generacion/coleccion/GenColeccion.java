@@ -238,11 +238,11 @@ public class GenColeccion {
 
     public void visitar(ColParentesis s) {
         //Expresion entre parentesis
-        Simbolo uso= Buscar.getPadre(s, 1);
+        Simbolo uso = Buscar.getPadre(s, 1);
         if (s.getLista().getElementos().size() == 1 && !(uso instanceof Funcion) && !(uso instanceof Return)) {
             Expresion exp = s.getLista().getExpresiones().get(0);
             StringBuilder codigo = new StringBuilder(50);
-            codigo.append(s.getParentesisI()).append(Casting.casting(exp, s.getTipo())).append(s.getParentesisD());
+            codigo.append(Casting.casting(exp, s.getTipo()));
             s.setCodigoGenerado(codigo);
         } else {
             //Colecciones
@@ -264,7 +264,7 @@ public class GenColeccion {
         if ((padre instanceof AccesoCol || padre instanceof AccesoColRef) && s.getLista().getExpresiones().size() == 1) {
             Expresion exp = s.getLista().getExpresiones().get(0);
             StringBuilder codigo = new StringBuilder(50);
-            codigo.append(s.getCorcheteI()).append(Casting.casting(exp, s.getTipo())).append(s.getCorcheteD());
+            codigo.append(s.getCorcheteI().getComentario()).append(Casting.casting(exp, s.getTipo())).append(s.getCorcheteD().getComentario());
             s.setCodigoGenerado(codigo);
         } else {
             Tipo t = s.getTipo();
@@ -272,15 +272,20 @@ public class GenColeccion {
                 t = t.getSubtipo(1);
             }
             s.setCodigoGenerado(genArrayList(s.getLista(), t));
+            s.getCodigoGenerado().insert(0, s.getCorcheteI().getComentario());
+            s.getCodigoGenerado().append(s.getCorcheteD().getComentario());
             genRef(s, t);
         }
-        s.getCodigoGenerado().insert(0, s.getCorcheteI().getComentario());
-        s.getCodigoGenerado().append(s.getCorcheteD().getComentario());
     }
 
     public void visitar(ColLlave s) {
         Simbolo uso = s.getPadre().getPadre();
-        if (uso instanceof AccesoRefEscalar || uso instanceof AccesoRefArray || uso instanceof AccesoRefMap) {
+         if ((s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) && s.getLista().getExpresiones().size() == 1) {
+            Expresion exp = s.getLista().getExpresiones().get(0);
+            StringBuilder codigo = new StringBuilder(50);
+            codigo.append(s.getLlaveI().getComentario()).append(Casting.casting(exp, s.getTipo())).append(s.getLlaveD().getComentario());
+            s.setCodigoGenerado(codigo);
+        }else if (uso instanceof AccesoRefEscalar || uso instanceof AccesoRefArray || uso instanceof AccesoRefMap) {
             Expresion exp = s.getLista().getExpresiones().get(0);
             StringBuilder codigo = new StringBuilder(50);
             codigo.append(s.getLlaveI().getComentario()).append(Casting.casting(exp, s.getTipo())).append(s.getLlaveD().getComentario());
@@ -295,10 +300,10 @@ public class GenColeccion {
             } else if (t.isMap()) {//Creacion de mapa
                 s.setCodigoGenerado(genMap(s.getLista(), t));
             }
+            s.getCodigoGenerado().insert(0, s.getLlaveI().getComentario());
+            s.getCodigoGenerado().append(s.getLlaveD().getComentario());
             genRef(s, t);
         }
-        s.getCodigoGenerado().insert(0, s.getLlaveI().getComentario());
-        s.getCodigoGenerado().append(s.getLlaveD().getComentario());
     }
 
 }

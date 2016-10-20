@@ -35,7 +35,9 @@ public abstract class Regulares extends Simbolo {
         setSeparadorIni(separadorIni);
         setPatron(patron);
         setSeparadorFin(separadorFin);
-        setModificadores(modificadores);
+        if (modificadores != null) {
+            setModificadores(modificadores);
+        }
     }
 
     /**
@@ -147,10 +149,8 @@ public abstract class Regulares extends Simbolo {
      * @param modificadores Modificiadores
      */
     public final void setModificadores(Terminal modificadores) {
-        if (modificadores != null) {
-            modificadores.setPadre(this);
-            this.modificadores = modificadores;
-        }
+        modificadores.setPadre(this);
+        this.modificadores = modificadores;
     }
 
 }

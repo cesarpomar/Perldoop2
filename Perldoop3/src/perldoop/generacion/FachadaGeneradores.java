@@ -12,12 +12,14 @@ import perldoop.generacion.coleccion.*;
 import perldoop.generacion.comparacion.*;
 import perldoop.generacion.condicional.*;
 import perldoop.generacion.cuerpo.*;
+import perldoop.generacion.escritura.GenEscritura;
 import perldoop.generacion.expresion.*;
 import perldoop.generacion.flujo.*;
 import perldoop.generacion.fuente.*;
 import perldoop.generacion.funcion.*;
 import perldoop.generacion.funciondef.*;
 import perldoop.generacion.funcionsub.*;
+import perldoop.generacion.handle.GenHandle;
 import perldoop.generacion.lectura.GenLectura;
 import perldoop.generacion.lista.*;
 import perldoop.generacion.logico.*;
@@ -61,6 +63,8 @@ public final class FachadaGeneradores {
     private GenFuncion genFuncion;
     private GenFuncionDef genFuncionDef;
     private GenFuncionSub genFuncionSub;
+    private GenHandle genHandle;
+    private GenEscritura genEscritura;
     private GenLectura genLectura;
     private GenLista genLista;
     private GenLogico genLogico;
@@ -481,6 +485,48 @@ public final class FachadaGeneradores {
      */
     public void setGenFuncionSub(GenFuncionSub genFuncionSub) {
         this.genFuncionSub = genFuncionSub;
+    }
+
+    /**
+     * Obtiene el generador de handle
+     *
+     * @return Generador de handle
+     */
+    public GenHandle getGenHandle() {
+        if (genHandle == null) {
+            genHandle = new GenHandle(tabla);
+        }
+        return genHandle;
+    }
+
+    /**
+     * Establece el generador de handle
+     *
+     * @param genHandle Generador de handle
+     */
+    public void setGenHandle(GenHandle genHandle) {
+        this.genHandle = genHandle;
+    }
+
+    /**
+     * Obtiene el generador de escritura
+     *
+     * @return Generador de escritura
+     */
+    public GenEscritura getGenEscritura() {
+        if (genEscritura == null) {
+            genEscritura = new GenEscritura(tabla);
+        }
+        return genEscritura;
+    }
+
+    /**
+     * Establece el generador de escritura
+     *
+     * @param genEscritura Generador de escritura
+     */
+    public void setGenEscritura(GenEscritura genEscritura) {
+        this.genEscritura = genEscritura;
     }
 
     /**

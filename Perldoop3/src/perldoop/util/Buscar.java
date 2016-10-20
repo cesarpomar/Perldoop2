@@ -42,15 +42,24 @@ public final class Buscar {
      * @return Token
      */
     public static Token tokenInicio(Simbolo s) {
-        Simbolo hijo = s;
-        do {
-            Simbolo[] hijos = hijo.getHijos();
-            if (hijos.length == 0) {
-                return null;
+        List<List<Simbolo>> simbolos = new ArrayList<>(100);
+        List<Simbolo> nivel = new ArrayList<>(10);
+        nivel.add(s);
+        simbolos.add(nivel);
+        while (!simbolos.isEmpty()) {
+            nivel = simbolos.get(simbolos.size() - 1);
+            if (nivel.isEmpty()) {
+                simbolos.remove(simbolos.size() - 1);
+                continue;
             }
-            hijo = hijos[0];
-        } while (!(hijo instanceof Terminal));
-        return ((Terminal) hijo).getToken();
+            s = nivel.remove(0);
+            if (s instanceof Terminal) {
+                return ((Terminal) s).getToken();
+            }
+            nivel = new ArrayList<>(Arrays.asList(s.getHijos()));
+            simbolos.add(nivel);
+        }
+        return null;
     }
 
     /**
@@ -60,15 +69,24 @@ public final class Buscar {
      * @return TOken
      */
     public static Token tokenFin(Simbolo s) {
-        Simbolo hijo = s;
-        do {
-            Simbolo[] hijos = hijo.getHijos();
-            if (hijos.length == 0) {
-                return null;
+        List<List<Simbolo>> simbolos = new ArrayList<>(100);
+        List<Simbolo> nivel = new ArrayList<>(10);
+        nivel.add(s);
+        simbolos.add(nivel);
+        while (!simbolos.isEmpty()) {
+            nivel = simbolos.get(simbolos.size() - 1);
+            if (nivel.isEmpty()) {
+                simbolos.remove(simbolos.size() - 1);
+                continue;
             }
-            hijo = hijos[hijos.length - 1];
-        } while (!(hijo instanceof Terminal));
-        return ((Terminal) hijo).getToken();
+            s = nivel.remove(nivel.size() - 1);
+            if (s instanceof Terminal) {
+                return ((Terminal) s).getToken();
+            }
+            nivel = new ArrayList<>(Arrays.asList(s.getHijos()));
+            simbolos.add(nivel);
+        }
+        return null;
     }
 
     /**
@@ -230,7 +248,7 @@ public final class Buscar {
      * @param exp Expresión
      * @return Variable
      */
-    public static Variable buscarVariable(Expresion exp) {
+    public static Variable buscarVariable(Simbolo exp) {
         while (exp instanceof ExpAcceso) {
             ExpAcceso expAcceso = (ExpAcceso) exp;
             exp = expAcceso.getAcceso().getExpresion();

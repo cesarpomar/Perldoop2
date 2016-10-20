@@ -1,6 +1,7 @@
 package perldoop.lib.box;
 
 import perldoop.lib.Box;
+import perldoop.lib.Casting;
 import perldoop.lib.PerlFile;
 import perldoop.lib.Ref;
 
@@ -29,32 +30,32 @@ public final class BooleanBox implements Box {
 
     @Override
     public Integer intValue() {
-        return value == null ? null : value ? 1 : 0;
+        return Casting.toInteger(value);
     }
 
     @Override
     public Long longValue() {
-        return value == null ? null : value ? 1l : 0l;
+        return Casting.toLong(value);
     }
 
     @Override
     public Float floatValue() {
-        return value == null ? null : value ? 1f : 0f;
+        return Casting.toFloat(value);
     }
 
     @Override
     public Double doubleValue() {
-        return value == null ? null : value ? 1d : 0d;
+        return Casting.toDouble(value);
     }
 
     @Override
     public Number numberValue() {
-        return value == null ? null : value ? 1 : 0;
+        return Casting.toInteger(value);
     }
 
     @Override
     public String stringValue() {
-        return value == null ? null : value ? "1" : "0";
+        return Casting.toString(value);
     }
 
     @Override

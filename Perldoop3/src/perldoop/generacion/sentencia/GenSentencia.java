@@ -110,7 +110,7 @@ public class GenSentencia {
     }
 
     public void visitar(StcModulos s) {
-
+        s.setCodigoGenerado(s.getModulos().getCodigoGenerado());
     }
 
     public void visitar(StcImport s) {

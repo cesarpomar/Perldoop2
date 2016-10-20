@@ -10,7 +10,6 @@ import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.variable.VarMy;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.util.Buscar;
 
 /**
  * Clase generadora de bloque
@@ -137,7 +136,7 @@ public class GenBloque {
             codigo.append(" ").append(var);
             asignacion = new StringBuilder(100);
             asignacion.append(s.getVariable()).append("=");
-            asignacion.append(Casting.casting(aux, s.getVariable().getTipo()));
+            asignacion.append(Casting.casting(aux, s.getVariable().getTipo())).append(";");
         }
         codigo.append(":");
         if (s.getColeccion().getTipo().isMap()) {

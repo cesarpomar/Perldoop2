@@ -6,6 +6,7 @@ import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de lectura
+ *
  * @author César Pomar
  */
 public class GenLectura {
@@ -26,7 +27,5 @@ public class GenLectura {
 
     public void visitar(LecturaFile s) {
     }
-
-
 
 }

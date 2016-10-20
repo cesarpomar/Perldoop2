@@ -1,9 +1,11 @@
 package perldoop.generacion.flujo;
 
+import perldoop.generacion.util.Casting;
 import perldoop.modelo.arbol.flujo.Last;
 import perldoop.modelo.arbol.flujo.Next;
 import perldoop.modelo.arbol.flujo.Return;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.modelo.semantica.Tipo;
 
 /**
  * Clase generadora de flujo
@@ -41,7 +43,13 @@ public class GenFlujo {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append(s.getId()).append(" ");
         if (s.getExpresion() != null) {
-            codigo.append(s.getExpresion());
+            if(s.getExpresion().getTipo().isColeccion()){
+                codigo.append(Casting.casting(s.getExpresion(), new Tipo(Tipo.ARRAY,Tipo.BOX)));
+            }else{
+                codigo.append("new Box[]{");
+                codigo.append(Casting.toBox(s.getExpresion()));
+                codigo.append("}");
+            }
         }
         codigo.append(s.getPuntoComa());
         s.setCodigoGenerado(codigo);

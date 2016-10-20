@@ -1,4 +1,4 @@
-package perldoop.modelo.lexico;
+package perldoop.lexico;
 
 import perldoop.sintactico.Parser;
 
@@ -7,7 +7,7 @@ import perldoop.sintactico.Parser;
  *
  * @author César Pomar
  */
-public class Reservados {
+public final class PalabrasReservadas {
 
     /**
      * Busca un identificador y retorna su tipo.

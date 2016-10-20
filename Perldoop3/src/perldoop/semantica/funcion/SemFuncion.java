@@ -34,23 +34,21 @@ public class SemFuncion {
         this.tabla = tabla;
     }
 
-    public void visitar(FuncionPaqueteArgs s) {
-        comprobarFuncionPaquete(s, s.getPaquetes());
+    public void visitar(FuncionBasica s) {
+        if(s.getPaquetes().getTerminales().isEmpty()){
+            comprobarFuncion(s, (ColParentesis) s.getColeccion());
+        }else{
+            comprobarFuncionPaquete(s, s.getPaquetes());
+        }
+        
     }
-
-    public void visitar(FuncionPaqueteNoArgs s) {
-        comprobarFuncionPaquete(s, s.getPaquetes());
+    
+    public void visitar(FuncionHandle s) {
+        
     }
-
-    public void visitar(FuncionArgs s) {
-        comprobarFuncion(s, (ColParentesis) s.getColeccion().getColeccion());
-    }
-
-    public void visitar(FuncionNoArgs s) {
-        comprobarFuncion(s, null);
-    }
-
-    public void visitar(FuncionEspecial s) {
+    
+    public void visitar(FuncionBloque s) {
+        
     }
 
     /**

@@ -76,7 +76,6 @@ public class GenAcceso {
                 codigo.append(")");
             }
         } else {
-            Expresion exp = lista.get(0);
             //Encapsular en una referencia
             if (!escritura && !noRef && s.getTipo().isRef()) {
                 codigo.append("new ").append(Tipos.declaracion(s.getTipo())).append("(");
@@ -88,17 +87,17 @@ public class GenAcceso {
                 t = t.getSubtipo(1);
             }
             if (t.isArray()) {
-                codigo.append("[").append(Casting.casting(exp, new Tipo(Tipo.INTEGER))).append("]");
+                codigo.append("[").append(Casting.casting(coleccion, new Tipo(Tipo.INTEGER))).append("]");
             } else if (t.isList()) {
                 if (escritura) {
-                    codigo.append(".set(").append(Casting.casting(exp, new Tipo(Tipo.INTEGER))).append(",");
+                    codigo.append(".set(").append(Casting.casting(coleccion, new Tipo(Tipo.INTEGER))).append(",");
                 } else {
-                    codigo.append(".get(").append(Casting.casting(exp, new Tipo(Tipo.INTEGER))).append(")");
+                    codigo.append(".get(").append(Casting.casting(coleccion, new Tipo(Tipo.INTEGER))).append(")");
                 }
             } else if (escritura) {
-                codigo.append(".put(").append(Casting.casting(exp, new Tipo(Tipo.STRING))).append(",");
+                codigo.append(".put(").append(Casting.casting(coleccion, new Tipo(Tipo.STRING))).append(",");
             } else {
-                codigo.append(".get(").append(Casting.casting(exp, new Tipo(Tipo.STRING))).append(")");
+                codigo.append(".get(").append(Casting.casting(coleccion, new Tipo(Tipo.STRING))).append(")");
             }
             //hay que cerrar la referencia
             if (!escritura && !noRef && s.getTipo().isRef()) {

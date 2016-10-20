@@ -173,7 +173,7 @@ public class SemColeccion {
 
     public void visitar(ColCorchete s) {
         if (s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) {
-            if (s.getLista().getExpresiones().size() == 1) {
+            if (s.getLista().getElementos().size() == 1) {
                 s.setTipo(new Tipo(Tipo.INTEGER));
                 Tipos.casting(s.getLista().getExpresiones().get(0), s.getTipo(), tabla.getGestorErrores());
             } else {
@@ -196,7 +196,7 @@ public class SemColeccion {
         Simbolo padre = s.getPadre();
         Simbolo uso = padre.getPadre();
         if (padre instanceof AccesoCol || padre instanceof AccesoColRef) {
-            if (s.getLista().getExpresiones().size() == 1) {
+            if (s.getLista().getElementos().size() == 1) {
                 s.setTipo(new Tipo(Tipo.STRING));
                 Tipos.casting(s.getLista().getExpresiones().get(0), s.getTipo(), tabla.getGestorErrores());
             } else {

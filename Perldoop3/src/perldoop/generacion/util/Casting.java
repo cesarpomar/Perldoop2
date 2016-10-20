@@ -1,9 +1,14 @@
 package perldoop.generacion.util;
 
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.expresion.ExpFuncion;
+import perldoop.modelo.arbol.expresion.ExpFuncion5;
 import perldoop.modelo.arbol.expresion.ExpRegulares;
+import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.regulares.RegularMatch;
+import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
@@ -13,6 +18,33 @@ import perldoop.util.Buscar;
  * @author César Pomar
  */
 public final class Casting {
+
+    /**
+     * Transforma un escalar retornando su primer o ultimo elemento
+     *
+     * @param col Simbolo coleccion
+     * @param escalar Simbolo escalar
+     * @return Primer o ultimo elemento de la colecciones
+     */
+    public static Simbolo ColtoScalar(Simbolo col, Simbolo escalar) {
+        Variable var = Buscar.buscarVariable(escalar);
+        if (col.getTipo().isArrayOrList() && !escalar.getTipo().isColeccion() && var != null) {
+            Simbolo aux = new SimboloAux(col);
+            aux.setTipo(col.getTipo().getSubtipo(1));
+            if (var.getContexto().getValor().equals("$")) {
+                aux.getCodigoGenerado().insert(0, "Pd.last(").append(")");
+            } else {
+                aux.getCodigoGenerado().insert(0, "Pd.first(").append(")");
+            }
+            if (col.getTipo().getTipo().size() > 2) {
+                aux.setTipo(col.getTipo().add(0, Tipo.REF));
+                StringBuilder declaracion = Tipos.declaracion(aux.getTipo()).append("(");
+                aux.getCodigoGenerado().insert(0, declaracion).append(")");
+            }
+            return aux;
+        }
+        return col;
+    }
 
     /**
      * Castea una expresión a boolean
@@ -26,7 +58,7 @@ public final class Casting {
             case Tipo.ARRAY:
                 if (s instanceof ExpRegulares && ((ExpRegulares) s).getRegulares() instanceof RegularMatch) {
                     //Optimizacion para expresiones regulares, en caso de boolean usamos un match rapido
-                    return cst.append("simpleM").append(s.getCodigoGenerado().substring(1));
+                    return cst.append(s.getCodigoGenerado().toString().replaceFirst("^Regex.match", "Regex.simpleMatch"));
                 } else if (Buscar.isNotNull(s)) {
                     return cst.append("(").append(s.getCodigoGenerado()).append(".length > 0)");
                 } else {
@@ -515,7 +547,7 @@ public final class Casting {
                 if (Buscar.isNotNull(s)) {
                     cst.append(s.getCodigoGenerado()).append(".refValue()");
                 } else {
-                    return cst.append("Casting.toRef(").append(s.getCodigoGenerado()).append(")");
+                    cst.append("Casting.toRef(").append(s.getCodigoGenerado()).append(")");
                 }
                 return cst.append(")");
         }
@@ -713,12 +745,12 @@ public final class Casting {
      * @return Codigo no nulo
      */
     public static StringBuilder checkNull(Simbolo s) {
-        if(!Buscar.isNotNull(s)){
+        if (!Buscar.isNotNull(s)) {
             return new StringBuilder(100).append("Pd.checkNull(").append(s.getCodigoGenerado()).append(")");
         }
         return s.getCodigoGenerado();
     }
-    
+
     /**
      * Castea la expresion origen al destino y luego comprueba que no sea nula (Solo tipos numericos y cadenas)
      *
@@ -727,12 +759,12 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder castingNotNull(Simbolo origen, Tipo destino) {
-        StringBuilder codigo = casting(origen, destino);       
-        if((destino.isNumberType() || destino.isString()) && !Buscar.isNotNull(origen)){
+        StringBuilder codigo = casting(origen, destino);
+        if ((destino.isNumberType() || destino.isString()) && !Buscar.isNotNull(origen)) {
             return new StringBuilder(100).append("Pd.checkNull(").append(codigo).append(")");
         }
         return codigo;
-    }    
+    }
 
     /**
      * Castea la expresion origen al destino

@@ -132,6 +132,50 @@ public final class Pd {
     }
 
     /**
+     * Retorna el ultimo elemento
+     *
+     * @param <T> Tipo de elementos
+     * @param array Array
+     * @return Ultimo elemento
+     */
+    public static <T> T last(T[] array) {
+        return array[array.length - 1];
+    }
+
+    /**
+     * Retorna el ultimo elemento
+     *
+     * @param <T> Tipo de elementos
+     * @param list Lista
+     * @return Ultimo elemento
+     */
+    public static <T> T last(PerlList<T> list) {
+        return list.get(list.size() - 1);
+    }
+
+    /**
+     * Retorna el primer elemento
+     *
+     * @param <T> Tipo de elementos
+     * @param array Array
+     * @return Primer elemento
+     */
+    public static <T> T first(T[] array) {
+        return array[0];
+    }
+
+    /**
+     * Retorna el primer elemento
+     *
+     * @param <T> Tipo de elementos
+     * @param list Lista
+     * @return Primer elemento
+     */
+    public static <T> T first(PerlList<T> list) {
+        return list.get(0);
+    }
+
+    /**
      * Crea una copia superficial del array
      *
      * @param <T> Tipo de los elementos del array
@@ -221,7 +265,7 @@ public final class Pd {
      * @return Numero no nulo
      */
     public static <T extends Number> T checkNull(T n) {
-        return (T)(n == null ? 0 : n);
+        return (T) (n == null ? 0 : n);
     }
 
     /**
@@ -232,6 +276,47 @@ public final class Pd {
      */
     public static String checkNull(String str) {
         return str == null ? "" : str;
+    }
+
+    /**
+     * Calcula la exponencia de dos numeros
+     *
+     * @param n Numero
+     * @param exp Exponente
+     * @return n elevado a exp
+     */
+    public static Double pow(Number n, Number exp) {
+        return Math.pow(n.doubleValue(), exp.doubleValue());
+    }
+
+    /**
+     * Repite la cadena str n veces
+     *
+     * @param str Cadena
+     * @param n Numero de repeticiones
+     * @return Cadena repetida
+     */
+    public static String x(String str, Number n) {
+        int nrep = n.intValue();
+        if (nrep < 1) {
+            return "";
+        }
+        StringBuilder cadena = new StringBuilder(str.length() * nrep + 1);
+        for (int i = 0; i < nrep; i++) {
+            cadena.append(str);
+        }
+        return cadena.toString();
+    }
+
+    /**
+     * Calcula el modulo de dos numeros
+     *
+     * @param n Numero
+     * @param mod Modulo
+     * @return n elevado a exp
+     */
+    public static Integer mod(Integer n, Integer mod) {
+        return Math.floorMod(n, mod);
     }
 
 }

@@ -96,7 +96,7 @@ public final class Consola {
         opcionales.addArgument("-en", "--encoding").metavar("e").action(new StoreArgumentAction()).help(interfaz.get(Interfaz.CODIFICACION));
         //Optimizaciones
         ArgumentGroup optimizacion = parser.addArgumentGroup(interfaz.get(Interfaz.ARGS_OPTIMIZACION));
-        optimizacion.addArgument("-on", "--optimize-nulls").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_INSTANCIAS));
+        optimizacion.addArgument("-on", "--optimize-nulls").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_NULOS));
         optimizacion.addArgument("-oi", "--optimize-instance").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_INSTANCIAS));
         optimizacion.addArgument("-ol", "--optimize-diamond").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_DIAMANTE));
         optimizacion.addArgument("-os", "--optimize-statements").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_SENTENCIAS));

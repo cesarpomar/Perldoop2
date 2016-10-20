@@ -1,6 +1,7 @@
 package perldoop.lib.box;
 
 import perldoop.lib.Box;
+import perldoop.lib.Casting;
 import perldoop.lib.PerlFile;
 import perldoop.lib.Ref;
 
@@ -24,27 +25,27 @@ public final class NumberBox implements Box {
 
     @Override
     public Boolean booleanValue() {
-        return value == null ? null : value.floatValue() != 0;
+        return Casting.toBoolean(value);
     }
 
     @Override
     public Integer intValue() {
-        return value == null ? null : value.intValue();
+        return Casting.toInteger(value);
     }
 
     @Override
     public Long longValue() {
-        return value == null ? null : value.longValue();
+        return Casting.toLong(value);
     }
 
     @Override
     public Float floatValue() {
-        return value == null ? null : value.floatValue();
+        return Casting.toFloat(value);
     }
 
     @Override
     public Double doubleValue() {
-        return value == null ? null : value.doubleValue();
+        return Casting.toDouble(value);
     }
 
     @Override
@@ -54,7 +55,7 @@ public final class NumberBox implements Box {
 
     @Override
     public String stringValue() {
-        return value == null ? null : String.valueOf(value);
+        return Casting.toString(value);
     }
 
     @Override

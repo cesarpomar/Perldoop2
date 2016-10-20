@@ -15,14 +15,15 @@ import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.cuerpo.*;
+import perldoop.modelo.arbol.escritura.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.*;
 import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.funciondef.*;
 import perldoop.modelo.arbol.funcionsub.*;
-import perldoop.modelo.arbol.lectura.LecturaFile;
-import perldoop.modelo.arbol.lectura.LecturaIn;
+import perldoop.modelo.arbol.handle.*;
+import perldoop.modelo.arbol.lectura.*;
 import perldoop.modelo.arbol.lista.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.modificador.*;
@@ -524,28 +525,43 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(FuncionPaqueteArgs s) {
+    public void visitar(FuncionBasica s) {
         fachada.getSemFuncion().visitar(s);
     }
 
     @Override
-    public void visitar(FuncionPaqueteNoArgs s) {
+    public void visitar(FuncionHandle s) {
         fachada.getSemFuncion().visitar(s);
     }
 
     @Override
-    public void visitar(FuncionArgs s) {
+    public void visitar(FuncionBloque s) {
         fachada.getSemFuncion().visitar(s);
     }
 
     @Override
-    public void visitar(FuncionNoArgs s) {
-        fachada.getSemFuncion().visitar(s);
+    public void visitar(HandleOut s) {
+        fachada.getSemHandle().visitar(s);
     }
 
     @Override
-    public void visitar(FuncionEspecial s) {
-        fachada.getSemFuncion().visitar(s);
+    public void visitar(HandleErr s) {
+        fachada.getSemHandle().visitar(s);
+    }
+
+    @Override
+    public void visitar(HandleFile s) {
+        fachada.getSemHandle().visitar(s);
+    }
+
+    @Override
+    public void visitar(EscrituraOut s) {
+        fachada.getSemEscritura().visitar(s);
+    }
+
+    @Override
+    public void visitar(EscrituraErr s) {
+        fachada.getSemEscritura().visitar(s);
     }
 
     @Override

@@ -61,27 +61,6 @@ public class GenAritmetica {
     }
 
     /**
-     * Genera una expresion numerica entera
-     *
-     * @param exp Expresion
-     * @param t Tipo
-     * @return Numero
-     */
-    public StringBuilder genExpresionInt(Expresion exp, Tipo t) {
-        if (exp.getTipo().isInteger() || exp.getTipo().isLong()) {
-            if (tabla.getOpciones().isOptNulos()) {
-                return exp.getCodigoGenerado();
-            } else {
-                return Casting.checkNull(exp);
-            }
-        } else if (tabla.getOpciones().isOptNulos()) {
-            return Casting.casting(exp, t);
-        } else {
-            return Casting.castingNotNull(exp, t);
-        }
-    }
-
-    /**
      * Genera las operacion basicas +,-,*
      *
      * @param s Simbolo
@@ -159,9 +138,11 @@ public class GenAritmetica {
 
     public void visitar(AritMod s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append(genExpresionInt(s.getIzquierda(), s.getTipo()));
-        codigo.append(s.getOperador());
-        codigo.append(genExpresionInt(s.getDerecha(), s.getTipo()));
+        codigo.append("Pd.mod(").append(s.getOperador().getComentario());
+        codigo.append(genExpresionNum(s.getIzquierda(), s.getTipo()));
+        codigo.append(',').append(s.getOperador().getComentario());
+        codigo.append(genExpresionNum(s.getDerecha(), s.getTipo()));
+        codigo.append(")");
         s.setCodigoGenerado(codigo);
     }
 

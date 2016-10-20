@@ -5,7 +5,7 @@ package perldoop.lexico;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-import perldoop.modelo.lexico.*;
+import perldoop.modelo.lexico.Token;
 import perldoop.sintactico.Parser;
 import perldoop.error.GestorErrores;
 import perldoop.internacionalizacion.Errores;
@@ -1101,7 +1101,7 @@ public class Lexer {
           case 103: break;
           case 2: 
             { String txt = yytext(); 
-						int tipo = Reservados.buscarId(txt, Parser.ID);
+						int tipo = PalabrasReservadas.buscarId(txt, Parser.ID);
 						if(tipo==Parser.SUB) yybegin(VAR);
 						return token(txt, tipo);
             }
@@ -1546,7 +1546,7 @@ public class Lexer {
           case 197: break;
           case 96: 
             { String t = yytext(); 
-							Integer tipo = Reservados.buscarEtiqueta(t);
+							Integer tipo = PalabrasReservadas.buscarEtiqueta(t);
 							if (tipo == null){
 								buffer.append(t);
 								token(t, 0);

@@ -150,7 +150,7 @@ public abstract class Casting {
      * @return Integer
      */
     public static Integer toInteger(String s) {
-        return s == null ? null : Integer.parseInt(s);
+        return s == null ? null : toDouble(s).intValue();
     }
 
     /**
@@ -220,7 +220,7 @@ public abstract class Casting {
      * @return Long
      */
     public static Long toLong(String s) {
-        return s == null ? null : Long.parseLong(s);
+        return s == null ? null : toDouble(s).longValue();
     }
 
     /**
@@ -290,7 +290,7 @@ public abstract class Casting {
      * @return Float
      */
     public static Float toFloat(String s) {
-        return s == null ? null : Float.parseFloat(s);
+        return s == null ? null : toDouble(s).floatValue();
     }
 
     /**
@@ -360,7 +360,60 @@ public abstract class Casting {
      * @return Double
      */
     public static Double toDouble(String s) {
-        return s == null ? null : Double.parseDouble(s);
+        if (s == null) {
+            return null;
+        }
+        char[] chars = s.toCharArray();
+        StringBuilder str = new StringBuilder(s.length());
+        int i = 0;
+        boolean punto = false;
+        boolean exp = false;
+        //Eliminar ceros
+        for (; i < chars.length; i++) {
+            if (chars[i] != 0) {
+                break;
+            }
+        }
+        //Numeros
+        FOR:
+        for (; i < chars.length; i++) {
+            switch (chars[i]) {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    str.append(chars[i]);
+                    break;
+                case '.':
+                    if (punto || exp) {
+                        break FOR;
+                    }
+                    punto = true;
+                    str.append(chars[i]);
+                    break;
+                case 'e':
+                case 'E':
+                    if (exp) {
+                        break FOR;
+                    }
+                    exp = true;
+                    str.append(chars[i]);
+                    break;
+                default:
+                    break FOR;
+            }
+        }
+        if (str.length() > 0) {
+            return Double.parseDouble(str.toString());
+        } else {
+            return 0d;
+        }
     }
 
     /**
