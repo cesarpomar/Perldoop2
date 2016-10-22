@@ -5,6 +5,7 @@ import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Raiz;
 import perldoop.modelo.lexico.Token;
+import perldoop.modelo.semantica.EntradaFuncionNoDeclarada;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
@@ -27,9 +28,11 @@ public class SemRaiz {
 
     public void visitar(Raiz s) {
         //Imprimimos como error todas las funciones usadas pero no declaradas
-        Collection<Token> funciones = tabla.getTablaSimbolos().getFuncionesNoDeclaradas().values();
-        for (Token token : funciones) {
-            tabla.getGestorErrores().error(Errores.FUNCION_NO_EXISTE, token, token.getValor());
+        Collection<EntradaFuncionNoDeclarada> funciones = tabla.getTablaSimbolos().getFuncionesNoDeclaradas().values();
+        for (EntradaFuncionNoDeclarada funcion : funciones) {
+            for (Token token : funcion.getLlamadas()) {
+                tabla.getGestorErrores().error(Errores.FUNCION_NO_EXISTE, token, token.getValor());
+            }
         }
         if (!funciones.isEmpty()) {
             throw new ExcepcionSemantica(Errores.FUNCION_NO_EXISTE);

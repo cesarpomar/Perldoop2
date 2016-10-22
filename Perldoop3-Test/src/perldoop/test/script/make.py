@@ -14,10 +14,10 @@ while len(carpetas) > 0:
 		carpetas += folders
 		files.sort()
 		infile=[]
-		
+		pack=path.replace("src/perldoop/test/perl/","perldoop/test/java/").replace("/",".")	
 		for file in files:
 			if file.endswith(".pl"):
 				infile.append(path+"/"+file)	
 
 		if len(infile) > 0:
-			call(['java','-jar','../Perldoop3/dist/Perldoop3.jar']+infile+['-out','src'])
+			call(['java','-jar','../Perldoop3/dist/Perldoop3.jar']+infile+['-out','src','-pk',pack])

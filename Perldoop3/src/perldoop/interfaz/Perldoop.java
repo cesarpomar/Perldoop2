@@ -1,12 +1,9 @@
 package perldoop.interfaz;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import perldoop.depurador.Depurador;
 import perldoop.error.GestorErrores;
 import perldoop.generacion.Generador;
@@ -18,7 +15,7 @@ import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.lexico.Token;
-import perldoop.modelo.semantica.Paquete;
+import perldoop.modelo.semantica.ArbolPaquetes;
 import perldoop.modelo.semantica.TablaSimbolos;
 import perldoop.preprocesador.Preprocesador;
 import perldoop.semantica.Semantica;
@@ -38,12 +35,13 @@ public final class Perldoop {
      * @param args Argumentos de ejecución
      */
     public static void main(String[] args) {
-        Map<String, Paquete> paquetes = new HashMap<>();
         Consola consola = new Consola(args);
         consola.parse();
         Opciones opciones = consola.getOpciones();
         CodeWriter writer = new CodeWriter(opciones);
         GestorErrores gestorErrores;
+        checkFicheros(consola);
+        ArbolPaquetes paquetes = new ArbolPaquetes(consola.getFicheros(),opciones.getPaquetes());
         for (String ruta : consola.getFicheros()) {
             gestorErrores = new GestorErrores(ruta.trim(), opciones);
             File fichero = new File(ruta);
@@ -63,10 +61,7 @@ public final class Perldoop {
                 if (opciones.getDepEtapas() == 1) {
                     continue;
                 }
-            } catch (FileNotFoundException ex) {
-                gestorErrores.error(Errores.FICHERO_NO_EXISTE);
-                continue;
-            }catch (UnsupportedEncodingException ex) {
+            } catch (UnsupportedEncodingException ex) {
                 gestorErrores.error(Errores.ERROR_CODIFICACION, opciones.getCodificacion());
                 return;//La codificacion fallara en todos
             } catch (IOException ex) {
@@ -120,6 +115,26 @@ public final class Perldoop {
             } catch (IOException ex) {
                 gestorErrores.error(Errores.ERROR_ESCRITURA);
             }
+        }
+    }
+
+    /**
+     * Comprueba que todos los ficheros existen
+     *
+     * @param consola Consola
+     */
+    private static void checkFicheros(Consola consola) {
+        boolean error = false;
+        for (String ruta : consola.getFicheros()) {
+            File f = new File(ruta);
+            if (!f.exists()) {
+                error = true;
+                GestorErrores ge = new GestorErrores(ruta, consola.getOpciones());
+                ge.error(Errores.FICHERO_NO_EXISTE);
+            }
+        }
+        if (error) {
+            System.exit(0);
         }
     }
 }

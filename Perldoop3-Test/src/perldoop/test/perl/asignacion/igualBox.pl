@@ -1,5 +1,5 @@
 
-package perldoop::test::java::asignacion::IgualBox;
+package IgualBox;
 
 #Asignacion box
 our $l1 = 1;#<box>

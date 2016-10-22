@@ -3,7 +3,7 @@ package perldoop.test.tests.colecciones;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import perldoop.test.java.coleciones.Colecciones;
+import perldoop.test.java.colecciones.Colecciones;
 
 public class ColeccionesTest {
 

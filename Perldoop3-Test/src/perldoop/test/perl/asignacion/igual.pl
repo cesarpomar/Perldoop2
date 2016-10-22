@@ -1,5 +1,5 @@
 
-package perldoop::test::java::asignacion::Igual;
+package Igual;
 
 #Asignacion simple
 our $l1 = 1;#<integer>

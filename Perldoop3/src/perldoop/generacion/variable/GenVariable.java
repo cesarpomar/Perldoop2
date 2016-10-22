@@ -11,6 +11,7 @@ import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
+import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.generacion.TablaGenerador;
@@ -42,7 +43,8 @@ public final class GenVariable {
 
     public void visitar(VarPaquete s) {
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), Buscar.getContexto(s));
-        StringBuilder codigo = new StringBuilder(s.getPaquetes().getCodigoGenerado());
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(getPaquete(s.getPaquetes()));
         codigo.append(".").append(e.getAlias()).append(s.getVar().getComentario());
         s.setCodigoGenerado(codigo);
     }
@@ -63,8 +65,8 @@ public final class GenVariable {
 
     public void visitar(VarPaqueteSigil s) {
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), Buscar.getContexto(s));
-        StringBuilder codigo = new StringBuilder(s.getPaquetes().getCodigoGenerado());
-        codigo.append(s.getContexto().getComentario());
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(getPaquete(s.getPaquetes()));
         codigo.append(s.getSigil().getComentario());
         codigo.append("(").append(e.getAlias()).append(s.getVar().getComentario());
         if (e.getTipo().isArray()) {
@@ -84,13 +86,22 @@ public final class GenVariable {
     }
 
     /**
+     * Obtiene el paquete
+     * @param p Paquetes
+     * @return Nombre paquete
+     */
+    private String getPaquete(Paquetes p){
+        return tabla.getTablaSimbolos().getImports().get(p.getClaseJava()).getAlias();
+    }
+    
+    /**
      * Declara una variable
      *
      * @param v Variable
      * @param dec Terminal de declaracion
      * @param publica Acceso publico
      */
-    public void declararVar(Variable v, Terminal dec, boolean publica) {
+    private void declararVar(Variable v, Terminal dec, boolean publica) {
         //Crear alias
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(v.getVar().toString(), Buscar.getContexto(v));
         e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(), e.isConflicto()));

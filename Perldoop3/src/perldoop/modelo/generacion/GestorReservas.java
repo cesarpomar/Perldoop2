@@ -56,12 +56,12 @@ public final class GestorReservas {
     }
 
     /**
-     * Busca si una palabra esta reservada
+     * Comprueba si el identificador esta reservado por java
      *
      * @param id Identificador
-     * @return Esta reservada
+     * @return Palabra reservada java
      */
-    private static boolean isReservada(String id) {
+    public static boolean isReservadaJava(String id) {
         switch (id) {
             //Java
             case "abstract":
@@ -114,6 +114,20 @@ public final class GestorReservas {
             case "native":
             case "super":
             case "while":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Busca si una palabra esta reservada
+     *
+     * @param id Identificador
+     * @return Esta reservada
+     */
+    private static boolean isReservada(String id) {
+        switch (id) {
             //Perldoop
             case "Box":
             case "Casting":
@@ -123,10 +137,11 @@ public final class GestorReservas {
             case "PerlList":
             case "PerlMap":
             case "Ref":
+            case "Regex":
             case "__":
                 return true;
             default:
-                return id.startsWith(PREF);
+                return id.startsWith(PREF) || isReservadaJava(id);
         }
     }
 

@@ -1,23 +1,28 @@
 package perldoop.modelo.semantica;
 
+import java.util.ArrayList;
+import java.util.List;
+import perldoop.modelo.lexico.Token;
+
 /**
- * Función almacenada en la tabla de simbolos
+ * Invocaciones a una funcion no declarada
  *
  * @author César Pomar
  */
-public final class EntradaFuncion {
+public final class EntradaFuncionNoDeclarada {
 
     private String identificador;
     private String alias;
-    private boolean conflicto;
+    private List<Token> llamadas;
 
     /**
      * Contruye una entrada de la tabla pra una función
      *
      * @param identificador Identificador
      */
-    public EntradaFuncion(String identificador) {
+    public EntradaFuncionNoDeclarada(String identificador) {
         this.identificador = identificador;
+        llamadas = new ArrayList<>(10);
     }
 
     /**
@@ -57,21 +62,21 @@ public final class EntradaFuncion {
     }
 
     /**
-     * Obtiene si la variable entra en conflicto con otra
+     * Obtiene las llamdas a la funcion
      *
-     * @return Existe conflicto
+     * @return Lista de llamadas
      */
-    public boolean isConflicto() {
-        return conflicto;
+    public List<Token> getLlamadas() {
+        return llamadas;
     }
 
     /**
-     * Estable si la variable entra en conflicto con otra
+     * Establece las llamadas
      *
-     * @param conflicto Existe conflicto
+     * @param llamadas Lista de llamadas
      */
-    public void setConflicto(boolean conflicto) {
-        this.conflicto = conflicto;
+    public void setLlamadas(List<Token> llamadas) {
+        this.llamadas = llamadas;
     }
 
 }

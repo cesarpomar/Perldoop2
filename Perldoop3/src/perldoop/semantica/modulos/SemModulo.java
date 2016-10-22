@@ -1,5 +1,10 @@
 package perldoop.semantica.modulos;
 
+import java.util.List;
+import static javax.management.Query.value;
+import perldoop.excepciones.ExcepcionSemantica;
+import perldoop.internacionalizacion.Errores;
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.modulos.ModuloPackage;
 import perldoop.modelo.arbol.modulos.ModuloUse;
 import perldoop.modelo.semantica.TablaSemantica;
@@ -23,16 +28,23 @@ public class SemModulo {
     }
 
     public void visitar(ModuloPackage s) {
-        if (tabla.getTablaSimbolos().isPaquete()) {
-            //TODO Dar error paqute ya creado
+        if(!tabla.getTablaSimbolos().isVacia()){
+            tabla.getGestorErrores().error(Errores.MODULO_NO_VACIO, s.getIdPackage().getToken());
+            throw new ExcepcionSemantica(Errores.MODULO_NO_VACIO);
         }
-        if (!tabla.getTablaSimbolos().isVacia()) {
-            //TODO Dar error paquete tiene que ser declarado al principio
+        if (tabla.getTablaSimbolos().getPaquete()!=null) {
+            tabla.getGestorErrores().error(Errores.MODULO_YA_CREADO, s.getIdPackage().getToken());
+            throw new ExcepcionSemantica(Errores.MODULO_YA_CREADO);
         }
-        tabla.getTablaSimbolos().crerPaquete(s.getPaquetes().getRepresentancion());
+        tabla.getTablaSimbolos().crearPaquete(tabla.getGestorErrores().getFichero());
     }
 
     public void visitar(ModuloUse s) {
+        List<Terminal> ids = s.getPaquetes().getIdentificadores();
+        String clase = ids.get(ids.size()-1).getValor();
+        String fichero = tabla.getGestorErrores().getFichero();
+        String[] paquetes = s.getPaquetes().getArrayString();
+        tabla.getTablaSimbolos().getImports().put(clase, tabla.getTablaSimbolos().getPaquete(fichero, paquetes));
     }
 
 }

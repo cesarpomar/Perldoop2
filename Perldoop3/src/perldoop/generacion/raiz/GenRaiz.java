@@ -1,8 +1,10 @@
 package perldoop.generacion.raiz;
 
+import com.sun.javafx.util.Utils;
 import java.io.File;
 import perldoop.modelo.arbol.Raiz;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.util.Utiles;
 
 /**
  * Clase generadora de raiz
@@ -26,10 +28,7 @@ public class GenRaiz {
         //Si no se declaro un paquete le damos el nombre con el fichero
         if (tabla.getClase().getNombre() == null) {
             String nombre = new File(tabla.getGestorErrores().getFichero().trim()).getName();
-            nombre = nombre.replaceAll("[^a-zA-Z0-9]", "_");
-            if (nombre.matches("^[0-9].*")) {
-                nombre = "_" + nombre;
-            }
+            nombre = Utiles.normalizar(nombre.substring(0, nombre.lastIndexOf(".")));
             tabla.getClase().setNombre(nombre);
         }
         //Import libreria

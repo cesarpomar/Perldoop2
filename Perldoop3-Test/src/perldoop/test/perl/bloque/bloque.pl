@@ -1,5 +1,5 @@
 
-package perldoop::test::java::bloque::Bloque;
+package Bloque;
 
 #Bloque foreach
 

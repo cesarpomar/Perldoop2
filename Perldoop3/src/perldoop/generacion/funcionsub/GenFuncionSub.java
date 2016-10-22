@@ -25,7 +25,9 @@ public class GenFuncionSub {
     public void visitar(FuncionSub s) {
         StringBuilder codigo = new StringBuilder(50);
         EntradaFuncion fun = tabla.getTablaSimbolos().buscarFuncion(s.getId().getToken().toString());
-        fun.setAlias(tabla.getGestorReservas().getAlias(fun.getIdentificador(), fun.isConflicto()));
+        if (fun.getAlias() == null) {
+            fun.setAlias(tabla.getGestorReservas().getAlias(fun.getIdentificador(), fun.isConflicto()));
+        }
         codigo.append("public static Box[] ").append(fun.getAlias()).append(" (Box[] __)");
         s.setCodigoGenerado(codigo);
     }

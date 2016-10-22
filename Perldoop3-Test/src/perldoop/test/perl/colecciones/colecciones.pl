@@ -1,5 +1,5 @@
 
-package perldoop::test::java::coleciones::Colecciones;
+package Colecciones;
 
 #Inicializacion basica
 our @a = (1,2,3,4);#<array><string>

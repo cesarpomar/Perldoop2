@@ -1,5 +1,5 @@
 
-package perldoop::test::java::acceso::Acceso;
+package Acceso;
 
 #Colecciones
 our @a = (1,2,3,4);#<array><string>

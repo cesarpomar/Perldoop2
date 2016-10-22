@@ -1,7 +1,6 @@
 %{
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import perldoop.modelo.Opciones;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.sintactico.ParserVal;
@@ -111,10 +110,10 @@ sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)
 			|	error	'}'								{$$=set(new StcError());}
 			|	error	'{'								{$$=set(new StcError());}
 			
-modulos		:	USE paqueteID ID ';'					{$$=set(new ModuloUse(s($1),s($2),s($3),s($4)));}
-			|	USE ID ';'								{$$=set(new ModuloUse(s($1),add(new Paquetes()),s($2),s($3)));}
-			|	PACKAGE paqueteID ID ';'				{$$=set(new ModuloPackage(s($1),s($2),s($3),s($4)));}
-			|	PACKAGE ID ';'							{$$=set(new ModuloPackage(s($1),add(new Paquetes()),s($2),s($3)));}
+modulos		:	USE paqueteID ID ';'					{$$=set(new ModuloUse(s($1),Paquetes.addId(s($2),s($3)),s($4)));}
+			|	USE ID ';'								{$$=set(new ModuloUse(s($1),add(new Paquetes().addId(s($2))),s($3)));}
+			|	PACKAGE paqueteID ID ';'				{$$=set(new ModuloPackage(s($1),Paquetes.addId(s($2),s($3)),s($4)));}
+			|	PACKAGE ID ';'							{$$=set(new ModuloPackage(s($1),add(new Paquetes().addId(s($2))),s($3)));}
 
 expresion	:	numero									{$$=set(new ExpNumero(s($1)));} 
 			|	cadena									{$$=set(new ExpCadena(s($1)));} 

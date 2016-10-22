@@ -1,10 +1,12 @@
 package perldoop.modelo.arbol.paquete;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.util.Utiles;
 
 /**
  * Clase que representa la reduccion -&gt;<br>
@@ -58,16 +60,60 @@ public final class Paquetes extends Simbolo {
     }
 
     /**
-     * Obtiene la representacion de todos los paquetes como un String
+     * Obtiene los paquetes como un espacio de nombres representado por una clase java
      *
-     * @return String de paqutes
+     * @return Ruta
      */
-    public String getRepresentancion() {
-        StringBuilder sb = new StringBuilder(100);
-        for (Terminal t : identificadores) {
-            sb.append(t);
+    public String getClaseJava() {
+        Iterator<Terminal> it = identificadores.iterator();
+        StringBuilder clase = new StringBuilder(100);
+        while (it.hasNext()) {
+            clase.append(Utiles.normalizar(it.next().getValor()));
+            if (it.hasNext()) {
+                clase.append("_");
+            }
         }
-        return sb.toString();
+        return clase.toString();
+    }
+
+    /**
+     * Obtiene los paquetes como un array de nombres
+     *
+     * @return Array de nombres
+     */
+    public String[] getArrayString() {
+        return identificadores.stream().map(i -> Utiles.normalizar(i.getValor())).toArray(String[]::new);
+    }
+
+    /**
+     * Obtiene el numero de identificadores
+     *
+     * @return Identificadores
+     */
+    public int size() {
+        return identificadores.size();
+    }
+
+    /**
+     * Comprueba si existe algun paquete
+     *
+     * @return Existe algun paquete
+     */
+    public boolean isVacio() {
+        return identificadores.isEmpty();
+    }
+
+    /**
+     * Añade un nivel al paquete
+     *
+     * @param id Identificador
+     * @return Este paquete
+     */
+    public Paquetes addId(Terminal id) {
+        id.setPadre(this);
+        terminales.add(id);
+        identificadores.add(id);
+        return this;
     }
 
     /**
@@ -78,11 +124,9 @@ public final class Paquetes extends Simbolo {
      * @return Este paquete
      */
     public Paquetes add(Terminal id, Terminal ambito) {
-        id.setPadre(this);
+        addId(id);
         ambito.setPadre(this);
-        terminales.add(id);
         terminales.add(ambito);
-        identificadores.add(id);
         return this;
     }
 
@@ -96,6 +140,17 @@ public final class Paquetes extends Simbolo {
      */
     public static Paquetes add(Paquetes p, Terminal id, Terminal ambito) {
         return p.add(id, ambito);
+    }
+
+    /**
+     * Añade un nivel a el paquete
+     *
+     * @param p paquete
+     * @param id Identificador
+     * @return Paquete p
+     */
+    public static Paquetes addId(Paquetes p, Terminal id) {
+        return p.addId(id);
     }
 
     @Override

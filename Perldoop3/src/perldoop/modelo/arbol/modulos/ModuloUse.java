@@ -14,7 +14,6 @@ public final class ModuloUse extends Modulo {
 
     private Terminal idUse;
     private Paquetes paquetes;
-    private Terminal id;
     private Terminal puntoComa;
 
     /**
@@ -22,13 +21,11 @@ public final class ModuloUse extends Modulo {
      *
      * @param idUse IdUse
      * @param paquetes Paquetes
-     * @param id Id
      * @param puntoComa PuntoComa
      */
-    public ModuloUse(Terminal idUse, Paquetes paquetes, Terminal id, Terminal puntoComa) {
+    public ModuloUse(Terminal idUse, Paquetes paquetes, Terminal puntoComa) {
         setIdUse(idUse);
         setPaquetes(paquetes);
-        setId(id);
         setPuntoComa(puntoComa);
     }
 
@@ -71,25 +68,6 @@ public final class ModuloUse extends Modulo {
     }
 
     /**
-     * Obtiene el id
-     *
-     * @return Id
-     */
-    public Terminal getId() {
-        return id;
-    }
-
-    /**
-     * Establece el id
-     *
-     * @param id Id
-     */
-    public void setId(Terminal id) {
-        id.setPadre(this);
-        this.id = id;
-    }
-
-    /**
      * Obtiene el punto y coma ';'
      *
      * @return PuntoComa
@@ -115,7 +93,7 @@ public final class ModuloUse extends Modulo {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{idUse, paquetes, id, puntoComa};
+        return new Simbolo[]{idUse, paquetes, puntoComa};
     }
 
 }

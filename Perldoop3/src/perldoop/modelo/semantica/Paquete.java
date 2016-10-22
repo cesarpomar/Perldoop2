@@ -4,27 +4,103 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Clase que representa un paquete
+ * Paquete que representa las variables y funciones exportadas por una clase
  *
  * @author César Pomar
  */
 public final class Paquete {
 
+    private String identificador;
+    private String alias;
     private Map<String, Contexto> atributos;
     private Map<String, EntradaFuncion> funciones;
 
     /**
      * Constructor del paquete
      *
+     * @param identifiador Identificador
      * @param funciones Funciones
      */
-    public Paquete(Map<String, EntradaFuncion> funciones) {
+    public Paquete(String identifiador, Map<String, EntradaFuncion> funciones) {
+        this.identificador = identifiador;
         this.funciones = funciones;
         atributos = new HashMap<>(10);
     }
 
     /**
-     * Añade una variable al paquete
+     * Obtiene el identificador
+     *
+     * @return Identificador
+     */
+    public String getIdentificador() {
+        return identificador;
+    }
+
+    /**
+     * Establece el identificador
+     *
+     * @param identificador Identificador
+     */
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
+    }
+
+    /**
+     * Obtiene el alias
+     *
+     * @return Alias
+     */
+    public String getAlias() {
+        return alias;
+    }
+
+    /**
+     * Establece el alias
+     *
+     * @param alias Alias
+     */
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    /**
+     * Obtiene los atributos
+     *
+     * @return Atributos
+     */
+    public Map<String, Contexto> getAtributos() {
+        return atributos;
+    }
+
+    /**
+     * Establece los atributos
+     *
+     * @param atributos Atributos
+     */
+    public void setAtributos(Map<String, Contexto> atributos) {
+        this.atributos = atributos;
+    }
+
+    /**
+     * Obtiene las funciones
+     *
+     * @return Funciones
+     */
+    public Map<String, EntradaFuncion> getFunciones() {
+        return funciones;
+    }
+
+    /**
+     * Establece las funciones
+     *
+     * @param funciones Funciones
+     */
+    public void setFunciones(Map<String, EntradaFuncion> funciones) {
+        this.funciones = funciones;
+    }
+
+    /**
+     * Añade una entrada al contexto de una variable
      *
      * @param entrada Entrada
      * @param contexto Contexto
@@ -34,6 +110,8 @@ public final class Paquete {
         if (c == null) {
             c = new Contexto();
             atributos.put(entrada.getIdentificador(), c);
+        } else {
+            entrada.setConflicto(true);
         }
         switch (contexto) {
             case '$':
@@ -49,7 +127,7 @@ public final class Paquete {
     }
 
     /**
-     * Busca una variable en su contexto dentro del paquete
+     * Busca una variable en su contexto
      *
      * @param identificador Identificador
      * @param contexto Contexto
@@ -72,17 +150,7 @@ public final class Paquete {
     }
 
     /**
-     * Busca una variable dentro del paquete
-     *
-     * @param identificador Identificador
-     * @return Entrada
-     */
-    public Contexto buscarVariable(String identificador) {
-        return atributos.get(identificador);
-    }
-
-    /**
-     * Obtiene el alias de una función si existe
+     * Obtiene una funcion
      *
      * @param identificador Identificador
      * @return Entrada función

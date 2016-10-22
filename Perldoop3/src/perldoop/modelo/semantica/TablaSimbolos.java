@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.preprocesador.EtiquetasTipo;
 
 /**
- * Clase que almacena las bloques declaradas en el código.
+ * Paquete que almacena las bloques declaradas en el código.
  *
  * @author César Pomar
  */
@@ -17,42 +18,53 @@ public final class TablaSimbolos {
     private List<Map<String, Contexto>> bloques;
     private Map<String, EtiquetasTipo> predeclaraciones;
     private Map<String, EntradaFuncion> funciones;
-    private Map<String, Token> funcionesNoDeclaradas;
-    private Map<String, Paquete> paquetes;
+    private Map<String, EntradaFuncionNoDeclarada> funcionesNoDeclaradas;
+    private ArbolPaquetes paquetes;
+    private Map<String, Paquete> imports;
     private Paquete paquete;
     private boolean vacia;
 
     /**
      * Construye la tabla de símbolos
      *
-     * @param paquetes Paquetes
+     * @param paquetes Arbol de paquetes
      */
-    public TablaSimbolos(Map<String, Paquete> paquetes) {
+    public TablaSimbolos(ArbolPaquetes paquetes) {
         bloques = new ArrayList<>(20);
-        bloques.add(new HashMap<>(10));//Atributos
+        bloques.add(new HashMap<>(20));//Atributos
         predeclaraciones = new HashMap<>(20);
         funciones = new HashMap<>(20);
         funcionesNoDeclaradas = new HashMap<>(20);
         this.paquetes = paquetes;
+        imports = new HashMap<>(20);
         vacia = true;
     }
 
     /**
-     * Abre un nuevo bloque de bloques
+     * Abre un nuevo bloque de variables
      */
     public void abrirBloque() {
-        bloques.add(new HashMap<>());
+        bloques.add(new HashMap<>(20));
     }
 
     /**
-     * Cierra el ultimo bloque bloques
+     * Cierra el ultimo bloque de variable
      */
     public void cerrarBloque() {
         bloques.remove(bloques.size() - 1);
     }
 
     /**
-     * Añade una variable
+     * Comprueba si la tabla de simbolos ha sido usada
+     *
+     * @return Tabla vacia
+     */
+    public boolean isVacia() {
+        return vacia;
+    }
+
+    /**
+     * Añade una entrada al contexto de una variable
      *
      * @param entrada Entrada
      * @param contexto Contexto
@@ -180,26 +192,29 @@ public final class TablaSimbolos {
     }
 
     /**
-     * Crea una funcion con su alias, si existe la sobreescribe
+     * Crea una funcion, si ya existe sobrescribe a la anterior
      *
      * @param entrada Entrada
      */
     public void addFuncion(EntradaFuncion entrada) {
-        funcionesNoDeclaradas.remove(entrada.getIdentificador());
+        EntradaFuncionNoDeclarada noDeclarada = funcionesNoDeclaradas.remove(entrada.getIdentificador());
         funciones.put(entrada.getIdentificador(), entrada);
+        if(noDeclarada!=null){
+            entrada.setAlias(noDeclarada.getAlias());
+        }
     }
 
     /**
-     * Obtiene las funciones no declaradas, con su token de donde
+     * Obtiene las funciones no declaradas
      *
      * @return Funciones no declaradas
      */
-    public Map<String, Token> getFuncionesNoDeclaradas() {
+    public Map<String, EntradaFuncionNoDeclarada> getFuncionesNoDeclaradas() {
         return funcionesNoDeclaradas;
     }
 
     /**
-     * Obtiene el alias de una función si existe
+     * Obtiene una funcion
      *
      * @param identificador Identificador
      * @return Entrada función
@@ -209,56 +224,77 @@ public final class TablaSimbolos {
     }
 
     /**
+     * Obtiene una funcion no declarada
+     *
+     * @param identificador Identificador
+     * @return Entrada función no declarada
+     */
+    public EntradaFuncionNoDeclarada buscarFuncionNoDeclarada(String identificador) {
+        return funcionesNoDeclaradas.get(identificador);
+    }
+
+    /**
      * Crea una entrada para una función que aun no ha sido declarada
      *
      * @param t Token
-     * @return Alias de la función
      */
-    public String addFuncionNoDeclarada(Token t) {
-        if (!funcionesNoDeclaradas.containsKey(t.getValor())) {
-            funcionesNoDeclaradas.put(t.getValor(), t);
+    public void addFuncionNoDeclarada(Token t) {
+        EntradaFuncionNoDeclarada entrada = funcionesNoDeclaradas.get(t.getValor());
+        if (entrada == null) {
+            entrada = new EntradaFuncionNoDeclarada(t.getValor());
+            funcionesNoDeclaradas.put(t.getValor(), entrada);
         }
-        return t.getValor();
+        entrada.getLlamadas().add(t);
     }
 
     /**
-     * Comprueba si la tabla pertenece a un paquete
+     * Obtiene el paquete si esta declarado
      *
-     * @return Declaracion de paquete
+     * @return Paquete declarado
      */
-    public boolean isPaquete() {
-        return paquete != null;
+    public Paquete getPaquete() {
+        return paquete;
     }
 
     /**
-     * Comprueba si la tabla de simbolos ha sido usada
+     * Obtiene el arbol de paquetes
      *
-     * @return Tabla vacia
+     * @return Arbol de paquetes
      */
-    public boolean isVacia() {
-        return vacia;
+    public ArbolPaquetes getArbolPaquete() {
+        return paquetes;
+    }
+
+    /**
+     * Obtiene los paquetes importados
+     *
+     * @return Mapa de paquetes
+     */
+    public Map<String, Paquete> getImports() {
+        return imports;
+    }
+
+    /**
+     * Crea un paquete
+     *
+     * @param fichero Fichero
+     */
+    public void crearPaquete(String fichero) {
+        String id=String.join(".", paquetes.getDirectorios(fichero))+"."+paquetes.getClases().get(fichero);
+        paquete = new Paquete(paquetes.getClases().get(fichero), funciones);
+        paquetes.getPaquetes().put(id, paquete);
     }
 
     /**
      * Obtiene un paquete
      *
-     * @param nombre Nombre del paquete
+     * @param fichero Fichero actual
+     * @param paquete Paquete a importar
      * @return Paquete
      */
-    public Paquete getPaquete(String nombre) {
-        return paquetes.get(nombre);
-    }
-
-    /**
-     * Crea un paquete con la tabla
-     *
-     * @param nombre Nombre del paquete
-     */
-    public void crerPaquete(String nombre) {
-        if (paquete == null && isVacia()) {
-            paquete = new Paquete(funciones);
-            paquetes.put(nombre, paquete);
-        }
+    public Paquete getPaquete(String fichero, String[] paquete) {
+        String ruta = String.join(".",paquetes.getDirectorios(fichero))+"."+String.join(".",paquete);
+        return paquetes.getPaquetes().get(ruta);
     }
 
 }

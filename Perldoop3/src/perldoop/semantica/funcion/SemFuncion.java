@@ -35,7 +35,7 @@ public class SemFuncion {
     }
 
     public void visitar(FuncionBasica s) {
-        if(s.getPaquetes().getTerminales().isEmpty()){
+        if(s.getPaquetes().isVacio()){
             comprobarFuncion(s, (ColParentesis) s.getColeccion());
         }else{
             comprobarFuncionPaquete(s, s.getPaquetes());
@@ -81,10 +81,10 @@ public class SemFuncion {
      * @param paquetes Paquetes
      */
     private void comprobarFuncionPaquete(Funcion f, Paquetes paquetes) {
-        Paquete paquete = tabla.getTablaSimbolos().getPaquete(paquetes.getRepresentancion());
+        Paquete paquete = tabla.getTablaSimbolos().getImports().get(paquetes.getClaseJava());
         if (paquete == null) {
             tabla.getGestorErrores().error(Errores.PAQUETE_NO_EXISTE, paquetes.getIdentificadores().get(0).getToken(),
-                    paquetes.getRepresentancion());
+                    paquetes.getIdentificadores().get(0).getToken());
             throw new ExcepcionSemantica(Errores.PAQUETE_NO_EXISTE);
         }
         if (paquete.buscarFuncion(f.getIdentificador().getToken().getValor()) == null) {

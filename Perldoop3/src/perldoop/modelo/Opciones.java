@@ -16,6 +16,7 @@ public class Opciones {
     private boolean ocultarAvisos;
     private Integer mostrarErrores;
     private String codificacion;
+    private String[] paquetes;
     //Argumentos Optimización
     private boolean optNulos;
     private boolean optIntancias;
@@ -296,6 +297,22 @@ public class Opciones {
      */
     public void setOptNulos(boolean optNulos) {
         this.optNulos = optNulos;
+    }
+
+    /**
+     * Obtiene los paquetes
+     * @return Paquetes
+     */
+    public String[] getPaquetes() {
+        return paquetes;
+    }
+
+    /**
+     * Establece los paquetes
+     * @param paquetes Paquetes
+     */
+    public void setPaquetes(String[] paquetes) {
+        this.paquetes = paquetes;
     }
 
 }

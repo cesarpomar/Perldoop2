@@ -13,9 +13,12 @@ import net.sourceforge.argparse4j.inf.Argument;
 import net.sourceforge.argparse4j.inf.ArgumentGroup;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.ArgumentType;
 import net.sourceforge.argparse4j.inf.Namespace;
+import perldoop.internacionalizacion.Errores;
 import perldoop.internacionalizacion.Interfaz;
 import perldoop.modelo.Opciones;
+import perldoop.modelo.generacion.GestorReservas;
 
 /**
  * Interfaz de consola y parsing de argumentnos
@@ -94,6 +97,7 @@ public final class Consola {
         opcionales.addArgument("-hw", "--hide-warnings").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OCULTAR_AVISOS));
         opcionales.addArgument("-se", "--show-errors").metavar("n").action(new StoreArgumentAction()).type(Integer.class).help(interfaz.get(Interfaz.MOSTRAR_ERRORES));
         opcionales.addArgument("-en", "--encoding").metavar("e").action(new StoreArgumentAction()).help(interfaz.get(Interfaz.CODIFICACION));
+        opcionales.addArgument("-pk", "--package").metavar("p").action(new StoreArgumentAction()).type(new ArgumentPaquete()).help(interfaz.get(Interfaz.PAQUETES));
         //Optimizaciones
         ArgumentGroup optimizacion = parser.addArgumentGroup(interfaz.get(Interfaz.ARGS_OPTIMIZACION));
         optimizacion.addArgument("-on", "--optimize-nulls").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_NULOS));
@@ -112,7 +116,7 @@ public final class Consola {
     /**
      * Clase para redefinir la escritura de la ayuda para solucionar los problemas con caracteres especiales.
      */
-    public static class HelpArgumentActionExt extends HelpArgumentAction {
+    private static class HelpArgumentActionExt extends HelpArgumentAction {
 
         @Override
         public void run(ArgumentParser parser, Argument arg, Map<String, Object> attrs, String flag, Object value)
@@ -121,6 +125,23 @@ public final class Consola {
             System.exit(0);
         }
 
+    }
+
+    /**
+     * Clase para comprobar que el argumento de paquetes es sintacticamente correcto
+     */
+    private static class ArgumentPaquete implements ArgumentType<String[]> {
+
+        @Override
+        public String[] convert(ArgumentParser parser, Argument arg, String value) throws ArgumentParserException {
+            String[] paquetes = value.split("\\.");
+            for (String paquete : paquetes) {
+                if(!paquete.matches("[_a-zA-Z][_a-zA-Z0-9]*") || GestorReservas.isReservadaJava(paquete)){
+                    throw new ArgumentParserException(new Errores().get(Errores.PAQUETE_INVALIDO), parser, arg);
+                }            
+            }
+            return paquetes;
+        }
     }
 
     /**
@@ -133,7 +154,9 @@ public final class Consola {
         opciones.setCopiarComentarios(comandos.getBoolean("copy_comments"));
         opciones.setOcultarAvisos(comandos.getBoolean("hide_warnings"));
         opciones.setMostrarErrores(comandos.getInt("show_errors"));
-        opciones.setCodificacion(comandos.get("encoding"));
+        opciones.setCodificacion(comandos.getString("encoding"));
+        String paquetes = comandos.getString("package");
+        opciones.setPaquetes(paquetes != null ? paquetes.split("\\.") : null);
         opciones.setOptNulos(comandos.getBoolean("optimize_nulls"));
         opciones.setOptIntancias(comandos.getBoolean("optimize_instance"));
         opciones.setOptDiamante(comandos.getBoolean("optimize_diamond"));

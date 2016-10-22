@@ -6,6 +6,7 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
+import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.preprocesador.EtiquetasTipo;
 import perldoop.modelo.semantica.EntradaVariable;
@@ -16,7 +17,7 @@ import perldoop.util.Buscar;
 import perldoop.util.ParserEtiquetas;
 
 /**
- * Clase para la semantica de variable
+ * Paquete para la semantica de variable
  *
  * @author César Pomar
  */
@@ -34,62 +35,20 @@ public class SemVariable {
     }
 
     public void visitar(VarExistente s) {
-        char contexto = Buscar.getContexto(s);
-        //Buscar entrada
-        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), contexto);
-        if (e == null) {
-            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar().getValor(), contexto);
-            throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
-        }
-        s.setTipo(e.getTipo());
+        setTipo(null, s);
     }
 
     public void visitar(VarPaquete s) {
-        char contexto = Buscar.getContexto(s);
-        //Buscar paquete
-        Paquete p = tabla.getTablaSimbolos().getPaquete(s.getPaquetes().getRepresentancion());
-        if (p == null) {
-            tabla.getGestorErrores().error(Errores.PAQUETE_NO_EXISTE, s.getPaquetes().getIdentificadores().get(0).getToken(),
-                    s.getPaquetes().getRepresentancion());
-            throw new ExcepcionSemantica(Errores.PAQUETE_NO_EXISTE);
-        }
-        //Buscar entrada
-        EntradaVariable e = p.buscarVariable(s.getVar().toString(), contexto);
-        if (e == null) {
-            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar().getValor(), contexto);
-            throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
-        }
-        s.setTipo(e.getTipo());
+        setTipo(s.getPaquetes(), s);
     }
 
     public void visitar(VarSigil s) {
-        char contexto = Buscar.getContexto(s);
-        //Buscar entrada
-        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), contexto);
-        if (e == null) {
-            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar().getValor(), contexto);
-            throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
-        }
-        s.setTipo(e.getTipo());
+        setTipo(null, s);
         sigil(s, s.getSigil());
     }
 
     public void visitar(VarPaqueteSigil s) {
-        char contexto = Buscar.getContexto(s);
-        //Buscar paquete
-        Paquete p = tabla.getTablaSimbolos().getPaquete(s.getPaquetes().getRepresentancion());
-        if (p == null) {
-            tabla.getGestorErrores().error(Errores.PAQUETE_NO_EXISTE, s.getPaquetes().getIdentificadores().get(0).getToken(),
-                    s.getPaquetes().getRepresentancion());
-            throw new ExcepcionSemantica(Errores.PAQUETE_NO_EXISTE);
-        }
-        //Buscar entrada
-        EntradaVariable e = p.buscarVariable(s.getVar().toString(), contexto);
-        if (e == null) {
-            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, s.getVar().getToken(), s.getVar().getValor(), contexto);
-            throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
-        }
-        s.setTipo(e.getTipo());
+        setTipo(s.getPaquetes(), s);
         sigil(s, s.getSigil());
     }
 
@@ -113,6 +72,36 @@ public class SemVariable {
             entrada.setConflicto(confligto);
             tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
         }
+    }
+
+    /**
+     * Establece el tipo de una variable creda desde la tabla de simbolos
+     *
+     * @param paquetes Paquetes
+     * @param var Variable
+     */
+    public void setTipo(Paquetes paquetes, Variable var) {
+        EntradaVariable e;
+        char contexto = Buscar.getContexto(var);
+        if (paquetes != null) {
+            //Busca dentro de los paquetes la clase con la variable
+            Paquete clase = tabla.getTablaSimbolos().getImports().get(paquetes.getClaseJava());
+            if (clase == null) {
+                tabla.getGestorErrores().error(Errores.PAQUETE_NO_EXISTE, paquetes.getIdentificadores().get(0).getToken(),
+                        paquetes.getIdentificadores().get(0).getToken());
+                throw new ExcepcionSemantica(Errores.PAQUETE_NO_EXISTE);
+            }
+            //Buscar entrada
+            e = clase.buscarVariable(var.getVar().toString(), contexto);
+        }else{
+            //Buscar entrada
+            e = tabla.getTablaSimbolos().buscarVariable(var.getVar().getValor(), contexto);
+        }
+        if (e == null) {
+            tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, var.getVar().getToken(), var.getVar().getValor(), contexto);
+            throw new ExcepcionSemantica(Errores.VARIABLE_NO_EXISTE);
+        }
+        var.setTipo(e.getTipo());
     }
 
     /**
@@ -144,14 +133,13 @@ public class SemVariable {
     }
 
     /**
-     * Obtiene el tipo de la variable
+     * Obtiene el tipo de la variable desde las etiquetas
      *
      * @param v Variable
      * @param tipoLinea Tipo declarado en la linea
      * @return Tipo asignado
      */
     private boolean obtenerTipo(Variable v, EtiquetasTipo tipoLinea) {
-        Simbolo uso = Buscar.getPadre(v, 1);
         EtiquetasTipo predeclaracion = tabla.getTablaSimbolos().getDeclaracion(Buscar.getContexto(v) + v.getVar().getValor());
         if (v.getPadre() instanceof BloqueForeachVar) {
             BloqueForeachVar foreach = (BloqueForeachVar) v.getPadre();

@@ -20,7 +20,6 @@ package perldoop.sintactico;
 //#line 2 "parser.y"
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import perldoop.modelo.Opciones;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.sintactico.ParserVal;
@@ -56,7 +55,7 @@ import perldoop.modelo.arbol.lectura.*;
 import perldoop.modelo.arbol.handle.*;
 import perldoop.modelo.arbol.modulos.*;
 import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
-//#line 56 "Parser.java"
+//#line 55 "Parser.java"
 
 
 
@@ -3391,7 +3390,7 @@ final static String yyrule[] = {
 "condicional : ELSE '{' cuerpo '}'",
 };
 
-//#line 334 "parser.y"
+//#line 333 "parser.y"
 
 	private List<Simbolo> simbolos;
 	private PreParser preParser;
@@ -3543,7 +3542,7 @@ final static String yyrule[] = {
 		}
 		ParserError.errorSintactico(this, tokens);
 	}
-//#line 3211 "Parser.java"
+//#line 3210 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -3698,834 +3697,834 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 82 "parser.y"
+//#line 81 "parser.y"
 {yyval=set(new Raiz(add(s(val_peek(0)))));}
 break;
 case 2:
-//#line 84 "parser.y"
+//#line 83 "parser.y"
 {yyval=set(Fuente.add(s(val_peek(1)), s(val_peek(0))), false);}
 break;
 case 3:
-//#line 86 "parser.y"
+//#line 85 "parser.y"
 {yyval=set(new Fuente(), false);}
 break;
 case 4:
-//#line 87 "parser.y"
+//#line 86 "parser.y"
 {yyval=set(Fuente.add(s(val_peek(1)), s(val_peek(0))), false);}
 break;
 case 5:
-//#line 89 "parser.y"
+//#line 88 "parser.y"
 {yyval=set(new FuncionDef(s(val_peek(3)), s(val_peek(2)), s(val_peek(1)), s(val_peek(0))));}
 break;
 case 6:
-//#line 91 "parser.y"
+//#line 90 "parser.y"
 {yyval=set(new FuncionSub(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 7:
-//#line 93 "parser.y"
+//#line 92 "parser.y"
 {yyval=set(Cuerpo.add(new Cuerpo(add(new AbrirBloque())), s(val_peek(0))), false);}
 break;
 case 8:
-//#line 94 "parser.y"
+//#line 93 "parser.y"
 {yyval=set(Cuerpo.add(s(val_peek(1)), s(val_peek(0))), false);}
 break;
 case 9:
-//#line 96 "parser.y"
+//#line 95 "parser.y"
 {yyval=set(s(val_peek(0)));}
 break;
 case 10:
-//#line 98 "parser.y"
+//#line 97 "parser.y"
 {yyval=set(new Cuerpo(add(new AbrirBloque())));}
 break;
 case 11:
-//#line 99 "parser.y"
+//#line 98 "parser.y"
 {yyval=val_peek(0);}
 break;
 case 12:
-//#line 101 "parser.y"
+//#line 100 "parser.y"
 {yyval=set(new StcLista(s(val_peek(2)), s(val_peek(1)), s(val_peek(0))));}
 break;
 case 13:
-//#line 102 "parser.y"
+//#line 101 "parser.y"
 {yyval=set(new StcLista(new Lista(), add(new ModNada()), s(val_peek(0))));}
 break;
 case 14:
-//#line 103 "parser.y"
+//#line 102 "parser.y"
 {yyval=set(new StcBloque(s(val_peek(0))));}
 break;
 case 15:
-//#line 104 "parser.y"
+//#line 103 "parser.y"
 {yyval=set(new StcFlujo(s(val_peek(0))));}
 break;
 case 16:
-//#line 105 "parser.y"
+//#line 104 "parser.y"
 {yyval=set(new StcModulos(s(val_peek(0))));}
 break;
 case 17:
-//#line 106 "parser.y"
+//#line 105 "parser.y"
 {yyval=set(new StcImport(s(val_peek(0))));}
 break;
 case 18:
-//#line 107 "parser.y"
+//#line 106 "parser.y"
 {yyval=set(new StcLineaJava(s(val_peek(0))));}
 break;
 case 19:
-//#line 108 "parser.y"
+//#line 107 "parser.y"
 {yyval=set(new StcComentario(s(val_peek(0))));}
 break;
 case 20:
-//#line 109 "parser.y"
+//#line 108 "parser.y"
 {yyval=set(new StcTipado(s(val_peek(0))));}
 break;
 case 21:
-//#line 110 "parser.y"
+//#line 109 "parser.y"
 {yyval=set(new StcError());}
 break;
 case 22:
-//#line 111 "parser.y"
+//#line 110 "parser.y"
 {yyval=set(new StcError());}
 break;
 case 23:
-//#line 112 "parser.y"
+//#line 111 "parser.y"
 {yyval=set(new StcError());}
 break;
 case 24:
-//#line 114 "parser.y"
-{yyval=set(new ModuloUse(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
+//#line 113 "parser.y"
+{yyval=set(new ModuloUse(s(val_peek(3)),Paquetes.addId(s(val_peek(2)),s(val_peek(1))),s(val_peek(0))));}
 break;
 case 25:
-//#line 115 "parser.y"
-{yyval=set(new ModuloUse(s(val_peek(2)),add(new Paquetes()),s(val_peek(1)),s(val_peek(0))));}
+//#line 114 "parser.y"
+{yyval=set(new ModuloUse(s(val_peek(2)),add(new Paquetes().addId(s(val_peek(1)))),s(val_peek(0))));}
 break;
 case 26:
-//#line 116 "parser.y"
-{yyval=set(new ModuloPackage(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
+//#line 115 "parser.y"
+{yyval=set(new ModuloPackage(s(val_peek(3)),Paquetes.addId(s(val_peek(2)),s(val_peek(1))),s(val_peek(0))));}
 break;
 case 27:
-//#line 117 "parser.y"
-{yyval=set(new ModuloPackage(s(val_peek(2)),add(new Paquetes()),s(val_peek(1)),s(val_peek(0))));}
+//#line 116 "parser.y"
+{yyval=set(new ModuloPackage(s(val_peek(2)),add(new Paquetes().addId(s(val_peek(1)))),s(val_peek(0))));}
 break;
 case 28:
-//#line 119 "parser.y"
+//#line 118 "parser.y"
 {yyval=set(new ExpNumero(s(val_peek(0))));}
 break;
 case 29:
-//#line 120 "parser.y"
+//#line 119 "parser.y"
 {yyval=set(new ExpCadena(s(val_peek(0))));}
 break;
 case 30:
-//#line 121 "parser.y"
+//#line 120 "parser.y"
 {yyval=set(new ExpVariable(s(val_peek(0))));}
 break;
 case 31:
-//#line 122 "parser.y"
+//#line 121 "parser.y"
 {yyval=set(new ExpVarMulti(s(val_peek(0))));}
 break;
 case 32:
-//#line 123 "parser.y"
+//#line 122 "parser.y"
 {yyval=set(new ExpAsignacion(s(val_peek(0))));}
 break;
 case 33:
-//#line 124 "parser.y"
+//#line 123 "parser.y"
 {yyval=set(new ExpBinario(s(val_peek(0))));}
 break;
 case 34:
-//#line 125 "parser.y"
+//#line 124 "parser.y"
 {yyval=set(new ExpAritmetica(s(val_peek(0))));}
 break;
 case 35:
-//#line 126 "parser.y"
+//#line 125 "parser.y"
 {yyval=set(new ExpLogico(s(val_peek(0))));}
 break;
 case 36:
-//#line 127 "parser.y"
+//#line 126 "parser.y"
 {yyval=set(new ExpComparacion(s(val_peek(0))));}
 break;
 case 37:
-//#line 128 "parser.y"
+//#line 127 "parser.y"
 {yyval=set(new ExpColeccion(s(val_peek(0))));}
 break;
 case 38:
-//#line 129 "parser.y"
+//#line 128 "parser.y"
 {yyval=set(new ExpAcceso(s(val_peek(0))));}
 break;
 case 39:
-//#line 130 "parser.y"
+//#line 129 "parser.y"
 {yyval=set(new ExpFuncion(s(val_peek(0))));}
 break;
 case 40:
-//#line 131 "parser.y"
+//#line 130 "parser.y"
 {yyval=set(new ExpFuncion5(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 41:
-//#line 132 "parser.y"
+//#line 131 "parser.y"
 {yyval=set(new ExpLectura(s(val_peek(0))));}
 break;
 case 42:
-//#line 133 "parser.y"
+//#line 132 "parser.y"
 {}
 break;
 case 43:
-//#line 134 "parser.y"
+//#line 133 "parser.y"
 {yyval=set(new ExpRegulares(s(val_peek(0))));}
 break;
 case 44:
-//#line 135 "parser.y"
+//#line 134 "parser.y"
 {yyval=set(new ExpRango(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 45:
-//#line 137 "parser.y"
+//#line 136 "parser.y"
 {yyval=set(s(val_peek(0)));}
 break;
 case 46:
-//#line 139 "parser.y"
+//#line 138 "parser.y"
 {yyval=set(Lista.add(s(val_peek(2)), s(val_peek(1)), s(val_peek(0))), false);}
 break;
 case 47:
-//#line 140 "parser.y"
+//#line 139 "parser.y"
 {yyval=set(new Lista(s(val_peek(1)), s(val_peek(0))), false);}
 break;
 case 48:
-//#line 141 "parser.y"
+//#line 140 "parser.y"
 {yyval=set(new Lista(s(val_peek(0))), false);}
 break;
 case 49:
-//#line 143 "parser.y"
+//#line 142 "parser.y"
 {yyval=set(new ModNada());}
 break;
 case 50:
-//#line 144 "parser.y"
+//#line 143 "parser.y"
 {yyval=set(new ModIf(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 51:
-//#line 145 "parser.y"
+//#line 144 "parser.y"
 {yyval=set(new ModUnless(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 52:
-//#line 146 "parser.y"
+//#line 145 "parser.y"
 {yyval=set(new ModWhile(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 53:
-//#line 147 "parser.y"
+//#line 146 "parser.y"
 {yyval=set(new ModUntil(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 54:
-//#line 148 "parser.y"
+//#line 147 "parser.y"
 {yyval=set(new ModFor(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 55:
-//#line 150 "parser.y"
+//#line 149 "parser.y"
 {yyval=set(new Next(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 56:
-//#line 151 "parser.y"
+//#line 150 "parser.y"
 {yyval=set(new Last(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 57:
-//#line 152 "parser.y"
+//#line 151 "parser.y"
 {yyval=set(new Return(s(val_peek(1)), s(val_peek(0))));}
 break;
 case 58:
-//#line 153 "parser.y"
+//#line 152 "parser.y"
 {yyval=set(new Return(s(val_peek(2)), s(val_peek(1)), s(val_peek(0))));}
 break;
 case 59:
-//#line 155 "parser.y"
+//#line 154 "parser.y"
 {yyval=set(new Igual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 60:
-//#line 156 "parser.y"
+//#line 155 "parser.y"
 {yyval=set(new MasIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 61:
-//#line 157 "parser.y"
+//#line 156 "parser.y"
 {yyval=set(new MenosIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 62:
-//#line 158 "parser.y"
+//#line 157 "parser.y"
 {yyval=set(new MultiIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 63:
-//#line 159 "parser.y"
+//#line 158 "parser.y"
 {yyval=set(new DivIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 64:
-//#line 160 "parser.y"
+//#line 159 "parser.y"
 {yyval=set(new ModIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 65:
-//#line 161 "parser.y"
+//#line 160 "parser.y"
 {yyval=set(new PowIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 66:
-//#line 162 "parser.y"
+//#line 161 "parser.y"
 {yyval=set(new AndIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 67:
-//#line 163 "parser.y"
+//#line 162 "parser.y"
 {yyval=set(new OrIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 68:
-//#line 164 "parser.y"
+//#line 163 "parser.y"
 {yyval=set(new XorIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 69:
-//#line 165 "parser.y"
+//#line 164 "parser.y"
 {yyval=set(new DespDIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 70:
-//#line 166 "parser.y"
+//#line 165 "parser.y"
 {yyval=set(new DespIIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 71:
-//#line 167 "parser.y"
+//#line 166 "parser.y"
 {yyval=set(new LAndIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 72:
-//#line 168 "parser.y"
+//#line 167 "parser.y"
 {yyval=set(new LOrIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 73:
-//#line 169 "parser.y"
+//#line 168 "parser.y"
 {yyval=set(new DLOrIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 74:
-//#line 170 "parser.y"
+//#line 169 "parser.y"
 {yyval=set(new XIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 75:
-//#line 171 "parser.y"
+//#line 170 "parser.y"
 {yyval=set(new ConcatIgual(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 76:
-//#line 173 "parser.y"
+//#line 172 "parser.y"
 {yyval=set(new Entero(s(val_peek(0))));}
 break;
 case 77:
-//#line 174 "parser.y"
+//#line 173 "parser.y"
 {yyval=set(new Decimal(s(val_peek(0))));}
 break;
 case 78:
-//#line 176 "parser.y"
+//#line 175 "parser.y"
 {yyval=set(new CadenaSimple(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 79:
-//#line 177 "parser.y"
+//#line 176 "parser.y"
 {yyval=set(new CadenaDoble(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 80:
-//#line 178 "parser.y"
+//#line 177 "parser.y"
 {yyval=set(new CadenaComando(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 81:
-//#line 179 "parser.y"
+//#line 178 "parser.y"
 {yyval=set(new CadenaQ(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 82:
-//#line 180 "parser.y"
+//#line 179 "parser.y"
 {yyval=set(new CadenaQW(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 83:
-//#line 181 "parser.y"
+//#line 180 "parser.y"
 {yyval=set(new CadenaQQ(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 84:
-//#line 182 "parser.y"
+//#line 181 "parser.y"
 {yyval=set(new CadenaQR(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 85:
-//#line 183 "parser.y"
+//#line 182 "parser.y"
 {yyval=set(new CadenaQX(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 86:
-//#line 185 "parser.y"
+//#line 184 "parser.y"
 {yyval=set(s(val_peek(0)));}
 break;
 case 87:
-//#line 187 "parser.y"
+//#line 186 "parser.y"
 {yyval=set(new CadenaTexto(),false);}
 break;
 case 88:
-//#line 188 "parser.y"
+//#line 187 "parser.y"
 {yyval=set(CadenaTexto.add(s(val_peek(1)),s(val_peek(0))),false);}
 break;
 case 89:
-//#line 189 "parser.y"
+//#line 188 "parser.y"
 {yyval=set(CadenaTexto.add(s(val_peek(1)),s(val_peek(0))),false);}
 break;
 case 90:
-//#line 191 "parser.y"
+//#line 190 "parser.y"
 {yyval=set(new VarExistente(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 91:
-//#line 192 "parser.y"
+//#line 191 "parser.y"
 {yyval=set(new VarExistente(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 92:
-//#line 193 "parser.y"
+//#line 192 "parser.y"
 {yyval=set(new VarExistente(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 93:
-//#line 194 "parser.y"
+//#line 193 "parser.y"
 {yyval=set(new VarPaquete(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 94:
-//#line 195 "parser.y"
+//#line 194 "parser.y"
 {yyval=set(new VarPaquete(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 95:
-//#line 196 "parser.y"
+//#line 195 "parser.y"
 {yyval=set(new VarPaquete(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 96:
-//#line 197 "parser.y"
+//#line 196 "parser.y"
 {yyval=set(new VarSigil(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 97:
-//#line 198 "parser.y"
+//#line 197 "parser.y"
 {yyval=set(new VarPaqueteSigil(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 98:
-//#line 199 "parser.y"
+//#line 198 "parser.y"
 {yyval=set(new VarMy(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 99:
-//#line 200 "parser.y"
+//#line 199 "parser.y"
 {yyval=set(new VarMy(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 100:
-//#line 201 "parser.y"
+//#line 200 "parser.y"
 {yyval=set(new VarMy(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 101:
-//#line 202 "parser.y"
+//#line 201 "parser.y"
 {yyval=set(new VarOur(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 102:
-//#line 203 "parser.y"
+//#line 202 "parser.y"
 {yyval=set(new VarOur(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 103:
-//#line 204 "parser.y"
+//#line 203 "parser.y"
 {yyval=set(new VarOur(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 104:
-//#line 206 "parser.y"
+//#line 205 "parser.y"
 {yyval=set(new VarMultiMy(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 105:
-//#line 207 "parser.y"
+//#line 206 "parser.y"
 {yyval=set(new VarMultiOur(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 106:
-//#line 209 "parser.y"
+//#line 208 "parser.y"
 {yyval=set(Paquetes.add(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 107:
-//#line 210 "parser.y"
+//#line 209 "parser.y"
 {yyval=set(new Paquetes(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 108:
-//#line 212 "parser.y"
+//#line 211 "parser.y"
 {yyval=set(Paquetes.add(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 109:
-//#line 213 "parser.y"
+//#line 212 "parser.y"
 {yyval=set(new Paquetes(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 110:
-//#line 215 "parser.y"
+//#line 214 "parser.y"
 {yyval=set(new ColParentesis(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 111:
-//#line 216 "parser.y"
+//#line 215 "parser.y"
 {yyval=set(new ColParentesis(s(val_peek(1)),add(new Lista()),s(val_peek(0))));}
 break;
 case 112:
-//#line 218 "parser.y"
+//#line 217 "parser.y"
 {yyval=set(new ColCorchete(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 113:
-//#line 219 "parser.y"
+//#line 218 "parser.y"
 {yyval=set(new ColCorchete(s(val_peek(1)),add(new Lista()),s(val_peek(0))));}
 break;
 case 114:
-//#line 220 "parser.y"
+//#line 219 "parser.y"
 {yyval=set(new ColLlave(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 115:
-//#line 221 "parser.y"
+//#line 220 "parser.y"
 {yyval=set(new ColLlave(s(val_peek(1)),add(new Lista()),s(val_peek(0))));}
 break;
 case 116:
-//#line 223 "parser.y"
+//#line 222 "parser.y"
 {yyval=val_peek(0);}
 break;
 case 117:
-//#line 224 "parser.y"
+//#line 223 "parser.y"
 {yyval=val_peek(0);}
 break;
 case 118:
-//#line 226 "parser.y"
+//#line 225 "parser.y"
 {yyval=set(new AccesoCol(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 119:
-//#line 227 "parser.y"
+//#line 226 "parser.y"
 {yyval=set(new AccesoColRef(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 120:
-//#line 228 "parser.y"
+//#line 227 "parser.y"
 {yyval=set(new AccesoRefEscalar(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 121:
-//#line 229 "parser.y"
+//#line 228 "parser.y"
 {yyval=set(new AccesoRefArray(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 122:
-//#line 230 "parser.y"
+//#line 229 "parser.y"
 {yyval=set(new AccesoRefMap(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 123:
-//#line 231 "parser.y"
+//#line 230 "parser.y"
 {yyval=set(new AccesoRef(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 124:
-//#line 233 "parser.y"
+//#line 232 "parser.y"
 {yyval=set(new FuncionBasica(add(new Paquetes()),s(val_peek(1)),add(new ColParentesis(add(new Lista(s(val_peek(0))))))));}
 break;
 case 125:
-//#line 234 "parser.y"
+//#line 233 "parser.y"
 {yyval=set(new FuncionBasica(add(new Paquetes()),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 126:
-//#line 235 "parser.y"
+//#line 234 "parser.y"
 {yyval=set(new FuncionBasica(add(new Paquetes()),s(val_peek(0)),add(new ColParentesis(add(new Lista())))));}
 break;
 case 127:
-//#line 236 "parser.y"
+//#line 235 "parser.y"
 {yyval=set(new FuncionBasica(s(val_peek(2)),s(val_peek(1)),add(new ColParentesis(add(new Lista(s(val_peek(0))))))));}
 break;
 case 128:
-//#line 237 "parser.y"
+//#line 236 "parser.y"
 {yyval=set(new FuncionBasica(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 129:
-//#line 238 "parser.y"
+//#line 237 "parser.y"
 {yyval=set(new FuncionBasica(s(val_peek(1)),s(val_peek(0)),add(new ColParentesis(add(new Lista())))));}
 break;
 case 130:
-//#line 239 "parser.y"
+//#line 238 "parser.y"
 {yyval=set(new FuncionHandle(add(new Paquetes()),s(val_peek(2)),s(val_peek(1)),add(new ColParentesis(add(new Lista(s(val_peek(0))))))));}
 break;
 case 131:
-//#line 240 "parser.y"
+//#line 239 "parser.y"
 {yyval=set(new FuncionHandle(add(new Paquetes()),s(val_peek(4)),s(val_peek(2)),add(new ColParentesis(s(val_peek(3)),add(new Lista(s(val_peek(1)))),s(val_peek(0))))));}
 break;
 case 132:
-//#line 241 "parser.y"
+//#line 240 "parser.y"
 {yyval=set(new FuncionBloque(add(new Paquetes()),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),add(new ColParentesis(add(new Lista(s(val_peek(0))))))));}
 break;
 case 133:
-//#line 243 "parser.y"
+//#line 242 "parser.y"
 {yyval=set(new HandleOut(s(val_peek(0))));}
 break;
 case 134:
-//#line 244 "parser.y"
+//#line 243 "parser.y"
 {yyval=set(new HandleErr(s(val_peek(0))));}
 break;
 case 135:
-//#line 245 "parser.y"
+//#line 244 "parser.y"
 {yyval=set(new HandleFile(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 136:
-//#line 247 "parser.y"
+//#line 246 "parser.y"
 {yyval=set(new EscrituraOut(s(val_peek(0))));}
 break;
 case 137:
-//#line 248 "parser.y"
+//#line 247 "parser.y"
 {yyval=set(new EscrituraErr(s(val_peek(0))));}
 break;
 case 138:
-//#line 250 "parser.y"
+//#line 249 "parser.y"
 {yyval=set(new LecturaIn(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 139:
-//#line 251 "parser.y"
+//#line 250 "parser.y"
 {yyval=set(new LecturaFile(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 140:
-//#line 253 "parser.y"
+//#line 252 "parser.y"
 {yyval=set(new BinOr(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 141:
-//#line 254 "parser.y"
+//#line 253 "parser.y"
 {yyval=set(new BinAnd(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 142:
-//#line 255 "parser.y"
+//#line 254 "parser.y"
 {yyval=set(new BinNot(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 143:
-//#line 256 "parser.y"
+//#line 255 "parser.y"
 {yyval=set(new BinXor(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 144:
-//#line 257 "parser.y"
+//#line 256 "parser.y"
 {yyval=set(new BinDespI(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 145:
-//#line 258 "parser.y"
+//#line 257 "parser.y"
 {yyval=set(new BinDespD(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 146:
-//#line 260 "parser.y"
+//#line 259 "parser.y"
 {yyval=set(new LogOr(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 147:
-//#line 261 "parser.y"
+//#line 260 "parser.y"
 {yyval=set(new DLogOr(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 148:
-//#line 262 "parser.y"
+//#line 261 "parser.y"
 {yyval=set(new LogAnd(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 149:
-//#line 263 "parser.y"
+//#line 262 "parser.y"
 {yyval=set(new LogNot(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 150:
-//#line 264 "parser.y"
+//#line 263 "parser.y"
 {yyval=set(new LogOrBajo(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 151:
-//#line 265 "parser.y"
+//#line 264 "parser.y"
 {yyval=set(new LogAndBajo(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 152:
-//#line 266 "parser.y"
+//#line 265 "parser.y"
 {yyval=set(new LogNotBajo(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 153:
-//#line 267 "parser.y"
+//#line 266 "parser.y"
 {yyval=set(new LogXorBajo(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 154:
-//#line 268 "parser.y"
+//#line 267 "parser.y"
 {yyval=set(new LogTernario(s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 155:
-//#line 270 "parser.y"
+//#line 269 "parser.y"
 {yyval=set(new CompNumEq(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 156:
-//#line 271 "parser.y"
+//#line 270 "parser.y"
 {yyval=set(new CompNumNe(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 157:
-//#line 272 "parser.y"
+//#line 271 "parser.y"
 {yyval=set(new CompNumLt(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 158:
-//#line 273 "parser.y"
+//#line 272 "parser.y"
 {yyval=set(new CompNumLe(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 159:
-//#line 274 "parser.y"
+//#line 273 "parser.y"
 {yyval=set(new CompNumGt(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 160:
-//#line 275 "parser.y"
+//#line 274 "parser.y"
 {yyval=set(new CompNumGe(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 161:
-//#line 276 "parser.y"
+//#line 275 "parser.y"
 {yyval=set(new CompNumCmp(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 162:
-//#line 277 "parser.y"
+//#line 276 "parser.y"
 {yyval=set(new CompStrEq(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 163:
-//#line 278 "parser.y"
+//#line 277 "parser.y"
 {yyval=set(new CompStrNe(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 164:
-//#line 279 "parser.y"
+//#line 278 "parser.y"
 {yyval=set(new CompStrLt(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 165:
-//#line 280 "parser.y"
+//#line 279 "parser.y"
 {yyval=set(new CompStrLe(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 166:
-//#line 281 "parser.y"
+//#line 280 "parser.y"
 {yyval=set(new CompStrGt(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 167:
-//#line 282 "parser.y"
+//#line 281 "parser.y"
 {yyval=set(new CompStrGe(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 168:
-//#line 283 "parser.y"
+//#line 282 "parser.y"
 {yyval=set(new CompStrCmp(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 169:
-//#line 284 "parser.y"
+//#line 283 "parser.y"
 {yyval=set(new CompSmart(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 170:
-//#line 286 "parser.y"
+//#line 285 "parser.y"
 {yyval=set(new AritSuma(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 171:
-//#line 287 "parser.y"
+//#line 286 "parser.y"
 {yyval=set(new AritResta(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 172:
-//#line 288 "parser.y"
+//#line 287 "parser.y"
 {yyval=set(new AritMulti(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 173:
-//#line 289 "parser.y"
+//#line 288 "parser.y"
 {yyval=set(new AritDiv(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 174:
-//#line 290 "parser.y"
+//#line 289 "parser.y"
 {yyval=set(new AritPow(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 175:
-//#line 291 "parser.y"
+//#line 290 "parser.y"
 {yyval=set(new AritX(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 176:
-//#line 292 "parser.y"
+//#line 291 "parser.y"
 {yyval=set(new AritConcat(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 177:
-//#line 293 "parser.y"
+//#line 292 "parser.y"
 {yyval=set(new AritMod(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 178:
-//#line 294 "parser.y"
+//#line 293 "parser.y"
 {yyval=set(new AritPositivo(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 179:
-//#line 295 "parser.y"
+//#line 294 "parser.y"
 {yyval=set(new AritNegativo(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 180:
-//#line 296 "parser.y"
+//#line 295 "parser.y"
 {yyval=set(new AritPreIncremento(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 181:
-//#line 297 "parser.y"
+//#line 296 "parser.y"
 {yyval=set(new AritPreDecremento(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 182:
-//#line 298 "parser.y"
+//#line 297 "parser.y"
 {yyval=set(new AritPostIncremento(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 183:
-//#line 299 "parser.y"
+//#line 298 "parser.y"
 {yyval=set(new AritPostDecremento(s(val_peek(1)),s(val_peek(0))));}
 break;
 case 184:
-//#line 301 "parser.y"
+//#line 300 "parser.y"
 {yyval=set(new RegularMatch(s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 185:
-//#line 302 "parser.y"
+//#line 301 "parser.y"
 {yyval=set(new RegularMatch(s(val_peek(5)),s(val_peek(4)),null ,s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 186:
-//#line 303 "parser.y"
+//#line 302 "parser.y"
 {yyval=set(new RegularNoMatch(s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 187:
-//#line 304 "parser.y"
+//#line 303 "parser.y"
 {yyval=set(new RegularNoMatch(s(val_peek(5)),s(val_peek(4)),null ,s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 188:
-//#line 305 "parser.y"
+//#line 304 "parser.y"
 {yyval=set(new RegularSubs(s(val_peek(8)),s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 189:
-//#line 306 "parser.y"
+//#line 305 "parser.y"
 {yyval=set(new RegularTrans(s(val_peek(8)),s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 190:
-//#line 308 "parser.y"
+//#line 307 "parser.y"
 {yyval=set(null,false);}
 break;
 case 191:
-//#line 309 "parser.y"
+//#line 308 "parser.y"
 {yyval=val_peek(0);}
 break;
 case 192:
-//#line 311 "parser.y"
+//#line 310 "parser.y"
 {yyval=set(new AbrirBloque());}
 break;
 case 193:
-//#line 313 "parser.y"
+//#line 312 "parser.y"
 {yyval=set(new Lista());}
 break;
 case 194:
-//#line 314 "parser.y"
+//#line 313 "parser.y"
 {yyval=val_peek(0);}
 break;
 case 195:
-//#line 316 "parser.y"
+//#line 315 "parser.y"
 {yyval=set(new BloqueVacio(s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 196:
-//#line 317 "parser.y"
+//#line 316 "parser.y"
 {yyval=set(new BloqueWhile(s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 197:
-//#line 318 "parser.y"
+//#line 317 "parser.y"
 {yyval=set(new BloqueUntil(s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 198:
-//#line 319 "parser.y"
+//#line 318 "parser.y"
 {yyval=set(new BloqueDoWhile(s(val_peek(9)),s(val_peek(8)),s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 199:
-//#line 320 "parser.y"
+//#line 319 "parser.y"
 {yyval=set(new BloqueDoUntil(s(val_peek(9)),s(val_peek(8)),s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 200:
-//#line 321 "parser.y"
+//#line 320 "parser.y"
 {yyval=set(new BloqueFor(s(val_peek(11)),s(val_peek(10)),s(val_peek(9)),s(val_peek(8)),s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 201:
-//#line 322 "parser.y"
+//#line 321 "parser.y"
 {yyval=set(new BloqueForeachVar(s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 202:
-//#line 323 "parser.y"
+//#line 322 "parser.y"
 {yyval=set(new BloqueForeach(s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 203:
-//#line 324 "parser.y"
+//#line 323 "parser.y"
 {yyval=set(new BloqueIf(s(val_peek(8)),s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 204:
-//#line 325 "parser.y"
+//#line 324 "parser.y"
 {yyval=set(new BloqueUnless(s(val_peek(8)),s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 205:
-//#line 327 "parser.y"
+//#line 326 "parser.y"
 {yyval=set(new CondicionalNada());}
 break;
 case 206:
-//#line 328 "parser.y"
+//#line 327 "parser.y"
 {yyval=set(new CondicionalElsif(s(val_peek(7)),s(val_peek(6)),s(val_peek(5)),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 207:
-//#line 329 "parser.y"
+//#line 328 "parser.y"
 {yyval=set(new CondicionalElse(s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
-//#line 4188 "Parser.java"
+//#line 4187 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

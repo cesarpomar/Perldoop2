@@ -15,6 +15,7 @@ public class Errores extends Internacionalizacion {
     public static final String ERROR_LECTURA = "ERROR_LECTURA";
     public static final String ERROR_ESCRITURA = "ERROR_ESCRITURA";
     public static final String ERROR_CODIFICACION = "ERROR_CODIFICACION";
+    public static final String PAQUETE_INVALIDO = "PAQUETE_INVALIDO";
     //Lexicos
     public static final String CARACTER_INVALIDO = "CARACTER_INVALIDO";
     public static final String ACCESO_CADENA = "ACCESO_CADENA";
@@ -70,6 +71,8 @@ public class Errores extends Internacionalizacion {
     public static final String NEXT_LAST_SIN_BUCLE = "NEXT_LAST_SIN_BUCLE";
     public static final String SENTENCIA_MUERTA = "SENTENCIA_MUERTA";
     public static final String OPERADOR_SMART= "OPERADOR_SMART";
+    public static final String MODULO_NO_VACIO= "MODULO_NO_VACIO";
+    public static final String MODULO_YA_CREADO= "MODULO_YA_CREADO";
 
     public Errores() {
         super("errores");
