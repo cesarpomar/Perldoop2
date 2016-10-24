@@ -187,7 +187,7 @@ public class GenIgual {
      */
     public static StringBuilder asignacion(Simbolo izq, String igual, Simbolo der) {
         StringBuilder codigo = null;
-        Simbolo derAux = Casting.ColtoScalar(der,izq);
+        Simbolo derAux = Casting.colToScalar(der,izq);
         //si la derecha es un box y la izquierda una referencia, hacemos un pre casting
         if(izq.getTipo().isRef() && der.getTipo().isBox()){
             derAux.setCodigoGenerado(Casting.casting(derAux, izq.getTipo()));

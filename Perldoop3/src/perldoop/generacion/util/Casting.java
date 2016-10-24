@@ -3,10 +3,11 @@ package perldoop.generacion.util;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpFuncion5;
 import perldoop.modelo.arbol.expresion.ExpRegulares;
-import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.regulares.RegularMatch;
 import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.semantica.Tipo;
@@ -20,18 +21,23 @@ import perldoop.util.Buscar;
 public final class Casting {
 
     /**
-     * Transforma un escalar retornando su primer o ultimo elemento
+     * Transforma una coleccion a escalar retornando su primer o ultimo elemento
      *
      * @param col Simbolo coleccion
      * @param escalar Simbolo escalar
      * @return Primer o ultimo elemento de la colecciones
      */
-    public static Simbolo ColtoScalar(Simbolo col, Simbolo escalar) {
-        Variable var = Buscar.buscarVariable(escalar);
-        if (col.getTipo().isArrayOrList() && !escalar.getTipo().isColeccion() && var != null) {
+    public static Simbolo colToScalar(Simbolo col, Simbolo escalar) {
+        if (col.getTipo().isArrayOrList() &&( col instanceof ExpFuncion || col instanceof ExpFuncion5 ||
+                 (col instanceof ExpColeccion && ((ExpColeccion) col).getColeccion() instanceof ColParentesis))
+                && (escalar == null || !escalar.getTipo().isColeccion())) {
             Simbolo aux = new SimboloAux(col);
             aux.setTipo(col.getTipo().getSubtipo(1));
-            if (var.getContexto().getValor().equals("$")) {
+            Variable var = null;
+            if (escalar != null) {
+                var = Buscar.buscarVariable(escalar);
+            }
+            if (var == null || var.getContexto().getValor().equals("$")) {
                 aux.getCodigoGenerado().insert(0, "Pd.last(").append(")");
             } else {
                 aux.getCodigoGenerado().insert(0, "Pd.first(").append(")");
@@ -47,12 +53,24 @@ public final class Casting {
     }
 
     /**
+     * Transforma un escalar retornando su ultimo elemento
+     *
+     * @param col Simbolo coleccion
+     * @param escalar Simbolo escalar
+     * @return Ultimo elemento de la colecciones
+     */
+    private static Simbolo colToScalar(Simbolo col) {
+        return colToScalar(col, null);
+    }
+
+    /**
      * Castea una expresión a boolean
      *
      * @param s Simbolo
      * @return Casting
      */
     public static StringBuilder toBoolean(Simbolo s) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
@@ -144,6 +162,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toInteger(Simbolo s) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
@@ -207,6 +226,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toLong(Simbolo s) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
@@ -274,6 +294,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toFloat(Simbolo s) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
@@ -341,6 +362,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toDouble(Simbolo s) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
@@ -404,6 +426,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toString(Simbolo s) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
@@ -455,6 +478,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toBox(Simbolo s) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
@@ -494,6 +518,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toNumber(Simbolo s) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(50);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
@@ -538,6 +563,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toRef(Simbolo s, Tipo destino) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(50);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.REF:
@@ -561,6 +587,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toFile(Simbolo s) {
+        s = colToScalar(s);
         StringBuilder cst = new StringBuilder(50);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.FILE:

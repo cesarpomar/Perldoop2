@@ -20,13 +20,24 @@ public final class Cuerpo extends Simbolo {
     private List<Sentencia> sentencias;
 
     /**
-     * Único contructor de la clase
+     * Construye un cuerpo vacio
      *
      * @param abrirBloque Abertura de bloque para el cuerpo
      */
     public Cuerpo(AbrirBloque abrirBloque) {
         setAbrirBloque(abrirBloque);
         sentencias = new ArrayList<>(100);
+    }
+
+    /**
+     * Construye un cuerpo con una sentencia
+     *
+     * @param abrirBloque Abertura de bloque para el cuerpo
+     * @param sentencia Sentecia
+     */
+    public Cuerpo(AbrirBloque abrirBloque, Sentencia sentencia) {
+        this(abrirBloque);
+        add(sentencia);
     }
 
     /**

@@ -103,6 +103,7 @@ public class SemFuncion {
      * @return Argumentos añadidos
      */
     private boolean getArgumentos(Funcion f, Coleccion col, boolean interpolar) {
+        return false;/*
         Simbolo uso = f.getPadre().getPadre();
         if (!(uso instanceof Lista)) {//Solo hay un argumento
             return false;
@@ -125,7 +126,7 @@ public class SemFuncion {
         } else {
             tabla.getAcciones().reAnalizarDespuesDe(lista);
         }
-        return true;
+        return true;*/
     }
 
     /**

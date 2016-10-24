@@ -89,7 +89,7 @@ funcionDef	:	funcionSub '{' cuerpo '}'				{$$=set(new FuncionDef(s($1), s($2), s
 
 funcionSub	:	SUB ID									{$$=set(new FuncionSub(s($1), s($2)));}
 
-cuerpoR		:	sentencia								{$$=set(Cuerpo.add(new Cuerpo(add(new AbrirBloque())), s($1)), false);}
+cuerpoR		:	sentencia								{$$=set(new Cuerpo(add(new AbrirBloque()), s($1)), false);}
 			|	cuerpoR	sentencia				        {$$=set(Cuerpo.add(s($1), s($2)), false);}
 			
 cuerpoNV	:	cuerpoR									{$$=set(s($1));}
@@ -134,10 +134,10 @@ expresion	:	numero									{$$=set(new ExpNumero(s($1)));}
 			|	expresion DOS_PUNTOS expresion			{$$=set(new ExpRango(s($1),s($2),s($3)));}
 			
 lista		:	listaR									{$$=set(s($1));}
+			|	listaR ','								{$$=set(Lista.add((Lista)s($1), s($2)));}
 
-listaR		:	expresion ',' listaR					{$$=set(Lista.add(s($1), s($2), s($3)), false);}
-			|	expresion ','							{$$=set(new Lista(s($1), s($2)), false);}
-			|	expresion								{$$=set(new Lista(s($1)), false);}
+listaR		:	listaR ',' expresion					{$$=set(Lista.add(s($1), s($2), s($3)), false);}
+			|	expresion								{$$=set(new Lista(s($1)), false);}			
 
 modificador :											{$$=set(new ModNada());}
 			|	IF expresion							{$$=set(new ModIf(s($1), s($2)));}
@@ -481,3 +481,5 @@ condicional	:																					{$$=set(new CondicionalNada());}
 		}
 		ParserError.errorSintactico(this, tokens);
 	}
+	
+	
