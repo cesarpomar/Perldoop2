@@ -1,20 +1,14 @@
 package perldoop.semantica.funcion;
 
-import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
-import perldoop.modelo.arbol.FuncionNativa;
-import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.coleccion.ColParentesis;
-import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
-import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.*;
-import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
+import perldoop.semantica.funcion.nativa.*;
 
 /**
  * Clase para la semantica de funcion
@@ -35,42 +29,45 @@ public class SemFuncion {
     }
 
     public void visitar(FuncionBasica s) {
-        if(s.getPaquetes().isVacio()){
-            comprobarFuncion(s, (ColParentesis) s.getColeccion());
-        }else{
+        if (!s.getPaquetes().isVacio()) {
             comprobarFuncionPaquete(s, s.getPaquetes());
         }
-        
-    }
-    
-    public void visitar(FuncionHandle s) {
-        
-    }
-    
-    public void visitar(FuncionBloque s) {
-        
+        SemFuncionNativa fn = null;
+        if (s.getPadre() instanceof ExpFuncion) {
+            fn = getSemNativa(s.getIdentificador().getValor());
+        }
+        if (fn != null) {
+            fn.visitar(s);
+            return;
+        } else if (tabla.getTablaSimbolos().buscarFuncion(s.getIdentificador().getToken().getValor()) == null) {
+            tabla.getTablaSimbolos().addFuncionNoDeclarada(s.getIdentificador().getToken());
+        }
+        s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
     }
 
-    /**
-     * Comprueba una funcion
-     *
-     * @param f Funcion
-     * @param args Argumentos
-     */
-    private void comprobarFuncion(Funcion f, ColParentesis args) {
-        FuncionNativa fn = null;
-        if (f.getPadre() instanceof ExpFuncion) {
-            fn = getSemNativa(f.getIdentificador().getValor());
+    public void visitar(FuncionHandle s) {
+        SemFuncionNativa fn = null;
+        if (s.getPadre() instanceof ExpFuncion) {
+            fn = getSemNativa(s.getIdentificador().getValor());
         }
-        if (args != null && args.isVirtual() && f.getTipo() == null && getArgumentos(f, args, fn != null)) {
-            f.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+        if (fn != null) {
+            fn.visitar(s);
         } else {
-            f.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-            if (fn != null) {
-                fn.visitar(f, args);
-            } else if (tabla.getTablaSimbolos().buscarFuncion(f.getIdentificador().getToken().getValor()) == null) {
-                tabla.getTablaSimbolos().addFuncionNoDeclarada(f.getIdentificador().getToken());
-            }
+            tabla.getGestorErrores().error(Errores.FUNCION_SIN_HANDLE, s.getHandle());
+            throw new ExcepcionSemantica(Errores.FUNCION_SIN_HANDLE);
+        }
+    }
+
+    public void visitar(FuncionBloque s) {
+        SemFuncionNativa fn = null;
+        if (s.getPadre() instanceof ExpFuncion) {
+            fn = getSemNativa(s.getIdentificador().getValor());
+        }
+        if (fn != null) {
+            fn.visitar(s);
+        } else {
+            tabla.getGestorErrores().error(Errores.FUNCION_SIN_HANDLE, s.getLlaveD());
+            throw new ExcepcionSemantica(Errores.FUNCION_SIN_HANDLE);
         }
     }
 
@@ -95,48 +92,15 @@ public class SemFuncion {
     }
 
     /**
-     * Obtiene las expresiones de una coleccion virtual
-     *
-     * @param f Funcion
-     * @param col Argumentos
-     * @param interpolar Interpolar argumentos
-     * @return Argumentos añadidos
-     */
-    private boolean getArgumentos(Funcion f, Coleccion col, boolean interpolar) {
-        return false;/*
-        Simbolo uso = f.getPadre().getPadre();
-        if (!(uso instanceof Lista)) {//Solo hay un argumento
-            return false;
-        }
-        Lista lista = (Lista) uso;
-        List<Expresion> expO = lista.getExpresiones();
-        List<Simbolo> elemO = lista.getElementos();
-        List<Expresion> expD = col.getLista().getExpresiones();
-        List<Simbolo> elemD = col.getLista().getElementos();
-        int exp = expO.indexOf(f.getPadre());
-        int elem = elemO.indexOf(f.getPadre());
-        while (exp < expO.size()) {
-            expD.add(expO.remove(exp));
-        }
-        while (elem < elemO.size()) {
-            elemD.add(elemO.remove(elem));
-        }
-        if (interpolar) {
-            tabla.getAcciones().reAnalizarDespuesDe(col);
-        } else {
-            tabla.getAcciones().reAnalizarDespuesDe(lista);
-        }
-        return true;*/
-    }
-
-    /**
      * Obtiene la semantica nativa de una funcion
      *
      * @param id Nombre de la funcion
      * @return Semantica nativa
      */
-    private FuncionNativa getSemNativa(String id) {
+    private SemFuncionNativa getSemNativa(String id) {
         switch (id) {
+            case "print":
+                return new SemFuncionPrint(tabla);
             default:
                 return null;
         }

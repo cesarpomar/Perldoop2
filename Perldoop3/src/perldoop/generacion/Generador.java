@@ -1,5 +1,6 @@
 package perldoop.generacion;
 
+import perldoop.modelo.arbol.std.*;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
@@ -15,7 +16,6 @@ import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.cuerpo.*;
-import perldoop.modelo.arbol.escritura.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.*;
@@ -190,7 +190,12 @@ public class Generador implements Visitante {
 
     @Override
     public void visitar(ExpLectura s) {
-        fachada.getGenSentencia().visitar(s);
+        fachada.getGenExpresion().visitar(s);
+    }
+
+    @Override
+    public void visitar(ExpStd s) {
+        fachada.getGenExpresion().visitar(s);
     }
 
     @Override
@@ -595,17 +600,22 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(EscrituraOut s) {
-        fachada.getGenEscritura().visitar(s);
-    }
-    
-        @Override
-    public void visitar(EscrituraErr s) {
-        fachada.getGenEscritura().visitar(s);
+    public void visitar(StdIn s) {
+        fachada.getGenStd().visitar(s);
     }
 
     @Override
-    public void visitar(LecturaIn s) {
+    public void visitar(StdOut s) {
+        fachada.getGenStd().visitar(s);
+    }
+
+    @Override
+    public void visitar(StdErr s) {
+        fachada.getGenStd().visitar(s);
+    }
+
+    @Override
+    public void visitar(LecturaArg s) {
         fachada.getGenLectura().visitar(s);
     }
 

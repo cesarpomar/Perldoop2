@@ -11,8 +11,30 @@ import perldoop.lib.file.Fwrite;
  */
 public final class PerlFile {
 
+    public static PerlFile STDIN = new PerlFile(new Fread());
+    public static PerlFile STDOUT = new PerlFile(new Fwrite(Fwrite.STDOUT));
+    public static PerlFile STDERR = new PerlFile(new Fwrite(Fwrite.STDERR));
+
     private Fread read;
     private Fwrite write;
+
+    /**
+     * Crea un fichero con el descriptor de entrada
+     *
+     * @param read Decriptor de entrada
+     */
+    public PerlFile(Fread read) {
+        this.read = read;
+    }
+
+    /**
+     * Crea un fichero con el descriptor de salida
+     *
+     * @param write Descritor de salida
+     */
+    public PerlFile(Fwrite write) {
+        this.write = write;
+    }
 
     /**
      *
@@ -79,7 +101,7 @@ public final class PerlFile {
      * @param values valores
      * @return 1 si tiene exito, 0 en caso contrario
      */
-    public int say(Object... values) {
+    public int println(Object... values) {
         if (write != null) {
             return write.println(values);
         }
@@ -95,7 +117,7 @@ public final class PerlFile {
         if (read != null) {
             return read.read();
         }
-        return null;
+        return "";
     }
 
     /**

@@ -31,7 +31,7 @@ public class ParserVal {
      *
      * @return Símbolo
      */
-    public Simbolo get() {
+    public final Simbolo get() {
         return s;
     }
 
@@ -40,7 +40,7 @@ public class ParserVal {
      *
      * @param s Símbolo
      */
-    public void set(Simbolo s) {
+    public final void set(Simbolo s) {
         this.s = s;
     }
 

@@ -35,8 +35,8 @@ public class SemAritmetica {
      * @return Tipo
      */
     private void tipoMinimo(AritOpBinario s) {
-        Tipo ti = Tipos.toNumber(s.getIzquierda().getTipo());
-        Tipo td = Tipos.toNumber(s.getDerecha().getTipo());
+        Tipo ti = Tipos.toNumber(s.getIzquierda());
+        Tipo td = Tipos.toNumber(s.getDerecha());
         if (ti.isDouble() || td.isDouble()) {
             s.setTipo(new Tipo(Tipo.DOUBLE));
         } else if (ti.isFloat() || td.isFloat()) {
@@ -102,8 +102,8 @@ public class SemAritmetica {
     }
 
     public void visitar(AritMod s) {
-        Tipo t = Tipos.toNumber(s.getIzquierda().getTipo());
-        Tipo t2 = Tipos.toNumber(s.getDerecha().getTipo());
+        Tipo t = Tipos.toNumber(s.getIzquierda());
+        Tipo t2 = Tipos.toNumber(s.getDerecha());
         if (t.isInteger() && t2.isInteger()) {
             s.setTipo(t);
         } else {
@@ -112,11 +112,11 @@ public class SemAritmetica {
     }
 
     public void visitar(AritPositivo s) {
-        s.setTipo(Tipos.toNumber(s.getTipo()));
+        s.setTipo(Tipos.toNumber(s));
     }
 
     public void visitar(AritNegativo s) {
-        s.setTipo(Tipos.toNumber(s.getTipo()));
+        s.setTipo(Tipos.toNumber(s));
     }
 
     public void visitar(AritPreIncremento s) {

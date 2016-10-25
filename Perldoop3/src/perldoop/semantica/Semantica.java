@@ -1,5 +1,6 @@
 package perldoop.semantica;
 
+import perldoop.modelo.arbol.std.*;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
@@ -15,7 +16,6 @@ import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.cuerpo.*;
-import perldoop.modelo.arbol.escritura.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.*;
@@ -211,6 +211,11 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(ExpLectura s) {
+        fachada.getSemExpresion().visitar(s);
+    }
+
+    @Override
+    public void visitar(ExpStd s) {
         fachada.getSemExpresion().visitar(s);
     }
 
@@ -555,17 +560,22 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(EscrituraOut s) {
-        fachada.getSemEscritura().visitar(s);
+    public void visitar(StdIn s) {
+        fachada.getSemStd().visitar(s);
     }
 
     @Override
-    public void visitar(EscrituraErr s) {
-        fachada.getSemEscritura().visitar(s);
+    public void visitar(StdOut s) {
+        fachada.getSemStd().visitar(s);
     }
 
     @Override
-    public void visitar(LecturaIn s) {
+    public void visitar(StdErr s) {
+        fachada.getSemStd().visitar(s);
+    }
+
+    @Override
+    public void visitar(LecturaArg s) {
         fachada.getSemLectura().visitar(s);
     }
 

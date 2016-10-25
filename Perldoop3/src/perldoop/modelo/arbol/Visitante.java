@@ -12,7 +12,6 @@ import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.cuerpo.*;
-import perldoop.modelo.arbol.escritura.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.*;
@@ -29,6 +28,7 @@ import perldoop.modelo.arbol.numero.*;
 import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.sentencia.*;
+import perldoop.modelo.arbol.std.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.arbol.varmulti.*;
 
@@ -106,6 +106,8 @@ public interface Visitante {
     void visitar(ExpFuncion5 s);
 
     void visitar(ExpLectura s);
+
+    void visitar(ExpStd s);
 
     void visitar(ExpRegulares s);
 
@@ -241,18 +243,20 @@ public interface Visitante {
 
     //Handle
     void visitar(HandleErr s);
-    
+
     void visitar(HandleOut s);
-    
+
     void visitar(HandleFile s);
-    
-    //Escritura
-    void visitar(EscrituraErr s);
-    
-    void visitar(EscrituraOut s);
-    
+
+    //Std
+    void visitar(StdErr s);
+
+    void visitar(StdOut s);
+
+    void visitar(StdIn s);
+
     //Lectura
-    void visitar(LecturaIn s);
+    void visitar(LecturaArg s);
 
     void visitar(LecturaFile s);
 

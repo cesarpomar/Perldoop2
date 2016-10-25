@@ -73,6 +73,14 @@ public class GenExpresion {
         s.setCodigoGenerado(s.getRegulares().getCodigoGenerado());
     }
 
+    public void visitar(ExpLectura s) {
+        s.setCodigoGenerado(s.getLectura().getCodigoGenerado());
+    }
+
+    public void visitar(ExpStd s) {
+        s.setCodigoGenerado(s.getStd().getCodigoGenerado());
+    }
+
     public void visitar(ExpVarMulti s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

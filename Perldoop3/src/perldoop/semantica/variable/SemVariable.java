@@ -56,9 +56,9 @@ public class SemVariable {
         noAccederDeclaracion(s);
         if (obtenerTipo(s, (EtiquetasTipo) s.getMy().getEtiquetas())) {
             validarTipo(s);
-            boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
+            boolean conflicto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
             EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), false);
-            entrada.setConflicto(confligto);
+            entrada.setConflicto(conflicto);
             tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
         }
     }
@@ -67,9 +67,9 @@ public class SemVariable {
         noAccederDeclaracion(s);
         if (obtenerTipo(s, (EtiquetasTipo) s.getOur().getEtiquetas())) {
             validarTipo(s);
-            boolean confligto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
+            boolean conflicto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
             EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), true);
-            entrada.setConflicto(confligto);
+            entrada.setConflicto(conflicto);
             tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
         }
     }

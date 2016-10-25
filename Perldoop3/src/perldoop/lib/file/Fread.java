@@ -5,6 +5,7 @@ import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +18,14 @@ public final class Fread implements Closeable {
 
     private BufferedReader buffer;
     private FileReader file;
+    private boolean cerrado;
+
+    /**
+     * Usa la entrada estandar para la lectura
+     */
+    public Fread() {
+        buffer = new BufferedReader(new InputStreamReader(System.in));
+    }
 
     /**
      * Abre un fichero para lectura
@@ -34,6 +43,7 @@ public final class Fread implements Closeable {
      */
     @Override
     public void close() throws IOException {
+        cerrado=true;
         buffer.close();
     }
 
@@ -43,6 +53,9 @@ public final class Fread implements Closeable {
      * @return linea
      */
     public String read() {
+        if(cerrado){
+            return "";
+        }
         try {
             String line = buffer.readLine();
             if (line != null) {
@@ -51,7 +64,7 @@ public final class Fread implements Closeable {
         } catch (IOException ex) {
             Logger.getLogger(Fread.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return "";
     }
 
     /**
@@ -60,6 +73,9 @@ public final class Fread implements Closeable {
      * @return array de lineas
      */
     public String[] readLines() {
+        if(cerrado){
+            return new String[0];
+        }
         return buffer.lines().map(line -> line + "\n").toArray(String[]::new);
     }
 

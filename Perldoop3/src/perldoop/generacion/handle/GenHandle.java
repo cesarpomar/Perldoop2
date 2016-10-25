@@ -22,9 +22,11 @@ public class GenHandle {
     }
 
     public void visitar(HandleOut s) {
+        s.setCodigoGenerado(new StringBuilder("PerlFile.STDOUT"));
     }
 
     public void visitar(HandleErr s) {
+        s.setCodigoGenerado(new StringBuilder("PerlFile.STDERR"));
     }
 
     public void visitar(HandleFile s) {

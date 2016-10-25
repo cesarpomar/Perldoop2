@@ -1,22 +1,22 @@
-package perldoop.modelo.arbol.escritura;
+package perldoop.modelo.arbol.std;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -&gt; escritura : STDOUT
+ * Clase que representa la reduccion -&gt; std : STDOUT
  *
  * @author César Pomar
  */
-public final class EscrituraOut extends Escritura {
+public final class StdOut extends Std {
 
     /**
      * Contructor unico de la clase
      *
      * @param handle Handle
      */
-    public EscrituraOut(Terminal handle) {
+    public StdOut(Terminal handle) {
         super(handle);
     }
 

@@ -5,6 +5,10 @@ import perldoop.error.GestorErrores;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
+import perldoop.modelo.arbol.expresion.ExpFuncion;
+import perldoop.modelo.arbol.expresion.ExpFuncion5;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 import perldoop.util.ParserEtiquetas;
@@ -51,10 +55,10 @@ public final class Tipos {
         if (tl2.size() == 1) {
             return true;
         }
-        if(t1.isRef() && t2.isBox() || t1.isBox() && t2.isRef()){
+        if (t1.isRef() && t2.isBox() || t1.isBox() && t2.isRef()) {
             return true;
         }
-        return tl2.size() == tl1.size() && ((!t1.isRef() && !t2.isRef()) || igual(t1, t2));   
+        return tl2.size() == tl1.size() && ((!t1.isRef() && !t2.isRef()) || igual(t1, t2));
     }
 
     /**
@@ -69,8 +73,8 @@ public final class Tipos {
     }
 
     /**
-     * Comprueba el casting de un simbolo a otro para verificar la conversión, en este caso el tipo de simbolo
-     * se especifica a parte por si hiciera falta modificarlo
+     * Comprueba el casting de un simbolo a otro para verificar la conversión, en este caso el tipo de simbolo se
+     * especifica a parte por si hiciera falta modificarlo
      *
      * @param s Simbolo origen
      * @param ts Tipo del simbolo origen
@@ -87,10 +91,17 @@ public final class Tipos {
     /**
      * Conversion del tipo a un numero
      *
-     * @param t Tipo
+     * @param s Simbolo
      * @return Tipo numerico
      */
-    public static Tipo toNumber(Tipo t) {
+    public static Tipo toNumber(Simbolo s) {
+        Tipo t = s.getTipo();
+        /////////TODO MEJORAR
+        if (s.getTipo().isArrayOrList() && (s instanceof ExpFuncion || s instanceof ExpFuncion5
+                || (s instanceof ExpColeccion && ((ExpColeccion) s).getColeccion() instanceof ColParentesis))) {
+            t = t.getSubtipo(1);
+        }
+        //////////////////////   
         switch (t.getTipo().get(0)) {
             case Tipo.BOOLEAN:
                 return new Tipo(Tipo.INTEGER);
@@ -98,9 +109,9 @@ public final class Tipos {
             case Tipo.LONG:
             case Tipo.FLOAT:
             case Tipo.DOUBLE:
+                return new Tipo(t);
             case Tipo.NUMBER:
             case Tipo.BOX:
-                return new Tipo(t);
             case Tipo.STRING:
                 return new Tipo(Tipo.DOUBLE);
             case Tipo.FILE:

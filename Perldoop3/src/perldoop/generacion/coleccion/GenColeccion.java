@@ -109,7 +109,7 @@ public class GenColeccion {
                 }
                 coleccion.append("}");
                 colecciones.add(coleccion);
-
+                expresiones.clear();
             }
             //Si es una coleccion habra que agregarla
             if (!iscoleccion) {

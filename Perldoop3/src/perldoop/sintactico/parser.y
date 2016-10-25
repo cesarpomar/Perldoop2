@@ -31,7 +31,7 @@ import perldoop.modelo.arbol.binario.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.aritmetica.*;
-import perldoop.modelo.arbol.escritura.*;
+import perldoop.modelo.arbol.std.*;
 import perldoop.modelo.arbol.lectura.*;
 import perldoop.modelo.arbol.handle.*;
 import perldoop.modelo.arbol.modulos.*;
@@ -55,8 +55,9 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 %left LLOR LLXOR
 %left LLAND
 %left LLNOT
-%left ',' ID
+%left ',' 
 %right '=' MULTI_IGUAL DIV_IGUAL MOD_IGUAL SUMA_IGUAL MAS_IGUAL MENOS_IGUAL DESP_I_IGUAL DESP_D_IGUAL AND_IGUAL OR_IGUAL XOR_IGUAL POW_IGUAL LAND_IGUAL LOR_IGUAL DLOR_IGUAL CONCAT_IGUAL X_IGUAL
+%left ID
 %right ':' '?'
 %nonassoc DOS_PUNTOS
 %left LOR DLOR
@@ -129,15 +130,15 @@ expresion	:	numero									{$$=set(new ExpNumero(s($1)));}
 			|	funcion									{$$=set(new ExpFuncion(s($1)));} 
 			|	'&' funcion %prec UNITARIO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
 			|	lectura									{$$=set(new ExpLectura(s($1)));} 
-			|	escritura								{}
+			|	std										{$$=set(new ExpStd(s($1)));} 
 			|	regulares								{$$=set(new ExpRegulares(s($1)));}
 			|	expresion DOS_PUNTOS expresion			{$$=set(new ExpRango(s($1),s($2),s($3)));}
 			
 lista		:	listaR									{$$=set(s($1));}
-			|	listaR ','								{$$=set(Lista.add((Lista)s($1), s($2)));}
+			|	listaR ','								{$$=set(s(ParseValLista.add($1, s($2))));}
 
-listaR		:	listaR ',' expresion					{$$=set(Lista.add(s($1), s($2), s($3)), false);}
-			|	expresion								{$$=set(new Lista(s($1)), false);}			
+listaR		:	listaR ',' expresion					{$$=ParseValLista.add($1, s($2), s($3), args);args=null;}
+			|	expresion								{$$=new ParseValLista(new Lista(), s($1), args, simbolos);args=null;}			
 
 modificador :											{$$=set(new ModNada());}
 			|	IF expresion							{$$=set(new ModIf(s($1), s($2)));}
@@ -229,25 +230,26 @@ acceso		:	expresion colRef						{$$=set(new AccesoCol(s($1),s($2)));}
 			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 			
 			|	'\\' expresion %prec UNITARIO			{$$=set(new AccesoRef(s($1),s($2)));} 
 
-funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(add(new Lista(s($2)))))));}
+funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(args=add(new Lista(s($2)))))));}
 			|	ID_P colParen							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),s($2)));}
 			|	ID										{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(add(new Lista())))));}
-			|	paqueteID ID expresion					{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(new Lista(s($3)))))));}
+			|	paqueteID ID expresion					{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(args=new Lista(s($3)))))));}
 			|	paqueteID ID_P colParen					{$$=set(new FuncionBasica(s($1),s($2),s($3)));}
 			|	paqueteID ID							{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(new Lista())))));}	
-			|	ID handle expresion						{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($2),add(new ColParentesis(add(new Lista(s($3)))))));}
+			|	ID handle expresion						{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($2),add(new ColParentesis(add(args=new Lista(s($3)))))));}
 			|	ID_P '(' handle expresion ')'			{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($3),add(new ColParentesis(s($2),add(new Lista(s($4))),s($5)))));}
-			|	ID '{' lista '}' expresion				{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(add(new Lista(s($5)))))));}
+			|	ID '{' lista '}' expresion				{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(add(args=new Lista(s($5)))))));}
 
 handle		:	STDOUT_H								{$$=set(new HandleOut(s($1)));}
 			|	STDERR_H								{$$=set(new HandleErr(s($1)));}
 			|	FILE VAR								{$$=set(new HandleFile(s($1),s($2)));}
 			
-escritura	:	STDOUT									{$$=set(new EscrituraOut(s($1)));}
-			|	STDERR									{$$=set(new EscrituraErr(s($1)));}
+std			:	STDIN									{$$=set(new StdIn(s($1)));}
+			|	STDOUT									{$$=set(new StdOut(s($1)));}
+			|	STDERR									{$$=set(new StdErr(s($1)));}
 			
-lectura		:	'<' STDIN '>'							{$$=set(new LecturaIn(s($1),s($2),s($3)));}
-			|	'<' expresion '>'						{$$=set(new LecturaFile(s($1),s($2),s($3)));}
+lectura		:	'<' expresion '>'						{$$=set(new LecturaFile(s($1),s($2),s($3)));}
+			|	'<' '>'									{$$=set(new LecturaArg(s($1),s($2)));}
 
 binario		:	expresion '|' expresion					{$$=set(new BinOr(s($1),s($2),s($3)));}
 			|	expresion '&' expresion					{$$=set(new BinAnd(s($1),s($2),s($3)));}
@@ -335,6 +337,7 @@ condicional	:																					{$$=set(new CondicionalNada());}
 	private PreParser preParser;
 	private Opciones opciones;
 	private GestorErrores gestorErrores;
+	private Lista args;
 	
 	/**
 	 * Constructor del analizador sintactico

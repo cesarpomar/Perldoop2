@@ -1,13 +1,12 @@
 package perldoop.generacion.funcion;
 
-import perldoop.modelo.arbol.FuncionNativa;
-import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.EntradaFuncion;
 import perldoop.modelo.semantica.EntradaFuncionNoDeclarada;
+import perldoop.generacion.funcion.nativa.*;
 
 /**
  * Clase generadora de funcion
@@ -29,9 +28,9 @@ public final class GenFuncion {
 
     public void visitar(FuncionBasica s) {
         if (s.getPadre() instanceof ExpFuncion) {
-            FuncionNativa fn = getGenNativa(s.getIdentificador().getValor());
+            GenFuncionNativa fn = getGenNativa(s.getIdentificador().getValor());
             if (fn != null) {
-                fn.visitar(s, (ColParentesis) s.getColeccion());
+                fn.visitar(s);
                 return;
             }
         }
@@ -47,11 +46,11 @@ public final class GenFuncion {
     }
 
     public void visitar(FuncionHandle s) {
-
+        getGenNativa(s.getIdentificador().getValor()).visitar(s);
     }
 
     public void visitar(FuncionBloque s) {
-
+        getGenNativa(s.getIdentificador().getValor()).visitar(s);
     }
 
     /**
@@ -93,8 +92,10 @@ public final class GenFuncion {
      * @param id Nombre de la funcion
      * @return Semantica nativa
      */
-    private FuncionNativa getGenNativa(String id) {
+    private GenFuncionNativa getGenNativa(String id) {
         switch (id) {
+            case "print":
+                return new GenFuncionPrint(tabla);
             default:
                 return null;
         }

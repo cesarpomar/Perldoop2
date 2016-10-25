@@ -1,14 +1,14 @@
-package perldoop.modelo.arbol.escritura;
+package perldoop.modelo.arbol.std;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 
 /**
- * Clase abtracta que representa todas las reduciones de escritura
+ * Clase abtracta que representa todas las reduciones de std
  *
  * @author César Pomar
  */
-public abstract class Escritura extends Simbolo {
+public abstract class Std extends Simbolo {
 
     protected Terminal handle;
 
@@ -17,7 +17,7 @@ public abstract class Escritura extends Simbolo {
      *
      * @param handle Handle
      */
-    public Escritura(Terminal handle) {
+    public Std(Terminal handle) {
         setHandle(handle);
     }
 

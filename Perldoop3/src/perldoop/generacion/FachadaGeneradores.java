@@ -12,7 +12,7 @@ import perldoop.generacion.coleccion.*;
 import perldoop.generacion.comparacion.*;
 import perldoop.generacion.condicional.*;
 import perldoop.generacion.cuerpo.*;
-import perldoop.generacion.escritura.GenEscritura;
+import perldoop.generacion.std.GenStd;
 import perldoop.generacion.expresion.*;
 import perldoop.generacion.flujo.*;
 import perldoop.generacion.fuente.*;
@@ -64,7 +64,7 @@ public final class FachadaGeneradores {
     private GenFuncionDef genFuncionDef;
     private GenFuncionSub genFuncionSub;
     private GenHandle genHandle;
-    private GenEscritura genEscritura;
+    private GenStd genStd;
     private GenLectura genLectura;
     private GenLista genLista;
     private GenLogico genLogico;
@@ -509,24 +509,24 @@ public final class FachadaGeneradores {
     }
 
     /**
-     * Obtiene el generador de escritura
+     * Obtiene el generador de std
      *
-     * @return Generador de escritura
+     * @return Generador de std
      */
-    public GenEscritura getGenEscritura() {
-        if (genEscritura == null) {
-            genEscritura = new GenEscritura(tabla);
+    public GenStd getGenStd() {
+        if (genStd == null) {
+            genStd = new GenStd(tabla);
         }
-        return genEscritura;
+        return genStd;
     }
 
     /**
-     * Establece el generador de escritura
+     * Establece el generador de std
      *
-     * @param genEscritura Generador de escritura
+     * @param genStd Generador de std
      */
-    public void setGenEscritura(GenEscritura genEscritura) {
-        this.genEscritura = genEscritura;
+    public void setGenStd(GenStd genStd) {
+        this.genStd = genStd;
     }
 
     /**

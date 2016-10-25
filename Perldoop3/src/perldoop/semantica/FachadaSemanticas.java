@@ -13,7 +13,7 @@ import perldoop.semantica.coleccion.*;
 import perldoop.semantica.comparacion.*;
 import perldoop.semantica.condicional.*;
 import perldoop.semantica.cuerpo.*;
-import perldoop.semantica.escritura.SemEscritura;
+import perldoop.semantica.std.SemStd;
 import perldoop.semantica.expresion.*;
 import perldoop.semantica.flujo.*;
 import perldoop.semantica.funcion.*;
@@ -61,7 +61,7 @@ public final class FachadaSemanticas {
     private SemFuncionDef semFuncionDef;
     private SemFuncionSub semFuncionSub;
     private SemHandle semHandle;
-    private SemEscritura semEscritura;
+    private SemStd semStd;
     private SemLectura semLectura;
     private SemLista semLista;
     private SemLogico semLogico;
@@ -463,24 +463,24 @@ public final class FachadaSemanticas {
     }
 
     /**
-     * Obtiene la semantica de escritura
+     * Obtiene la semantica de std
      *
-     * @return Semantica de escritura
+     * @return Semantica de std
      */
-    public SemEscritura getSemEscritura() {
-        if (semEscritura == null) {
-            semEscritura = new SemEscritura(tabla);
+    public SemStd getSemStd() {
+        if (semStd == null) {
+            semStd = new SemStd(tabla);
         }
-        return semEscritura;
+        return semStd;
     }
 
     /**
-     * Establece la semantica de escritura
+     * Establece la semantica de std
      *
-     * @param semEscritura Semantica de escritura
+     * @param semStd Semantica de std
      */
-    public void setSemEscritura(SemEscritura semEscritura) {
-        this.semEscritura = semEscritura;
+    public void setSemStd(SemStd semStd) {
+        this.semStd = semStd;
     }
 
     /**

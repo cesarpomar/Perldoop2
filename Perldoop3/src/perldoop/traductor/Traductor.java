@@ -81,26 +81,16 @@ public final class Traductor implements Acciones {
         return errores;
     }
 
-    @Override
-    public void analizar(Simbolo s) throws ExcepcionSemantica {
+    /**
+     * Analiza un simbolo.
+     *
+     * @param s Simbolo
+     */
+    private void analizar(Simbolo s) throws ExcepcionSemantica {
         generar = true;
         s.aceptar(semantica);
         if (generar && errores == 0) {
             s.aceptar(generador);
-        }
-    }
-
-    @Override
-    public void reAnalizar(Simbolo s) throws ExcepcionSemantica {
-        int posicion = index;
-        while (posicion > 0 && !simbolos.get(posicion).equals(s)) {
-            posicion--;
-        }
-        List<Simbolo> l = simbolos.subList(posicion, index);
-        Simbolo sAnalizar = s;
-        while (l.indexOf(sAnalizar) < index) {
-            analizar(sAnalizar);
-            sAnalizar = sAnalizar.getPadre();
         }
     }
 

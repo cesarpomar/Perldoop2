@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,8 +15,25 @@ import java.util.logging.Logger;
  */
 public final class Fwrite implements Closeable {
 
+    public static final boolean STDOUT = false;
+    public static final boolean STDERR = true;
+
     private BufferedWriter buffer;
     private FileWriter file;
+    private boolean cerrado;
+
+    /**
+     * Escribe por pantalla
+     *
+     * @param flag STDOUT || STDERR
+     */
+    public Fwrite(boolean flag) {
+        if (flag == STDOUT) {
+            buffer = new BufferedWriter(new OutputStreamWriter(System.out));
+        } else {
+            buffer = new BufferedWriter(new OutputStreamWriter(System.err));
+        }
+    }
 
     /**
      * Abre el fichero para la escritura
@@ -35,8 +53,11 @@ public final class Fwrite implements Closeable {
      */
     @Override
     public void close() throws IOException {
+        cerrado=true;
         buffer.close();
-        file.close();
+        if (file != null) {
+            file.close();
+        }
     }
 
     /**
@@ -46,6 +67,9 @@ public final class Fwrite implements Closeable {
      * @return 1 si tiene exito, 0 en caso contrario
      */
     public int print(Object... values) {
+        if (cerrado) {
+            return 0;
+        }
         try {
             for (Object value : values) {
                 buffer.write(value.toString());
@@ -64,6 +88,9 @@ public final class Fwrite implements Closeable {
      * @return 1 si tiene exito, 0 en caso contrario
      */
     public int println(Object... values) {
+        if (cerrado) {
+            return 0;
+        }
         try {
             for (Object value : values) {
                 buffer.write(value.toString());

@@ -119,7 +119,4 @@ public class GenSentencia {
     public void visitar(StcLineaJava s) {
     }
 
-    public void visitar(ExpLectura s) {
-    }
-
 }

@@ -1,7 +1,7 @@
 package perldoop.semantica.lectura;
 
 import perldoop.modelo.arbol.lectura.LecturaFile;
-import perldoop.modelo.arbol.lectura.LecturaIn;
+import perldoop.modelo.arbol.lectura.LecturaArg;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
@@ -22,7 +22,7 @@ public class SemLectura {
         this.tabla = tabla;
     }
 
-    public void visitar(LecturaIn s) {
+    public void visitar(LecturaArg s) {
     }
 
     public void visitar(LecturaFile s) {
