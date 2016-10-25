@@ -73,6 +73,7 @@ public class Errores extends Internacionalizacion {
     public static final String OPERADOR_SMART= "OPERADOR_SMART";
     public static final String MODULO_NO_VACIO= "MODULO_NO_VACIO";
     public static final String MODULO_YA_CREADO= "MODULO_YA_CREADO";
+    public static final String MODULO_NO_EXISTE= "MODULO_NO_EXISTE";
     public static final String FUNCION_SIN_HANDLE = "FUNCION_SIN_HANDLE";
 
     public Errores() {

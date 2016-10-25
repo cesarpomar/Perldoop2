@@ -7,6 +7,7 @@ import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.modulos.ModuloPackage;
 import perldoop.modelo.arbol.modulos.ModuloUse;
+import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
@@ -44,7 +45,12 @@ public class SemModulo {
         String clase = ids.get(ids.size()-1).getValor();
         String fichero = tabla.getGestorErrores().getFichero();
         String[] paquetes = s.getPaquetes().getArrayString();
-        tabla.getTablaSimbolos().getImports().put(clase, tabla.getTablaSimbolos().getPaquete(fichero, paquetes));
+        Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, paquetes);
+        if(paquete==null){
+            tabla.getGestorErrores().error(Errores.MODULO_NO_EXISTE,s.getPuntoComa());
+            throw new ExcepcionSemantica(Errores.MODULO_NO_EXISTE);
+        }
+        tabla.getTablaSimbolos().getImports().put(clase, paquete);
     }
 
 }
