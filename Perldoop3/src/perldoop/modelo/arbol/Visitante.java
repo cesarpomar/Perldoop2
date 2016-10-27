@@ -256,7 +256,7 @@ public interface Visitante {
     void visitar(StdIn s);
 
     //Lectura
-    void visitar(LecturaArg s);
+    void visitar(LecturaIn s);
 
     void visitar(LecturaFile s);
 

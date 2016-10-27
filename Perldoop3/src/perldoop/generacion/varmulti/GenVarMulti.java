@@ -23,11 +23,11 @@ public class GenVarMulti {
     }
 
     public void visitar(VarMultiMy s) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void visitar(VarMultiOur s) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

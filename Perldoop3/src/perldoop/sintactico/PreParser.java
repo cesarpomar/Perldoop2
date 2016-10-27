@@ -72,7 +72,7 @@ public final class PreParser {
      * @return Tipo del handle
      */
     private int tipoHandle(int i, int tipo) {
-        if (lista.size() > i + 1 && FILE_HANDLE_CHAR.contains(lista.get(i + 2).getToken().getTipo()) && isFuncion(i)) {
+        if (lista.size() > i + 1 && FILE_HANDLE_CHAR.contains(lista.get(i + 1).getToken().getTipo()) && isFuncion(i)) {
             return tipo;
         }
         return lista.get(i).getToken().getTipo();

@@ -575,7 +575,7 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(LecturaArg s) {
+    public void visitar(LecturaIn s) {
         fachada.getSemLectura().visitar(s);
     }
 

@@ -319,4 +319,38 @@ public final class Pd {
         return Math.floorMod(n, mod);
     }
 
+    /**
+     * lee una linea de file
+     *
+     * @param file Fichero
+     * @return linea
+     */
+    public static String read(PerlFile file) {
+        if(file==null){
+            return "";
+        }
+        return file.read();
+    }
+
+    /**
+     * Lee todas las lineas de file
+     *
+     * @param file Fichero
+     * @return Array de lineas
+     */
+    public static String[] readLines(PerlFile file) {
+        if(file==null){
+            return new String[0];
+        }
+        return file.readLines();
+    }
+
+    /**
+     * Evalua una expresion dentro de una función para poder ser aceptada como sentencia
+     *
+     * @param exp Expresión
+     */
+    public static void eval(Object exp) {
+    }
+
 }

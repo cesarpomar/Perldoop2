@@ -17,6 +17,7 @@ import perldoop.modelo.arbol.aritmetica.AritPreIncremento;
 import perldoop.modelo.arbol.aritmetica.AritResta;
 import perldoop.modelo.arbol.aritmetica.AritSuma;
 import perldoop.modelo.arbol.aritmetica.AritX;
+import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
@@ -161,19 +162,47 @@ public class GenAritmetica {
     }
 
     public void visitar(AritPreIncremento s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        Tipo t = s.getTipo();
+        if ((t.isInteger() || t.isInteger()) && s.getExpresion() instanceof ExpVariable) {
+            codigo.append("++").append(s.getExpresion());
+        } else {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(AritPreDecremento s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        Tipo t = s.getTipo();
+        if ((t.isInteger() || t.isInteger()) && s.getExpresion() instanceof ExpVariable) {
+            codigo.append("--").append(s.getExpresion());
+        } else {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(AritPostIncremento s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        Tipo t = s.getTipo();
+        if ((t.isInteger() || t.isInteger()) && s.getExpresion() instanceof ExpVariable) {
+            codigo.append(s.getExpresion()).append("++");
+        } else {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(AritPostDecremento s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder codigo = new StringBuilder(100);
+        Tipo t = s.getTipo();
+        if ((t.isInteger() || t.isInteger()) && s.getExpresion() instanceof ExpVariable) {
+            codigo.append(s.getExpresion()).append("--");
+        } else {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        s.setCodigoGenerado(codigo);
     }
 
 }

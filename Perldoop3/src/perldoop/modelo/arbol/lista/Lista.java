@@ -18,6 +18,7 @@ public final class Lista extends Simbolo {
 
     private List<Simbolo> elementos;
     private List<Expresion> expresiones;
+    private List<Terminal> separadores;
 
     /**
      * Construye una lista vacia
@@ -25,6 +26,7 @@ public final class Lista extends Simbolo {
     public Lista() {
         elementos = new ArrayList<>(20);
         expresiones = new ArrayList<>(20);
+        separadores = new ArrayList<>(20);
     }
 
     /**
@@ -53,6 +55,15 @@ public final class Lista extends Simbolo {
      */
     public List<Expresion> getExpresiones() {
         return expresiones;
+    }
+
+    /**
+     * Obtiene los separadores de las expresiones
+     *
+     * @return Lista de separadores
+     */
+    public List<Terminal> getSeparadores() {
+        return separadores;
     }
 
     /**
@@ -88,6 +99,7 @@ public final class Lista extends Simbolo {
      * @return Esta lista
      */
     public Lista add(Terminal coma) {
+        separadores.add(coma);
         elementos.add(coma);
         coma.setPadre(this);
         return this;
@@ -115,7 +127,7 @@ public final class Lista extends Simbolo {
     public static Lista add(Lista l, Terminal coma) {
         return l.add(coma);
     }
-    
+
     /**
      * Añade el ultimo elemento de otra lista
      *
@@ -124,15 +136,15 @@ public final class Lista extends Simbolo {
      */
     public Lista addLast(Lista l) {
         Expresion exp;
-        add(exp=l.expresiones.remove(l.expresiones.size()-1));
-        if(exp==l.elementos.get(l.elementos.size()-1)){
-            add((Expresion)l.elementos.get(l.elementos.size()-1));          
-        }else{
-            add((Terminal)l.elementos.get(l.elementos.size()-1));  
-            add((Expresion)l.elementos.get(l.elementos.size()-1));  
+        add(exp = l.expresiones.remove(l.expresiones.size() - 1));
+        if (exp == l.elementos.get(l.elementos.size() - 1)) {
+            add((Expresion) l.elementos.get(l.elementos.size() - 1));
+        } else {
+            add((Terminal) l.elementos.get(l.elementos.size() - 1));
+            add((Expresion) l.elementos.get(l.elementos.size() - 1));
         }
         return this;
-    }    
+    }
 
     @Override
     public void aceptar(Visitante v) {

@@ -9,7 +9,7 @@ import perldoop.modelo.arbol.Visitante;
  *
  * @author César Pomar
  */
-public final class LecturaArg extends Lectura {
+public final class LecturaIn extends Lectura {
 
     /**
      * Constructor unico de la clase
@@ -17,7 +17,7 @@ public final class LecturaArg extends Lectura {
      * @param menor Menor
      * @param mayor Mayor
      */
-    public LecturaArg(Terminal menor, Terminal mayor) {
+    public LecturaIn(Terminal menor, Terminal mayor) {
         super(menor, mayor);
     }
 

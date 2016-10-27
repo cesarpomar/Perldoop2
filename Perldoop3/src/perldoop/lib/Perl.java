@@ -28,11 +28,10 @@ public final class Perl {
      * @return Retorna 1 si tiene exito
      */
     public int print(PerlFile f, Object... args) {
+        if(f==null){
+            return 0;
+        }
         return f.print(args);
-    }
-
-    public static void eval(Object exp) {
-        //No tiene que hacer nada
     }
 
 }

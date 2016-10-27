@@ -44,7 +44,7 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
 %token VAR FILE
-%token ENTERO DECIMAL M_REX S_REX Y_REX TEXTO REX_MOD SEP STDIN STDOUT STDERR STDOUT_H STDERR_H
+%token ENTERO DECIMAL M_REX S_REX Y_REX TEXTO EXP_SEP REX_MOD SEP STDIN STDOUT STDERR STDOUT_H STDERR_H
 
 /*Palabras reservadas*/
 %token MY SUB OUR PACKAGE WHILE DO FOR UNTIL USE
@@ -185,7 +185,7 @@ cadena		:	'\'' TEXTO '\''							{$$=set(new CadenaSimple(s($1),s($2),s($3)));}
 cadenaTexto :	cadenaTextoR							{$$=set(s($1));}	
 			
 cadenaTextoR:											{$$=set(new CadenaTexto(),false);}
-			|	cadenaTextoR variable 					{$$=set(CadenaTexto.add(s($1),s($2)),false);}
+			|	cadenaTextoR EXP_SEP expresion EXP_SEP	{$$=set(CadenaTexto.add(s($1),s($3)),false);}	
 			|	cadenaTextoR TEXTO						{$$=set(CadenaTexto.add(s($1),s($2)),false);}			
 
 variable	:	'$' VAR									{$$=set(new VarExistente(s($1),s($2)));} 
@@ -249,7 +249,7 @@ std			:	STDIN									{$$=set(new StdIn(s($1)));}
 			|	STDERR									{$$=set(new StdErr(s($1)));}
 			
 lectura		:	'<' expresion '>'						{$$=set(new LecturaFile(s($1),s($2),s($3)));}
-			|	'<' '>'									{$$=set(new LecturaArg(s($1),s($2)));}
+			|	'<' '>'									{$$=set(new LecturaIn(s($1),s($2)));}
 
 binario		:	expresion '|' expresion					{$$=set(new BinOr(s($1),s($2),s($3)));}
 			|	expresion '&' expresion					{$$=set(new BinAnd(s($1),s($2),s($3)));}

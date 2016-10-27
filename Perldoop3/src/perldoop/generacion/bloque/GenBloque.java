@@ -1,8 +1,8 @@
 package perldoop.generacion.bloque;
 
+import java.util.Iterator;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
-import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.bloque.*;
@@ -94,25 +94,45 @@ public class GenBloque {
         genDeclaraciones(codigo);
         codigo.append(s.getId());
         codigo.append(s.getParentesisI());
+        Iterator<Terminal> itt;
+        Iterator<Expresion> itexp;
         //Primer campo
-        for (Simbolo e : s.getLista1().getElementos()) {
-            codigo.append(e);
+        itt = s.getLista1().getSeparadores().iterator();
+        itexp = s.getLista1().getExpresiones().iterator();
+        while (itexp.hasNext()) {
+            codigo.append(itexp.next());
+            if (itexp.hasNext()) {
+                codigo.append(",");
+            }
+            if (itt.hasNext()) {
+                codigo.append(itt.next().getComentario());
+            }
         }
         codigo.append(s.getPuntoComa1());
         //Segundo campo
-        boolean coma = false;
-        for (Simbolo e : s.getLista1().getElementos()) {
-            if (coma) {
-                codigo.append("&&").append(((Terminal) e).getComentario());
-            } else {
-                codigo.append(Casting.toBoolean(e));
+        itt = s.getLista2().getSeparadores().iterator();
+        itexp = s.getLista2().getExpresiones().iterator();
+        while (itexp.hasNext()) {
+            codigo.append(Casting.toBoolean(itexp.next()));
+            if (itexp.hasNext()) {
+                codigo.append("&&");
             }
-            coma = !coma;
+            if (itt.hasNext()) {
+                codigo.append(itt.next().getComentario());
+            }
         }
         codigo.append(s.getPuntoComa2());
         //Tercer campo
-        for (Simbolo e : s.getLista1().getElementos()) {
-            codigo.append(e);
+        itt = s.getLista3().getSeparadores().iterator();
+        itexp = s.getLista3().getExpresiones().iterator();
+        while (itexp.hasNext()) {
+            codigo.append(itexp.next());
+            if (itexp.hasNext()) {
+                codigo.append(",");
+            }
+            if (itt.hasNext()) {
+                codigo.append(itt.next().getComentario());
+            }
         }
         codigo.append(s.getParentesisD());
         codigo.append(s.getLlaveI());
@@ -239,7 +259,7 @@ public class GenBloque {
      * @return Codigo expresion
      */
     public static StringBuilder genExpresion(TablaGenerador tabla, Expresion exp) {
-        if(!tabla.getOpciones().isOptNulos()){
+        if (!tabla.getOpciones().isOptNulos()) {
             return Casting.castingNotNull(exp, new Tipo(Tipo.BOOLEAN));
         }
         return exp.getCodigoGenerado();

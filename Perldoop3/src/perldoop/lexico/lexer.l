@@ -17,7 +17,7 @@ import perldoop.modelo.Opciones;
 %line
 %column
 %char
-%state VAR FUN PD IGNORAR DELIMITADOR DELIMITADOR_DOBLE ANALISIS ANALISIS_VAR REX_T REX_MOD
+%state VAR FUN PD IGNORAR DELIMITADOR DELIMITADOR_DOBLE ANALISIS ANALISIS_VAR ANALISIS_ACCESO ANALISIS_ACCESO_INDEX REX_T REX_MOD
 
 %{
 	private Token yyval;
@@ -34,6 +34,7 @@ import perldoop.modelo.Opciones;
 	private boolean interpola;
 	private int estadoReturn;
 	private int analisisTipo;
+	private int flag;
 
 	/**
 	 * Constructor del analizador léxico
@@ -298,7 +299,7 @@ PD_NUM			=	<{ENTERO}>
 
 		/*----Comentarios----*/
 
-	"\#!.*"					{}
+	"\#!".*					{}
 	^.*\#{IGNORAR_LINEA}.*	{}
 	\#{IGNORAR_BLOQUE}		{yybegin(IGNORAR);}
 	{IMPORT_JAVA}			{return token(Parser.IMPORT_JAVA);}
@@ -363,12 +364,19 @@ PD_NUM			=	<{ENTERO}>
 								tokenAux=yyval;buffer.setLength(0);
 							}
 							buffer.append(yytext());}
-	[^][a-zA-Z_]?		{
+	[^].?		{
 							char c = yycharat(0);
 							boolean c2 = false;
 							if(yylength()>1){ 
+								char cc=yycharat(1);
+								if(interpola && (c == '$' || c == '@')){
+									if(PalabrasReservadas.isPerlSpecialVar(cc)){
+										token(0);
+										gestorErrores.error(Errores.AVISO,Errores.VARIABLE_IGNORADA, yyval, yytext());
+									}
+								}
 								yypushback(1);	
-								c2 = true;								
+								c2 = (cc >= 'A' && cc <= 'Z') || (cc >= 'a' && cc <= 'z') || cc=='_';								
 							}	
 							if((c == sep && stack==0) || (interpola && c2 && (c == '$' || c == '@'))){
 								if(tokenAux!=null){
@@ -390,6 +398,12 @@ PD_NUM			=	<{ENTERO}>
 									}
 									
 								}else{
+									if(flag==0){
+										flag++;
+										yypushback(1);return token(Parser.EXP_SEP);
+									}else{
+										flag=0;
+									}
 									yybegin(ANALISIS_VAR);return token(c);
 								}
 							}else{
@@ -414,8 +428,25 @@ PD_NUM			=	<{ENTERO}>
 	{ID}				{return token(Parser.VAR);}
 	"::"				{return token(Parser.AMBITO);}
 	"\#"				{return token('#');}
-	[\{\[]				{token(0);gestorErrores.error(Errores.ACCESO_CADENA, yyval, yytext());}
-	[^]					{yypushback(1);yybegin(ANALISIS);}
+	[\{\[]				{yypushback(1);yybegin(ANALISIS_ACCESO);}
+	[^]					{yypushback(1);yybegin(ANALISIS);return token(Parser.EXP_SEP);}
+}
+
+<ANALISIS_ACCESO>{
+	[\{\[]				{yybegin(ANALISIS_ACCESO_INDEX);return token(yycharat(0));}
+	[^]					{yypushback(1);yybegin(ANALISIS);return token(Parser.EXP_SEP);}
+}
+
+<ANALISIS_ACCESO_INDEX>{
+	"$"					{return token('$');}
+	"@"					{return token('@');}
+	"::"				{return token(Parser.AMBITO);}
+	"\#"				{return token('#');}
+	{ID}				{return token(Parser.VAR);}
+	{ENTERO}			{return token(Parser.ENTERO);}
+	[\}\]]				{yybegin(ANALISIS_ACCESO);return token(yycharat(0));}
+	[\s]				{}
+	[^]					{yybegin(ANALISIS);yypushback(1);error();}
 }
 
 

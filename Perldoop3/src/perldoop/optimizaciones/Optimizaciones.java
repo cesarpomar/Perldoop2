@@ -49,7 +49,7 @@ public class Optimizaciones {
     }
 
     /**
-     * Elimina las referencias que siguen el patron new Ref<...>(...).get() o new ...();
+     * Elimina las referencias que siguen el patron new Ref<...>(...).get()
      *
      * @param codigo Codigo fuente
      */

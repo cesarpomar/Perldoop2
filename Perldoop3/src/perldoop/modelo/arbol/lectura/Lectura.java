@@ -20,7 +20,8 @@ public abstract class Lectura extends Simbolo {
      * @param mayor Mayor 
      */
     public Lectura(Terminal menor, Terminal mayor) {
-
+        setMenor(menor);
+        setMayor(mayor);
     }
 
     /**

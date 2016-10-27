@@ -260,11 +260,33 @@ public final class Buscar {
     }
 
     /**
-     * Retorna todas las instancias de la clase que existen en el subarbol del simbolo
+     * Retorna la primera instancia de la clase que exista en el subarbol del simbolo
      *
+     * @param <T> Tipo del simbolo
      * @param s Simbolo
      * @param clase Clase
      * @return Simbolo
+     */
+    public static <T> T buscarClase(Simbolo s, Class<T> clase) {
+        List<Simbolo> lista = new ArrayList<>(100);
+        lista.add(s);
+        while (!lista.isEmpty()) {
+            Simbolo actual = lista.remove(lista.size() - 1);
+            if (clase.isInstance(actual)) {
+                return (T) actual;
+            }
+            lista.addAll(Arrays.asList(actual.getHijos()));
+        }
+        return null;
+    }
+
+    /**
+     * Retorna todas las instancias de la clase que existen en el subarbol del simbolo
+     *
+     * @param <T> Tipo del simbolo
+     * @param s Simbolo
+     * @param clase Clase
+     * @return Lista de simbolos
      */
     public static <T> List<T> buscarClases(Simbolo s, Class<T> clase) {
         List<Simbolo> lista = new ArrayList<>(100);
@@ -276,6 +298,35 @@ public final class Buscar {
                 resultado.add((T) actual);
             }
             lista.addAll(Arrays.asList(actual.getHijos()));
+        }
+        return resultado;
+    }
+
+    /**
+     * Retorna todas las instancias de las subclases mas altas que coninciden con alguna de las clases, de forma que una
+     * vez que una instancia coincide, no se profundiza en sus descendientes
+     *
+     * @param s Simbolo
+     * @param clases Clases a buscar
+     * @return Lista de simbolos
+     */
+    public static List<Simbolo> buscarClases(Simbolo s, Class<? extends Simbolo>... clases) {
+        List<Simbolo> lista = new ArrayList<>(100);
+        List<Simbolo> resultado = new ArrayList<>(10);
+        lista.add(s);
+        while (!lista.isEmpty()) {
+            Simbolo actual = lista.remove(lista.size() - 1);
+            boolean add=false;
+            for (Class clase : clases) {
+                if (clase.isInstance(actual)) {
+                    resultado.add(actual);
+                    add=true;
+                    break;
+                }
+            }
+            if(!add){
+               lista.addAll(Arrays.asList(actual.getHijos()));  
+            }
         }
         return resultado;
     }

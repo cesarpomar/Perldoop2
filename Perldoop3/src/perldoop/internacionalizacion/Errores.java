@@ -18,9 +18,9 @@ public class Errores extends Internacionalizacion {
     public static final String PAQUETE_INVALIDO = "PAQUETE_INVALIDO";
     //Lexicos
     public static final String CARACTER_INVALIDO = "CARACTER_INVALIDO";
-    public static final String ACCESO_CADENA = "ACCESO_CADENA";
     public static final String FALLOS_LEXICOS = "FALLOS_LEXICOS";
     public static final String ETIQUETA_IGNORADA = "ETIQUETA_IGNORADA";
+    public static final String VARIABLE_IGNORADA = "VARIABLE_IGNORADA";
     //Preprocesador
     public static final String FALLOS_PREPROCESADOR = "FALLOS_PREPROCESADOR";
     public static final String ETIQUETAS_COLECCION_INCOMPLETAS = "ETIQUETAS_COLECCION_INCOMPLETAS";

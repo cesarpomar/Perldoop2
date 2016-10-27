@@ -87,6 +87,47 @@ public final class PalabrasReservadas {
     }
 
     /**
+     * Comrpeuba si el simbolo pertenece a una variable especial de Perl
+     *
+     * @param var Variable simbolica
+     * @return Variable es especial
+     */
+    public static boolean isPerlSpecialVar(char var) {
+        switch (var) {
+            case '&':
+            case '`':
+            case '\'':
+            case '+':
+            case '-':
+            case '^':
+            case '.':
+            case '|':
+            case ',':
+            case '\\':
+            case '"':
+            case '%':
+            case '=':
+            case '~':
+            case ';':
+            case ':':
+            case '?':
+            case '!':
+            case '@':
+            case '$':
+            case '<':
+            case '>':
+            case '(':
+            case ')':
+            case ']':
+            case '[':
+            case '{':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Comprueba si existe una etiqueta y retorno su tipo
      *
      * @param e Etiqueta

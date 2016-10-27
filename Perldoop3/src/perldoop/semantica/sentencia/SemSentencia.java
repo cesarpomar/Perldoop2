@@ -24,18 +24,19 @@ public class SemSentencia {
     }
 
     public void visitar(StcLista s) {
-        //Nada que comprobar
+        //Sin semantica
     }
 
     public void visitar(StcBloque s) {
-        //Nada que comprobar
+        //Sin semantica
     }
 
     public void visitar(StcFlujo s) {
+        //Sin semantica
     }
 
     public void visitar(StcComentario s) {
-        //Nada que comprobar
+        //Sin semantica
     }
 
     public void visitar(StcTipado s) {
@@ -46,15 +47,18 @@ public class SemSentencia {
     }
 
     public void visitar(StcModulos s) {
+        //Sin semantica
     }
 
     public void visitar(StcImport s) {
+        //Sin semantica
     }
 
     public void visitar(StcLineaJava s) {
+        //Sin semantica
     }
 
     public void visitar(StcError s) {
-        //No se usa
+        ////Sin semantica
     }
 }
