@@ -635,7 +635,7 @@ public final class Casting {
      * @param destino Tipo destino
      * @return Casting
      */
-    public static StringBuilder toColNumber(Simbolo origen, Tipo destino) {
+    private static StringBuilder toColNumber(Simbolo origen, Tipo destino) {
         StringBuilder cst = new StringBuilder(200);
         cst.append("((").append(Tipos.declaracion(destino)).append(")");
         if (destino.isList()) {
@@ -654,7 +654,7 @@ public final class Casting {
      * @param destino Tipo destino
      * @return Casting
      */
-    public static StringBuilder toCol(Simbolo origen, Tipo destino) {
+    private static StringBuilder toCol(Simbolo origen, Tipo destino) {
         //Si las colecciones son numericas y el casting es a Number
         if (origen.getTipo().getSimple().isNumberType() && destino.getSimple().isNumber()) {
             Tipo t = origen.getTipo().getSubtipo(0);

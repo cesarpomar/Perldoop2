@@ -4,12 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import perldoop.depurador.Depurador;
 import perldoop.error.GestorErrores;
 import perldoop.generacion.Generador;
 import perldoop.internacionalizacion.Errores;
 import perldoop.io.CodeReader;
 import perldoop.io.CodeWriter;
+import perldoop.jar.LibJar;
 import perldoop.lexico.Lexer;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;
@@ -41,7 +44,7 @@ public final class Perldoop {
         CodeWriter writer = new CodeWriter(opciones);
         GestorErrores gestorErrores;
         checkFicheros(consola);
-        ArbolPaquetes paquetes = new ArbolPaquetes(consola.getFicheros(),opciones.getPaquetes());
+        ArbolPaquetes paquetes = new ArbolPaquetes(consola.getFicheros(), opciones.getPaquetes());
         for (String ruta : consola.getFicheros()) {
             gestorErrores = new GestorErrores(ruta.trim(), opciones);
             File fichero = new File(ruta);
@@ -114,6 +117,13 @@ public final class Perldoop {
                 writer.escribir(generador.getClase());
             } catch (IOException ex) {
                 gestorErrores.error(Errores.ERROR_ESCRITURA);
+            }
+        }
+        if (opciones.isLibreria()) {
+            try {
+                LibJar.buildLib(opciones.getDirectorioSalida());
+            } catch (Exception ex) {
+                new GestorErrores(opciones.getDirectorioSalida().getPath(), opciones).error(Errores.ERROR_LIBRERIA);
             }
         }
     }

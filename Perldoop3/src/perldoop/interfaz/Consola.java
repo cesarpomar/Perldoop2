@@ -92,6 +92,7 @@ public final class Consola {
         opcionales.addArgument("-h", "--help").action(new HelpArgumentActionExt()).help(interfaz.get(Interfaz.AYUDA));
         opcionales.addArgument("-v", "--version").action(new VersionArgumentAction()).help(interfaz.get(Interfaz.VERSION));
         opcionales.addArgument("-out").metavar("dir").setDefault(new File(".")).action(new StoreArgumentAction()).help(interfaz.get(Interfaz.OUT));
+        opcionales.addArgument("-lib").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.LIBRERIA));
         opcionales.addArgument("-nf", "--not-formatting").action(new StoreFalseArgumentAction()).help(interfaz.get(Interfaz.NO_FORMATEAR));
         opcionales.addArgument("-cc", "--copy-comments").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.COPIAR_COMENTARIOS));
         opcionales.addArgument("-hw", "--hide-warnings").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OCULTAR_AVISOS));
@@ -150,13 +151,13 @@ public final class Consola {
     private void opciones() {
         opciones = new Opciones();
         opciones.setDirectorioSalida(new File(comandos.getString("out")));
+        opciones.setLibreria(comandos.getBoolean("lib"));
         opciones.setFormatearCodigo(comandos.getBoolean("not_formatting"));
         opciones.setCopiarComentarios(comandos.getBoolean("copy_comments"));
         opciones.setOcultarAvisos(comandos.getBoolean("hide_warnings"));
         opciones.setMostrarErrores(comandos.getInt("show_errors"));
         opciones.setCodificacion(comandos.getString("encoding"));
-        String paquetes = comandos.getString("package");
-        opciones.setPaquetes(paquetes != null ? paquetes.split("\\.") : null);
+        opciones.setPaquetes(comandos.get("package"));
         opciones.setOptNulos(comandos.getBoolean("optimize_nulls"));
         opciones.setOptIntancias(comandos.getBoolean("optimize_instance"));
         opciones.setOptDiamante(comandos.getBoolean("optimize_diamond"));

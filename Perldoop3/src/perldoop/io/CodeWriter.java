@@ -10,11 +10,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import perldoop.error.GestorErrores;
+import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.generacion.ClaseJava;
 import perldoop.optimizaciones.Optimizaciones;
@@ -52,11 +50,11 @@ public final class CodeWriter {
         //Paquete
         if (!java.getPaquetes().isEmpty()) {
             repr.append("package ");
-            appendList(repr, java.getPaquetes(), ".");
+            repr.append(String.join(".", java.getPaquetes()));
             repr.append("; ");
         }
         //Imports
-        appendList(repr, java.getImports());
+        repr.append(String.join("", java.getImports()));
         //Clase
         repr.append("public class ").append(java.getNombre()).append(" ");
         //Clase Padre
@@ -66,15 +64,15 @@ public final class CodeWriter {
         //Interfaces
         if (!java.getInterfaces().isEmpty()) {
             repr.append("implements ");
-            appendList(repr, java.getInterfaces(), ",");
+            repr.append(String.join(",", java.getInterfaces()));
             repr.append(" ");
         }
         //Inicio clase
         repr.append("{");
         //Atributos
-        appendList(repr, java.getAtributos());
+        repr.append(String.join("", java.getAtributos()));
         //Funciones
-        appendList(repr, java.getFunciones());
+        repr.append(String.join("", java.getFunciones()));
         //Fin clase
         repr.append("}");
         //Formatemos
@@ -84,7 +82,7 @@ public final class CodeWriter {
                 escribir(new Formatter().formatSource(repr.toString()), java.getNombre(), java.getPaquetes());
                 return;
             } catch (FormatterException ex) {
-                Logger.getLogger(CodeWriter.class.getName()).log(Level.SEVERE, null, ex);
+                new GestorErrores(new File(directorio, java.getNombre()).getPath(), opciones).error(Errores.ERROR_FORMATEO);
             }
         }
         escribir(repr.toString(), java.getNombre(), java.getPaquetes());
@@ -109,35 +107,6 @@ public final class CodeWriter {
                 buffer.append(codigo);
             }
         }
-    }
-
-    /**
-     * Inserta una colección en una cadena
-     *
-     * @param <T> Tipo de la colección
-     * @param sb Cadenas
-     * @param col Colección de cadenas
-     * @param separador Separador
-     */
-    private <T> void appendList(StringBuilder sb, Collection<T> col, String separador) {
-        Iterator<T> it = col.iterator();
-        while (it.hasNext()) {
-            sb.append(it.next());
-            if (it.hasNext()) {
-                sb.append(separador);
-            }
-        }
-    }
-
-    /**
-     * Inserta una colección en una cadena
-     *
-     * @param <T> Tipo de la colección
-     * @param sb Cadenas
-     * @param col Colección de cadenas
-     */
-    private <T> void appendList(StringBuilder sb, Collection<T> col) {
-        appendList(sb, col, "");
     }
 
 }

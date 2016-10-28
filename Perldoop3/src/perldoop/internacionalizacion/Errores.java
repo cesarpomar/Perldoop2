@@ -16,6 +16,9 @@ public class Errores extends Internacionalizacion {
     public static final String ERROR_ESCRITURA = "ERROR_ESCRITURA";
     public static final String ERROR_CODIFICACION = "ERROR_CODIFICACION";
     public static final String PAQUETE_INVALIDO = "PAQUETE_INVALIDO";
+    public static final String ERROR_LIBRERIA = "ERROR_LIBRERIA";
+    public static final String ERROR_FORMATEO = "ERROR_FORMATEO";
+    
     //Lexicos
     public static final String CARACTER_INVALIDO = "CARACTER_INVALIDO";
     public static final String FALLOS_LEXICOS = "FALLOS_LEXICOS";

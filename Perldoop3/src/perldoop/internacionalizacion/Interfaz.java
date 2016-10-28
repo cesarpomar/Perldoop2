@@ -22,17 +22,18 @@ public class Interfaz extends Internacionalizacion {
     public static final String NO_FORMATEAR = "NO_FORMATEAR";
     public static final String COPIAR_COMENTARIOS = "COPIAR_COMENTARIOS";
     public static final String OCULTAR_AVISOS = "OCULTAR_AVISOS";
-    public static final String MOSTRAR_ERRORES = "MOSTRAR_ERRORES";  
-    public static final String CODIFICACION = "CODIFICACION"; 
+    public static final String MOSTRAR_ERRORES = "MOSTRAR_ERRORES";
+    public static final String CODIFICACION = "CODIFICACION";
     public static final String PAQUETES = "PAQUETES";
-    
+    public static final String LIBRERIA = "LIBRERIA";
+
     //Argumentos Optimización
     public static final String ARGS_OPTIMIZACION = "ARGS_OPTIMIZACION";
     public static final String OPTIMIZAR_NULOS = "OPTIMIZAR_NULOS";
     public static final String OPTIMIZAR_INSTANCIAS = "OPTIMIZAR_INSTANCIAS";
     public static final String OPTIMIZAR_DIAMANTE = "OPTIMIZAR_DIAMANTE";
     public static final String OPTIMIZAR_SENTENCIAS = "OPTIMIZAR_SENTENCIAS";
-    
+
     //Argumentos depuración
     public static final String ARGS_DEPURACION = "ARGS_DEPURACION";
     public static final String DEPURACION_TOKENS = "DEPURACION_TOKENS";

@@ -132,4 +132,9 @@ public final class PerlFile {
         return new String[0];
     }
 
+    @Override
+    public String toString() {
+        return "GLOB(" +super.toString().substring(1)+ ')';
+    }
+
 }

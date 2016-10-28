@@ -37,4 +37,15 @@ public final class Ref<T> {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        if (value instanceof Object[] || value instanceof PerlList) {
+            return "ARRAY(0x" + super.toString().substring(1) + ")";
+        } else if (value instanceof PerlMap) {
+            return "HASH(0x" + super.toString().substring(1) + ")";
+        } else {
+            return value.toString();
+        }
+    }
+
 }

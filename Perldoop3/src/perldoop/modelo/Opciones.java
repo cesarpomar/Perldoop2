@@ -17,6 +17,7 @@ public class Opciones {
     private Integer mostrarErrores;
     private String codificacion;
     private String[] paquetes;
+    private boolean libreria;
     //Argumentos Optimización
     private boolean optNulos;
     private boolean optIntancias;
@@ -301,6 +302,7 @@ public class Opciones {
 
     /**
      * Obtiene los paquetes
+     *
      * @return Paquetes
      */
     public String[] getPaquetes() {
@@ -309,10 +311,29 @@ public class Opciones {
 
     /**
      * Establece los paquetes
+     *
      * @param paquetes Paquetes
      */
     public void setPaquetes(String[] paquetes) {
         this.paquetes = paquetes;
+    }
+
+    /**
+     * Obtiene generar libreria
+     *
+     * @return Generar libreria
+     */
+    public boolean isLibreria() {
+        return libreria;
+    }
+
+    /**
+     * Establece generar libreria
+     *
+     * @param libreria Generar libreria
+     */
+    public void setLibreria(boolean libreria) {
+        this.libreria = libreria;
     }
 
 }
