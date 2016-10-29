@@ -326,7 +326,7 @@ public final class Pd {
      * @return linea
      */
     public static String read(PerlFile file) {
-        if(file==null){
+        if (file == null) {
             return "";
         }
         return file.read();
@@ -339,7 +339,7 @@ public final class Pd {
      * @return Array de lineas
      */
     public static String[] readLines(PerlFile file) {
-        if(file==null){
+        if (file == null) {
             return new String[0];
         }
         return file.readLines();
@@ -351,6 +351,17 @@ public final class Pd {
      * @param exp Expresión
      */
     public static void eval(Object exp) {
+    }
+
+    /**
+     * Reliza la operacion xor
+     *
+     * @param exp1 Expresion 1
+     * @param exp2 Expresion 2
+     * @return !exp1 && exp2 || exp1 && !exp2
+     */
+    public static Boolean xor(Boolean exp1, Boolean exp2) {
+        return !exp1 && exp2 || exp1 && !exp2;
     }
 
 }

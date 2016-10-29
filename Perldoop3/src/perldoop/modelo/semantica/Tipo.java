@@ -47,7 +47,7 @@ public final class Tipo {
      *
      * @param list Lista de subtipos
      */
-    public Tipo(List<Byte> list) {
+    private Tipo(List<Byte> list) {
         tipo = new ArrayList<>(list);
     }
 

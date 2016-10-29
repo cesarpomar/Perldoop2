@@ -28,8 +28,8 @@ public final class Casting {
      * @return Primer o ultimo elemento de la colecciones
      */
     public static Simbolo colToScalar(Simbolo col, Simbolo escalar) {
-        if (col.getTipo().isArrayOrList() &&( col instanceof ExpFuncion || col instanceof ExpFuncion5 ||
-                 (col instanceof ExpColeccion && ((ExpColeccion) col).getColeccion() instanceof ColParentesis))
+        if (col.getTipo().isArrayOrList() && (col instanceof ExpFuncion || col instanceof ExpFuncion5
+                || (col instanceof ExpColeccion && ((ExpColeccion) col).getColeccion() instanceof ColParentesis))
                 && (escalar == null || !escalar.getTipo().isColeccion())) {
             Simbolo aux = new SimboloAux(col);
             aux.setTipo(col.getTipo().getSubtipo(1));
@@ -776,6 +776,22 @@ public final class Casting {
             return new StringBuilder(100).append("Pd.checkNull(").append(s.getCodigoGenerado()).append(")");
         }
         return s.getCodigoGenerado();
+    }
+
+    /**
+     * Castea la expresion origen al destino pudiendo filtrar nulos
+     *
+     * @param origen Expresion origen
+     * @param destino Tipo destino
+     * @param notNull Comprobar no nulos
+     * @return Casting
+     */
+    public static StringBuilder casting(Simbolo origen, Tipo destino, boolean notNull) {
+        if (notNull) {
+            return castingNotNull(origen, destino);
+        } else {
+            return casting(origen, destino);
+        }
     }
 
     /**
