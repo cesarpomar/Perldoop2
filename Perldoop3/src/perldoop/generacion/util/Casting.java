@@ -772,7 +772,18 @@ public final class Casting {
      * @return Codigo no nulo
      */
     public static StringBuilder checkNull(Simbolo s) {
-        if (!Buscar.isNotNull(s)) {
+        return checkNull(s, !Buscar.isNotNull(s));
+    }
+
+    /**
+     * Evita que un valor no sea nulo siempre que no se trate de una colección
+     *
+     * @param s Simbolo
+     * @param isNull Codigo es nulo
+     * @return Codigo no nulo
+     */
+    public static StringBuilder checkNull(Simbolo s, boolean isNull) {
+        if (isNull) {
             return new StringBuilder(100).append("Pd.checkNull(").append(s.getCodigoGenerado()).append(")");
         }
         return s.getCodigoGenerado();

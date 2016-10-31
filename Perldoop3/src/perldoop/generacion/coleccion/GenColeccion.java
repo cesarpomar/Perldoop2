@@ -239,7 +239,7 @@ public class GenColeccion {
     public void visitar(ColParentesis s) {
         //Expresion entre parentesis
         Simbolo uso = Buscar.getPadre(s, 1);
-        if (s.getLista().getElementos().size() == 1 && !(uso instanceof Funcion) && !(uso instanceof Return)) {
+        if (s.getLista().getElementos().size() == 1 && !(s.getPadre() instanceof Funcion) && !(uso instanceof Return)) {
             Expresion exp = s.getLista().getExpresiones().get(0);
             StringBuilder codigo = new StringBuilder(50);
             codigo.append(Casting.casting(exp, s.getTipo()));

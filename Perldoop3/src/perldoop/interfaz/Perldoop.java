@@ -114,7 +114,7 @@ public final class Perldoop {
             }
             /*--------------------------------Escritura---------------------------------*/
             try {
-                writer.escribir(generador.getClase());
+                writer.escribir(generador.getClase(),gestorErrores);
             } catch (IOException ex) {
                 gestorErrores.error(Errores.ERROR_ESCRITURA);
             }

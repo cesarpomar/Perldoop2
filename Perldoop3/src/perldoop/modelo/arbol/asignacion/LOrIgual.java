@@ -12,78 +12,15 @@ import perldoop.modelo.arbol.expresion.Expresion;
  */
 public final class LOrIgual extends Asignacion {
 
-    private Expresion izquierda;
-    private Terminal lOrIgual;
-    private Expresion derecha;
-
     /**
      * Único contructor de la clase
      *
      * @param izquierda Izquierda
-     * @param lOrIgual LorIgual
+     * @param operador Operador
      * @param derecha Derecha
      */
-    public LOrIgual(Expresion izquierda, Terminal lOrIgual, Expresion derecha) {
-        setIzquierda(izquierda);
-        setlOrIgual(lOrIgual);
-        setDerecha(derecha);
-    }
-
-    /**
-     * Obtiene el Simbolo izquierdo
-     *
-     * @return Simbolo izquierdo
-     */
-    public Expresion getIzquierda() {
-        return izquierda;
-    }
-
-    /**
-     * Establece el simbolo izquierdo
-     *
-     * @param izquierda Simbolo izquierdo
-     */
-    public void setIzquierda(Expresion izquierda) {
-        izquierda.setPadre(this);
-        this.izquierda = izquierda;
-    }
-
-    /**
-     * Obtiene el lOrIgual
-     *
-     * @return LOrIgual
-     */
-    public Terminal getlOrIgual() {
-        return lOrIgual;
-    }
-
-    /**
-     * Establece el lOrIgual
-     *
-     * @param lOrIgual LOrIgual
-     */
-    public void setlOrIgual(Terminal lOrIgual) {
-        lOrIgual.setPadre(this);
-        this.lOrIgual = lOrIgual;
-    }
-
-    /**
-     * Establece el simbolo derecho
-     *
-     * @return Simbolo derecho
-     */
-    public Expresion getDerecha() {
-        return derecha;
-    }
-
-    /**
-     * Obtiene el simbolo derecho
-     *
-     * @param derecha Simbolo derecho
-     */
-    public void setDerecha(Expresion derecha) {
-        derecha.setPadre(this);
-        this.derecha = derecha;
+    public LOrIgual(Expresion izquierda, Terminal operador, Expresion derecha) {
+        super(izquierda, operador, derecha);
     }
 
     @Override
@@ -93,7 +30,7 @@ public final class LOrIgual extends Asignacion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{izquierda, lOrIgual, derecha};
+        return new Simbolo[]{izquierda, operador, derecha};
     }
 
 }

@@ -58,7 +58,7 @@ public class SemColeccion {
             }
         } else if ((multi = Buscar.getVarMultivar(s)) != null) {//Uso para inicializar en multiasignacion
             s.setTipo(multi.getTipo());
-        } else if (uso instanceof Funcion || uso instanceof Return) {//Uso argumentos funcion
+        } else if (exp instanceof Funcion || uso instanceof Return) {//Uso argumentos funcion
             s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
         } else if (uso instanceof Lista && uso.getPadre() instanceof Coleccion) {//Coleccion anidada
             Coleccion col = (Coleccion) uso.getPadre();
@@ -155,7 +155,7 @@ public class SemColeccion {
             }
             s.setTipo(null);
             tabla.getAcciones().saltarGenerador();
-        } else if (s.getLista().getElementos().size() == 1 && !(uso instanceof Funcion) && !(uso instanceof Return)) {
+        } else if (s.getLista().getElementos().size() == 1 && !(s.getPadre() instanceof Funcion) && !(uso instanceof Return)) {
             s.setTipo(new Tipo(s.getLista().getExpresiones().get(0).getTipo()));
         } else {
             tipar(s);

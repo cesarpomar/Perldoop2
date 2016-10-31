@@ -50,7 +50,11 @@ public final class PerlList<T> extends ArrayList<T> {
 
     @Override
     public T set(int index, T element) {
-        super.set(index, element);
+        if(index == size()){
+            super.add(element);
+        }else{
+            super.set(index, element);
+        }
         return element;
     }
 

@@ -4,6 +4,7 @@ import java.util.List;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColLlave;
@@ -81,30 +82,113 @@ public class GenAcceso {
                 codigo.append("new ").append(Tipos.declaracion(s.getTipo())).append("(");
             }
             codigo.append(expresion).append(comentarioRef);
-            //Ignorar referencia en acceso anidado
-            Tipo t = s.getExpresion().getTipo();
-            if (t.isRef()) {
-                t = t.getSubtipo(1);
-            }
-            if (t.isArray()) {
-                codigo.append("[").append(Casting.casting(coleccion, new Tipo(Tipo.INTEGER))).append("]");
-            } else if (t.isList()) {
-                if (escritura) {
-                    codigo.append(".set(").append(Casting.casting(coleccion, new Tipo(Tipo.INTEGER))).append(",");
-                } else {
-                    codigo.append(".get(").append(Casting.casting(coleccion, new Tipo(Tipo.INTEGER))).append(")");
-                }
-            } else if (escritura) {
-                codigo.append(".put(").append(Casting.casting(coleccion, new Tipo(Tipo.STRING))).append(",");
-            } else {
-                codigo.append(".get(").append(Casting.casting(coleccion, new Tipo(Tipo.STRING))).append(")");
-            }
+            genAcceso(s, coleccion, escritura, codigo);
             //hay que cerrar la referencia
             if (!escritura && !noRef && s.getTipo().isRef()) {
                 codigo.append(")");
             }
         }
         s.setCodigoGenerado(codigo);
+    }
+
+    /**
+     * Genera el acceso a una coleccion
+     *
+     * @param s Simbolo acceso
+     * @param index Posicion del acceso
+     * @param escritura Acceso como escritura
+     * @param codigo Codigo para generar el acceso
+     */
+    private static void genAcceso(Acceso s, Simbolo index, boolean escritura, StringBuilder codigo) {
+        //Ignorar referencia en acceso anidado
+        Tipo t = s.getExpresion().getTipo();
+        if (t.isRef()) {
+            t = t.getSubtipo(1);
+        }
+        if (t.isArray()) {
+            codigo.append("[").append(Casting.casting(index, new Tipo(Tipo.INTEGER))).append("]");
+        } else if (t.isList()) {
+            if (escritura) {
+                codigo.append(".set(").append(Casting.casting(index, new Tipo(Tipo.INTEGER))).append(",");
+            } else {
+                codigo.append(".get(").append(Casting.casting(index, new Tipo(Tipo.INTEGER))).append(")");
+            }
+        } else if (escritura) {
+            codigo.append(".put(").append(Casting.casting(index, new Tipo(Tipo.STRING))).append(",");
+        } else {
+            codigo.append(".get(").append(Casting.casting(index, new Tipo(Tipo.STRING))).append(")");
+        }
+    }
+
+    /**
+     * Replica un acceso para lectura y escritura
+     *
+     * @param exp Expresion acceso
+     * @param lectura Simbolo para la lectura
+     * @param escritura Simbolo para la escritura
+     * @param tabla Tabla generador
+     */
+    public static void getReplica(ExpAcceso exp, Simbolo lectura, Simbolo escritura, TablaGenerador tabla) {
+        Acceso acceso = exp.getAcceso();
+        Simbolo colL;
+        Simbolo colE;
+        String Refcomen;
+        if (acceso instanceof AccesoCol) {
+            Refcomen = "";
+            colE = colL = ((AccesoCol) acceso).getColeccion();
+        } else {
+            Refcomen = ((AccesoColRef) acceso).getFlecha().getComentario();
+            colE = colL = ((AccesoColRef) acceso).getColeccion();
+        }
+        if (!Buscar.isRepetible(colL)) {
+            //Declarar variable aux
+            String aux = tabla.getGestorReservas().getAux();
+            StringBuilder declaracion = Tipos.declaracion(colL.getTipo());
+            declaracion.append(" ").append(aux).append(";");
+            tabla.getDeclaraciones().add(declaracion);
+            //Subtituir codigo original
+            colL = new SimboloAux(colL.getTipo(), new StringBuilder(aux));
+            colE = new SimboloAux(colE.getTipo(), new StringBuilder(100).append(aux).append("=").append(colE));
+        }
+        if (!Buscar.isRepetible(acceso.getExpresion())) {
+            Tipo te = acceso.getExpresion().getTipo().getSubtipo(1);//Quitar el ref de acceso anidado
+            //Declarar variable aux
+            String aux = tabla.getGestorReservas().getAux();
+            StringBuilder declaracion = Tipos.declaracion(te);
+            declaracion.append(" ").append(aux).append(";");
+            tabla.getDeclaraciones().add(declaracion);
+            //Subtituir codigo original
+            lectura.setCodigoGenerado(new StringBuilder(aux));
+            escritura.setCodigoGenerado(new StringBuilder(100).append("(").append(aux).append("=").append(acceso.getExpresion()).append(")"));
+        } else {
+            lectura.setCodigoGenerado(new StringBuilder(100).append(acceso.getExpresion()));
+            escritura.setCodigoGenerado(new StringBuilder(100).append(acceso.getExpresion()));
+        }
+        genAcceso(acceso, colL, false, lectura.getCodigoGenerado());
+        genAcceso(acceso, colE, true, escritura.getCodigoGenerado());
+    }
+
+    /**
+     * Comprueba si el acceso va a ser duplicado
+     *
+     * @param s Simbolo
+     * @param tabla Tabla generador
+     * @return Simbolo adaptado
+     */
+    private static Simbolo checkReplica(Simbolo s, TablaGenerador tabla) {
+        if (Buscar.isRepetible(s.getPadre())) {
+            return s;
+        }
+        //Declarar variable aux
+        String aux = tabla.getGestorReservas().getAux();
+        StringBuilder declaracion = Tipos.declaracion(s.getTipo());
+        declaracion.append(" ").append(aux).append("=").append("null;");
+        tabla.getDeclaraciones().add(declaracion);
+        //Subtituir codigo original
+        StringBuilder codigo = new StringBuilder(100);
+        SimboloAux nuevo = new SimboloAux(s.getTipo(), codigo);
+        codigo.append(aux).append("==null?").append(aux).append("=").append(s).append(":").append(aux);
+        return nuevo;
     }
 
     /**

@@ -11,7 +11,7 @@ import perldoop.modelo.semantica.TablaSemantica;
 public class SemAsignacion {
 
     private TablaSemantica tabla;
-    private SemIgual semIgual; 
+    private SemIgual semIgual;
 
     /**
      * Contruye la semantica
@@ -21,59 +21,109 @@ public class SemAsignacion {
     public SemAsignacion(TablaSemantica tabla) {
         this.tabla = tabla;
     }
-    
-    public void visitar(Igual s) {
-       if(semIgual==null){
-           semIgual=new SemIgual(tabla);
-       } 
-       semIgual.visitar(s);
+
+    /**
+     * Obtiene la semantica de Igual
+     *
+     * @return Semantica Igual
+     */
+    private SemIgual getSemIgual() {
+        if (semIgual == null) {
+            semIgual = new SemIgual(tabla);
+        }
+        return semIgual;
     }
+
+    /**
+     * Comprueba que la asignacion puede realizarse
+     *
+     * @param a Asignacion
+     */
+    private void checkVar(Asignacion a) {
+        getSemIgual().checkAsignacion(a.getIzquierda(), a.getOperador(), a.getDerecha());
+    }
+
+    public void visitar(Igual s) {
+        getSemIgual().visitar(s);
+    }
+
     public void visitar(MasIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
     }
 
     public void visitar(MenosIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(MultiIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(DivIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(ModIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(PowIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(AndIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(OrIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(XorIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(DespDIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(DespIIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(LOrIgual s) {
-    }
-
-    public void visitar(LAndIgual s) {
-    }
-
-    public void visitar(XIgual s) {
-    }
-
-    public void visitar(ConcatIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
 
     public void visitar(DLOrIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
     }
+
+    public void visitar(LAndIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
+    }
+
+    public void visitar(XIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
+    }
+
+    public void visitar(ConcatIgual s) {
+        s.setTipo(s.getIzquierda().getTipo());
+        checkVar(s);
+    }
+
 }

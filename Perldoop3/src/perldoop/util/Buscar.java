@@ -6,6 +6,11 @@ import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.aritmetica.AritPostDecremento;
+import perldoop.modelo.arbol.aritmetica.AritPostIncremento;
+import perldoop.modelo.arbol.aritmetica.AritPreDecremento;
+import perldoop.modelo.arbol.aritmetica.AritPreIncremento;
+import perldoop.modelo.arbol.asignacion.Asignacion;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.cadena.Cadena;
 import perldoop.modelo.arbol.cadena.CadenaDoble;
@@ -316,16 +321,16 @@ public final class Buscar {
         lista.add(s);
         while (!lista.isEmpty()) {
             Simbolo actual = lista.remove(lista.size() - 1);
-            boolean add=false;
+            boolean add = false;
             for (Class clase : clases) {
                 if (clase.isInstance(actual)) {
                     resultado.add(actual);
-                    add=true;
+                    add = true;
                     break;
                 }
             }
-            if(!add){
-               lista.addAll(Arrays.asList(actual.getHijos()));  
+            if (!add) {
+                lista.addAll(Arrays.asList(actual.getHijos()));
             }
         }
         return resultado;
@@ -373,6 +378,39 @@ public final class Buscar {
             }
         }
         return null;
+    }
+
+    /**
+     * Comprueba si el codigo puede ser repetido
+     *
+     * @param s Simbolo
+     * @return Es el codigo repetible
+     */
+    public static boolean isRepetible(Simbolo s) {
+        List<Simbolo> lista = new ArrayList<>(100);
+        lista.add(s);
+        while (!lista.isEmpty()) {
+            Simbolo actual = lista.remove(lista.size() - 1);
+            if (actual instanceof Asignacion && !(actual instanceof Igual)) {
+                return false;
+            } else if (actual instanceof AritPreIncremento || actual instanceof AritPostIncremento) {
+                return false;
+            } else if (actual instanceof AritPreDecremento || actual instanceof AritPostDecremento) {
+                return false;
+            }
+            lista.addAll(Arrays.asList(actual.getHijos()));
+        }
+        return true;
+    }
+
+    /**
+     * Comrpeueba si la expresion es una variable o un acceso a un array
+     *
+     * @param exp Expresion
+     * @return Es una variable o un acceso a un array
+     */
+    public static boolean isArrayOrVar(Expresion exp) {
+        return exp instanceof ExpVariable || (exp instanceof ExpAcceso && ((ExpAcceso) exp).getAcceso().getExpresion().getTipo().isArray());
     }
 
 }

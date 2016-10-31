@@ -12,38 +12,16 @@ import perldoop.modelo.arbol.lista.Lista;
  */
 public final class VarMultiOur extends VarMulti {
 
-    private Terminal our;
-
     /**
      * Único contructor de la clase
      *
-     * @param our Our
+     * @param operador Operador
      * @param parentesisI Parentesis izquierdo
      * @param lista Lista
      * @param parentesisD Parentesis derecho
      */
-    public VarMultiOur(Terminal our,Terminal parentesisI, Lista lista, Terminal parentesisD) {
-        setOur(our);
-        setParentesisI(parentesisI);
-        setLista(lista);
-        setParentesisD(parentesisD);
-    }
-
-    /**
-     * Obtiene el our
-     * @return Our
-     */
-    public Terminal getOur() {
-        return our;
-    }
-
-    /**
-     * Establece el our
-     * @param our Our
-     */
-    public void setOur(Terminal our) {
-        our.setPadre(this);
-        this.our = our;
+    public VarMultiOur(Terminal operador, Terminal parentesisI, Lista lista, Terminal parentesisD) {
+        super(operador, parentesisI, lista, parentesisD);
     }
 
     @Override
@@ -53,6 +31,6 @@ public final class VarMultiOur extends VarMulti {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{parentesisI, lista, parentesisD};
+        return new Simbolo[]{operador, parentesisI, lista, parentesisD};
     }
 }

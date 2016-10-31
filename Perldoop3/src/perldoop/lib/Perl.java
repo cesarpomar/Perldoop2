@@ -13,7 +13,7 @@ public final class Perl {
      * @param args Argumentos
      * @return Retorna 1 si tiene exito
      */
-    public int print(Object... args) {
+    public static int print(Object... args) {
         for (Object arg : args) {
             System.out.print(arg);
         }
@@ -27,7 +27,7 @@ public final class Perl {
      * @param args Argumentos
      * @return Retorna 1 si tiene exito
      */
-    public int print(PerlFile f, Object... args) {
+    public static int print(PerlFile f, Object... args) {
         if(f==null){
             return 0;
         }

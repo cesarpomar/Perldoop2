@@ -3,17 +3,19 @@ package perldoop.generacion.variable;
 import java.util.List;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.bloque.BloqueFor;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
+import perldoop.modelo.arbol.expresion.ExpVarMulti;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.arbol.varmulti.VarMulti;
+import perldoop.modelo.arbol.varmulti.VarMultiOur;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.util.Buscar;
@@ -37,8 +39,13 @@ public final class GenVariable {
     }
 
     public void visitar(VarExistente s) {
-        EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), Buscar.getContexto(s));
-        s.setCodigoGenerado(new StringBuilder(e.getAlias()).append(s.getVar().getComentario()));
+        Simbolo uso = Buscar.getPadre(s, 2);
+        if (uso instanceof VarMulti) {
+            declararVar(s, "", uso instanceof VarMultiOur);
+        } else {
+            EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), Buscar.getContexto(s));
+            s.setCodigoGenerado(new StringBuilder(e.getAlias()).append(s.getVar().getComentario()));
+        }
     }
 
     public void visitar(VarPaquete s) {
@@ -78,36 +85,37 @@ public final class GenVariable {
     }
 
     public void visitar(VarMy s) {
-        declararVar(s, s.getMy(), false);
+        declararVar(s, s.getMy().getComentario(), false);
     }
 
     public void visitar(VarOur s) {
-        declararVar(s, s.getOur(), true);
+        declararVar(s, s.getOur().getComentario(), true);
     }
 
     /**
      * Obtiene el paquete
+     *
      * @param p Paquetes
      * @return Nombre paquete
      */
-    private String getPaquete(Paquetes p){
+    private String getPaquete(Paquetes p) {
         return tabla.getTablaSimbolos().getImports().get(p.getClaseJava()).getAlias();
     }
-    
+
     /**
      * Declara una variable
      *
      * @param v Variable
-     * @param dec Terminal de declaracion
+     * @param cdec Comentario terminal de declaracion
      * @param publica Acceso publico
      */
-    private void declararVar(Variable v, Terminal dec, boolean publica) {
+    private void declararVar(Variable v, String cdec, boolean publica) {
         //Crear alias
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(v.getVar().toString(), Buscar.getContexto(v));
         e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(), e.isConflicto()));
         //Declarar
         StringBuilder declaracion = Tipos.declaracion(v.getTipo());
-        declaracion.append(dec.getComentario()).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
+        declaracion.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
         if (publica || tabla.getTablaSimbolos().getBloques() == 1) {
             if (publica) {
                 declaracion.insert(0, "public static ");
@@ -121,7 +129,8 @@ public final class GenVariable {
                 StringBuilder inicializacion = new StringBuilder(100);
                 inicializacion.append(e.getAlias()).append('=').append(Tipos.valoreDefecto(v.getTipo()));
                 v.setCodigoGenerado(inicializacion);
-                if (!(Buscar.getPadre(v, 2) instanceof StcLista)) {
+                Simbolo uso = Buscar.getPadre(v, 2);
+                if (!(uso instanceof StcLista) && !(uso instanceof VarMulti)) {
                     inicializacion.insert(0, '(').append(')');//Asegurar que permaneceran juntos
                 }
             } else {
@@ -166,6 +175,9 @@ public final class GenVariable {
         List<Simbolo> lista = Buscar.getCamino(v, Expresion.class, Igual.class);
         if (lista.isEmpty()) {
             lista = Buscar.getCamino(v, Expresion.class, Lista.class, ColParentesis.class, ExpColeccion.class, Igual.class);
+        }
+        if(lista.isEmpty()){
+            lista = Buscar.getCamino(v, Expresion.class, Lista.class, VarMulti.class, ExpVarMulti.class, Igual.class);
         }
         int last = lista.size() - 1;
         return last > 0 && ((Igual) lista.get(last)).getIzquierda().equals(lista.get(last - 1));

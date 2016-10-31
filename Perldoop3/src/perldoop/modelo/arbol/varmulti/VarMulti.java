@@ -11,10 +11,45 @@ import perldoop.modelo.arbol.lista.Lista;
  */
 public abstract class VarMulti extends Simbolo {
 
+    protected Terminal operador;
     protected Terminal parentesisI;
     protected Lista lista;
     protected Terminal parentesisD;
-    
+
+    /**
+     * Único contructor de la clase
+     *
+     * @param operador Operador
+     * @param parentesisI Parentesis izquierdo
+     * @param lista Lista
+     * @param parentesisD Parentesis derecho
+     */
+    public VarMulti(Terminal operador, Terminal parentesisI, Lista lista, Terminal parentesisD) {
+        setOperador(operador);
+        setParentesisI(parentesisI);
+        setLista(lista);
+        setParentesisD(parentesisD);
+    }
+
+    /**
+     * Obtiene el operador
+     *
+     * @return Operador
+     */
+    public final Terminal getOperador() {
+        return operador;
+    }
+
+    /**
+     * Establece el operador
+     *
+     * @param operador Operador
+     */
+    public final void setOperador(Terminal operador) {
+        operador.setPadre(this);
+        this.operador = operador;
+    }
+
     /**
      * Obtiene el parentesis izquierdo
      *

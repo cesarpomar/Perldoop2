@@ -12,78 +12,15 @@ import perldoop.modelo.arbol.expresion.Expresion;
  */
 public final class AndIgual extends Asignacion {
 
-    private Expresion izquierda;
-    private Terminal andIgual;
-    private Expresion derecha;
-
     /**
      * Único contructor de la clase
      *
      * @param izquierda Izquierda
-     * @param andIgual AndIgual
+     * @param operador Operador
      * @param derecha Derecha
      */
-    public AndIgual(Expresion izquierda, Terminal andIgual, Expresion derecha) {
-        setIzquierda(izquierda);
-        setAndIgual(andIgual);
-        setDerecha(derecha);
-    }
-
-    /**
-     * Obtiene el Simbolo izquierdo
-     *
-     * @return Simbolo izquierdo
-     */
-    public Expresion getIzquierda() {
-        return izquierda;
-    }
-
-    /**
-     * Establece el simbolo izquierdo
-     *
-     * @param izquierda Simbolo izquierdo
-     */
-    public void setIzquierda(Expresion izquierda) {
-        izquierda.setPadre(this);
-        this.izquierda = izquierda;
-    }
-
-    /**
-     * Obtiene el andIgual
-     *
-     * @return AndIgual
-     */
-    public Terminal getAndIgual() {
-        return andIgual;
-    }
-
-    /**
-     * Establece el andIgual
-     *
-     * @param andIgual AndIgual
-     */
-    public void setAndIgual(Terminal andIgual) {
-        andIgual.setPadre(this);
-        this.andIgual = andIgual;
-    }
-
-    /**
-     * Establece el simbolo derecho
-     *
-     * @return Simbolo derecho
-     */
-    public Expresion getDerecha() {
-        return derecha;
-    }
-
-    /**
-     * Obtiene el simbolo derecho
-     *
-     * @param derecha Simbolo derecho
-     */
-    public void setDerecha(Expresion derecha) {
-        derecha.setPadre(this);
-        this.derecha = derecha;
+    public AndIgual(Expresion izquierda, Terminal operador, Expresion derecha) {
+        super(izquierda, operador, derecha);
     }
 
     @Override
@@ -93,7 +30,7 @@ public final class AndIgual extends Asignacion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{izquierda, andIgual, derecha};
+        return new Simbolo[]{izquierda, operador, derecha};
     }
 
 }

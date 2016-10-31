@@ -61,7 +61,7 @@ public class SemIgual {
      * @param s Simbolo de asignacion
      */
     private void simple(Igual s) {
-        checkAsignacion(s.getIzquierda(), s.getIgual(), s.getDerecha());
+        checkAsignacion(s.getIzquierda(), s.getOperador(), s.getDerecha());
         s.setTipo(new Tipo(s.getIzquierda().getTipo()));
     }
 
@@ -75,7 +75,7 @@ public class SemIgual {
         if (s.getDerecha() instanceof ExpColeccion) {
             List<Expresion> valores = ((ColParentesis) ((ExpColeccion) s.getDerecha()).getColeccion()).getLista().getExpresiones();
             for (int i = 0; i < variables.size() && i < valores.size(); i++) {
-                checkAsignacion(variables.get(i), s.getIgual(), valores.get(i));
+                checkAsignacion(variables.get(i), s.getOperador(), valores.get(i));
             }
         } else {
             Tipo t = s.getDerecha().getTipo();
@@ -87,7 +87,7 @@ public class SemIgual {
                 throw new ExcepcionSemantica(Errores.IGUAL_COLECION_REQUERIDA);
             }
             for (Expresion var : variables) {
-                checkAsignacion(var, s.getIgual(), coleccion);
+                checkAsignacion(var, s.getOperador(), coleccion);
             }
         }
         s.setTipo(new Tipo(Tipo.INTEGER));
@@ -99,12 +99,12 @@ public class SemIgual {
      * @param s Simbolo de asignacion
      */
     private void inicializacion(Igual s) {
-        checkAsignacion(s.getIzquierda(), s.getIgual(), s.getDerecha());
+        checkAsignacion(s.getIzquierda(), s.getOperador(), s.getDerecha());
         Tipo t = s.getIzquierda().getTipo();
         int accesos = Buscar.accesos(s.getIzquierda());
         s.setTipo(new Tipo(t));
         List<Token> sizes = null;
-        Etiquetas etiquetas = s.getIgual().getEtiquetas();
+        Etiquetas etiquetas = s.getOperador().getEtiquetas();
         //Obtenemos las etiquetas de tamaño
         if (etiquetas == null) {
             sizes = new ArrayList<>();
@@ -159,7 +159,7 @@ public class SemIgual {
      * @param operador Operador
      * @param der Expresion derecha
      */
-    private void checkAsignacion(Simbolo izq, Terminal operador, Simbolo der) {
+    void checkAsignacion(Simbolo izq, Terminal operador, Simbolo der) {
         if (!Buscar.isVariable(izq)) {
             tabla.getGestorErrores().error(Errores.MODIFICAR_CONSTANTE, Buscar.tokenInicio(izq), operador.getValor());
             throw new ExcepcionSemantica(Errores.MODIFICAR_CONSTANTE);

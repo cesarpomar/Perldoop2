@@ -13,6 +13,7 @@ import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
+import perldoop.modelo.arbol.expresion.ExpVarMulti;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.sentencia.StcLista;
@@ -67,7 +68,7 @@ public class GenIgual {
      * @param s Simbolo de asignacion
      */
     private void simple(Igual s) {
-        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(),s.getDerecha()));
+        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getOperador().getComentario(), s.getDerecha()));
     }
 
     /**
@@ -81,7 +82,7 @@ public class GenIgual {
         //Si la derecha es una coleccion y a la derecha hay un conjunto de expresiones o solo una entre parentesis
         if (s.getDerecha() instanceof ExpColeccion && (s.getDerecha().getTipo() == null || !s.getDerecha().getTipo().isColeccion())) {
             List<Simbolo> valores = (List) ((ColParentesis) ((ExpColeccion) s.getDerecha()).getColeccion()).getLista().getExpresiones();
-            checkInicializacion(variables, valores);
+            checkInicializacion(s, variables, valores);
             atomicidad(asignaciones, variables, valores);
             for (int i = 0; i < variables.size() && i < valores.size(); i++) {
                 Simbolo valor = valores.get(i);
@@ -127,7 +128,7 @@ public class GenIgual {
      */
     private void inicializacion(Igual s) {
         List<Token> sizes = null;
-        Etiquetas etiquetas = s.getIgual().getEtiquetas();
+        Etiquetas etiquetas = s.getOperador().getEtiquetas();
         int accesos = Buscar.accesos(s.getIzquierda());
         //Obtenemos las etiquetas de tamaño
         if (etiquetas == null) {
@@ -174,7 +175,7 @@ public class GenIgual {
         //Generamos un simbolo y lo asignamos
         Simbolo aux = new SimboloAux(new Tipo(s.getIzquierda().getTipo()), ini);
         aux.setPadre(s);
-        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getIgual().getComentario(), aux));
+        s.setCodigoGenerado(asignacion(s.getIzquierda(), s.getOperador().getComentario(), aux));
     }
 
     /**
@@ -187,12 +188,12 @@ public class GenIgual {
      */
     public static StringBuilder asignacion(Simbolo izq, String igual, Simbolo der) {
         StringBuilder codigo = null;
-        Simbolo derAux = Casting.colToScalar(der,izq);
+        Simbolo derAux = Casting.colToScalar(der, izq);
         //si la derecha es un box y la izquierda una referencia, hacemos un pre casting
-        if(izq.getTipo().isRef() && der.getTipo().isBox()){
+        if (izq.getTipo().isRef() && der.getTipo().isBox()) {
             derAux.setCodigoGenerado(Casting.casting(derAux, izq.getTipo()));
             derAux.setTipo(izq.getTipo());
-        }  
+        }
         //Si la izquierda es un acceso y la rerecha una referencia real, se hace el get
         if (derAux.getTipo().isRef() && izq instanceof ExpAcceso && !(der instanceof ExpAcceso || der instanceof SimboloAux)) {
             derAux.getCodigoGenerado().append(".get()");
@@ -263,24 +264,32 @@ public class GenIgual {
     /**
      * Asegura que no se colaran variables sin inicializar cuando hay mas variables que valores
      *
+     * @param s Igual
      * @param variables Variables
      * @param valores Valores
      */
-    public void checkInicializacion(List<Expresion> variables, List<Simbolo> valores) {
+    private void checkInicializacion(Igual s, List<Expresion> variables, List<Simbolo> valores) {
         if (variables.size() > valores.size()) {
-            for (int i = 0; i < variables.size(); i++) {
-                Expresion exp = variables.get(i);
-                if (exp instanceof ExpVariable) {
-                    Variable var = ((ExpVariable) exp).getVariable();
-                    if (var instanceof VarMy || var instanceof VarOur) {
-                        valores.add(new SimboloAux(exp.getTipo(), new StringBuilder(Tipos.valoreDefecto(exp.getTipo()))));
-                    } else {
-                        //Si ya esta asignada y no tiene valor la ignoramos
-                        variables.remove(i);
-                        i--;
-                    }
+            if (s.getIzquierda() instanceof ExpVarMulti) {
+                for (int i = valores.size() - 1; i < variables.size(); i++) {
+                    Expresion exp = variables.get(i);
+                    valores.add(new SimboloAux(exp.getTipo(), new StringBuilder(Tipos.valoreDefecto(exp.getTipo()))));
                 }
+            } else {
+                for (int i = 0; i < variables.size(); i++) {
+                    Expresion exp = variables.get(i);
+                    if (exp instanceof ExpVariable) {
+                        Variable var = ((ExpVariable) exp).getVariable();
+                        if (var instanceof VarMy || var instanceof VarOur) {
+                            valores.add(new SimboloAux(exp.getTipo(), new StringBuilder(Tipos.valoreDefecto(exp.getTipo()))));
+                        } else {
+                            //Si ya esta asignada y no tiene valor la ignoramos
+                            variables.remove(i);
+                            i--;
+                        }
+                    }
 
+                }
             }
         }
     }
@@ -292,7 +301,7 @@ public class GenIgual {
      * @param variables Variables
      * @param valores Valores
      */
-    public void atomicidad(List<StringBuilder> asignaciones, List<Expresion> variables, List<Simbolo> valores) {
+    private void atomicidad(List<StringBuilder> asignaciones, List<Expresion> variables, List<Simbolo> valores) {
         HashSet<String> escrituras = new HashSet<>(variables.size());
         List<Integer> noAtomica = new ArrayList<>(variables.size());
         for (Expresion exp : variables) {

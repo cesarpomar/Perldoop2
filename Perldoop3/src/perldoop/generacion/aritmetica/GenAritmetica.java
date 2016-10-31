@@ -1,7 +1,11 @@
 package perldoop.generacion.aritmetica;
 
+import perldoop.generacion.acceso.GenAcceso;
+import perldoop.generacion.asignacion.GenIgual;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
+import perldoop.modelo.arbol.SimboloAux;
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.aritmetica.AritConcat;
 import perldoop.modelo.arbol.aritmetica.AritDiv;
 import perldoop.modelo.arbol.aritmetica.AritMod;
@@ -17,10 +21,14 @@ import perldoop.modelo.arbol.aritmetica.AritPreIncremento;
 import perldoop.modelo.arbol.aritmetica.AritResta;
 import perldoop.modelo.arbol.aritmetica.AritSuma;
 import perldoop.modelo.arbol.aritmetica.AritX;
+import perldoop.modelo.arbol.aritmetica.Aritmetica;
+import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
+import perldoop.util.Buscar;
 
 /**
  * Clase generadora de aritmetica
@@ -161,48 +169,91 @@ public class GenAritmetica {
         s.setCodigoGenerado(codigo);
     }
 
-    public void visitar(AritPreIncremento s) {
+    /**
+     * Genera una operacion de preIncremento o preDecremento de una variable
+     *
+     * @param s Simbolo aritmetico
+     * @param expresion Expresion
+     * @return Codigo generador
+     */
+    private StringBuilder genPre(Aritmetica s, Expresion expresion) {
         StringBuilder codigo = new StringBuilder(100);
+        boolean opt = tabla.getOpciones().isOptNulos();
+        boolean arrayVar = Buscar.isArrayOrVar(expresion);
         Tipo t = s.getTipo();
-        if ((t.isInteger() || t.isInteger()) && s.getExpresion() instanceof ExpVariable) {
-            codigo.append("++").append(s.getExpresion());
+        if ((t.isInteger() || t.isInteger()) && opt && arrayVar && Buscar.isRepetible(expresion)) {
+            codigo.append(s.getOperador()).append(expresion);
         } else {
-            throw new UnsupportedOperationException("Not supported yet.");
+            SimboloAux lectura;
+            SimboloAux escritura;
+            Tipo tn=s.getTipo().isNumberType()?s.getTipo():new Tipo(Tipo.DOUBLE);
+            if (expresion instanceof ExpVariable) {
+                lectura = new SimboloAux(expresion);
+                escritura = new SimboloAux(expresion);
+            } else {
+                lectura = new SimboloAux(t);
+                escritura = new SimboloAux(t);
+                GenAcceso.getReplica((ExpAcceso) expresion, lectura, escritura, tabla);
+            }
+            lectura.setCodigoGenerado(Casting.casting(lectura, tn));
+            if (!opt) {
+                lectura.setCodigoGenerado(Casting.checkNull(lectura, !opt));
+            }
+            lectura.setTipo(tn);
+            lectura.getCodigoGenerado().append(s.getOperador().getValor().charAt(0)).append(s.getOperador().getComentario()).append("1");
+            lectura.setCodigoGenerado(Casting.casting(lectura, t));
+            if (arrayVar) {
+                codigo.append(escritura).append("=").append(lectura);
+            } else {
+                codigo.append(escritura).append(lectura).append(")");
+            }
         }
-        s.setCodigoGenerado(codigo);
+        return codigo;
+    }
+
+    /**
+     * Genera una operacion de preIncremento o preDecremento de una variable
+     *
+     * @param s Simbolo aritmetico
+     * @param expresion Expresion
+     * @return Codigo generador
+     */
+    private StringBuilder genPos(Aritmetica s, Expresion expresion) {
+        StringBuilder codigo;
+        boolean opt = tabla.getOpciones().isOptNulos();
+        boolean arrayVar = Buscar.isArrayOrVar(expresion);
+        Tipo t = s.getTipo();
+        if ((t.isInteger() || t.isInteger()) && opt && arrayVar && Buscar.isRepetible(expresion)) {
+            codigo = new StringBuilder(100);
+            codigo.append(expresion).append(s.getOperador());
+        } else {
+            String op = s.getOperador().getValor().equals("++") ? "-" : "+";
+            codigo = genPre(s, expresion);
+            if (Buscar.getPadre(s, 2) instanceof StcLista) {
+                return codigo;
+            }
+            Tipo tn=s.getTipo().isNumberType()?s.getTipo():new Tipo(Tipo.DOUBLE);
+            SimboloAux aux = new SimboloAux(expresion.getTipo(),codigo);
+            aux.setCodigoGenerado(Casting.casting(aux, tn).append(op).append("1"));
+            aux.setCodigoGenerado(Casting.casting(aux, expresion.getTipo()));
+        }
+        return codigo;
+    }
+
+    public void visitar(AritPreIncremento s) {
+        s.setCodigoGenerado(genPre(s, s.getExpresion()));
     }
 
     public void visitar(AritPreDecremento s) {
-        StringBuilder codigo = new StringBuilder(100);
-        Tipo t = s.getTipo();
-        if ((t.isInteger() || t.isInteger()) && s.getExpresion() instanceof ExpVariable) {
-            codigo.append("--").append(s.getExpresion());
-        } else {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-        s.setCodigoGenerado(codigo);
+        s.setCodigoGenerado(genPre(s, s.getExpresion()));
     }
 
     public void visitar(AritPostIncremento s) {
-        StringBuilder codigo = new StringBuilder(100);
-        Tipo t = s.getTipo();
-        if ((t.isInteger() || t.isInteger()) && s.getExpresion() instanceof ExpVariable) {
-            codigo.append(s.getExpresion()).append("++");
-        } else {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-        s.setCodigoGenerado(codigo);
+        s.setCodigoGenerado(genPos(s, s.getExpresion()));
     }
 
     public void visitar(AritPostDecremento s) {
-        StringBuilder codigo = new StringBuilder(100);
-        Tipo t = s.getTipo();
-        if ((t.isInteger() || t.isInteger()) && s.getExpresion() instanceof ExpVariable) {
-            codigo.append(s.getExpresion()).append("--");
-        } else {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-        s.setCodigoGenerado(codigo);
+        s.setCodigoGenerado(genPos(s, s.getExpresion()));
     }
 
 }

@@ -43,9 +43,10 @@ public final class CodeWriter {
      * Escribe la clase java en el directorio
      *
      * @param java Clase java
+     * @param ge Gestor de errores
      * @throws IOException Error de escritura
      */
-    public void escribir(ClaseJava java) throws IOException {
+    public void escribir(ClaseJava java, GestorErrores ge) throws IOException {
         StringBuilder repr = new StringBuilder(10000);
         //Paquete
         if (!java.getPaquetes().isEmpty()) {
@@ -82,7 +83,7 @@ public final class CodeWriter {
                 escribir(new Formatter().formatSource(repr.toString()), java.getNombre(), java.getPaquetes());
                 return;
             } catch (FormatterException ex) {
-                new GestorErrores(new File(directorio, java.getNombre()).getPath(), opciones).error(Errores.ERROR_FORMATEO);
+                ge.error(Errores.ERROR_FORMATEO);
             }
         }
         escribir(repr.toString(), java.getNombre(), java.getPaquetes());
