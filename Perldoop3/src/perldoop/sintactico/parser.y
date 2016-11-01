@@ -18,7 +18,6 @@ import perldoop.modelo.arbol.asignacion.*;
 import perldoop.modelo.arbol.numero.*;
 import perldoop.modelo.arbol.cadena.*;
 import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.acceso.*;
@@ -119,7 +118,6 @@ modulos		:	USE paqueteID ID ';'					{$$=set(new ModuloUse(s($1),Paquetes.addId(s
 expresion	:	numero									{$$=set(new ExpNumero(s($1)));} 
 			|	cadena									{$$=set(new ExpCadena(s($1)));} 
 			|	variable								{$$=set(new ExpVariable(s($1)));} 
-			|	varMulti								{$$=set(new ExpVarMulti(s($1)));}
 			|	asignacion								{$$=set(new ExpAsignacion(s($1)));}  
 			|	binario									{$$=set(new ExpBinario(s($1)));} 
 			|	aritmetica								{$$=set(new ExpAritmetica(s($1)));} 
@@ -202,9 +200,6 @@ variable	:	'$' VAR									{$$=set(new VarExistente(s($1),s($2)));}
 			|	OUR '$' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
 			|	OUR '@' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
 			|	OUR '%' VAR								{$$=set(new VarOur(s($1),s($2),s($3)));} 
-			
-varMulti	:	MY '(' lista ')'						{$$=set(new VarMultiMy(s($1),s($2),s($3),s($4)));}
-			|	OUR '(' lista ')'						{$$=set(new VarMultiOur(s($1),s($2),s($3),s($4)));}
 
 paqueteVar	:	paqueteVar VAR AMBITO					{$$=set(Paquetes.add(s($1),s($2),s($3)));} 
 			|	VAR AMBITO								{$$=set(new Paquetes(s($1),s($2)));} 
@@ -220,8 +215,12 @@ colRef		:	'[' lista ']'							{$$=set(new ColCorchete(s($1),s($2),s($3)));}
 			|	'{' lista '}'							{$$=set(new ColLlave(s($1),s($2),s($3)));}
 			|	'{' '}'									{$$=set(new ColLlave(s($1),add(new Lista()),s($2)));}
 			
+colDec		:	MY '(' lista ')'						{$$=set(new ColDecMy(s($1),s($2),s($3),s($4)));}
+			|	OUR '(' lista ')'						{$$=set(new ColDecOur(s($1),s($2),s($3),s($4)));}
+			
 coleccion	:	colParen								{$$=$1;}
 			|	colRef									{$$=$1;}
+			|	colDec									{$$=$1;}
 			
 acceso		:	expresion colRef						{$$=set(new AccesoCol(s($1),s($2)));}
 			|	expresion FLECHA colRef					{$$=set(new AccesoColRef(s($1),s($2),s($3)));}

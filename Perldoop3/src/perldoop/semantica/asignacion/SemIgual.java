@@ -90,7 +90,7 @@ public class SemIgual {
                 checkAsignacion(var, s.getOperador(), coleccion);
             }
         }
-        s.setTipo(new Tipo(Tipo.INTEGER));
+        s.setTipo(new Tipo(Tipo.ARRAY,Tipo.BOX));
     }
 
     /**

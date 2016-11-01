@@ -6,10 +6,10 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
+import perldoop.modelo.arbol.coleccion.ColDec;
+import perldoop.modelo.arbol.coleccion.ColDecOur;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.arbol.varmulti.VarMulti;
-import perldoop.modelo.arbol.varmulti.VarMultiOur;
 import perldoop.modelo.preprocesador.EtiquetasTipo;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Paquete;
@@ -38,8 +38,8 @@ public class SemVariable {
 
     public void visitar(VarExistente s) {
         Simbolo uso = Buscar.getPadre(s, 2);
-        if (uso instanceof VarMulti) {
-            declaracion(s, (EtiquetasTipo) ((VarMulti) uso).getOperador().getEtiquetas(), uso instanceof VarMultiOur);
+        if (uso instanceof ColDec) {
+            declaracion(s, (EtiquetasTipo) ((ColDec) uso).getOperador().getEtiquetas(), uso instanceof ColDecOur);
         } else {
             setTipo(null, s);
         }

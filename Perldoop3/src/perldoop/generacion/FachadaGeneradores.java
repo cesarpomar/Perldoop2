@@ -32,7 +32,6 @@ import perldoop.generacion.regulares.*;
 import perldoop.generacion.sentencia.*;
 import perldoop.generacion.terminal.*;
 import perldoop.generacion.variable.*;
-import perldoop.generacion.varmulti.*;
 import perldoop.modelo.generacion.TablaGenerador;
 
 /**
@@ -76,7 +75,6 @@ public final class FachadaGeneradores {
     private GenCadenaTexto genCadenaTexto;
     private GenSentencia genSentencia;
     private GenVariable genVariable;
-    private GenVarMulti genVarMulti;
     private GenTerminal genTerminal;
 
     /**
@@ -737,27 +735,6 @@ public final class FachadaGeneradores {
      */
     public void setGenVariable(GenVariable genVariable) {
         this.genVariable = genVariable;
-    }
-
-    /**
-     * Obtiene el generador de variables multiples
-     *
-     * @return Generador de variables multiples
-     */
-    public GenVarMulti getGenVarMulti() {
-        if (genVarMulti == null) {
-            genVarMulti = new GenVarMulti(tabla);
-        }
-        return genVarMulti;
-    }
-
-    /**
-     * Establece el generador de variables multiples
-     *
-     * @param genVarMulti Generador de variables multiples
-     */
-    public void setGenVarMulti(GenVarMulti genVarMulti) {
-        this.genVarMulti = genVarMulti;
     }
 
     /**

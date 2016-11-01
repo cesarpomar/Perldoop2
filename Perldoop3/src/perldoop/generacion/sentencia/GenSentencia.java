@@ -9,6 +9,7 @@ import perldoop.modelo.arbol.aritmetica.AritPostIncremento;
 import perldoop.modelo.arbol.aritmetica.AritPreDecremento;
 import perldoop.modelo.arbol.aritmetica.AritPreIncremento;
 import perldoop.modelo.arbol.asignacion.Asignacion;
+import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lectura.Lectura;
@@ -120,14 +121,14 @@ public class GenSentencia {
                 //Ignoramos numero
             } else if (exp instanceof ExpCadena) {
                 //Ignoramos cadena
-            } else if (exp instanceof ExpVariable || exp instanceof ExpVarMulti || exp instanceof ExpAsignacion) {
+            } else if (exp instanceof ExpVariable || exp instanceof ExpAsignacion
+                    || (exp instanceof ExpColeccion && ((ExpColeccion) exp).getColeccion() instanceof ColDec)) {
                 codigo.append(exp).append(";");
             } else if (exp instanceof ExpBinario || exp instanceof ExpAritmetica || exp instanceof ExpLogico
                     || exp instanceof ExpComparacion || exp instanceof ExpColeccion || exp instanceof ExpAcceso) {
-                List<Simbolo> sentencias = Buscar.buscarClases(exp, VarMy.class, VarOur.class, Funcion.class
-                        ,Asignacion.class, AritPreIncremento.class,AritPreDecremento.class, AritPostIncremento.class,
-                        AritPostDecremento.class,Lectura.class);
-                for(Simbolo sentencia: sentencias){
+                List<Simbolo> sentencias = Buscar.buscarClases(exp, VarMy.class, VarOur.class, Funcion.class, Asignacion.class, AritPreIncremento.class, AritPreDecremento.class, AritPostIncremento.class,
+                        AritPostDecremento.class, Lectura.class);
+                for (Simbolo sentencia : sentencias) {
                     codigo.append("Pd.eval(").append(sentencia).append(");");
                 }
             } else if (exp instanceof ExpFuncion || exp instanceof ExpFuncion5) {
@@ -137,8 +138,8 @@ public class GenSentencia {
             } else if (exp instanceof ExpStd) {
                 //Ignoramos std
             } else if (exp instanceof ExpRegulares) {
-                Regulares r=((ExpRegulares) exp).getRegulares();
-                if(r instanceof RegularSubs || r instanceof RegularTrans){
+                Regulares r = ((ExpRegulares) exp).getRegulares();
+                if (r instanceof RegularSubs || r instanceof RegularTrans) {
                     codigo.append(exp);
                 }
             } else if (exp instanceof ExpRango) {

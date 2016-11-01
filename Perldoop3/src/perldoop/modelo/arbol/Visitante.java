@@ -30,7 +30,6 @@ import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.std.*;
 import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.arbol.varmulti.*;
 
 /**
  * Interfaz para el patron Visitor
@@ -84,8 +83,6 @@ public interface Visitante {
     void visitar(ExpCadena s);
 
     void visitar(ExpVariable s);
-
-    void visitar(ExpVarMulti s);
 
     void visitar(ExpAsignacion s);
 
@@ -206,16 +203,15 @@ public interface Visitante {
 
     void visitar(VarOur s);
 
-    //VarMulti
-    void visitar(VarMultiMy s);
-
-    void visitar(VarMultiOur s);
-
     //Paquete
     void visitar(Paquetes s);
 
     //Colección
     void visitar(ColParentesis s);
+
+    void visitar(ColDecMy s);
+
+    void visitar(ColDecOur s);
 
     void visitar(ColCorchete s);
 

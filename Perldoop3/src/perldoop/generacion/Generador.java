@@ -33,7 +33,6 @@ import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.generacion.ClaseJava;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.TablaSimbolos;
@@ -265,11 +264,6 @@ public class Generador implements Visitante {
 
     @Override
     public void visitar(ExpRegulares s) {
-        fachada.getGenExpresion().visitar(s);
-    }
-
-    @Override
-    public void visitar(ExpVarMulti s) {
         fachada.getGenExpresion().visitar(s);
     }
 
@@ -509,16 +503,6 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(VarMultiMy s) {
-        fachada.getGenVarMulti().visitar(s);
-    }
-
-    @Override
-    public void visitar(VarMultiOur s) {
-        fachada.getGenVarMulti().visitar(s);
-    }
-
-    @Override
     public void visitar(Paquetes s) {
         fachada.getGenPaquetes().visitar(s);
     }
@@ -526,7 +510,16 @@ public class Generador implements Visitante {
     @Override
     public void visitar(ColParentesis s) {
         fachada.getGenColeccion().visitar(s);
+    }
 
+    @Override
+    public void visitar(ColDecMy s) {
+        fachada.getGenColeccion().visitar(s);
+    }
+
+    @Override
+    public void visitar(ColDecOur s) {
+        fachada.getGenColeccion().visitar(s);
     }
 
     @Override

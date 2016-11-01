@@ -97,10 +97,6 @@ public class GenExpresion {
         s.setCodigoGenerado(checkSentencia(s.getStd()));
     }
 
-    public void visitar(ExpVarMulti s) {
-        s.setCodigoGenerado(checkSentencia(s.getVariables()));
-    }
-
     public void visitar(ExpRango s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

@@ -81,10 +81,6 @@ public class SemExpresion {
         s.setTipo(s.getRegulares().getTipo());
     }
     
-    public void visitar(ExpVarMulti s) {
-        s.setTipo(s.getVariables().getTipo());
-    }
-    
     public void visitar(ExpRango s) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

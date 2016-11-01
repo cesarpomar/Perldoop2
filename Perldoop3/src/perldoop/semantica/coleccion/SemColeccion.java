@@ -11,10 +11,13 @@ import perldoop.modelo.arbol.acceso.AccesoRefEscalar;
 import perldoop.modelo.arbol.acceso.AccesoRefMap;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.*;
+import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.flujo.Return;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
+import perldoop.modelo.arbol.variable.VarMy;
+import perldoop.modelo.arbol.variable.VarOur;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.semantica.util.Tipos;
@@ -147,6 +150,25 @@ public class SemColeccion {
         }
     }
 
+    /**
+     * Comprueba que en la lista solo haya variables y ninguna este acompañada de my o our
+     *
+     * @param s Simbolo s
+     */
+    private void checkVariablesDec(ColDec s) {
+        for (Expresion exp : s.getLista().getExpresiones()) {
+            if (exp instanceof ExpVariable) {
+                if (((ExpVariable) exp).getVariable() instanceof VarMy || ((ExpVariable) exp).getVariable() instanceof VarOur) {
+                    tabla.getGestorErrores().error(Errores.DOBLE_DECLARACION, Buscar.tokenInicio(exp));
+                    throw new ExcepcionSemantica(Errores.DOBLE_DECLARACION);
+                }
+            } else {
+                tabla.getGestorErrores().error(Errores.DECLARACION_NO_VAR, Buscar.tokenInicio(exp));
+                throw new ExcepcionSemantica(Errores.DECLARACION_NO_VAR);
+            }
+        }
+    }
+
     public void visitar(ColParentesis s) {
         Simbolo uso = s.getPadre().getPadre();
         if (uso instanceof Igual && ((Igual) uso).getIzquierda() == s.getPadre()) {
@@ -161,7 +183,7 @@ public class SemColeccion {
             tipar(s);
             if (s.getTipo() == null && !(uso instanceof Igual && contieneCol(s.getLista()) == null)) {
                 s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-            } else if (s.getTipo() != null && s.getTipo().isBox()){
+            } else if (s.getTipo() != null && s.getTipo().isBox()) {
                 s.getTipo().add(0, Tipo.ARRAY);
             } else if (s.getTipo() != null) {
                 comprobarElems(s.getTipo(), s.getLista());
@@ -169,6 +191,16 @@ public class SemColeccion {
                 tabla.getAcciones().saltarGenerador();
             }
         }
+    }
+
+    public void visitar(ColDecMy s) {
+        checkVariablesDec(s);
+        visitar((ColParentesis)s);
+    }
+
+    public void visitar(ColDecOur s) {
+        checkVariablesDec(s);
+        visitar((ColParentesis)s);
     }
 
     public void visitar(ColCorchete s) {

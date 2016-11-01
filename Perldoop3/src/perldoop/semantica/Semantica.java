@@ -34,7 +34,6 @@ import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.arbol.varmulti.*;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.TablaSimbolos;
 import perldoop.traductor.Acciones;
@@ -221,11 +220,6 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(ExpRegulares s) {
-        fachada.getSemExpresion().visitar(s);
-    }
-
-    @Override
-    public void visitar(ExpVarMulti s) {
         fachada.getSemExpresion().visitar(s);
     }
 
@@ -469,16 +463,6 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(VarMultiMy s) {
-        fachada.getSemVarMulti().visitar(s);
-    }
-
-    @Override
-    public void visitar(VarMultiOur s) {
-        fachada.getSemVarMulti().visitar(s);
-    }
-
-    @Override
     public void visitar(Paquetes s) {
         fachada.getSemPaquetes().visitar(s);
     }
@@ -486,7 +470,16 @@ public class Semantica implements Visitante {
     @Override
     public void visitar(ColParentesis s) {
         fachada.getSemColeccion().visitar(s);
+    }
 
+    @Override
+    public void visitar(ColDecMy s) {
+        fachada.getSemColeccion().visitar(s);
+    }
+
+    @Override
+    public void visitar(ColDecOur s) {
+        fachada.getSemColeccion().visitar(s);
     }
 
     @Override

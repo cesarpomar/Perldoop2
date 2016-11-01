@@ -10,10 +10,10 @@ import perldoop.modelo.arbol.lista.Lista;
  *
  * @author César Pomar
  */
-public final class ColParentesis extends Coleccion {
+public class ColParentesis extends Coleccion {
 
-    private Terminal parentesisI;
-    private Terminal parentesisD;
+    protected Terminal parentesisI;
+    protected Terminal parentesisD;
     private boolean virtual;
 
     /**
@@ -45,7 +45,7 @@ public final class ColParentesis extends Coleccion {
      *
      * @return Parentesis izquierdo
      */
-    public Terminal getParentesisI() {
+    public final Terminal getParentesisI() {
         return parentesisI;
     }
 
@@ -54,7 +54,7 @@ public final class ColParentesis extends Coleccion {
      *
      * @param parentesisI Parentesis izquierdo
      */
-    public void setParentesisI(Terminal parentesisI) {
+    public final void setParentesisI(Terminal parentesisI) {
         parentesisI.setPadre(this);
         this.parentesisI = parentesisI;
     }
@@ -64,7 +64,7 @@ public final class ColParentesis extends Coleccion {
      *
      * @return Parentesis derecho
      */
-    public Terminal getParentesisD() {
+    public final Terminal getParentesisD() {
         return parentesisD;
     }
 
@@ -73,7 +73,7 @@ public final class ColParentesis extends Coleccion {
      *
      * @param parentesisD Parentesis derecho
      */
-    public void setParentesisD(Terminal parentesisD) {
+    public final void setParentesisD(Terminal parentesisD) {
         parentesisD.setPadre(this);
         this.parentesisD = parentesisD;
     }
@@ -83,7 +83,7 @@ public final class ColParentesis extends Coleccion {
      *
      * @return Es virtual
      */
-    public boolean isVirtual() {
+    public final boolean isVirtual() {
         return virtual;
     }
 

@@ -23,16 +23,6 @@ public final class Pd {
     }
 
     /**
-     * Función para realizar asignaciones en sus argumentos
-     *
-     * @param eqs Asignaciones
-     * @return Numero de asignaciones
-     */
-    public static Integer equals(Object... eqs) {
-        return eqs.length;
-    }
-
-    /**
      * Accede a varias posiciones dentro de un array
      *
      * @param <T> Tipo de los elementos
@@ -362,6 +352,52 @@ public final class Pd {
      */
     public static Boolean xor(Boolean exp1, Boolean exp2) {
         return !exp1 && exp2 || exp1 && !exp2;
+    }
+
+    /**
+     * Función para realizar multiasignaciones en expresiones
+     *
+     * @param n Numero de valores
+     * @param aux Asginaciones auxiliares
+     * @param eqs Asignaciones
+     * @return Asignaciones
+     */
+    public static Box[] equals(Integer n, Object[] aux, Box... eqs) {
+        return eqs;
+    }
+
+    /**
+     * Función para realizar multiasignaciones en expresiones
+     *
+     * @param n Numero de valores
+     * @param aux Asignaciones auxiliares
+     * @param eqs Asignaciones
+     * @return Numero de valores
+     */
+    public static Integer sequals(Integer n, Object[] aux, Box... eqs) {
+        return n;
+    }
+
+    /**
+     * Función para realizar multiasignaciones en expresiones
+     *
+     * @param n Numero de valores
+     * @param eqs Asignaciones
+     * @return Asignaciones
+     */
+    public static Box[] equals(Integer n, Box... eqs) {
+        return eqs;
+    }
+
+    /**
+     * Función para realizar multiasignaciones en expresiones
+     *
+     * @param n Numero de valores
+     * @param eqs Asignaciones
+     * @return Numero de valores
+     */
+    public static Integer sequals(Integer n, Box... eqs) {
+        return n;
     }
 
 }

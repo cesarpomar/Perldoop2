@@ -3,7 +3,9 @@ package perldoop.generacion.util;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.ExpAsignacion;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpFuncion5;
@@ -47,6 +49,10 @@ public final class Casting {
                 StringBuilder declaracion = Tipos.declaracion(aux.getTipo()).append("(");
                 aux.getCodigoGenerado().insert(0, declaracion).append(")");
             }
+            return aux;
+        }else if( col.getTipo().isArray() && col instanceof ExpAsignacion && ((ExpAsignacion) col).getAsignacion() instanceof Igual){
+            //Pasar multiasignacion a contexto escalar
+            Simbolo aux = new SimboloAux(new Tipo(Tipo.INTEGER), new StringBuilder("Pd.s").append(col.toString().substring(3)));
             return aux;
         }
         return col;

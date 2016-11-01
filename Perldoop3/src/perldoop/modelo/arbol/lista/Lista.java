@@ -40,7 +40,7 @@ public final class Lista extends Simbolo {
     }
 
     /**
-     * Obtiene todos los elmentos de la lista
+     * Obtiene los elmentos de la lista
      *
      * @return Lista de elementos
      */
@@ -49,12 +49,29 @@ public final class Lista extends Simbolo {
     }
 
     /**
-     * Obtiene solo las expresiones de la lista
+     * Establece los elmentos de la lista
+     * @param elementos Lista de elementos
+     */
+    public void setElementos(List<Simbolo> elementos) {
+        this.elementos = elementos;
+    }
+
+    /**
+     * Obtiene las expresiones de la lista
      *
      * @return Lista de expresiones
      */
     public List<Expresion> getExpresiones() {
         return expresiones;
+    }
+
+    /**
+     * Establece las expresiones de la lista
+     *
+     * @param expresiones Lista de expresiones
+     */
+    public void setExpresiones(List<Expresion> expresiones) {
+        this.expresiones = expresiones;
     }
 
     /**
@@ -64,6 +81,15 @@ public final class Lista extends Simbolo {
      */
     public List<Terminal> getSeparadores() {
         return separadores;
+    }
+
+    /**
+     * Establece los separadores de las expresiones
+     *
+     * @param separadores Lista de separadores
+     */
+    public void setSeparadores(List<Terminal> separadores) {
+        this.separadores = separadores;
     }
 
     /**

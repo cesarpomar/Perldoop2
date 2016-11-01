@@ -1,4 +1,4 @@
-package perldoop.modelo.arbol.varmulti;
+package perldoop.modelo.arbol.coleccion;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
@@ -6,21 +6,21 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
- * Clase que representa la reduccion -&gt; coleccion : VarMulti '(' lista ')'
+ * Clase que representa la reduccion -&gt; coleccion : my '(' lista ')'
  *
  * @author César Pomar
  */
-public final class VarMultiMy extends VarMulti {
+public final class ColDecMy extends ColDec {
 
     /**
-     * Único contructor de la clase
+     * Constructor completo de una colección
      *
      * @param operador Operador
      * @param parentesisI Parentesis izquierdo
      * @param lista Lista
      * @param parentesisD Parentesis derecho
      */
-    public VarMultiMy(Terminal operador, Terminal parentesisI, Lista lista, Terminal parentesisD) {
+    public ColDecMy(Terminal operador, Terminal parentesisI, Lista lista, Terminal parentesisD) {
         super(operador, parentesisI, lista, parentesisD);
     }
 
@@ -33,4 +33,5 @@ public final class VarMultiMy extends VarMulti {
     public Simbolo[] getHijos() {
         return new Simbolo[]{operador, parentesisI, lista, parentesisD};
     }
+
 }

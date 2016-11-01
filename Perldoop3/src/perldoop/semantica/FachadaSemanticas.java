@@ -31,7 +31,6 @@ import perldoop.semantica.raiz.SemRaiz;
 import perldoop.semantica.regulares.*;
 import perldoop.semantica.sentencia.*;
 import perldoop.semantica.variable.*;
-import perldoop.semantica.varmulti.*;
 
 /**
  * Fachada de las semanticas
@@ -73,7 +72,6 @@ public final class FachadaSemanticas {
     private SemCadenaTexto semCadenaTexto;
     private SemSentencia semSentencia;
     private SemVariable semVariable;
-    private SemVarMulti semVarMulti;
 
     /**
      * Constructor de la fachada
@@ -712,27 +710,6 @@ public final class FachadaSemanticas {
      */
     public void setSemVariable(SemVariable semVariable) {
         this.semVariable = semVariable;
-    }
-
-    /**
-     * Obtiene la semantica de variables multiples
-     *
-     * @return Variables multiples
-     */
-    public SemVarMulti getSemVarMulti() {
-        if (semVarMulti == null) {
-            semVarMulti = new SemVarMulti(tabla);
-        }
-        return semVarMulti;
-    }
-
-    /**
-     * Establece la semantica de variables multiples
-     *
-     * @param semVarMulti Variables multiples
-     */
-    public void setSemVarMulti(SemVarMulti semVarMulti) {
-        this.semVarMulti = semVarMulti;
     }
 
 }

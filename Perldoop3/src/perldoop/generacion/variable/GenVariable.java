@@ -6,16 +6,15 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.bloque.BloqueFor;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
+import perldoop.modelo.arbol.coleccion.ColDec;
+import perldoop.modelo.arbol.coleccion.ColDecOur;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.ExpVarMulti;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.arbol.varmulti.VarMulti;
-import perldoop.modelo.arbol.varmulti.VarMultiOur;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.util.Buscar;
@@ -40,8 +39,8 @@ public final class GenVariable {
 
     public void visitar(VarExistente s) {
         Simbolo uso = Buscar.getPadre(s, 2);
-        if (uso instanceof VarMulti) {
-            declararVar(s, "", uso instanceof VarMultiOur);
+        if (uso instanceof ColDec) {
+            declararVar(s, "", uso instanceof ColDecOur);
         } else {
             EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), Buscar.getContexto(s));
             s.setCodigoGenerado(new StringBuilder(e.getAlias()).append(s.getVar().getComentario()));
@@ -130,7 +129,7 @@ public final class GenVariable {
                 inicializacion.append(e.getAlias()).append('=').append(Tipos.valoreDefecto(v.getTipo()));
                 v.setCodigoGenerado(inicializacion);
                 Simbolo uso = Buscar.getPadre(v, 2);
-                if (!(uso instanceof StcLista) && !(uso instanceof VarMulti)) {
+                if (!(uso instanceof StcLista) && !(uso instanceof ColDec)) {
                     inicializacion.insert(0, '(').append(')');//Asegurar que permaneceran juntos
                 }
             } else {
@@ -175,9 +174,6 @@ public final class GenVariable {
         List<Simbolo> lista = Buscar.getCamino(v, Expresion.class, Igual.class);
         if (lista.isEmpty()) {
             lista = Buscar.getCamino(v, Expresion.class, Lista.class, ColParentesis.class, ExpColeccion.class, Igual.class);
-        }
-        if(lista.isEmpty()){
-            lista = Buscar.getCamino(v, Expresion.class, Lista.class, VarMulti.class, ExpVarMulti.class, Igual.class);
         }
         int last = lista.size() - 1;
         return last > 0 && ((Igual) lista.get(last)).getIzquierda().equals(lista.get(last - 1));
