@@ -42,6 +42,11 @@ public final class ExpAritmetica extends Expresion {
     }
 
     @Override
+    public Simbolo getValor() {
+        return aritmetica;
+    }
+
+    @Override
     public void aceptar(Visitante v) {
         v.visitar(this);
     }

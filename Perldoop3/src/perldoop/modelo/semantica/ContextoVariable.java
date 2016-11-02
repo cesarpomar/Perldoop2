@@ -6,7 +6,7 @@ package perldoop.modelo.semantica;
  *
  * @author César Pomar
  */
-public final class Contexto {
+public final class ContextoVariable {
     
     private EntradaVariable escalar;
     private EntradaVariable array;
@@ -15,7 +15,7 @@ public final class Contexto {
     /**
      * Constructor del contexto 
      */
-    public Contexto() {
+    public ContextoVariable() {
     }
     
     /**

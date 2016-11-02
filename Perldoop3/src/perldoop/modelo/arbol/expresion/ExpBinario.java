@@ -16,7 +16,7 @@ public final class ExpBinario extends Expresion {
     public ExpBinario(Binario binario) {
         setBinario(binario);
     }
-    
+
     /**
      * Obtiene el binario
      *
@@ -34,6 +34,11 @@ public final class ExpBinario extends Expresion {
     public void setBinario(Binario binario) {
         binario.setPadre(this);
         this.binario = binario;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return binario;
     }
 
     @Override

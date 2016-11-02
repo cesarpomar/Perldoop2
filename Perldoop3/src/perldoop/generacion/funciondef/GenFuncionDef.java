@@ -26,11 +26,11 @@ public class GenFuncionDef {
     }
 
     public void visitar(FuncionDef s) {
-        StringBuilder codigo = new StringBuilder(s.getCuerpo().getCodigoGenerado().length() + 50);
+        StringBuilder codigo = new StringBuilder(s.getContexto().getCuerpo().getCodigoGenerado().length() + 50);
         codigo.append(s.getFuncionSub().getCodigoGenerado());
-        codigo.append(s.getLlaveI().getCodigoGenerado());
-        codigo.append(s.getCuerpo().getCodigoGenerado());
-        List<Sentencia> sentencias = s.getCuerpo().getSentencias();
+        codigo.append(s.getContexto().getLlaveI().getCodigoGenerado());
+        codigo.append(s.getContexto().getCuerpo().getCodigoGenerado());
+        List<Sentencia> sentencias = s.getContexto().getCuerpo().getSentencias();
         if (sentencias.isEmpty()) {
             codigo.append(new StringBuilder("return new Box[0];"));
         } else {
@@ -39,7 +39,7 @@ public class GenFuncionDef {
                 codigo.append(new StringBuilder("return new Box[0];"));
             }
         }
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveD());
         s.setCodigoGenerado(codigo);
     }
 

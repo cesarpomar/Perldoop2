@@ -1,6 +1,7 @@
 package perldoop.semantica.abrirbloque;
 
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.fuente.Fuente;
 import perldoop.modelo.semantica.TablaSemantica;
 
@@ -23,7 +24,7 @@ public class SemAbrirBloque {
     }
 
     public void visitar(AbrirBloque s) {
-        if (!(s.getPadre().getPadre() instanceof Fuente)) {
+        if (s.getPadre().getPadre() instanceof Contexto) {
             tabla.getTablaSimbolos().abrirBloque();
         }
     }

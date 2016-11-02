@@ -1,8 +1,7 @@
 package perldoop.modelo.arbol.bloque;
 
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
-import perldoop.modelo.arbol.cuerpo.Cuerpo;
+import perldoop.modelo.arbol.contexto.Contexto;
 
 /**
  * Clase abtracta que representa todas las reduciones de bloque
@@ -11,79 +10,34 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
  */
 public abstract class Bloque extends Simbolo {
 
-    protected Terminal llaveI;
-    protected Cuerpo cuerpo;
-    protected Terminal llaveD;
+    protected Contexto contexto;
 
     /**
      * Único contructor de la clase
      *
-
-     * @param llaveI Llave izquierda
-     * @param cuerpo Cuerpo
-     * @param llaveD Llave derecha
+     * @param contexto Contexto del bloque
      */
-    public Bloque(Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        setLlaveI(llaveI);
-        setCuerpo(cuerpo);
-        setLlaveD(llaveD);
+    public Bloque(Contexto contexto) {
+        setContexto(contexto);
     }
 
     /**
-     * Obtiene la llave izquierda
+     * Obtiene el contexto del bloque
      *
-     * @return Llave izquierda
+     * @return Contexto del bloque
      */
-    public final Terminal getLlaveI() {
-        return llaveI;
+    public final Contexto getContexto() {
+        return contexto;
     }
 
     /**
-     * Establece la llave izquierda
+     * Establece el contexto del bloque
      *
-     * @param llaveI Llave izquierda
+     * @param contexto Contexto del bloque
      */
-    public final void setLlaveI(Terminal llaveI) {
-        llaveI.setPadre(this);
-        this.llaveI = llaveI;
-    }
-
-    /**
-     * Obtiene el cuerpo
-     *
-     * @return Cuerpo
-     */
-    public final Cuerpo getCuerpo() {
-        return cuerpo;
-    }
-
-    /**
-     * Establece el cuerpo
-     *
-     * @param cuerpo Cuerpo
-     */
-    public final void setCuerpo(Cuerpo cuerpo) {
-        cuerpo.setPadre(this);
-        this.cuerpo = cuerpo;
-    }
-
-    /**
-     * Obtiene la llave derecha
-     *
-     * @return Llave derecha
-     */
-    public final Terminal getLlaveD() {
-        return llaveD;
-    }
-
-    /**
-     * Establece la llave derecha
-     *
-     * @param llaveD Llave derecha
-     */
-    public final void setLlaveD(Terminal llaveD) {
-        llaveD.setPadre(this);
-        this.llaveD = llaveD;
+    public final void setContexto(Contexto contexto) {
+        contexto.setPadre(this);
+        this.contexto = contexto;
     }
 
 }

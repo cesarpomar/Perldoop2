@@ -9,20 +9,22 @@ import perldoop.modelo.arbol.logico.Logico;
  *
  * @author César Pomar
  */
-public final class ExpLogico extends Expresion{
-    
+public final class ExpLogico extends Expresion {
+
     private Logico logico;
 
     /**
      * Único contructor de la clase
+     *
      * @param logico Lógico
      */
     public ExpLogico(Logico logico) {
         setLogico(logico);
     }
-    
+
     /**
      * Obtiene el lógico
+     *
      * @return Lógico
      */
     public Logico getLogico() {
@@ -31,11 +33,17 @@ public final class ExpLogico extends Expresion{
 
     /**
      * Establece el lógico
+     *
      * @param logico Lógico
      */
     public void setLogico(Logico logico) {
         logico.setPadre(this);
         this.logico = logico;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return logico;
     }
 
     @Override
@@ -47,7 +55,5 @@ public final class ExpLogico extends Expresion{
     public Simbolo[] getHijos() {
         return new Simbolo[]{logico};
     }
-    
-    
-    
+
 }

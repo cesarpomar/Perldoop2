@@ -15,6 +15,7 @@ public final class ExpNumero extends Expresion {
 
     /**
      * Único contructor de la clase
+     *
      * @param numero Numero
      */
     public ExpNumero(Numero numero) {
@@ -23,6 +24,7 @@ public final class ExpNumero extends Expresion {
 
     /**
      * Obtiene el numero
+     *
      * @return Numero
      */
     public Numero getNumero() {
@@ -31,11 +33,17 @@ public final class ExpNumero extends Expresion {
 
     /**
      * Establece el numero
+     *
      * @param numero Numero
      */
     public void setNumero(Numero numero) {
         numero.setPadre(this);
         this.numero = numero;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return numero;
     }
 
     @Override

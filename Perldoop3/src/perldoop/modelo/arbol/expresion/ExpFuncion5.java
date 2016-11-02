@@ -21,7 +21,7 @@ public final class ExpFuncion5 extends Expresion {
      * @param ampersand Ampersand
      * @param funcion Función
      */
-    public ExpFuncion5(Terminal ampersand,Funcion funcion) {
+    public ExpFuncion5(Terminal ampersand, Funcion funcion) {
         setAmpersand(ampersand);
         setFuncion(funcion);
     }
@@ -61,6 +61,11 @@ public final class ExpFuncion5 extends Expresion {
     public void setFuncion(Funcion funcion) {
         funcion.setPadre(this);
         this.funcion = funcion;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return funcion;
     }
 
     @Override

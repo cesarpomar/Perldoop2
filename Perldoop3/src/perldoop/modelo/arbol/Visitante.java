@@ -1,5 +1,6 @@
 package perldoop.modelo.arbol;
 
+import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.arbol.abrirbloque.*;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.aritmetica.*;
@@ -11,6 +12,7 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.condicional.*;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.cuerpo.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
@@ -52,6 +54,9 @@ public interface Visitante {
 
     //Cuerpo
     void visitar(Cuerpo s);
+
+    //Contexto
+    void visitar(Contexto s);
 
     //Sentencia
     void visitar(StcLista s);
@@ -109,7 +114,10 @@ public interface Visitante {
     void visitar(ExpRegulares s);
 
     void visitar(ExpRango s);
-
+    
+    //Rango
+    void visitar(Rango s);
+    
     //Lista
     void visitar(Lista s);
 

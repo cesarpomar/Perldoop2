@@ -15,6 +15,7 @@ public final class ExpCadena extends Expresion {
 
     /**
      * Único contructor de la clase
+     *
      * @param cadena Cadena
      */
     public ExpCadena(Cadena cadena) {
@@ -23,6 +24,7 @@ public final class ExpCadena extends Expresion {
 
     /**
      * Obtiene la cadena
+     *
      * @return Cadena
      */
     public Cadena getCadena() {
@@ -31,11 +33,17 @@ public final class ExpCadena extends Expresion {
 
     /**
      * Establece la cadena
+     *
      * @param cadena Cadena
      */
     public void setCadena(Cadena cadena) {
         cadena.setPadre(this);
         this.cadena = cadena;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return cadena;
     }
 
     @Override

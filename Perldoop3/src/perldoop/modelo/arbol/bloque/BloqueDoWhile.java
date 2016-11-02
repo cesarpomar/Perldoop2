@@ -4,6 +4,7 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
@@ -22,17 +23,15 @@ public final class BloqueDoWhile extends BloqueControlBasico {
      *
      * @param id Do
      * @param abrirBloque Abertura de bloque para la cabecera
-     * @param llaveI Llave izquierda
-     * @param cuerpo Cuerpo
-     * @param llaveD Llave derecha
+     * @param contexto Contexto del bloque
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresiom
      * @param parentesisD Parentesis derecho
      * @param idWhile While
      * @param puntoComa Punto y coma
      */
-    public BloqueDoWhile(Terminal id, AbrirBloque abrirBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Terminal idWhile, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal puntoComa) {
-        super(id, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD);
+    public BloqueDoWhile(Terminal id, AbrirBloque abrirBloque, Contexto contexto, Terminal idWhile, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal puntoComa) {
+        super(id, abrirBloque, parentesisI, expresion, parentesisD, contexto);
         setIdWhile(idWhile);
         setPuntoComa(puntoComa);
     }
@@ -82,6 +81,6 @@ public final class BloqueDoWhile extends BloqueControlBasico {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, llaveI, cuerpo, llaveD, idWhile, parentesisI, expresion, parentesisD, puntoComa};
+        return new Simbolo[]{id, contexto, idWhile, parentesisI, expresion, parentesisD, puntoComa};
     }
 }

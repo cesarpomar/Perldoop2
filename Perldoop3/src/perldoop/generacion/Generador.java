@@ -15,6 +15,7 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.condicional.*;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.cuerpo.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
@@ -30,6 +31,7 @@ import perldoop.modelo.arbol.modificador.*;
 import perldoop.modelo.arbol.modulos.*;
 import perldoop.modelo.arbol.numero.*;
 import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
@@ -145,6 +147,11 @@ public class Generador implements Visitante {
     @Override
     public void visitar(Cuerpo s) {
         fachada.getGenCuerpo().visitar(s);
+    }
+
+    @Override
+    public void visitar(Contexto s) {
+        fachada.getGenContexto().visitar(s);
     }
 
     @Override
@@ -270,6 +277,11 @@ public class Generador implements Visitante {
     @Override
     public void visitar(ExpRango s) {
         fachada.getGenExpresion().visitar(s);
+    }
+
+    @Override
+    public void visitar(Rango s) {
+        fachada.getGenRango().visitar(s);
     }
 
     @Override

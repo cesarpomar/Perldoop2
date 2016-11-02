@@ -98,7 +98,7 @@ public class GenExpresion {
     }
 
     public void visitar(ExpRango s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        s.setCodigoGenerado(checkSentencia(s.getRango()));
     }
 
 }

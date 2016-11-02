@@ -36,9 +36,9 @@ public class GenBloque {
         codigo.append(s.getParentesisI());
         codigo.append(genExpresion(s.getExpresion()));
         codigo.append(s.getParentesisD());
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         s.setCodigoGenerado(codigo);
     }
 
@@ -51,9 +51,9 @@ public class GenBloque {
         codigo.append(genExpresion(s.getExpresion()));
         codigo.append(")");
         codigo.append(s.getParentesisD());
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         s.setCodigoGenerado(codigo);
     }
 
@@ -61,9 +61,9 @@ public class GenBloque {
         StringBuilder codigo = new StringBuilder(1000);
         genDeclaraciones(codigo);
         codigo.append(s.getId());
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         codigo.append(s.getIdWhile());
         codigo.append(s.getParentesisI());
         codigo.append(genExpresion(s.getExpresion()));
@@ -76,9 +76,9 @@ public class GenBloque {
         StringBuilder codigo = new StringBuilder(1000);
         genDeclaraciones(codigo);
         codigo.append(s.getId());
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         codigo.append("while").append(s.getIdUntil().getComentario());
         codigo.append(s.getParentesisI());
         codigo.append("!(");
@@ -135,9 +135,9 @@ public class GenBloque {
             }
         }
         codigo.append(s.getParentesisD());
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         s.setCodigoGenerado(codigo);
     }
 
@@ -165,10 +165,10 @@ public class GenBloque {
             codigo.append(s.getColeccion());
         }
         codigo.append(")");
-        codigo.append(s.getLlaveI());
+        codigo.append(s.getContexto().getLlaveI());
         codigo.append(asignacion);
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         s.setCodigoGenerado(codigo);
         s.setCodigoGenerado(codigo);
     }
@@ -184,9 +184,9 @@ public class GenBloque {
         codigo.append(aux).append("<").append(Casting.casting(s.getColeccion(), t)).append(";");
         codigo.append(aux).append("++");
         codigo.append(")");
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         s.setCodigoGenerado(codigo);
     }
 
@@ -197,9 +197,9 @@ public class GenBloque {
         codigo.append(s.getParentesisI());
         codigo.append(genExpresion(s.getExpresion()));
         codigo.append(s.getParentesisD());
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         codigo.append(s.getBloqueElse());
         s.setCodigoGenerado(codigo);
     }
@@ -213,9 +213,9 @@ public class GenBloque {
         codigo.append(genExpresion(s.getExpresion()));
         codigo.append(")");
         codigo.append(s.getParentesisD());
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         codigo.append(s.getBloqueElse());
         s.setCodigoGenerado(codigo);
     }
@@ -223,9 +223,9 @@ public class GenBloque {
     public void visitar(BloqueVacio s) {
         //TODO actualizar
         StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         s.setCodigoGenerado(codigo);
     }
 

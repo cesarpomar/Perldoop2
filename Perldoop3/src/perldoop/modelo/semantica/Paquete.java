@@ -12,7 +12,7 @@ public final class Paquete {
 
     private String identificador;
     private String alias;
-    private Map<String, Contexto> atributos;
+    private Map<String, ContextoVariable> atributos;
     private Map<String, EntradaFuncion> funciones;
 
     /**
@@ -68,7 +68,7 @@ public final class Paquete {
      *
      * @return Atributos
      */
-    public Map<String, Contexto> getAtributos() {
+    public Map<String, ContextoVariable> getAtributos() {
         return atributos;
     }
 
@@ -77,7 +77,7 @@ public final class Paquete {
      *
      * @param atributos Atributos
      */
-    public void setAtributos(Map<String, Contexto> atributos) {
+    public void setAtributos(Map<String, ContextoVariable> atributos) {
         this.atributos = atributos;
     }
 
@@ -103,12 +103,12 @@ public final class Paquete {
      * Añade una entrada al contexto de una variable
      *
      * @param entrada Entrada
-     * @param contexto Contexto
+     * @param contexto ContextoVariable
      */
     public void addVariable(EntradaVariable entrada, char contexto) {
-        Contexto c = atributos.get(entrada.getIdentificador());
+        ContextoVariable c = atributos.get(entrada.getIdentificador());
         if (c == null) {
-            c = new Contexto();
+            c = new ContextoVariable();
             atributos.put(entrada.getIdentificador(), c);
         } else {
             entrada.setConflicto(true);
@@ -130,11 +130,11 @@ public final class Paquete {
      * Busca una variable en su contexto
      *
      * @param identificador Identificador
-     * @param contexto Contexto
+     * @param contexto ContextoVariable
      * @return Entrada
      */
     public EntradaVariable buscarVariable(String identificador, char contexto) {
-        Contexto c = atributos.get(identificador);
+        ContextoVariable c = atributos.get(identificador);
         if (c == null) {
             return null;
         }

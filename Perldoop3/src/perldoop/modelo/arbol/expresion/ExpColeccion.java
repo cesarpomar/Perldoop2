@@ -9,20 +9,22 @@ import perldoop.modelo.arbol.coleccion.Coleccion;
  *
  * @author César Pomar
  */
-public final class ExpColeccion extends Expresion{
-    
+public final class ExpColeccion extends Expresion {
+
     private Coleccion coleccion;
 
     /**
      * Único contructor de la clase
+     *
      * @param coleccion Colección
      */
     public ExpColeccion(Coleccion coleccion) {
         setColeccion(coleccion);
     }
-    
+
     /**
      * Obtiene la colección
+     *
      * @return Colección
      */
     public Coleccion getColeccion() {
@@ -31,11 +33,17 @@ public final class ExpColeccion extends Expresion{
 
     /**
      * Establece la colección
+     *
      * @param coleccion Colección
      */
     public void setColeccion(Coleccion coleccion) {
         coleccion.setPadre(this);
         this.coleccion = coleccion;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return coleccion;
     }
 
     @Override
@@ -47,6 +55,5 @@ public final class ExpColeccion extends Expresion{
     public Simbolo[] getHijos() {
         return new Simbolo[]{coleccion};
     }
-    
-    
+
 }

@@ -15,6 +15,7 @@ public final class ExpAcceso extends Expresion {
 
     /**
      * Único contructor de la clase
+     *
      * @param acceso Acceso
      */
     public ExpAcceso(Acceso acceso) {
@@ -23,6 +24,7 @@ public final class ExpAcceso extends Expresion {
 
     /**
      * obtiene el acceso
+     *
      * @return Acceso
      */
     public Acceso getAcceso() {
@@ -31,11 +33,17 @@ public final class ExpAcceso extends Expresion {
 
     /**
      * Establece el acceso
+     *
      * @param acceso Acceso
      */
     public void setAcceso(Acceso acceso) {
         acceso.setPadre(this);
         this.acceso = acceso;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return acceso;
     }
 
     @Override

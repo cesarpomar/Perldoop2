@@ -29,9 +29,7 @@ public class GenCondicional {
         StringBuilder codigo = new StringBuilder(100);
         genDeclaraciones(codigo);
         codigo.append(s.getId());
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto());
         s.setCodigoGenerado(codigo);
     }
 
@@ -42,9 +40,7 @@ public class GenCondicional {
         codigo.append(s.getParentesisI());
         codigo.append(genExpresion(s.getExpresion()));
         codigo.append(s.getParentesisD());
-        codigo.append(s.getLlaveI());
-        codigo.append(s.getCuerpo());
-        codigo.append(s.getLlaveD());
+        codigo.append(s.getContexto());
         codigo.append(s.getBloqueElse());
         s.setCodigoGenerado(codigo);
     }

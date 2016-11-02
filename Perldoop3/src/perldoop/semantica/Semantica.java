@@ -1,5 +1,6 @@
 package perldoop.semantica;
 
+import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.arbol.std.*;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
@@ -15,6 +16,7 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.condicional.*;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.cuerpo.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
@@ -102,7 +104,11 @@ public class Semantica implements Visitante {
     public void visitar(Cuerpo s) {
         fachada.getSemCuerpo().visitar(s);
     }
-
+    
+    @Override
+    public void visitar(Contexto s) {
+        fachada.getSemContexto().visitar(s);
+    }
     @Override
     public void visitar(StcLista s) {
         fachada.getSemSentencia().visitar(s);
@@ -227,6 +233,11 @@ public class Semantica implements Visitante {
     public void visitar(ExpRango s) {
         fachada.getSemExpresion().visitar(s);
     }
+    
+     @Override
+    public void visitar(Rango s) {
+        fachada.getSemRango().visitar(s);
+    }   
 
     @Override
     public void visitar(Lista s) {

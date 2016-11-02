@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.cuerpo.Cuerpo;
+import perldoop.modelo.arbol.funciondef.FuncionDef;
 
 /**
  * Clase que representa la reduccion -&gt; fuente : cuerpo masFuente <br>
@@ -14,54 +16,99 @@ import perldoop.modelo.arbol.Visitante;
  */
 public final class Fuente extends Simbolo {
 
-    private List<Simbolo> codigoFuente;
+    private List<Simbolo> elementos;
+    private List<FuncionDef> funciones;
+    private List<Cuerpo> cuerpos;
 
     /**
      * Único contructor de la clase
      */
     public Fuente() {
-        codigoFuente = new ArrayList<>(100);
+        funciones = new ArrayList<>(100);
+        cuerpos = new ArrayList<>(100);
+        elementos = new ArrayList<>(100);
     }
 
     /**
-     * Añade codigo fuente
+     * Añade una funcion
      *
-     * @param codigo Codigo fuetne
+     * @param funcion Funcion
      * @return Esta instancia
      */
-    public Fuente add(Simbolo codigo) {
-        codigoFuente.add(codigo);
-        codigo.setPadre(this);
+    public Fuente addFuncion(FuncionDef funcion) {
+        elementos.add(funcion);
+        funciones.add(funcion);
+        funcion.setPadre(this);
         return this;
     }
 
     /**
-     * Realiza la misma acción que invocar f.add(codigo)
+     * Realiza la misma acción que invocar f.addFuncion(codigo)
      *
      * @param f Fuente
-     * @param codigo Codigo fuente
+     * @param funcion Funcion
      * @return Fuente f
      */
-    public static Fuente add(Fuente f, Simbolo codigo) {
-        return f.add(codigo);
+    public static Fuente addFuncion(Fuente f, FuncionDef funcion) {
+        return f.addFuncion(funcion);
     }
 
     /**
-     * Obtiene el codigo fuente
+     * Añade un cuerpo
      *
-     * @return Codigo fuente
+     * @param cuerpo Cuerpo
+     * @return Esta instancia
      */
-    public List<Simbolo> getCodigoFuente() {
-        return codigoFuente;
+    public Fuente addCuerpo(Cuerpo cuerpo) {
+        elementos.add(cuerpo);
+        cuerpos.add(cuerpo);
+        cuerpo.setPadre(this);
+        return this;
     }
 
     /**
-     * Establece el codigo fuente
+     * Realiza la misma acción que invocar f.addCuerpo(codigo)
      *
-     * @param codigoFuente Codigo fuente
+     * @param f Fuente
+     * @param cuerpo Cuerpo
+     * @return Fuente f
      */
-    public void setCodigoFuente(List<Simbolo> codigoFuente) {
-        this.codigoFuente = codigoFuente;
+    public static Fuente addCuerpo(Fuente f, Cuerpo cuerpo) {
+        return f.addCuerpo(cuerpo);
+    }
+
+    /**
+     * Obtiene los cuerpos y fundiones
+     *
+     * @return Cuerpos y fundiones
+     */
+    public List<Simbolo> getElementos() {
+        return elementos;
+    }
+
+    /**
+     * Establece los cuerpos y funciones
+     *
+     * @param elementos Lista de Cuerpos y funciones
+     */
+    public void setElementos(List<Simbolo> elementos) {
+        this.elementos = elementos;
+    }
+
+    /**
+     * Obtiene los cuerpos
+     * @return Lista de cuerpos
+     */
+    public List<Cuerpo> getCuerpos() {
+        return cuerpos;
+    }
+
+    /**
+     * Obtiene las funciones
+     * @return Lista de funciones
+     */
+    public List<FuncionDef> getFunciones() {
+        return funciones;
     }
 
     @Override
@@ -71,7 +118,7 @@ public final class Fuente extends Simbolo {
 
     @Override
     public Simbolo[] getHijos() {
-        return codigoFuente.toArray(new Simbolo[codigoFuente.size()]);
+        return elementos.toArray(new Simbolo[elementos.size()]);
     }
 
 }

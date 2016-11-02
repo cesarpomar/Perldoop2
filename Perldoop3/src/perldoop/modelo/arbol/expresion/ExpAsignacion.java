@@ -24,6 +24,7 @@ public final class ExpAsignacion extends Expresion {
 
     /**
      * Obtiene la asignación
+     *
      * @return Asignación
      */
     public Asignacion getAsignacion() {
@@ -32,11 +33,17 @@ public final class ExpAsignacion extends Expresion {
 
     /**
      * Establece la asignación
+     *
      * @param asignacion Asignación
      */
     public void setAsignacion(Asignacion asignacion) {
         asignacion.setPadre(this);
         this.asignacion = asignacion;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return asignacion;
     }
 
     @Override

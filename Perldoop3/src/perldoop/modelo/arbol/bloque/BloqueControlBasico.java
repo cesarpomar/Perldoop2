@@ -2,7 +2,7 @@ package perldoop.modelo.arbol.bloque;
 
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
-import perldoop.modelo.arbol.cuerpo.Cuerpo;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
@@ -26,12 +26,10 @@ public abstract class BloqueControlBasico extends Bloque {
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
      * @param parentesisD Parentesis derecho
-     * @param llaveI Llave izquierda
-     * @param cuerpo Cuerpo
-     * @param llaveD Llave derecha
+     * @param contexto Contexto del bloque
      */
-    public BloqueControlBasico(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        super(llaveI, cuerpo, llaveD);
+    public BloqueControlBasico(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Contexto contexto) {
+        super(contexto);
         setId(id);
         setAbrirBloque(abrirBloque);
         setParentesisI(parentesisI);

@@ -42,6 +42,11 @@ public class ExpLectura extends Expresion {
     }
 
     @Override
+    public Simbolo getValor() {
+        return lectura;
+    }
+
+    @Override
     public void aceptar(Visitante v) {
         v.visitar(this);
     }

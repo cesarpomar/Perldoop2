@@ -42,6 +42,11 @@ public final class ExpFuncion extends Expresion {
     }
 
     @Override
+    public Simbolo getValor() {
+        return funcion;
+    }
+
+    @Override
     public void aceptar(Visitante v) {
         v.visitar(this);
     }

@@ -42,6 +42,11 @@ public final class ExpComparacion extends Expresion {
     }
 
     @Override
+    public Simbolo getValor() {
+        return comparacion;
+    }
+
+    @Override
     public void aceptar(Visitante v) {
         v.visitar(this);
     }

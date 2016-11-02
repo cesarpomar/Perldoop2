@@ -9,7 +9,7 @@ import perldoop.modelo.arbol.std.Std;
  *
  * @author César Pomar
  */
-public class ExpStd extends Expresion {
+public final class ExpStd extends Expresion {
 
     private Std std;
 
@@ -39,6 +39,11 @@ public class ExpStd extends Expresion {
     public final void setStd(Std std) {
         std.setPadre(this);
         this.std = std;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return std;
     }
 
     @Override

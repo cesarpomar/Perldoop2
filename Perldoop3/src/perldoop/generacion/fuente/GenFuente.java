@@ -27,7 +27,7 @@ public class GenFuente {
         StringBuilder global = new StringBuilder(10000);
         global.append("private static void global(){");
         int tam = global.length();
-        for (Simbolo codigo : s.getCodigoFuente()) {
+        for (Simbolo codigo : s.getElementos()) {
             if (codigo instanceof Cuerpo) {
                 //Codigo global
                 global.append(codigo.getCodigoGenerado());

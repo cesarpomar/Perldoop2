@@ -11,6 +11,7 @@ import perldoop.generacion.cadenatexto.GenCadenaTexto;
 import perldoop.generacion.coleccion.*;
 import perldoop.generacion.comparacion.*;
 import perldoop.generacion.condicional.*;
+import perldoop.generacion.contexto.GenContexto;
 import perldoop.generacion.cuerpo.*;
 import perldoop.generacion.std.GenStd;
 import perldoop.generacion.expresion.*;
@@ -28,6 +29,7 @@ import perldoop.generacion.modulos.GenModulo;
 import perldoop.generacion.numero.*;
 import perldoop.generacion.paquetes.*;
 import perldoop.generacion.raiz.GenRaiz;
+import perldoop.generacion.rango.GenRango;
 import perldoop.generacion.regulares.*;
 import perldoop.generacion.sentencia.*;
 import perldoop.generacion.terminal.*;
@@ -56,6 +58,7 @@ public final class FachadaGeneradores {
     private GenNumero genNumero;
     private GenCadena genCadena;
     private GenCuerpo genCuerpo;
+    private GenContexto genContexto;
     private GenExpresion genExpresion;
     private GenFlujo genFlujo;
     private GenFuente genFuente;
@@ -69,6 +72,7 @@ public final class FachadaGeneradores {
     private GenLogico genLogico;
     private GenPaquetes genPaquetes;
     private GenRaiz genRaiz;
+    private GenRango genRango;
     private GenModificador genModificador;
     private GenModulo genModulo;
     private GenRegulares genRegulares;
@@ -360,6 +364,27 @@ public final class FachadaGeneradores {
     }
 
     /**
+     * Obtiene el generador de contexto
+     *
+     * @return Generador de contexto
+     */
+    public GenContexto getGenContexto() {
+        if (genContexto == null) {
+            genContexto = new GenContexto(tabla);
+        }
+        return genContexto;
+    }
+
+    /**
+     * Establece el generador de contexto
+     *
+     * @param genContexto Generador de contexto
+     */
+    public void setGenContexto(GenContexto genContexto) {
+        this.genContexto = genContexto;
+    }
+
+    /**
      * Obtiene el generador de expresion
      *
      * @return Generador de expresion
@@ -609,6 +634,27 @@ public final class FachadaGeneradores {
      */
     public void setGenRaiz(GenRaiz genRaiz) {
         this.genRaiz = genRaiz;
+    }
+
+    /**
+     * Obtiene el generador de rango
+     *
+     * @return Generador de rango
+     */
+    public GenRango getGenRango() {
+        if (genRango == null) {
+            genRango = new GenRango(tabla);
+        }
+        return genRango;
+    }
+
+    /**
+     * Establece el generador de rango
+     *
+     * @param genRango Generador de rango
+     */
+    public void setGenRango(GenRango genRango) {
+        this.genRango = genRango;
     }
 
     /**

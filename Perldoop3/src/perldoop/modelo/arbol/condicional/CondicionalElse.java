@@ -3,33 +3,28 @@ package perldoop.modelo.arbol.condicional;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**
- * Clase que representa la reduccion -&gt;<br> condicional : ELSE '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt;<br> condicional : ELSE contexto
  *
  * @author César Pomar
  */
 public final class CondicionalElse extends Condicional {
 
     private Terminal id;
-    private Terminal llaveI;
-    private Cuerpo cuerpo;
-    private Terminal llaveD;
+    private Contexto contexto;
 
     /**
      * Único contructor de la clase
      *
      * @param id Else
-     * @param llaveI Llave izquierda
-     * @param cuerpo Cuerpo
-     * @param llaveD Llave derecha
+     * @param contexto Contexto
      */
-    public CondicionalElse(Terminal id, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+    public CondicionalElse(Terminal id, Contexto contexto) {
         setId(id);
-        setLlaveI(llaveI);
-        setCuerpo(cuerpo);
-        setLlaveD(llaveD);
+        setContexto(contexto);
     }
 
     /**
@@ -52,60 +47,22 @@ public final class CondicionalElse extends Condicional {
     }
 
     /**
-     * Obtiene la llave izquierda
+     * Obtiene el contexto del bloque
      *
-     * @return Llave izquierda
+     * @return Contexto del bloque
      */
-    public Terminal getLlaveI() {
-        return llaveI;
+    public final Contexto getContexto() {
+        return contexto;
     }
 
     /**
-     * Establece la llave izquierda
+     * Establece el contexto del bloque
      *
-     * @param llaveI Llave izquierda
+     * @param contexto Contexto del bloque
      */
-    public void setLlaveI(Terminal llaveI) {
-        llaveI.setPadre(this);
-        this.llaveI = llaveI;
-    }
-
-    /**
-     * Obtiene el cuerpo
-     *
-     * @return Cuerpo
-     */
-    public Cuerpo getCuerpo() {
-        return cuerpo;
-    }
-
-    /**
-     * Establece el cuerpo
-     *
-     * @param cuerpo Cuerpo
-     */
-    public void setCuerpo(Cuerpo cuerpo) {
-        cuerpo.setPadre(this);
-        this.cuerpo = cuerpo;
-    }
-
-    /**
-     * Obtiene la llave derecha
-     *
-     * @return Llave derecha
-     */
-    public Terminal getLlaveD() {
-        return llaveD;
-    }
-
-    /**
-     * Establece la llave derecha
-     *
-     * @param llaveD Llave derecha
-     */
-    public void setLlaveD(Terminal llaveD) {
-        llaveD.setPadre(this);
-        this.llaveD = llaveD;
+    public final void setContexto(Contexto contexto) {
+        contexto.setPadre(this);
+        this.contexto = contexto;
     }
 
     @Override
@@ -115,6 +72,6 @@ public final class CondicionalElse extends Condicional {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, contexto};
     }
 }

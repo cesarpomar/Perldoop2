@@ -1,39 +1,34 @@
 package perldoop.modelo.arbol.funciondef;
 
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.cuerpo.Cuerpo;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.funcionsub.FuncionSub;
 
 /**
- * Clase que representa la reduccion -&gt; funcionDef : funcionSub '{' cuerpo '}'
+ * Clase que representa la reduccion -&gt; funcionDef : funcionSub contexto
  *
  * @author César Pomar
  */
 public final class FuncionDef extends Simbolo {
 
     private FuncionSub funcionSub;
-    private Terminal llaveI;
-    private Cuerpo cuerpo;
-    private Terminal llaveD;
+    private Contexto contexto;
 
     /**
      * Único contructor de la clase
+     *
      * @param funcionSub Declaración de la función
-     * @param llaveI Llave izquierda
-     * @param cuerpo Cuerpo
-     * @param llaveD Lave derecha
+     * @param contexto Contexto
      */
-    public FuncionDef(FuncionSub funcionSub, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+    public FuncionDef(FuncionSub funcionSub, Contexto contexto) {
         setFuncionSub(funcionSub);
-        setLlaveI(llaveI);
-        setCuerpo(cuerpo);
-        setLlaveD(llaveD);
+        setContexto(contexto);
     }
 
     /**
      * Obtiene la declaración de la función
+     *
      * @return Declaración de la función
      */
     public FuncionSub getFuncionSub() {
@@ -42,6 +37,7 @@ public final class FuncionDef extends Simbolo {
 
     /**
      * Establece la declaración de la función
+     *
      * @param funcionSub Declaración de la función
      */
     public void setFuncionSub(FuncionSub funcionSub) {
@@ -50,54 +46,22 @@ public final class FuncionDef extends Simbolo {
     }
 
     /**
-     * Obtiene la llave izquierda
-     * @return Llave izquierda
+     * Obtiene el contexto del bloque
+     *
+     * @return Contexto del bloque
      */
-    public Terminal getLlaveI() {
-        return llaveI;
+    public Contexto getContexto() {
+        return contexto;
     }
 
     /**
-     * Establece la llave izquierda
-     * @param llaveI Llave izquierda
+     * Establece el contexto del bloque
+     *
+     * @param contexto Contexto del bloque
      */
-    public void setLlaveI(Terminal llaveI) {
-        llaveI.setPadre(this);
-        this.llaveI = llaveI;
-    }
-
-    /**
-     * Obtiene el cuerpo
-     * @return Cuerpo
-     */
-    public Cuerpo getCuerpo() {
-        return cuerpo;
-    }
-
-    /**
-     * Establece el cuerpo
-     * @param cuerpo Cuerpo
-     */
-    public void setCuerpo(Cuerpo cuerpo) {
-        cuerpo.setPadre(this);
-        this.cuerpo = cuerpo;
-    }
-
-    /**
-     * Obtiene la llave derecha
-     * @return Llave derecha
-     */
-    public Terminal getLlaveD() {
-        return llaveD;
-    }
-
-    /**
-     * Establece la llave derecha
-     * @param llaveD Llave derecha
-     */
-    public void setLlaveD(Terminal llaveD) {
-        llaveD.setPadre(this);
-        this.llaveD = llaveD;
+    public void setContexto(Contexto contexto) {
+        contexto.setPadre(this);
+        this.contexto = contexto;
     }
 
     @Override
@@ -107,7 +71,7 @@ public final class FuncionDef extends Simbolo {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{funcionSub, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{funcionSub, contexto};
     }
 
 }

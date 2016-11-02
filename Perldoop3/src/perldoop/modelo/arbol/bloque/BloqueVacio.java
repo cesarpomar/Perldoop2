@@ -3,6 +3,7 @@ package perldoop.modelo.arbol.bloque;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**
@@ -15,12 +16,10 @@ public final class BloqueVacio extends Bloque {
     /**
      * Único contructor de la clase
      *
-     * @param llaveI Llave izquierda
-     * @param cuerpo Cuerpo
-     * @param llaveD Llave derecha
+     * @param contexto Contexto del bloque
      */
-    public BloqueVacio(Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        super(llaveI, cuerpo, llaveD);
+    public BloqueVacio(Contexto contexto) {
+        super(contexto);
     }
 
     @Override
@@ -30,6 +29,6 @@ public final class BloqueVacio extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{llaveI, cuerpo, llaveD};
+        return new Simbolo[]{contexto};
     }
 }

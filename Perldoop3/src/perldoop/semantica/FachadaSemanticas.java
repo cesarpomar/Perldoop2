@@ -12,6 +12,7 @@ import perldoop.semantica.cadenatexto.SemCadenaTexto;
 import perldoop.semantica.coleccion.*;
 import perldoop.semantica.comparacion.*;
 import perldoop.semantica.condicional.*;
+import perldoop.semantica.contexto.SemContexto;
 import perldoop.semantica.cuerpo.*;
 import perldoop.semantica.std.SemStd;
 import perldoop.semantica.expresion.*;
@@ -28,6 +29,7 @@ import perldoop.semantica.modulos.SemModulo;
 import perldoop.semantica.numero.SemNumero;
 import perldoop.semantica.paquetes.*;
 import perldoop.semantica.raiz.SemRaiz;
+import perldoop.semantica.rango.SemRango;
 import perldoop.semantica.regulares.*;
 import perldoop.semantica.sentencia.*;
 import perldoop.semantica.variable.*;
@@ -54,6 +56,7 @@ public final class FachadaSemanticas {
     private SemNumero semNumero;
     private SemCadena semCadena;
     private SemCuerpo semCuerpo;
+    private SemContexto semContexto;
     private SemExpresion semExpresion;
     private SemFlujo semFlujo;
     private SemFuncion semFuncion;
@@ -68,6 +71,7 @@ public final class FachadaSemanticas {
     private SemModificador semModificador;
     private SemModulo semModulo;
     private SemRaiz semRaiz;
+    private SemRango semRango;
     private SemRegulares semRegulares;
     private SemCadenaTexto semCadenaTexto;
     private SemSentencia semSentencia;
@@ -332,6 +336,27 @@ public final class FachadaSemanticas {
      */
     public void setSemCuerpo(SemCuerpo semCuerpo) {
         this.semCuerpo = semCuerpo;
+    }
+
+    /**
+     * Obtiene la semantica de contexto
+     *
+     * @return Semantica de contexto
+     */
+    public SemContexto getSemContexto() {
+        if (semContexto == null) {
+            semContexto = new SemContexto(tabla);
+        }
+        return semContexto;
+    }
+
+    /**
+     * Establece la semantica de contexto
+     *
+     * @param semContexto Semantica de contexto
+     */
+    public void setSemContexto(SemContexto semContexto) {
+        this.semContexto = semContexto;
     }
 
     /**
@@ -626,6 +651,27 @@ public final class FachadaSemanticas {
      */
     public void setSemRaiz(SemRaiz semRaiz) {
         this.semRaiz = semRaiz;
+    }
+
+    /**
+     * Obtiene la semantica de rango
+     *
+     * @return Semantica de rango
+     */
+    public SemRango getSemRango() {
+        if (semRango == null) {
+            semRango = new SemRango(tabla);
+        }
+        return semRango;
+    }
+
+    /**
+     * Establece la semantica de rango
+     *
+     * @param semRango Semantica de rango
+     */
+    public void setSemRango(SemRango semRango) {
+        this.semRango = semRango;
     }
 
     /**

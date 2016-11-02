@@ -5,6 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.condicional.Condicional;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
@@ -25,13 +26,11 @@ public final class BloqueIf extends BloqueControlBasico {
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
      * @param parentesisD Parentesis derecho
-     * @param llaveI Llave izquierda
-     * @param cuerpo Cuerpo
-     * @param llaveD Llave derecha
+     * @param contexto Contexto del bloque
      * @param bloqueElse BloqueElse
      */
-    public BloqueIf(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Condicional bloqueElse) {
-        super(id, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD);
+    public BloqueIf(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Contexto contexto, Condicional bloqueElse) {
+        super(id, abrirBloque, parentesisI, expresion, parentesisD, contexto);
         setBloqueElse(bloqueElse);
     }
 
@@ -60,6 +59,6 @@ public final class BloqueIf extends BloqueControlBasico {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD, bloqueElse};
+        return new Simbolo[]{id, parentesisI, expresion, parentesisD, contexto, bloqueElse};
     }
 }

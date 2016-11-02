@@ -42,6 +42,11 @@ public final class ExpRegulares extends Expresion {
     }
 
     @Override
+    public Simbolo getValor() {
+        return regulares;
+    }
+
+    @Override
     public void aceptar(Visitante v) {
         v.visitar(this);
     }

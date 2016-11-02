@@ -15,7 +15,7 @@ import perldoop.modelo.preprocesador.EtiquetasTipo;
  */
 public final class TablaSimbolos {
 
-    private List<Map<String, Contexto>> bloques;
+    private List<Map<String, ContextoVariable>> bloques;
     private Map<String, EtiquetasTipo> predeclaraciones;
     private Map<String, EntradaFuncion> funciones;
     private Map<String, EntradaFuncionNoDeclarada> funcionesNoDeclaradas;
@@ -67,7 +67,7 @@ public final class TablaSimbolos {
      * Añade una entrada al contexto de una variable
      *
      * @param entrada Entrada
-     * @param contexto Contexto
+     * @param contexto ContextoVariable
      */
     public void addVariable(EntradaVariable entrada, char contexto) {
         vacia = false;
@@ -75,9 +75,9 @@ public final class TablaSimbolos {
             paquete.addVariable(entrada, contexto);
         }
         entrada.setNivel(bloques.size() - 1);
-        Contexto c = bloques.get(entrada.getNivel()).get(entrada.getIdentificador());
+        ContextoVariable c = bloques.get(entrada.getNivel()).get(entrada.getIdentificador());
         if (c == null) {
-            c = new Contexto();
+            c = new ContextoVariable();
             bloques.get(entrada.getNivel()).put(entrada.getIdentificador(), c);
         } else {
             entrada.setConflicto(true);
@@ -99,12 +99,12 @@ public final class TablaSimbolos {
      * Busca una variable en un nivel
      *
      * @param identificador Identificador
-     * @param contexto Contexto
+     * @param contexto ContextoVariable
      * @param nivel Nivel
      * @return Entrada
      */
     public EntradaVariable buscarVariable(String identificador, char contexto, int nivel) {
-        Contexto c = null;
+        ContextoVariable c = null;
         if (nivel > -1 && nivel < bloques.size()) {
             c = bloques.get(nivel).get(identificador);
         }
@@ -126,11 +126,11 @@ public final class TablaSimbolos {
      * Busca una variable en su contexto
      *
      * @param identificador Identificador
-     * @param contexto Contexto
+     * @param contexto ContextoVariable
      * @return Entrada
      */
     public EntradaVariable buscarVariable(String identificador, char contexto) {
-        Contexto c = buscarVariable(identificador);
+        ContextoVariable c = buscarVariable(identificador);
         if (c == null) {
             return null;
         }
@@ -151,8 +151,8 @@ public final class TablaSimbolos {
      * @param identificador Identificador
      * @return Entrada
      */
-    public Contexto buscarVariable(String identificador) {
-        Contexto c;
+    public ContextoVariable buscarVariable(String identificador) {
+        ContextoVariable c;
         for (int i = bloques.size() - 1; i >= 0; i--) {
             c = bloques.get(i).get(identificador);
             if (c != null) {

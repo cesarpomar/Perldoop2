@@ -9,4 +9,10 @@ import perldoop.modelo.arbol.Simbolo;
  */
 public abstract class Expresion extends Simbolo{
        
+    /**
+     * Obtiene el simbolo que le da valor a la expresion
+     * @return Simbolo valor
+     */
+    public abstract Simbolo getValor();
+    
 }

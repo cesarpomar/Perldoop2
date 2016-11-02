@@ -1,14 +1,14 @@
-package perldoop.generacion.lista;
+package perldoop.generacion.contexto;
 
-import perldoop.modelo.arbol.lista.Lista;
+import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.generacion.TablaGenerador;
 
 /**
- * Clase generadora de lista
+ * Clase generadora de contexto
  *
  * @author César Pomar
  */
-public class GenLista {
+public class GenContexto {
 
     private TablaGenerador tabla;
 
@@ -17,11 +17,11 @@ public class GenLista {
      *
      * @param tabla Tabla
      */
-    public GenLista(TablaGenerador tabla) {
+    public GenContexto(TablaGenerador tabla) {
         this.tabla = tabla;
     }
 
-    public void visitar(Lista s) {
+    public void visitar(Contexto s) {
         //Sus padres generan el codigo por el
     }
 

@@ -9,7 +9,7 @@ import perldoop.modelo.arbol.variable.Variable;
  *
  * @author César Pomar
  */
-public class ExpVariable extends Expresion {
+public final class ExpVariable extends Expresion {
 
     private Variable variable;
 
@@ -27,7 +27,7 @@ public class ExpVariable extends Expresion {
      *
      * @return Variable
      */
-    public final Variable getVariable() {
+    public Variable getVariable() {
         return variable;
     }
 
@@ -36,9 +36,14 @@ public class ExpVariable extends Expresion {
      *
      * @param variable variable
      */
-    public final void setVariable(Variable variable) {
+    public void setVariable(Variable variable) {
         variable.setPadre(this);
         this.variable = variable;
+    }
+
+    @Override
+    public Simbolo getValor() {
+        return variable;
     }
 
     @Override
