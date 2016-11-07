@@ -555,17 +555,7 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(AccesoRefEscalar s) {
-        fachada.getGenAcceso().visitar(s);
-    }
-
-    @Override
-    public void visitar(AccesoRefArray s) {
-        fachada.getGenAcceso().visitar(s);
-    }
-
-    @Override
-    public void visitar(AccesoRefMap s) {
+    public void visitar(AccesoDesRef s) {
         fachada.getGenAcceso().visitar(s);
     }
 

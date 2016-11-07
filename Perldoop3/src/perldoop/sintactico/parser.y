@@ -76,7 +76,7 @@ import perldoop.modelo.arbol.rango.Rango;
 %nonassoc MAS_MAS MENOS_MENOS
 %left FLECHA
 %right '(' ')' '[' ']' '{' '}' ID_P
-%left AMBITO
+%left AMBITO CONTEXTO
 
 
 %%
@@ -128,7 +128,7 @@ expresion	:	numero									{$$=set(new ExpNumero(s($1)));}
 			|	coleccion								{$$=set(new ExpColeccion(s($1)));} 
 			|	acceso									{$$=set(new ExpAcceso(s($1)));} 
 			|	funcion									{$$=set(new ExpFuncion(s($1)));} 
-			|	'&' funcion %prec UNITARIO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
+			|	'&' funcion %prec CONTEXTO				{$$=set(new ExpFuncion5(s($1), s($2)));} 
 			|	lectura									{$$=set(new ExpLectura(s($1)));} 
 			|	std										{$$=set(new ExpStd(s($1)));} 
 			|	regulares								{$$=set(new ExpRegulares(s($1)));}
@@ -175,11 +175,11 @@ asignacion	:   expresion '=' expresion					{$$=set(new Igual(s($1),s($2),s($3)))
 numero		:	ENTERO									{$$=set(new Entero(s($1)));}
 			|	DECIMAL									{$$=set(new Decimal(s($1)));}
 			
-cadena		:	'\'' TEXTO '\''							{$$=set(new CadenaSimple(s($1),s($2),s($3)));}
+cadena		:	'\'' cadenaTexto '\''							{$$=set(new CadenaSimple(s($1),s($2),s($3)));}
 			|	'"' cadenaTexto '"'						{$$=set(new CadenaDoble(s($1),s($2),s($3)));}
 			|	'`' cadenaTexto '`'						{$$=set(new CadenaComando(s($1),s($2),s($3)));}	
-			|	Q SEP TEXTO SEP							{$$=set(new CadenaQ(s($1),s($2),s($3),s($4)));}	 
-			|	QW SEP TEXTO SEP						{$$=set(new CadenaQW(s($1),s($2),s($3),s($4)));}	  
+			|	Q SEP cadenaTexto SEP							{$$=set(new CadenaQ(s($1),s($2),s($3),s($4)));}	 
+			|	QW SEP cadenaTexto SEP						{$$=set(new CadenaQW(s($1),s($2),s($3),s($4)));}	  
 			|	QQ SEP cadenaTexto SEP					{$$=set(new CadenaQQ(s($1),s($2),s($3),s($4)));}	  
 			|	QR SEP cadenaTexto SEP					{$$=set(new CadenaQR(s($1),s($2),s($3),s($4)));}	  
 			|	QX SEP cadenaTexto SEP					{$$=set(new CadenaQX(s($1),s($2),s($3),s($4)));}	  
@@ -228,10 +228,10 @@ coleccion	:	colParen								{$$=$1;}
 			
 acceso		:	expresion colRef						{$$=set(new AccesoCol(s($1),s($2)));}
 			|	expresion FLECHA colRef					{$$=set(new AccesoColRef(s($1),s($2),s($3)));}
-			|	'$' expresion %prec UNITARIO			{$$=set(new AccesoRefEscalar(s($1),s($2)));} 
-			|	'@' expresion %prec UNITARIO			{$$=set(new AccesoRefArray(s($1),s($2)));} 
-			|	'%' expresion %prec UNITARIO			{$$=set(new AccesoRefMap(s($1),s($2)));} 			
-			|	'\\' expresion %prec UNITARIO			{$$=set(new AccesoRef(s($1),s($2)));} 
+			|	'$' expresion %prec CONTEXTO			{$$=set(new AccesoDesRef(s($1),s($2)));} 
+			|	'@' expresion %prec CONTEXTO			{$$=set(new AccesoDesRef(s($1),s($2)));} 
+			|	'%' expresion %prec CONTEXTO			{$$=set(new AccesoDesRef(s($1),s($2)));} 			
+			|	'\\' expresion %prec CONTEXTO			{$$=set(new AccesoRef(s($1),s($2)));} 
 
 funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(args=add(new Lista(s($2)))))));}
 			|	ID_P colParen							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),s($2)));}
@@ -245,7 +245,7 @@ funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1
 
 handle		:	STDOUT_H								{$$=set(new HandleOut(s($1)));}
 			|	STDERR_H								{$$=set(new HandleErr(s($1)));}
-			|	FILE VAR								{$$=set(new HandleFile(s($1),s($2)));}
+			|	FILE VAR								{$$=set(new HandleFile(add(new VarExistente(s($1),s($2)))));}
 			
 std			:	STDIN									{$$=set(new StdIn(s($1)));}
 			|	STDOUT									{$$=set(new StdOut(s($1)));}

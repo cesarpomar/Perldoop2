@@ -1,19 +1,18 @@
 package perldoop.semantica.coleccion;
 
 import java.util.Iterator;
+import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.acceso.AccesoColRef;
-import perldoop.modelo.arbol.acceso.AccesoRefArray;
-import perldoop.modelo.arbol.acceso.AccesoRefEscalar;
-import perldoop.modelo.arbol.acceso.AccesoRefMap;
+import perldoop.modelo.arbol.acceso.AccesoDesRef;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.*;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.flujo.Return;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.variable.VarMy;
@@ -50,89 +49,163 @@ public class SemColeccion {
         if (s.getTipo() != null) {
             return;
         }
-        Simbolo exp = s.getPadre();
-        Simbolo uso = exp.getPadre();
-        Simbolo multi;
-        if (uso instanceof Igual) {//Uso para inicializar
-            Igual igual = (Igual) uso;
-            //Al otro lado tiene que haber un tipo de dato
-            if (igual.getIzquierda().getTipo() != null) {
-                s.setTipo(new Tipo(igual.getIzquierda().getTipo()));
+        //Si es una multiasignacion, intentamos usar el tipo de la variable
+        if ((s instanceof ColLlave || s instanceof ColCorchete) && s.getPadre() instanceof Expresion) {
+            Expresion var = Buscar.getVarMultivar((Expresion) s.getPadre());
+            if (var != null) {
+                Tipo t = var.getTipo();
+                if (t.isRef()) {
+                    t = t.getSubtipo(1);
+                }
+                s.setTipo(t);
+                return;
             }
-        } else if ((multi = Buscar.getVarMultivar(s)) != null) {//Uso para inicializar en multiasignacion
-            s.setTipo(multi.getTipo());
-        } else if (exp instanceof Funcion || uso instanceof Return) {//Uso argumentos funcion
-            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-        } else if (uso instanceof Lista && uso.getPadre() instanceof Coleccion) {//Coleccion anidada
-            Coleccion col = (Coleccion) uso.getPadre();
-            tipar(col);
-            if (col.getTipo() != null) {
-                Tipo t = new Tipo(col.getTipo());
-                if (s instanceof ColParentesis || t.isBox()) {
-                    s.setTipo(t);
-                } else {
-                    s.setTipo(col.getTipo().getSubtipo(1));
+        }
+        Simbolo uso = Buscar.getPadre(s, 1);
+        //Comprobar si es una coleccion anidada
+        if (uso instanceof Lista && uso.getPadre() instanceof Coleccion) {
+            Coleccion padre = (Coleccion) uso.getPadre();
+            tipar(padre);
+            Tipo t = padre.getTipo().getSubtipo(0);
+            if (t.isBox()) {
+                t.add(0, Tipo.ARRAY);
+            }
+            if (s instanceof ColParentesis) {
+                s.setTipo(t);
+            } else {
+                t = t.getSubtipo(1);
+                if (t.isBox()) {
+                    if (s instanceof ColLlave) {
+                        t.add(0, Tipo.MAP);
+                    } else {
+                        t.add(0, Tipo.ARRAY);
+                    }
+                }
+                s.setTipo(t);
+            }
+            return;
+        }
+        //Si esta a la derecha de igual, cogemos el tipo de la asignacion si es una coleccion
+        if (uso instanceof Igual && Buscar.isHijo(s, ((Igual) uso).getDerecha())) {
+            Tipo t = ((Igual) uso).getIzquierda().getTipo();
+            if (t != null) {
+                if (t.isRef()) {
+                    t = t.getSubtipo(1);
+                }
+                if (!t.isColeccion()) {
+                    t = t.getSubtipo(0);
+                    if (s instanceof ColLlave) {
+                        t.add(0, Tipo.MAP);
+                    } else {
+                        t.add(0, Tipo.ARRAY);
+                    }
+                }
+                s.setTipo(t);
+                return;
+            }
+        }
+        if (s instanceof ColParentesis) {
+            //Si es una funcion la coleccion representa el argumento
+            if (s.getPadre() instanceof Funcion) {
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+                return;
+            }
+            //Si esta a la izquierda de igual, es una mutiasignacion, no se necesita tipo
+            Igual igual = Buscar.buscarPadre(s, Igual.class);
+            if (igual != null && Buscar.isHijo(s, igual.getIzquierda())) {
+                return;
+            }
+            //Si es una expresion sola entre parentesis, propagamos el tipo
+            if (s.getLista().getExpresiones().size() == 1) {
+                s.setTipo(s.getLista().getExpresiones().get(0).getTipo());
+                if (s.getTipo() != null) {
+                    return;
                 }
             }
         }
-        //Tipamos siembre sin referencias
-        if (s.getTipo() != null && s.getTipo().isRef()) {
-            s.setTipo(s.getTipo().getSubtipo(1));
+        if (s instanceof ColCorchete) {
+            //Si es un acceso
+            if (s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) {
+                //Con solo una expresion en su interior
+                if (s.getLista().getExpresiones().size() == 1) {
+                    Expresion exp = s.getLista().getExpresiones().get(0);
+                    if (!(exp.getValor() instanceof ColParentesis) || Buscar.getExpresiones((Coleccion) exp.getValor()).size() == 1) {
+                        s.setTipo(new Tipo(Tipo.INTEGER));
+                        return;
+                    }
+                }
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.NUMBER));
+                return;
+            }
         }
+        if (s instanceof ColLlave) {
+            //Si es un acceso
+            if (s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) {
+                //Con solo una expresion en su interior
+                if (s.getLista().getExpresiones().size() == 1) {
+                    Expresion exp = s.getLista().getExpresiones().get(0);
+                    if (!(exp.getValor() instanceof ColParentesis) || Buscar.getExpresiones((Coleccion) exp.getValor()).size() == 1) {
+                        s.setTipo(new Tipo(Tipo.STRING));
+                        return;
+                    }
+                }
+                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));
+                return;
+            }
+            uso = Buscar.getUso((Expresion) s.getPadre());
+            if (uso instanceof AccesoDesRef && s.getLista().getExpresiones().size() == 1) {
+                Tipo t = s.getLista().getExpresiones().get(0).getTipo();
+                if (t != null) {
+                    if (t.isRef()) {
+                        t = t.getSubtipo(1);
+                    }
+                    s.setTipo(t);
+                    return;
+                }
+            }
+
+        }
+        //En el caso final de que la coleccion no vaya a ser usada por nadie 'util', asignamos tipo generico
+        s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
     }
 
     /**
      * Comprueba que todas las claves tienen un valor
      *
-     * @param l Lista
+     * @param expresiones Lista de expresiones
+     * @param tabla Tabla semantica
      */
-    public void checkClaveValor(Lista l) {
+    private static void checkClaveValor(List<Expresion> expresiones, TablaSemantica tabla) {
         int e = 0;
-        Iterator<Expresion> it = l.getExpresiones().iterator();
+        Iterator<Expresion> it = expresiones.iterator();
         Expresion last = null;
         while (it.hasNext()) {
             Expresion exp = it.next();
             if (!exp.getTipo().isColeccion()) {
                 e++;
             }
-            if (exp.getTipo().isColeccion() || !it.hasNext()) {
-                if (e % 2 != 0) {
-                    tabla.getGestorErrores().error(Errores.MAPA_NO_VALUE, Buscar.tokenInicio(last));
-                    throw new ExcepcionSemantica(Errores.MAPA_NO_VALUE);
-                }
+            if ((!it.hasNext() || exp.getTipo().isColeccion()) && e % 2 != 0) {
+                tabla.getGestorErrores().error(Errores.MAPA_NO_VALUE, Buscar.tokenInicio(last));
+                throw new ExcepcionSemantica(Errores.MAPA_NO_VALUE);
             }
             last = exp;
         }
     }
 
     /**
-     * Comprueba si la colección contiene una subcolección que debe ser desplegada y la retorna
-     *
-     * @param l Lista
-     * @return Coleccion
-     */
-    private Expresion contieneCol(Lista l) {
-        for (Expresion exp : l.getExpresiones()) {
-            if (exp.getTipo().isColeccion()) {
-                return exp;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Comprueba que todos los elementos de la coleccion son compatibles con el tipo de la misma
      *
      * @param t Tipo de la coleccion
-     * @param l Lista de elementos
+     * @param expresiones Lista de expresiones
+     * @param tabla Tabla semantica
      */
-    private void comprobarElems(Tipo t, Lista l) {
+    public static void comprobarElems(Tipo t, List<Expresion> expresiones, TablaSemantica tabla) {
         Tipo subT = t.getSubtipo(1);
-        if (subT.isArrayOrList() || subT.isMap()) {
+        if (subT.isColeccion()) {
             subT.add(0, Tipo.REF);
         }
-        for (int i = 0; i < l.getExpresiones().size(); i++) {
-            Tipo texp = l.getExpresiones().get(i).getTipo();
+        for (int i = 0; i < expresiones.size(); i++) {
+            Tipo texp = expresiones.get(i).getTipo();
             if (!t.isMap() || i % 2 == 1) {
                 if (texp.isColeccion()) {
                     texp = texp.getSubtipo(1);
@@ -140,13 +213,13 @@ public class SemColeccion {
                         texp.add(0, Tipo.REF);
                     }
                 }
-                Tipos.casting(l.getExpresiones().get(i), texp, subT, tabla.getGestorErrores());
+                Tipos.casting(expresiones.get(i), texp, subT, tabla.getGestorErrores());
             } else {
-                Tipos.casting(l.getExpresiones().get(i), texp, new Tipo(Tipo.STRING), tabla.getGestorErrores());
+                Tipos.casting(expresiones.get(i), texp, new Tipo(Tipo.STRING), tabla.getGestorErrores());
             }
         }
         if (t.isMap()) {
-            checkClaveValor(l);
+            checkClaveValor(expresiones, tabla);
         }
     }
 
@@ -170,87 +243,43 @@ public class SemColeccion {
     }
 
     public void visitar(ColParentesis s) {
-        Simbolo uso = s.getPadre().getPadre();
-        if (uso instanceof Igual && ((Igual) uso).getIzquierda() == s.getPadre()) {
-            if (contieneCol(s.getLista()) != null) {
-                tabla.getGestorErrores().error(Errores.VARIABLE_COLECCION_MULTIASIGNACION, Buscar.tokenInicio(contieneCol(s.getLista())));
-            }
-            s.setTipo(null);
-            tabla.getAcciones().saltarGenerador();
-        } else if (s.getLista().getElementos().size() == 1 && !(s.getPadre() instanceof Funcion) && !(uso instanceof Return)) {
-            s.setTipo(new Tipo(s.getLista().getExpresiones().get(0).getTipo()));
-        } else {
-            tipar(s);
-            if (s.getTipo() == null && !(uso instanceof Igual && contieneCol(s.getLista()) == null)) {
-                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-            } else if (s.getTipo() != null && s.getTipo().isBox()) {
-                s.getTipo().add(0, Tipo.ARRAY);
-            } else if (s.getTipo() != null) {
-                comprobarElems(s.getTipo(), s.getLista());
-            } else {
-                tabla.getAcciones().saltarGenerador();
-            }
+        tipar(s);
+        //Si es null es el lado izquierdo de la multi asignacion y si no es una coleccion es una simple expresion
+        if (s.getTipo() != null && s.getTipo().isColeccion()) {
+            comprobarElems(s.getTipo(), s.getLista().getExpresiones(), tabla);
         }
     }
 
     public void visitar(ColDecMy s) {
         checkVariablesDec(s);
-        visitar((ColParentesis)s);
+        visitar((ColParentesis) s);
     }
 
     public void visitar(ColDecOur s) {
         checkVariablesDec(s);
-        visitar((ColParentesis)s);
+        visitar((ColParentesis) s);
     }
 
     public void visitar(ColCorchete s) {
-        if (s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) {
-            if (s.getLista().getElementos().size() == 1) {
-                s.setTipo(new Tipo(Tipo.INTEGER));
-                Tipos.casting(s.getLista().getExpresiones().get(0), s.getTipo(), tabla.getGestorErrores());
-            } else {
-                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.NUMBER));
-                comprobarElems(s.getTipo(), s.getLista());
-            }
-        } else {
-            tipar(s);
-            if (s.getTipo() == null) {
-                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
-            } else if (s.getTipo().isBox()) {
-                s.getTipo().add(0, Tipo.ARRAY);
-            }
-            comprobarElems(s.getTipo(), s.getLista());
-            s.getTipo().add(0, Tipo.REF);
+        tipar(s);
+        if (s.getLista().getExpresiones().size() > 1) {
+            comprobarElems(s.getTipo(), s.getLista().getExpresiones(), tabla);
         }
+        if (s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) {
+            return;
+        }
+        s.getTipo().add(0, Tipo.REF);
     }
 
     public void visitar(ColLlave s) {
-        Simbolo padre = s.getPadre();
-        Simbolo uso = padre.getPadre();
-        if (padre instanceof AccesoCol || padre instanceof AccesoColRef) {
-            if (s.getLista().getElementos().size() == 1) {
-                s.setTipo(new Tipo(Tipo.STRING));
-                Tipos.casting(s.getLista().getExpresiones().get(0), s.getTipo(), tabla.getGestorErrores());
-            } else {
-                s.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));
-                comprobarElems(s.getTipo(), s.getLista());
-            }
-        } else if (uso instanceof AccesoRefEscalar || uso instanceof AccesoRefArray || uso instanceof AccesoRefMap) {
-            if (s.getLista().getElementos().size() != 1) {
-                tabla.getGestorErrores().error(Errores.ACCESO_REF_MULTIPLE, s.getLlaveI());
-                throw new ExcepcionSemantica(Errores.ACCESO_REF_MULTIPLE);
-            }
-            s.setTipo(new Tipo(s.getLista().getExpresiones().get(0).getTipo()));
-        } else {
-            tipar(s);
-            if (s.getTipo() == null) {
-                s.setTipo(new Tipo(Tipo.MAP, Tipo.BOX));
-            } else if (s.getTipo().isBox()) {
-                s.getTipo().add(0, Tipo.MAP);
-            }
-            comprobarElems(s.getTipo(), s.getLista());
-            s.getTipo().add(0, Tipo.REF);
+        tipar(s);
+        if (s.getLista().getExpresiones().size() > 1) {
+            comprobarElems(s.getTipo(), s.getLista().getExpresiones(), tabla);
         }
+        if (s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) {
+            return;
+        }
+        s.getTipo().add(0, Tipo.REF);
     }
 
 }

@@ -5,6 +5,7 @@ import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.aritmetica.*;
 import perldoop.modelo.arbol.asignacion.Igual;
+import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.semantica.util.Tipos;
@@ -80,11 +81,13 @@ public class SemAritmetica {
 
     public void visitar(AritDiv s) {
         tipoMinimo(s);
-        Simbolo uso = Buscar.getPadre(s, 1);
-        if (uso instanceof Igual) {
-            Tipo tigual = ((Igual) uso).getIzquierda().getTipo();
-            if (tigual.isInteger() || tigual.isLong()) {
-                s.setTipo(tigual);
+        if (s.getTipo().isInteger() || s.getTipo().isLong()) {
+            Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
+            if (uso instanceof Igual) {
+                Tipo t = ((Igual) uso).getIzquierda().getTipo();
+                if (t != null && (t.isInteger() || t.isLong())) {
+                    s.setTipo(t);
+                }
             }
         }
     }

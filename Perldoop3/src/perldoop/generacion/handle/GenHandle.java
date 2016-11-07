@@ -30,7 +30,7 @@ public class GenHandle {
     }
 
     public void visitar(HandleFile s) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        s.setCodigoGenerado(s.getVariable().getCodigoGenerado());
     }
 
 }

@@ -2,6 +2,7 @@ package perldoop.semantica.rango;
 
 import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.semantica.TablaSemantica;
+import perldoop.modelo.semantica.Tipo;
 
 /**
  * Clase para la semantica de raiz
@@ -22,9 +23,11 @@ public final class SemRango {
     }
 
     public void visitar(Rango s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        if (s.getIzquierda().getTipo().isInteger() && s.getDerecha().getTipo().isInteger()) {
+            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.INTEGER));
+        } else {
+            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.LONG));
+        }
     }
-
-
 
 }

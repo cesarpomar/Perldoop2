@@ -11,13 +11,34 @@ import perldoop.modelo.arbol.Visitante;
  */
 public final class HandleOut extends Handle {
 
+    private Terminal salida;
+
     /**
      * Constructor unico de la clase
      *
-     * @param std Salida
+     * @param salida Salida
      */
-    public HandleOut(Terminal std) {
-        super(std);
+    public HandleOut(Terminal salida) {
+        setSalida(salida);
+    }
+
+    /**
+     * Obtiene la salida
+     *
+     * @return salida
+     */
+    public Terminal getSalida() {
+        return salida;
+    }
+
+    /**
+     * Establece la salida
+     *
+     * @param salida Salida
+     */
+    public void setSalida(Terminal salida) {
+        salida.setPadre(this);
+        this.salida = salida;
     }
 
     @Override
@@ -27,7 +48,7 @@ public final class HandleOut extends Handle {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{std};
+        return new Simbolo[]{salida};
     }
 
 }

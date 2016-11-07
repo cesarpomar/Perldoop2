@@ -5,6 +5,7 @@ import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.util.Buscar;
 
 /**
  * Clase generadora de expresion
@@ -31,7 +32,8 @@ public class GenExpresion {
      * @return Codigo valido para sentencia en caso de ser necesario
      */
     public StringBuilder checkSentencia(Simbolo s) {
-        if (s.getPadre() instanceof Lista && s.getPadre().getPadre() instanceof StcLista) {
+        Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
+        if (uso instanceof Lista && uso.getPadre().getPadre() instanceof StcLista) {
             return new StringBuilder("Pd.eval(").append(s).append(")");
         }
         return s.getCodigoGenerado();

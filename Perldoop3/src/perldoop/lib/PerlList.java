@@ -32,7 +32,7 @@ public final class PerlList<T> extends ArrayList<T> {
      *
      * @param array Crea una lista con los elementos del array
      */
-    public PerlList(T[] array) {
+    public PerlList(T... array) {
         super(array.length*2);
         for (T e : array) {
             this.add(e);

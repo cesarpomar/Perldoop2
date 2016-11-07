@@ -23,16 +23,15 @@ public class GenCadena {
 
     public void visitar(CadenaSimple s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append('"');
         codigo.append(s.getTexto());
-        codigo.append('"').append(s.getComillaD().getComentario());
+        codigo.append(s.getSepD().getComentario());
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(CadenaDoble s) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append(s.getTexto());
-        codigo.append(s.getComillaD().getComentario());
+        codigo.append(s.getSepD().getComentario());
         s.setCodigoGenerado(codigo);
     }
 
@@ -40,17 +39,14 @@ public class GenCadena {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append("Pd.cmd(");
         codigo.append(s.getTexto());
-        codigo.append(s.getComillaD().getComentario());
-        codigo.append(")");
+        codigo.append(")").append(s.getSepD().getComentario());;
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(CadenaQ s) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append(s.getId().getComentario());
-        codigo.append('"');
         codigo.append(s.getTexto());
-        codigo.append('"');
         codigo.append(s.getSepD().getComentario());
         s.setCodigoGenerado(codigo);
     }
@@ -58,10 +54,9 @@ public class GenCadena {
     public void visitar(CadenaQW s) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append(s.getId().getComentario());
-        codigo.append('"');
+        codigo.append("new String[]{");
         codigo.append(s.getTexto());
-        codigo.append("\".split(\" \")");
-        codigo.append(s.getSepD().getComentario());
+        codigo.append("}").append(s.getSepD().getComentario());
         s.setCodigoGenerado(codigo);
     }
 
@@ -75,11 +70,10 @@ public class GenCadena {
 
     public void visitar(CadenaQX s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("Pd.cmd(");
         codigo.append(s.getId().getComentario());
+        codigo.append("Pd.cmd(");
         codigo.append(s.getTexto());
-        codigo.append(s.getSepD().getComentario());
-        codigo.append(")");
+        codigo.append(")").append(s.getSepD().getComentario());
         s.setCodigoGenerado(codigo);
     }
 

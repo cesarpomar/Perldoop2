@@ -118,6 +118,7 @@ public class GenSentencia {
     public void sentenciasOpt(Lista lista, StringBuilder codigo) {
         Iterator<Terminal> it = lista.getSeparadores().iterator();
         for (Expresion exp : lista.getExpresiones()) {
+            exp = Buscar.getExpresion(exp);
             if (exp instanceof ExpNumero) {
                 //Ignoramos numero
             } else if (exp instanceof ExpCadena) {

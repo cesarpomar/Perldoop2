@@ -18,7 +18,7 @@ public class Errores extends Internacionalizacion {
     public static final String PAQUETE_INVALIDO = "PAQUETE_INVALIDO";
     public static final String ERROR_LIBRERIA = "ERROR_LIBRERIA";
     public static final String ERROR_FORMATEO = "ERROR_FORMATEO";
-    
+
     //Lexicos
     public static final String CARACTER_INVALIDO = "CARACTER_INVALIDO";
     public static final String FALLOS_LEXICOS = "FALLOS_LEXICOS";
@@ -55,31 +55,35 @@ public class Errores extends Internacionalizacion {
     public static final String ERROR_CASTING = "ERROR_CASTING";
     public static final String UNBOXING_SIN_TIPO = "UNBOXING_SIN_TIPO";
     public static final String ACCESO_NO_COLECCION = "ACCESO_NO_COLECCION";
+    public static final String ACCESO_NO_VAR = "ACCESO_NO_VAR";//Borrar
     public static final String ACCESO_ERRONEO = "ACCESO_ERRONEO";
-    public static final String ACCESO_VACIO = "ACCESO_VACIO";
+    public static final String ACCESO_VACIO_COLECCION = "ACCESO_VACIO_COLECCION";
+    public static final String ACCESO_VACIO_REFERENCIA = "ACCESO_VACIO_REFERENCIA";
     public static final String ACCESO_NO_REF = "ACCESO_NO_REF";
     public static final String ACCESO_REF_MULTIPLE = "ACCESO_REF_MULTIPLE";
     public static final String ACCESO_REF_ESCALAR = "ACCESO_REF_ESCALAR";
+    public static final String ACCESO_ANIDADO_PORCENTAJE = "ACCESO_ANIDADO_PORCENTAJE";
     public static final String VARIABLE_ERROR_SIGIL = "VARIABLE_ERROR_SIGIL";
     public static final String REFERENCIA_NO_COLECCION = "REFERENCIA_NO_COLECCION";
-    public static final String MAPA_NO_TAM = "MAPA_NO_TAM";
+    public static final String MAPA_NO_TAM = "MAPA_NO_TAM";//BORRAR
     public static final String MAPA_NO_VALUE = "MAPA_NO_VALUE";
     public static final String ARRAY_INICIALIZACION_TAM = "ARRAY_INICIALIZACION_TAM";
-    public static final String IGUAL_COLECION_REQUERIDA = "IGUAL_COLECION_REQUERIDA";
+    public static final String IGUAL_COLECION_REQUERIDA = "IGUAL_COLECION_REQUERIDA";//BORRAR
     public static final String INICIALIZACION_SOLO_COLECIONES = "INICIALIZACION_SOLO_COLECIONES";
-    public static final String VARIABLE_COLECCION_MULTIASIGNACION = "VARIABLE_COLECCION_MULTIASIGNACION";
+    public static final String VARIABLE_COLECCION_MULTIASIGNACION = "VARIABLE_COLECCION_MULTIASIGNACION";//Borrar
     public static final String REGEX_NO_VARIABLE = "REGEX_NO_VARIABLE";
     public static final String REGEX_MODIFICADOR_DESCONOCIDO = "REGEX_MODIFICADOR_DESCONOCIDO";
     public static final String RETURN_SIN_FUNCION = "RETURN_SIN_FUNCION";
     public static final String NEXT_LAST_SIN_BUCLE = "NEXT_LAST_SIN_BUCLE";
     public static final String SENTENCIA_MUERTA = "SENTENCIA_MUERTA";
-    public static final String OPERADOR_SMART= "OPERADOR_SMART";
-    public static final String MODULO_NO_VACIO= "MODULO_NO_VACIO";
-    public static final String MODULO_YA_CREADO= "MODULO_YA_CREADO";
-    public static final String MODULO_NO_EXISTE= "MODULO_NO_EXISTE";
+    public static final String OPERADOR_SMART = "OPERADOR_SMART";
+    public static final String MODULO_NO_VACIO = "MODULO_NO_VACIO";
+    public static final String MODULO_YA_CREADO = "MODULO_YA_CREADO";
+    public static final String MODULO_NO_EXISTE = "MODULO_NO_EXISTE";
     public static final String FUNCION_SIN_HANDLE = "FUNCION_SIN_HANDLE";
     public static final String DOBLE_DECLARACION = "DOBLE_DECLARACION";
     public static final String DECLARACION_NO_VAR = "DECLARACION_NO_VAR";
+    public static final String CONTEXTO_HASH_ESCRITURA = "CONTEXTO_HASH_ESCRITURA";
 
     public Errores() {
         super("errores");

@@ -5,6 +5,7 @@ import perldoop.modelo.generacion.TablaGenerador;
 
 /**
  * Clase generadora de abrirBloque
+ *
  * @author César Pomar
  */
 public class GenAbrirBloque {
@@ -21,7 +22,6 @@ public class GenAbrirBloque {
     }
 
     public void visitar(AbrirBloque s) {
-        
     }
 
 }

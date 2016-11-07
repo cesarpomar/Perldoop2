@@ -1,6 +1,7 @@
 package perldoop.lib;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,6 +49,7 @@ public final class PerlMap<T> extends HashMap<String, T> {
 
     /**
      * Crea un mapa partiendo de un array de claves y otro de valores
+     *
      * @param claves Array de claves
      * @param valores Array de valores
      */
@@ -64,4 +66,24 @@ public final class PerlMap<T> extends HashMap<String, T> {
         return value;
     }
 
+    /**
+     * Almacena un valor usando una clave compuesta
+     *
+     * @param keys Lista de claves
+     * @param value Lista de valores
+     * @return Value
+     */
+    public T put(List<String> keys, T value) {
+        return put(String.join("\034", keys), value);
+    }
+
+    /**
+     * Obtiene un valor usando una clave compuesta
+     *
+     * @param keys Lista de claves
+     * @return Value
+     */
+    public T get(List<String> keys) {
+        return get(String.join("\034", keys));
+    }
 }

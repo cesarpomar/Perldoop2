@@ -514,17 +514,7 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(AccesoRefEscalar s) {
-        fachada.getSemAcceso().visitar(s);
-    }
-
-    @Override
-    public void visitar(AccesoRefArray s) {
-        fachada.getSemAcceso().visitar(s);
-    }
-
-    @Override
-    public void visitar(AccesoRefMap s) {
+    public void visitar(AccesoDesRef s) {
         fachada.getSemAcceso().visitar(s);
     }
 

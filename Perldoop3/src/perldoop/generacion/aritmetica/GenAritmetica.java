@@ -186,7 +186,7 @@ public class GenAritmetica {
         } else {
             SimboloAux lectura;
             SimboloAux escritura;
-            Tipo tn=s.getTipo().isNumberType()?s.getTipo():new Tipo(Tipo.DOUBLE);
+            Tipo tn = s.getTipo().isNumberType() ? s.getTipo() : new Tipo(Tipo.DOUBLE);
             if (expresion instanceof ExpVariable) {
                 lectura = new SimboloAux(expresion);
                 escritura = new SimboloAux(expresion);
@@ -232,8 +232,8 @@ public class GenAritmetica {
             if (Buscar.getPadre(s, 2) instanceof StcLista) {
                 return codigo;
             }
-            Tipo tn=s.getTipo().isNumberType()?s.getTipo():new Tipo(Tipo.DOUBLE);
-            SimboloAux aux = new SimboloAux(expresion.getTipo(),codigo);
+            Tipo tn = s.getTipo().isNumberType() ? s.getTipo() : new Tipo(Tipo.DOUBLE);
+            SimboloAux aux = new SimboloAux(expresion.getTipo(), codigo);
             aux.setCodigoGenerado(Casting.casting(aux, tn).append(op).append("1"));
             aux.setCodigoGenerado(Casting.casting(aux, expresion.getTipo()));
         }

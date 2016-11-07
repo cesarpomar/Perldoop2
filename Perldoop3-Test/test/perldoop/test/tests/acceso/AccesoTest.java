@@ -1,5 +1,6 @@
 package perldoop.test.tests.acceso;
 
+import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -57,8 +58,8 @@ public class AccesoTest {
         Assert.assertArrayEquals(new String[]{"1", "2"}, Acceso.l19);
         Assert.assertArrayEquals(new Integer[]{1, 2}, Acceso.l20.toArray());
         Assert.assertTrue(Acceso.l21.contains("a"));
-        Assert.assertArrayEquals(new String[]{"1", "2"}, Acceso.l22);
-        Assert.assertArrayEquals(new Integer[]{1, 2}, Acceso.l23.toArray());
+        Assert.assertArrayEquals(new String[]{"2"}, Acceso.l22);
+        Assert.assertArrayEquals(new Integer[]{2}, Acceso.l23.toArray());
         Assert.assertTrue(Acceso.l24.contains("a"));
     }
 
@@ -109,10 +110,9 @@ public class AccesoTest {
         Assert.assertNotNull(Acceso.w21.get("1"));
         Assert.assertEquals("n", Acceso.w21.get("1").get("1"));
         Assert.assertEquals("o", Acceso.w21.get("1").get("2"));
-        Assert.assertArrayEquals(new String[]{"7", "8"}, Acceso.w22.get());
-        Assert.assertArrayEquals(new Integer[]{7, 8}, Acceso.w23.get().toArray());
-        Assert.assertEquals("n", Acceso.w24.get().get("1"));
-        Assert.assertEquals("o", Acceso.w24.get().get("3"));
+        Assert.assertArrayEquals(new String[]{"1", "8"}, Acceso.w22.get());
+        Assert.assertArrayEquals(new Integer[]{1, 8}, Acceso.w23.get().toArray());
+        Assert.assertEquals("o", Acceso.w24.get().get(Arrays.asList("1","3")));
     }
 
     @Test

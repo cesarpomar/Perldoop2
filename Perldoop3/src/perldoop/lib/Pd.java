@@ -3,7 +3,10 @@ package perldoop.lib;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
 import perldoop.lib.util.Union;
 
 /**
@@ -23,14 +26,50 @@ public final class Pd {
     }
 
     /**
-     * Accede a varias posiciones dentro de un array
+     * Accede a varias posiciones dentro de un array en contexto escalar
      *
      * @param <T> Tipo de los elementos
      * @param array Array
      * @param indexs Posiciones
-     * @return Subarray
+     * @return Elemento del ultimo indexs
      */
-    public static <T> T[] access(T[] array, Number[] indexs) {
+    public static <T> T sAccess(T[] array, Number[] indexs) {
+        return array[indexs[indexs.length - 1].intValue()];
+    }
+
+    /**
+     * Accede a varias posiciones dentro de un array y las actualiza
+     *
+     * @param <T> Tipo de los elementos
+     * @param array Array
+     * @param indexs Posiciones
+     * @param value Valor
+     * @return Elemento del ultimo indexs
+     */
+    public static <T> T sAccess(T[] array, Number[] indexs, T value) {
+        return array[indexs[indexs.length - 1].intValue()] = value;
+    }
+
+    /**
+     * Genera una lista temporal desde un array sin recorrerlo
+     *
+     * @param <T> Tipo de los elementos
+     * @param array Arrays
+     * @return Lista temporal
+     */
+    public static <T> List<T> tList(T[] array) {
+        return Arrays.asList(array);
+    }
+
+    /**
+     * Accede a varias posiciones dentro de un array en contexto array
+     *
+     * @param <T> Tipo de los elementos
+     * @param array Array
+     * @param indexs Posiciones
+     * @return Array de posciones de los indices
+     */
+    public static <T> T[] aAccess(T[] array, Number[] indexs) {
         T[] res = (T[]) Array.newInstance(array.getClass().getComponentType(), indexs.length);
         for (int i = 0; i < indexs.length; i++) {
             res[i] = array[indexs[i].intValue()];
@@ -39,86 +78,191 @@ public final class Pd {
     }
 
     /**
-     * Accede a varias posiciones dentro de una lista
-     *
-     * @param <T> Tipo de los elementos
-     * @param lista Lista
-     * @param indexs Posiciones
-     * @return Sublista
-     */
-    public static <T> PerlList<T> access(PerlList<T> lista, Number[] indexs) {
-        PerlList<T> res = new PerlList<>(indexs.length);
-        for (Number n : indexs) {
-            res.add(lista.get(n.intValue()));
-        }
-        return res;
-    }
-
-    /**
-     * Accede a varias posiciones dentro de una map
-     *
-     * @param <T> Tipo de los elementos
-     * @param map Mapa
-     * @param keys Array de claves
-     * @return Array de valores
-     */
-    public static <T> PerlList<T> access(PerlMap<T> map, String[] keys) {
-        PerlList res = new PerlList(keys.length);
-        for (String key : keys) {
-            res.add(map.get(key));
-        }
-        return res;
-    }
-
-    /**
-     * Accede a varias posiciones dentro de un array y las actualiza con los nuevos valores
+     * Accede a varias posiciones dentro de un array y las actualiza en el contexto array
      *
      * @param <T> Tipo de los elementos
      * @param array Array
      * @param indexs Posiciones
      * @param values Valores
-     * @return Numero asignaciones
+     * @return Array de posciones de los indices
      */
-    public static <T> Integer access(T[] array, Number[] indexs, T[] values) {
-        int i;
-        for (i = 0; i < indexs.length && i < values.length; i++) {
-            array[indexs[i].intValue()] = values[i];
+    public static <T> T[] aAccess(T[] array, Number[] indexs, T... values) {
+        T[] res = (T[]) Array.newInstance(array.getClass().getComponentType(), indexs.length);
+        for (int i = 0; i < indexs.length; i++) {
+            res[i] = array[indexs[i].intValue()] = values[i];
         }
-        return i;
+        return res;
     }
 
     /**
-     * Accede a varias posiciones dentro de una lista y las actualiza con los nuevos valores
+     * Accede a varias posiciones dentro de una lista en el contexto hash
      *
      * @param <T> Tipo de los elementos
-     * @param lista Lista
+     * @param array Array
+     * @param indexs Posiciones
+     * @param f Funcion para transformar los elementos a box
+     * @return Lista de index valor consecutivos
+     */
+    public static <T> Box[] hAccess(T[] array, Number[] indexs, Function<T, Box> f) {
+        Box[] res = new Box[indexs.length * 2];
+        for (int i = 0; i < indexs.length; i++) {
+            res[i] = Casting.box(indexs[i]);
+            res[i + 1] = f.apply(array[indexs[i].intValue()]);
+        }
+        return res;
+    }
+
+    /**
+     * Accede a varias posiciones dentro de una lista en contexto escalar
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
+     * @param indexs Posiciones
+     * @return Elemento del ultimo indexs
+     */
+    public static <T> T sAccess(List<T> list, Number[] indexs) {
+        return list.get(indexs[indexs.length - 1].intValue());
+    }
+
+    /**
+     * Accede a varias posiciones dentro de una lista y las actualiza
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
+     * @param indexs Posiciones
+     * @param value Valor
+     * @return Elemento del ultimo indexs
+     */
+    public static <T> T sAccess(List<T> list, Number[] indexs, T value) {
+        return list.set(indexs[indexs.length - 1].intValue(), value);
+    }
+
+    /**
+     * Accede a varias posiciones dentro de una lista en contexto array
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
+     * @param indexs Posiciones
+     * @return Lista de posiciones de los indices
+     */
+    public static <T> PerlList<T> aAccess(List<T> list, Number[] indexs) {
+        PerlList<T> res = new PerlList<>(indexs.length);
+        for (int i = 0; i < indexs.length; i++) {
+            res.set(i, list.get(indexs[i].intValue()));
+        }
+        return res;
+    }
+
+    /**
+     * Accede a varias posiciones dentro de una lista y las actualiza en el contexto array
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
      * @param indexs Posiciones
      * @param values Valores
-     * @return Numero asignaciones
+     * @return Lista de posiciones de los indices
      */
-    public static <T> Integer access(PerlList<T> lista, Number[] indexs, PerlList<T> values) {
-        int i;
-        for (i = 0; i < indexs.length && i < values.size(); i++) {
-            lista.set(indexs[i].intValue(), values.get(i));
+    public static <T> PerlList<T> aAccess(List<T> list, Number[] indexs, List<T> values) {
+        PerlList<T> res = new PerlList<>(indexs.length);
+        for (int i = 0; i < indexs.length; i++) {
+            res.set(i, list.set(indexs[i].intValue(), values.get(i)));
         }
-        return i;
+        return res;
     }
 
     /**
-     * Accede a varias posiciones dentro de una map
+     * Accede a varias posiciones dentro de una lista en el contexto hash
      *
      * @param <T> Tipo de los elementos
-     * @param map Mapa
-     * @param keys Array de claves
-     * @param values Valores
-     * @return Numero asignaciones
+     * @param list Lista
+     * @param indexs Posiciones
+     * @param f Funcion para transformar los elementos a box
+     * @return Lista de index valor consecutivos
      */
-    public static <T> Integer access(PerlMap<T> map, String[] keys, PerlList<T> values) {
-        int i;
-        for (i = 0; i < keys.length && i < values.size(); i++) {
-            map.put(keys[i], values.get(i));
+    public static <T> PerlList<Box> hAccess(PerlList<T> list, Number[] indexs, Function<T, Box> f) {
+        PerlList<Box> res = new PerlList<>(indexs.length * 2);
+        for (int i = 0; i < indexs.length; i++) {
+            res.add(Casting.box(indexs[i]));
+            res.add(f.apply(list.get(indexs[i].intValue())));
         }
-        return i;
+        return res;
+    }
+
+    /**
+     * Accede a varias posiciones dentro de un hash en contexto escalar
+     *
+     * @param <T> Tipo de los elementos
+     * @param map PerlMap
+     * @param keys Claves
+     * @return Valor de la ultima clave
+     */
+    public static <T> T sAccess(PerlMap<T> map, String[] keys) {
+        return map.get(keys[keys.length - 1]);
+    }
+
+    /**
+     * Accede a varias posiciones dentro de una lista y las actualiza
+     *
+     * @param <T> Tipo de los elementos
+     * @param map PerlMap
+     * @param keys Claves
+     * @param value Valor
+     * @return Valor de la ultima clave
+     */
+    public static <T> T sAccess(PerlMap<T> map, String[] keys, T value) {
+        return map.put(Arrays.asList(keys), value);
+    }
+
+    /**
+     * Accede a varias posiciones dentro de una lista en contexto array
+     *
+     * @param <T> Tipo de los elementos
+     * @param map PerlMap
+     * @param keys Claves
+     * @return Lista de valores de las claves
+     */
+    public static <T> PerlList<T> aAccess(PerlMap<T> map, String[] keys) {
+        PerlList<T> res = new PerlList<>(keys.length);
+        for (int i = 0; i < keys.length; i++) {
+            res.set(i, map.get(keys[i]));
+        }
+        return res;
+    }
+
+    /**
+     * Accede a varias posiciones dentro de una lista y las actualiza en el contexto array
+     *
+     * @param <T> Tipo de los elementos
+     * @param map PerlMap
+     * @param keys Claves
+     * @param values Valores
+     * @return Lista de valores de las claves
+     */
+    public static <T> PerlList<T> aAccess(PerlMap<T> map, String[] keys, List<T> values) {
+        PerlList<T> res = new PerlList<>(keys.length);
+        for (int i = 0; i < keys.length; i++) {
+            res.set(i, map.put(keys[i], values.get(i)));
+        }
+        PerlList<PerlList<String>> a = null;
+        return res;
+    }
+
+    /**
+     * Accede a varias posiciones dentro de una lista en el contexto hash
+     *
+     * @param <T> Tipo de los elementos
+     * @param map PerlMap
+     * @param keys Claves
+     * @param f Funcion para transformar los elementos a box
+     * @return Lista de index valor consecutivos
+     */
+    public static <T> PerlList<Box> hAccess(PerlMap<T> map, String[] keys, Function<T, Box> f) {
+        PerlList<Box> res = new PerlList<>(keys.length * 2);
+        for (int i = 0; i < keys.length; i++) {
+            res.add(Casting.box(keys[i]));
+            res.add(f.apply(map.get(keys[i])));
+        }
+        return res;
     }
 
     /**
@@ -357,24 +501,24 @@ public final class Pd {
     /**
      * Función para realizar multiasignaciones en expresiones
      *
+     * @param eqs Asignaciones
      * @param n Numero de valores
      * @param aux Asginaciones auxiliares
-     * @param eqs Asignaciones
      * @return Asignaciones
      */
-    public static Box[] equals(Integer n, Object[] aux, Box... eqs) {
+    public static Box[] equals(Object[] aux, Integer n, Box[] eqs) {
         return eqs;
     }
 
     /**
      * Función para realizar multiasignaciones en expresiones
      *
+     * @param eqs Asignaciones
      * @param n Numero de valores
      * @param aux Asignaciones auxiliares
-     * @param eqs Asignaciones
      * @return Numero de valores
      */
-    public static Integer sequals(Integer n, Object[] aux, Box... eqs) {
+    public static Integer sequals(Object[] aux, Integer n, Box[] eqs) {
         return n;
     }
 
@@ -385,7 +529,7 @@ public final class Pd {
      * @param eqs Asignaciones
      * @return Asignaciones
      */
-    public static Box[] equals(Integer n, Box... eqs) {
+    public static Box[] equals(Integer n, Box[] eqs) {
         return eqs;
     }
 
@@ -396,8 +540,38 @@ public final class Pd {
      * @param eqs Asignaciones
      * @return Numero de valores
      */
-    public static Integer sequals(Integer n, Box... eqs) {
+    public static Integer sequals(Integer n, Box[] eqs) {
         return n;
+    }
+
+    /**
+     * Función para realizar la asignacion del resto de una coleccion
+     *
+     * @param <T> Tipo de la coleccion
+     * @param n Posicion de incio
+     * @param array Array de toda la asignacion
+     * @return Coleccion asignada
+     */
+    public static <T> T[] subEquals(Integer n, T[] array) {
+        if (n > array.length) {
+            return null;
+        }
+        return Arrays.copyOfRange(array, n, array.length);
+    }
+
+    /**
+     * Función para realizar la asignacion del resto de una coleccion
+     *
+     * @param <T> Tipo de la coleccion
+     * @param n Posicion de incio
+     * @param list Lista de toda la asignacion
+     * @return Coleccion asignada
+     */
+    public static <T> PerlList<T> subEquals(Integer n, PerlList<T> list) {
+        if (n > list.size()) {
+            return null;
+        }
+        return new PerlList<>(list.subList(n, list.size()));
     }
 
 }

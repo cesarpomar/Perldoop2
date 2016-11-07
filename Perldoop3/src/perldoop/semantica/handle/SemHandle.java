@@ -3,6 +3,7 @@ package perldoop.semantica.handle;
 import perldoop.modelo.arbol.handle.*;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
+import perldoop.semantica.util.Tipos;
 
 /**
  * Clase para la semantica de handle
@@ -31,6 +32,8 @@ public class SemHandle {
     }
 
     public void visitar(HandleFile s) {
+        s.setTipo(new Tipo(Tipo.FILE));
+        Tipos.casting(s.getVariable(), s.getTipo(), tabla.getGestorErrores());
     }
 
 }

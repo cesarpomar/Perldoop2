@@ -29,7 +29,7 @@ public final class Regex {
      * @param global Busca todas las coincidencias
      * @return Evaluacion de la expresion regular sobre la cadena
      */
-    public static boolean simpleMatch(String srt, String regex, String mods, boolean global) {
+    public static boolean match(String srt, String regex, String mods, boolean global) {
         return new Pattern(regex, mods).matches(srt);
     }
 
@@ -42,7 +42,7 @@ public final class Regex {
      * @param global Busca todas las coincidencias
      * @return Coincidencias de las expresiones entre parentesis
      */
-    public static String[] match(String srt, String regex, String mods, boolean global) {
+    public static String[] matcher(String srt, String regex, String mods, boolean global) {
         Pattern pattern = new Pattern(regex, mods);
         Matcher matcher = pattern.matcher(srt);
         if (global) {

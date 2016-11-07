@@ -24,7 +24,7 @@ public class SemCadenaTexto {
     }
 
     public void visitar(CadenaTexto s) {
-        s.setTipo(new Tipo(Tipo.STRING));
+        //No es necesario hacer nada
     }
 
 }

@@ -171,12 +171,7 @@ public final class GenVariable {
      * @return Asignada
      */
     private boolean isAsignada(Variable v) {
-        List<Simbolo> lista = Buscar.getCamino(v, Expresion.class, Igual.class);
-        if (lista.isEmpty()) {
-            lista = Buscar.getCamino(v, Expresion.class, Lista.class, ColParentesis.class, ExpColeccion.class, Igual.class);
-        }
-        int last = lista.size() - 1;
-        return last > 0 && ((Igual) lista.get(last)).getIzquierda().equals(lista.get(last - 1));
+        return Buscar.isHijo(v, Buscar.buscarPadre(v, Igual.class));
     }
 
 }

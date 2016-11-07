@@ -2,6 +2,7 @@ package perldoop.semantica.lectura;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.asignacion.Igual;
+import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lectura.Lectura;
 import perldoop.modelo.arbol.lectura.LecturaFile;
 import perldoop.modelo.arbol.lectura.LecturaIn;
@@ -34,7 +35,7 @@ public class SemLectura {
      * @param s Simbolo lectura
      */
     private void setTipo(Lectura s) {
-        Simbolo uso = Buscar.getPadre(s, 1);
+        Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
         if (uso instanceof Igual && !((Igual) uso).getIzquierda().getTipo().isColeccion()) {
             s.setTipo(new Tipo(Tipo.STRING));
         } else {

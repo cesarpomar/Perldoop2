@@ -10,6 +10,7 @@ import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpFuncion5;
 import perldoop.modelo.arbol.expresion.ExpRegulares;
+import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.regulares.RegularMatch;
 import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.semantica.Tipo;
@@ -30,30 +31,30 @@ public final class Casting {
      * @return Primer o ultimo elemento de la colecciones
      */
     public static Simbolo colToScalar(Simbolo col, Simbolo escalar) {
-        if (col.getTipo().isArrayOrList() && (col instanceof ExpFuncion || col instanceof ExpFuncion5
-                || (col instanceof ExpColeccion && ((ExpColeccion) col).getColeccion() instanceof ColParentesis))
-                && (escalar == null || !escalar.getTipo().isColeccion())) {
-            Simbolo aux = new SimboloAux(col);
-            aux.setTipo(col.getTipo().getSubtipo(1));
-            Variable var = null;
-            if (escalar != null) {
-                var = Buscar.buscarVariable(escalar);
+        if (escalar == null || !escalar.getTipo().isColeccion()) {
+            if (col.getTipo().isArrayOrList() && col instanceof Expresion) {
+                Expresion exp = Buscar.getExpresion((Expresion) col);
+                if (exp.getValor() instanceof ColParentesis) {
+                    StringBuilder codigo = new StringBuilder(100);
+                    char contexto = '@';
+                    if (escalar != null && escalar instanceof Expresion) {
+                        contexto=Buscar.getContexto(Buscar.getExpresion((Expresion) escalar).getValor());
+                    }
+                    if (contexto == '$') {
+                        codigo.append("Pd.last(").append(col).append(")");
+                    } else {
+                        codigo.append("Pd.first(").append(col).append(")");
+                    }
+                    Tipo t = col.getTipo().getSubtipo(1);
+                    if (t.isColeccion()) {
+                        t.add(0, Tipo.REF);
+                        codigo.insert(0, Tipos.declaracion(t).append("(")).append(")");
+                    }
+                    return new SimboloAux(t, codigo);
+                } else if (exp.getValor() instanceof Igual && ((Igual) exp.getValor()).getIzquierda() instanceof ExpColeccion) {
+                    return new SimboloAux(new Tipo(Tipo.INTEGER), new StringBuilder("Pd.s").append(col.getCodigoGenerado().substring(3)));
+                }
             }
-            if (var == null || var.getContexto().getValor().equals("$")) {
-                aux.getCodigoGenerado().insert(0, "Pd.last(").append(")");
-            } else {
-                aux.getCodigoGenerado().insert(0, "Pd.first(").append(")");
-            }
-            if (col.getTipo().getTipo().size() > 2) {
-                aux.setTipo(col.getTipo().add(0, Tipo.REF));
-                StringBuilder declaracion = Tipos.declaracion(aux.getTipo()).append("(");
-                aux.getCodigoGenerado().insert(0, declaracion).append(")");
-            }
-            return aux;
-        }else if( col.getTipo().isArray() && col instanceof ExpAsignacion && ((ExpAsignacion) col).getAsignacion() instanceof Igual){
-            //Pasar multiasignacion a contexto escalar
-            Simbolo aux = new SimboloAux(new Tipo(Tipo.INTEGER), new StringBuilder("Pd.s").append(col.toString().substring(3)));
-            return aux;
         }
         return col;
     }
@@ -80,9 +81,9 @@ public final class Casting {
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                if (s instanceof ExpRegulares && ((ExpRegulares) s).getRegulares() instanceof RegularMatch) {
+                if (s instanceof Expresion && Buscar.getExpresion((Expresion) s).getValor() instanceof RegularMatch) {
                     //Optimizacion para expresiones regulares, en caso de boolean usamos un match rapido
-                    return cst.append(s.getCodigoGenerado().toString().replaceFirst("^Regex.match", "Regex.simpleMatch"));
+                    return cst.append(s.getCodigoGenerado().toString().replaceFirst("Regex.matcher", "Regex.match"));
                 } else if (Buscar.isNotNull(s)) {
                     return cst.append("(").append(s.getCodigoGenerado()).append(".length > 0)");
                 } else {
@@ -675,6 +676,7 @@ public final class Casting {
         cst.append("Casting.cast(new Casting() { ");
         cst.append("@Override ");
         cst.append("public Object casting(Object arg) {");
+        cst.append("if(arg==null){return null;}");
         String tam;
         if (origen.getTipo().isArray()) {
             tam = "col.length";

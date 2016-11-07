@@ -6,7 +6,6 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.arbol.bloque.BloqueIf;
 import perldoop.modelo.arbol.bloque.BloqueUnless;
-import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.funciondef.FuncionDef;
 import perldoop.modelo.semantica.TablaSemantica;
@@ -66,8 +65,8 @@ public class SemFlujo {
     public void visitar(Return s) {
         FuncionDef funcion = Buscar.buscarPadre(s, FuncionDef.class);
         if (funcion == null) {
-            tabla.getGestorErrores().error(Errores.NEXT_LAST_SIN_BUCLE, s.getId().getToken());
-            throw new ExcepcionSemantica(Errores.NEXT_LAST_SIN_BUCLE);
+            tabla.getGestorErrores().error(Errores.RETURN_SIN_FUNCION, s.getId().getToken());
+            throw new ExcepcionSemantica(Errores.RETURN_SIN_FUNCION);
         }
         codigoMuerto(s);
     }

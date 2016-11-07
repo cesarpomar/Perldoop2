@@ -7,8 +7,13 @@ import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.acceso.Acceso;
+import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.coleccion.Coleccion;
+import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
@@ -19,6 +24,7 @@ import perldoop.modelo.preprocesador.EtiquetasTipo;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
+import perldoop.semantica.coleccion.SemColeccion;
 import perldoop.semantica.util.Tipos;
 import perldoop.util.Buscar;
 
@@ -41,16 +47,13 @@ public class SemIgual {
     }
 
     public void visitar(Igual s) {
-        if (s.getIzquierda() instanceof ExpColeccion && ((ExpColeccion)s.getIzquierda()).getColeccion() instanceof ColParentesis) {
+        Expresion izq = s.getIzquierda();
+        Expresion der = s.getDerecha();
+        if(izq.getValor() instanceof ColParentesis){
             multiple(s);
-        } else if (s.getDerecha() instanceof ExpColeccion && ((ExpColeccion)s.getDerecha()).getColeccion() instanceof ColParentesis) {
-            ExpColeccion expcol = (ExpColeccion) s.getDerecha();
-            if (expcol.getColeccion().getLista().getElementos().isEmpty()) {
-                inicializacion(s);
-            } else {
-                simple(s);
-            }
-        } else {
+        }else if(der instanceof ExpColeccion && ((ExpColeccion)der).getColeccion().getLista().getExpresiones().isEmpty()){
+            inicializacion(s);
+        }else{
             simple(s);
         }
     }
@@ -61,8 +64,8 @@ public class SemIgual {
      * @param s Simbolo de asignacion
      */
     private void simple(Igual s) {
-        checkAsignacion(s.getIzquierda(), s.getOperador(), s.getDerecha());
-        s.setTipo(new Tipo(s.getIzquierda().getTipo()));
+        s.setTipo(Buscar.getTipoVar(s.getIzquierda()));
+        checkAsignacion(s.getIzquierda(), s.getOperador(), s.getDerecha());    
     }
 
     /**
@@ -71,26 +74,46 @@ public class SemIgual {
      * @param s Simbolo de asignacion
      */
     private void multiple(Igual s) {
-        List<Expresion> variables = ((ColParentesis) ((ExpColeccion) s.getIzquierda()).getColeccion()).getLista().getExpresiones();
-        if (s.getDerecha() instanceof ExpColeccion) {
-            List<Expresion> valores = ((ColParentesis) ((ExpColeccion) s.getDerecha()).getColeccion()).getLista().getExpresiones();
-            for (int i = 0; i < variables.size() && i < valores.size(); i++) {
-                checkAsignacion(variables.get(i), s.getOperador(), valores.get(i));
-            }
-        } else {
-            Tipo t = s.getDerecha().getTipo();
-            Simbolo coleccion = new SimboloAux();
-            if (t.isColeccion()) {
-                coleccion.setTipo(t.getSubtipo(1));
-            } else {
-                tabla.getGestorErrores().error(Errores.IGUAL_COLECION_REQUERIDA, Buscar.tokenInicio(s.getDerecha()));
-                throw new ExcepcionSemantica(Errores.IGUAL_COLECION_REQUERIDA);
-            }
-            for (Expresion var : variables) {
-                checkAsignacion(var, s.getOperador(), coleccion);
+        s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
+        List<Expresion> variables = Buscar.getExpresiones((ExpColeccion) s.getIzquierda());
+        //Todas tienen que ser variables
+        for (Expresion var : variables) {
+            if (!Buscar.isVariable(var)) {
+                tabla.getGestorErrores().error(Errores.MODIFICAR_CONSTANTE, Buscar.tokenInicio(var), s.getOperador().getValor());
+                throw new ExcepcionSemantica(Errores.MODIFICAR_CONSTANTE);
             }
         }
-        s.setTipo(new Tipo(Tipo.ARRAY,Tipo.BOX));
+        if (s.getDerecha() instanceof ExpColeccion) {//Asignacion directa sin formar una colección
+            List<Expresion> valores = Buscar.getExpresiones((ExpColeccion) s.getDerecha());
+            if (!valores.stream().anyMatch(i -> i.getTipo().isColeccion())) {//Son todos tipos basicos
+                for (int i = 0; i < variables.size() && i < valores.size(); i++) {
+                    Expresion var = variables.get(i);
+                    if (var.getTipo().isColeccion()) {
+                        SemColeccion.comprobarElems(var.getTipo(), valores.subList(i, valores.size()), tabla);
+                        break;
+                    } else {
+                        checkAsignacion(var, s.getOperador(), valores.get(i));
+                    }
+                }
+            }
+
+        } else {
+            //Usando un solo origen
+            Tipo t = s.getDerecha().getTipo();
+            if (t.isColeccion()) {
+                Tipo st = t.getSubtipo(1);
+                for (Expresion var : variables) {
+                    if (!var.getTipo().isColeccion()) {
+                        Tipos.casting(s.getDerecha(), st, var.getTipo(), tabla.getGestorErrores());
+                    } else {
+                        Tipos.casting(s.getDerecha(), t, var.getTipo(), tabla.getGestorErrores());
+                        break;
+                    }
+                }
+            } else {
+                checkAsignacion(s.getDerecha(), s.getOperador(), variables.get(0));
+            }
+        }
     }
 
     /**
@@ -130,10 +153,6 @@ public class SemIgual {
             valor = valor.substring(1, valor.length() - 1);
             char c = valor.charAt(0);
             if (c == '$' || c == '@' || c == '%') {
-                if (c == '%') {
-                    tabla.getGestorErrores().error(Errores.MAPA_NO_TAM, token);
-                    throw new ExcepcionSemantica(Errores.MAPA_NO_TAM);
-                }
                 EntradaVariable entrada = tabla.getTablaSimbolos().buscarVariable(valor.substring(1), c);
                 if (entrada == null) {
                     tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, token, valor, c);
@@ -149,7 +168,7 @@ public class SemIgual {
             tabla.getGestorErrores().error(Errores.ARRAY_INICIALIZACION_TAM, Buscar.tokenInicio(s.getIzquierda()));
             throw new ExcepcionSemantica(Errores.ARRAY_INICIALIZACION_TAM);
         }
-        s.setTipo(new Tipo(s.getIzquierda().getTipo()));
+        s.setTipo(s.getIzquierda().getTipo());
     }
 
     /**
@@ -164,7 +183,11 @@ public class SemIgual {
             tabla.getGestorErrores().error(Errores.MODIFICAR_CONSTANTE, Buscar.tokenInicio(izq), operador.getValor());
             throw new ExcepcionSemantica(Errores.MODIFICAR_CONSTANTE);
         }
-        Tipos.casting(der, izq.getTipo(), tabla.getGestorErrores());
+        Tipo t = izq.getTipo();
+        if(t.isColeccion() && !der.getTipo().isColeccion()){
+            t = t.getSubtipo(1);
+        }
+        Tipos.casting(der, t, tabla.getGestorErrores());
     }
 
 }

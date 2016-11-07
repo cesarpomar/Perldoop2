@@ -10,9 +10,8 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.acceso.AccesoColRef;
-import perldoop.modelo.arbol.acceso.AccesoRefArray;
-import perldoop.modelo.arbol.acceso.AccesoRefEscalar;
-import perldoop.modelo.arbol.acceso.AccesoRefMap;
+import perldoop.modelo.arbol.acceso.AccesoDesRef;
+import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.coleccion.ColDecMy;
@@ -54,16 +53,30 @@ public class GenColeccion {
      * @param c Coleccion
      * @param t Tipo
      */
-    private void genRef(Coleccion c, Tipo t) {
-        Simbolo uso = Buscar.getPadre(c, 2);
-        //Si no va para otra colecion o acceso es una referencia
-        List<Simbolo> acceso = Buscar.getCamino(c, ExpColeccion.class, Lista.class, ColLlave.class, ExpColeccion.class, Acceso.class);
-        if (!(uso instanceof Coleccion && uso.getTipo() != null && uso.getTipo().isColeccion())
-                && !(c.getPadre() instanceof Acceso || !acceso.isEmpty())) {
-            StringBuilder diamante = new StringBuilder();
-            diamante.append("new Ref<").append(Tipos.declaracion(t)).append(">(");
-            c.getCodigoGenerado().insert(0, diamante).append(")");
+    private void genRef(Coleccion c) {
+        //Si no es una referencia
+        if (!c.getTipo().isRef()) {
+            return;
         }
+        if (c.getPadre() instanceof Expresion) {
+            Simbolo uso = Buscar.getUso((Expresion) c.getPadre());
+            //Si es un acceso
+            if (!Buscar.getCamino(uso, ColLlave.class, ExpColeccion.class, Acceso.class).isEmpty()) {
+                return;
+            }
+            //Si es una coleccion
+            Coleccion col = Buscar.getColeccion(c);
+            while(col!=null){
+                if(col.getTipo()==null || col.getTipo().getSubtipo(1).isBox()){
+                    break;
+                }
+                if(!col.getTipo().equals(c.getTipo())){
+                    return;
+                }
+                col = Buscar.getColeccion(col);
+            }
+        }
+        c.getCodigoGenerado().insert(0, Tipos.declaracion(c.getTipo()).insert(0, "new ").append('(')).append(')');
     }
 
     /**
@@ -74,7 +87,7 @@ public class GenColeccion {
      * @param t Tipo
      * @return Codigo
      */
-    public static StringBuilder genArrayList(List<? extends Simbolo> expresiones,List<Terminal> seps,Tipo t) {
+    public static StringBuilder genArrayList(List<? extends Simbolo> expresiones, List<Terminal> seps, Tipo t) {
         if (expresiones.isEmpty()) {
             if (t.isArray()) {
                 return Tipos.inicializacion(t, "0");
@@ -247,13 +260,15 @@ public class GenColeccion {
      * @param v Coleccion de variables
      */
     private void genDec(ColDec c) {
-        if (!(Buscar.getPadre(c, 2) instanceof StcLista)) {
+        if (!(Buscar.getUso((Expresion) c.getPadre()) instanceof StcLista)) {
             visitar(c);
+            c.getCodigoGenerado().insert(0, c.getOperador().getComentario());
             return;
         }
         StringBuilder codigo = new StringBuilder(100);
         Iterator<Expresion> itExp = c.getLista().getExpresiones().iterator();
         Iterator<Terminal> itSep = c.getLista().getSeparadores().iterator();
+        codigo.append(c.getOperador().getComentario());
         codigo.append(c.getParentesisI().getComentario());
         while (itExp.hasNext()) {
             codigo.append(itExp.next());
@@ -269,26 +284,28 @@ public class GenColeccion {
     }
 
     public void visitar(ColParentesis s) {
-        //Expresion entre parentesis
-        Simbolo uso = Buscar.getPadre(s, 1);
-        if (s.getLista().getElementos().size() == 1 && !(s.getPadre() instanceof Funcion) && !(uso instanceof Return)) {
-            Expresion exp = s.getLista().getExpresiones().get(0);
-            StringBuilder codigo = new StringBuilder(50);
-            codigo.append(Casting.casting(exp, s.getTipo()));
-            s.setCodigoGenerado(codigo);
-        } else {
-            //Colecciones
-            Tipo t = s.getTipo();
-            if (t.isArrayOrList()) {
-                s.setCodigoGenerado(genArrayList(s.getLista().getExpresiones(),s.getLista().getSeparadores(), t));
-            } else if (t.isMap()) {
-                s.setCodigoGenerado(genMap(s.getLista(), t));
+        if (s.getTipo() == null) {
+            return;
+        }
+        StringBuilder codigo;
+        //Si es un simple valor, podemos los parentesis y listo
+        if (s.getLista().getExpresiones().size() == 1 && !(s.getPadre() instanceof Funcion) && !s.getTipo().isColeccion()) {
+            codigo = new StringBuilder(100);
+            codigo.append(Casting.casting(s.getLista().getExpresiones().get(0), s.getTipo()));
+            if (!s.getLista().getSeparadores().isEmpty()) {
+                codigo.append(s.getLista().getSeparadores().get(0).getComentario());
             }
+        } else if (s.getTipo().isMap()) {
+            codigo = genMap(s.getLista(), s.getTipo());
+        } else {
+            codigo = genArrayList(s.getLista().getExpresiones(), s.getLista().getSeparadores(), s.getTipo());
         }
+        //Comprobar si hay parentesis
         if (!s.isVirtual()) {
-            s.getCodigoGenerado().insert(0, s.getParentesisI().getComentario());
-            s.getCodigoGenerado().append(s.getParentesisD().getComentario());
+            codigo.insert(0, s.getParentesisI());
+            codigo.append(s.getParentesisD());
         }
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(ColDecMy s) {
@@ -300,50 +317,42 @@ public class GenColeccion {
     }
 
     public void visitar(ColCorchete s) {
-        Simbolo padre = s.getPadre();
-        if ((padre instanceof AccesoCol || padre instanceof AccesoColRef) && s.getLista().getExpresiones().size() == 1) {
+        //Si es un acceso con un valor
+        if ((s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) && s.getLista().getExpresiones().size() == 1) {
             Expresion exp = s.getLista().getExpresiones().get(0);
-            StringBuilder codigo = new StringBuilder(50);
-            codigo.append(s.getCorcheteI().getComentario()).append(Casting.casting(exp, s.getTipo())).append(s.getCorcheteD().getComentario());
-            s.setCodigoGenerado(codigo);
+            s.setCodigoGenerado(Casting.casting(exp, s.getTipo()));
         } else {
             Tipo t = s.getTipo();
             if (t.isRef()) {
                 t = t.getSubtipo(1);
             }
-            s.setCodigoGenerado(genArrayList(s.getLista().getExpresiones(),s.getLista().getSeparadores(), t));
-            s.getCodigoGenerado().insert(0, s.getCorcheteI().getComentario());
-            s.getCodigoGenerado().append(s.getCorcheteD().getComentario());
-            genRef(s, t);
+            s.setCodigoGenerado(genArrayList(s.getLista().getExpresiones(), s.getLista().getSeparadores(), t));
+            genRef(s);
         }
+        s.getCodigoGenerado().insert(0, s.getCorcheteI().getComentario());
+        s.getCodigoGenerado().append(s.getCorcheteD().getComentario());
     }
 
     public void visitar(ColLlave s) {
         Simbolo uso = s.getPadre().getPadre();
-        if ((s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) && s.getLista().getExpresiones().size() == 1) {
+        if (((s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) && s.getLista().getExpresiones().size() == 1)
+                || (uso instanceof AccesoDesRef)) {
             Expresion exp = s.getLista().getExpresiones().get(0);
-            StringBuilder codigo = new StringBuilder(50);
-            codigo.append(s.getLlaveI().getComentario()).append(Casting.casting(exp, s.getTipo())).append(s.getLlaveD().getComentario());
-            s.setCodigoGenerado(codigo);
-        } else if (uso instanceof AccesoRefEscalar || uso instanceof AccesoRefArray || uso instanceof AccesoRefMap) {
-            Expresion exp = s.getLista().getExpresiones().get(0);
-            StringBuilder codigo = new StringBuilder(50);
-            codigo.append(s.getLlaveI().getComentario()).append(Casting.casting(exp, s.getTipo())).append(s.getLlaveD().getComentario());
-            s.setCodigoGenerado(codigo);
+            s.setCodigoGenerado(Casting.casting(exp, s.getTipo()));
         } else {
             Tipo t = s.getTipo();
             if (t.isRef()) {
                 t = t.getSubtipo(1);//Quitar ref
             }
             if (t.isArrayOrList()) {//En caso de multiacceso
-                s.setCodigoGenerado(genArrayList(s.getLista().getExpresiones(),s.getLista().getSeparadores(), t));
+                s.setCodigoGenerado(genArrayList(s.getLista().getExpresiones(), s.getLista().getSeparadores(), t));
             } else if (t.isMap()) {//Creacion de mapa
                 s.setCodigoGenerado(genMap(s.getLista(), t));
             }
-            s.getCodigoGenerado().insert(0, s.getLlaveI().getComentario());
-            s.getCodigoGenerado().append(s.getLlaveD().getComentario());
-            genRef(s, t);
+            genRef(s);
         }
+        s.getCodigoGenerado().insert(0, s.getLlaveI().getComentario());
+        s.getCodigoGenerado().append(s.getLlaveD().getComentario());
     }
 
 }

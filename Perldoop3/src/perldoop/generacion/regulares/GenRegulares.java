@@ -47,7 +47,7 @@ public class GenRegulares {
 
     public void visitar(RegularMatch s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("Regex.match(");
+        codigo.append("Regex.matcher(");
         codigo.append(Casting.toString(s.getExpresion())).append(",");
         codigo.append(s.getPatron()).append(",");
         codigo.append(genMods(s));
@@ -57,7 +57,7 @@ public class GenRegulares {
 
     public void visitar(RegularNoMatch s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("!Regex.simpleMatch(");
+        codigo.append("!Regex.match(");
         codigo.append(Casting.toString(s.getExpresion())).append(",");
         codigo.append(s.getPatron()).append(",");
         codigo.append(genMods(s));

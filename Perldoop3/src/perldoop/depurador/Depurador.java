@@ -105,7 +105,7 @@ public class Depurador {
         } else if (traduccion) {
             if (s.getTipo() != null) {
                 salida.append("__Tipo");
-                salida.append(ParserEtiquetas.parseTipo(s.getTipo()));
+                salida.append(String.join("", ParserEtiquetas.parseTipo(s.getTipo())));
             }
             if (s.getCodigoGenerado() != null) {
                 salida.append("__Codigo{");

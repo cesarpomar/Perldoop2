@@ -1,8 +1,8 @@
 package perldoop.modelo.arbol.handle;
 
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.variable.Variable;
 
 /**
  * Clase que representa la reduccion -&gt; handle : STDOUT
@@ -11,35 +11,34 @@ import perldoop.modelo.arbol.Visitante;
  */
 public final class HandleFile extends Handle {
 
-    protected Terminal file;
+    private Variable variable;
 
     /**
      * Constructor unico de la clase
      *
-     * @param std Salida
-     * @param file
+     * @param variable Variable
      */
-    public HandleFile(Terminal std, Terminal file) {
-        super(std);
+    public HandleFile(Variable variable) {
+        setVariable(variable);
     }
 
     /**
-     * Obtiene le fichero
+     * Obtiene la variable
      *
-     * @return Fichero
+     * @return Variable
      */
-    public Terminal getFile() {
-        return file;
+    public Variable getVariable() {
+        return variable;
     }
 
     /**
-     * Establece el fichero
+     * Establece la variable
      *
-     * @param file Fichero
+     * @param variable Variable
      */
-    public void setFile(Terminal file) {
-        file.setPadre(this);
-        this.file = file;
+    public void setVariable(Variable variable) {
+        variable.setPadre(this);
+        this.variable = variable;
     }
 
     @Override
@@ -49,7 +48,7 @@ public final class HandleFile extends Handle {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{std, file};
+        return new Simbolo[]{variable};
     }
 
 }

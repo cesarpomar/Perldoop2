@@ -230,11 +230,7 @@ public interface Visitante {
 
     void visitar(AccesoColRef s);
 
-    void visitar(AccesoRefEscalar s);
-
-    void visitar(AccesoRefArray s);
-
-    void visitar(AccesoRefMap s);
+    void visitar(AccesoDesRef s);
 
     void visitar(AccesoRef s);
 

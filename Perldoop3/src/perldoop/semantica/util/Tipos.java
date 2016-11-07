@@ -5,9 +5,8 @@ import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
-import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.ExpFuncion;
-import perldoop.modelo.arbol.expresion.ExpFuncion5;
+import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 import perldoop.util.ParserEtiquetas;
@@ -77,11 +76,11 @@ public final class Tipos {
      */
     private static void toColeccion(Simbolo s, Tipo to, Tipo td, GestorErrores ge) {
         if (!td.isColeccion()) {
-            error(s, to, td, ge);
+           // error(s, to, td, ge);
         }
         if (to.getTipo().size() != td.getTipo().size()) {
             if (!to.getSimple().isBox() || !td.getSimple().isBox()) {
-                error(s, to, td, ge);
+             //   error(s, to, td, ge);
             }
         }
     }
@@ -93,9 +92,15 @@ public final class Tipos {
      * @return Coleccion especial
      */
     private static boolean isSpecialCol(Simbolo s) {
-        return s.getTipo().isArrayOrList()
-                && (s instanceof ExpFuncion || s instanceof ExpFuncion5
-                || (s instanceof ExpColeccion && ((ExpColeccion) s).getColeccion() instanceof ColParentesis));
+        Expresion exp;
+        if (s instanceof Expresion) {
+            exp = Buscar.getExpresion((Expresion) s);
+        } else if (s.getPadre() instanceof Expresion) {
+            exp = Buscar.getExpresion((Expresion) s.getPadre());
+        } else {
+            return false;
+        }
+        return exp.getTipo().isArrayOrList() && (exp.getValor() instanceof Funcion || exp.getValor() instanceof ColParentesis);
     }
 
     /**
@@ -139,7 +144,7 @@ public final class Tipos {
      * @param ge Sistema de errores
      */
     public static void error(Simbolo s, Tipo to, Tipo td, GestorErrores ge) {
-        ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), ParserEtiquetas.parseTipo(to), ParserEtiquetas.parseTipo(td));
+        ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), String.join("",ParserEtiquetas.parseTipo(to)), String.join("",ParserEtiquetas.parseTipo(td)));
         throw new ExcepcionSemantica(Errores.ERROR_CASTING);
     }
 
