@@ -134,7 +134,7 @@ public final class PerlFile {
 
     @Override
     public String toString() {
-        return "GLOB(" +super.toString().substring(1)+ ')';
+        return "GLOB(" +super.toString()+ ')';
     }
 
 }

@@ -3,7 +3,6 @@ package perldoop.generacion.modulos;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.modulos.ModuloPackage;
 import perldoop.modelo.arbol.modulos.ModuloUse;
 import perldoop.modelo.generacion.TablaGenerador;

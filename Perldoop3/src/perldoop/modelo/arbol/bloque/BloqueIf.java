@@ -6,7 +6,6 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.condicional.Condicional;
 import perldoop.modelo.arbol.contexto.Contexto;
-import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**

@@ -2,7 +2,6 @@ package perldoop.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import perldoop.modelo.arbol.Simbolo;
@@ -521,7 +520,7 @@ public final class Buscar {
      * @param s Simbolo
      * @return Contexto
      */
-    public static char getContexto(Simbolo s) {
+    public static Character getContexto(Simbolo s) {
         Simbolo aux = s;
         if (aux instanceof Expresion) {
             aux = ((Expresion) aux).getValor();
@@ -534,10 +533,10 @@ public final class Buscar {
             } else if (aux instanceof Variable) {
                 return ((Variable) aux).getContexto().getValor().charAt(0);
             } else {
-                return '0';
+                return null;
             }
         }
-        return '0';
+        return null;
     }
 
     /**
@@ -668,15 +667,15 @@ public final class Buscar {
         return true;
     }
 
-////////////////////////////////PUNTO REVISION//////////////////////////////////
     /**
-     * Comrprueba si la expresion es una variable o un acceso a un array
+     * Comprueba si la expresion es una variable o un acceso a un array
      *
      * @param exp Expresion
      * @return Es una variable o un acceso a un array
      */
     public static boolean isArrayOrVar(Expresion exp) {
-        return exp instanceof ExpVariable || (exp instanceof ExpAcceso && ((ExpAcceso) exp).getAcceso().getExpresion().getTipo().isArray());
+        Expresion aux = Buscar.getExpresion(exp);       
+        return aux instanceof ExpVariable || (aux instanceof ExpAcceso && ((ExpAcceso) aux).getAcceso().getExpresion().getTipo().isArray());
     }
 
 }

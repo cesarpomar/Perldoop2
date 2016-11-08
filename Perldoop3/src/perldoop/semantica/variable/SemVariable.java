@@ -8,9 +8,7 @@ import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
 import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.coleccion.ColDecOur;
-import perldoop.modelo.arbol.coleccion.ColParentesis;
-import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.lista.Lista;
+import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.preprocesador.EtiquetasTipo;
@@ -39,8 +37,38 @@ public class SemVariable {
         this.tabla = tabla;
     }
 
+    /**
+     * la variable pertenece al bloque sort
+     *
+     * @param s Variable
+     * @return Es variable sort
+     */
+    private boolean isSort(VarExistente s) {
+        if (s.getContexto().getValor().charAt(0) != '$') {
+            return false;
+        }
+        String id = s.getVar().getValor();
+        if (!id.equals("a") && !id.equals("b")) {
+            return false;
+        }
+        FuncionBloque funcion = Buscar.buscarPadre(s, FuncionBloque.class);
+        return funcion != null && funcion.getIdentificador().getValor().equals("sort") && Buscar.isHijo(s, funcion.getLista());
+    }
+
     public void visitar(VarExistente s) {
-        if (Buscar.isDeclaracion(s)) {
+        if (isSort(s)) {
+            FuncionBloque funcion = Buscar.buscarPadre(s, FuncionBloque.class);
+            Tipo t = funcion.getColeccion().getTipo();
+            if (t == null) {
+                tabla.getAcciones().reAnalizarDespuesDe(funcion.getColeccion());
+            } else {
+                t = t.getSubtipo(1);
+                if (t.isColeccion()) {
+                    t.add(0, Tipo.REF);
+                }
+                s.setTipo(t);
+            }
+        } else if (Buscar.isDeclaracion(s)) {
             ColDec dec = Buscar.buscarPadre(s, ColDec.class);
             declaracion(s, (EtiquetasTipo) dec.getOperador().getEtiquetas(), dec instanceof ColDecOur);
         } else {
@@ -189,21 +217,21 @@ public class SemVariable {
             case '$':
                 if (t.isArrayOrList() || t.isMap()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar().getValor(), String.join("",ParserEtiquetas.parseTipo(t).get(0)));
+                            contexto, v.getVar().getValor(), String.join("", ParserEtiquetas.parseTipo(t).get(0)));
                     throw new ExcepcionSemantica(Errores.TIPO_INCORRECTO);
                 }
                 break;
             case '@':
                 if (!t.isArrayOrList()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar().getValor(), String.join("",ParserEtiquetas.parseTipo(t).get(0)));
+                            contexto, v.getVar().getValor(), String.join("", ParserEtiquetas.parseTipo(t).get(0)));
                     throw new ExcepcionSemantica(Errores.TIPO_INCORRECTO);
                 }
                 break;
             case '%':
                 if (!t.isMap()) {
                     tabla.getGestorErrores().error(Errores.TIPO_INCORRECTO, v.getVar().getToken(),
-                            contexto, v.getVar().getValor(), String.join("",ParserEtiquetas.parseTipo(t).get(0)));
+                            contexto, v.getVar().getValor(), String.join("", ParserEtiquetas.parseTipo(t).get(0)));
                     throw new ExcepcionSemantica(Errores.TIPO_INCORRECTO);
                 }
                 break;

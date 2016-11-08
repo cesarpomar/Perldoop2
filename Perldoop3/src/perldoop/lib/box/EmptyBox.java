@@ -62,4 +62,9 @@ public final class EmptyBox implements Box {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return stringValue();
+    }
+
 }

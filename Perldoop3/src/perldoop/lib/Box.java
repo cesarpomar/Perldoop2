@@ -5,7 +5,7 @@ package perldoop.lib;
  *
  * @author César Pomar
  */
-public interface Box {
+public interface Box extends Comparable<Box> {
 
     /**
      * Obtiene la representanción booleana
@@ -41,7 +41,7 @@ public interface Box {
      * @return Flotante de doble precisión despues de la conversión
      */
     Double doubleValue();
-    
+
     /**
      * Obtiene la representación abstracta de un numero
      *
@@ -69,4 +69,10 @@ public interface Box {
      * @return Fichero despues de la conversión
      */
     PerlFile fileValue();
+
+    @Override
+    public default int compareTo(Box o) {
+        return stringValue().compareTo(o.stringValue());
+    }
+
 }

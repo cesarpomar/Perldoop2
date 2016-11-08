@@ -6,7 +6,6 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.contexto.Contexto;
-import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.variable.Variable;
 
 /**

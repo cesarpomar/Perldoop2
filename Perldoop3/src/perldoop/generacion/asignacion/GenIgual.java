@@ -12,17 +12,13 @@ import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.asignacion.Igual;
-import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.sentencia.StcLista;
-import perldoop.modelo.arbol.variable.VarMy;
-import perldoop.modelo.arbol.variable.VarOur;
 import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.lexico.Token;
@@ -35,7 +31,6 @@ import perldoop.generacion.util.ColIterator;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.util.Buscar;
-import perldoop.util.Utiles;
 
 /**
  * Clase para la semantica de igual

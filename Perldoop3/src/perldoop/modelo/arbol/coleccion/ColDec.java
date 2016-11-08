@@ -1,8 +1,6 @@
 package perldoop.modelo.arbol.coleccion;
 
-import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
-import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**

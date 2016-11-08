@@ -10,7 +10,6 @@ import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.acceso.AccesoDesRef;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.*;
-import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.Funcion;

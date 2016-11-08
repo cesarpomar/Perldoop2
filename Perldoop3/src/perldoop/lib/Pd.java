@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 import perldoop.lib.util.Union;
@@ -572,6 +571,18 @@ public final class Pd {
             return null;
         }
         return new PerlList<>(list.subList(n, list.size()));
+    }
+
+    /**
+     * Funcion para obtener el retorno de una funcion desde una variable y retornarlo simulando la misma
+     *
+     * @param <T> Tipo del retorno
+     * @param f Ejecucion de la funcion nativa invocada
+     * @param rn Argumento retorno de la funcion nativa
+     * @return Retorno de la funcion nativa
+     */
+    public static <T> T rn(Object f, Ref<T> rn) {
+        return rn.get();
     }
 
 }

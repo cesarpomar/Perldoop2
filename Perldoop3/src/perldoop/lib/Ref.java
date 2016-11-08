@@ -11,6 +11,12 @@ public final class Ref<T> {
     private T value;
 
     /**
+     * Contruye una referencia vacia
+     */
+    public Ref() {
+    }
+
+    /**
      * Contruye la referencia
      *
      * @param value Objeto a almacenar
@@ -40,9 +46,9 @@ public final class Ref<T> {
     @Override
     public String toString() {
         if (value instanceof Object[] || value instanceof PerlList) {
-            return "ARRAY(0x" + super.toString().substring(1) + ")";
+            return "ARRAY(" + super.toString() + ")";
         } else if (value instanceof PerlMap) {
-            return "HASH(0x" + super.toString().substring(1) + ")";
+            return "HASH(" + super.toString() + ")";
         } else {
             return value.toString();
         }

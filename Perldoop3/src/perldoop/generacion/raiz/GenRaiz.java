@@ -1,6 +1,5 @@
 package perldoop.generacion.raiz;
 
-import com.sun.javafx.util.Utils;
 import java.io.File;
 import perldoop.modelo.arbol.Raiz;
 import perldoop.modelo.generacion.TablaGenerador;

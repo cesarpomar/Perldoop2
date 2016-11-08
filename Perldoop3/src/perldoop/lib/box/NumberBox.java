@@ -68,4 +68,8 @@ public final class NumberBox implements Box {
         throw new ClassCastException();
     }
 
+    @Override
+    public String toString() {
+        return stringValue();
+    }
 }

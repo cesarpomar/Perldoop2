@@ -5,14 +5,9 @@ import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
-import perldoop.modelo.arbol.expresion.ExpAsignacion;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.ExpFuncion;
-import perldoop.modelo.arbol.expresion.ExpFuncion5;
-import perldoop.modelo.arbol.expresion.ExpRegulares;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.regulares.RegularMatch;
-import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 

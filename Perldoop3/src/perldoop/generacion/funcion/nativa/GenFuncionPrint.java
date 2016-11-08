@@ -1,7 +1,7 @@
 package perldoop.generacion.funcion.nativa;
 
-import java.util.Iterator;
-import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.generacion.util.ColIterator;
+import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.funcion.FuncionHandle;
@@ -18,61 +18,60 @@ public class GenFuncionPrint extends GenFuncionNativa {
         super(tabla);
     }
 
-    @Override
-    public void visitar(FuncionBasica f) {
-        StringBuilder codigo = new StringBuilder(100);
-        codigo.append("Perl.");
-        codigo.append(f.getIdentificador());
-        codigo.append("(");
-        Iterator<Expresion> it = f.getColeccion().getLista().getExpresiones().iterator();
+    /**
+     * Construye los argumentos de una funcion print
+     *
+     * @param col Coleccion de argumentos
+     * @param codigo Codigo para la escritura
+     * @return Argumento codigo
+     */
+    private StringBuilder args(Coleccion col, StringBuilder codigo) {
+        ColIterator it = new ColIterator(col);
+        codigo.append(it.getComentario());
+        if (col.getLista().getExpresiones().size() == 1 && col.getLista().getExpresiones().get(0).getTipo().isArray()) {
+            codigo.append("(Object)");
+        }
         while (it.hasNext()) {
             codigo.append(it.next());
             if (it.hasNext()) {
                 codigo.append(",");
             }
+            codigo.append(it.getComentario());
         }
-        codigo.append(")");
+        return codigo;
+    }
+
+    @Override
+    public void visitar(FuncionBasica f) {
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append("Perl.").append(f.getIdentificador());
+        codigo.append("(");
+        args(f.getColeccion(), codigo).append(")");
         f.setCodigoGenerado(codigo);
     }
 
     @Override
     public void visitar(FuncionBloque f) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append(f.getIdentificador());
-        codigo.append("(");
+        codigo.append(f.getIdentificador()).append("(");
         codigo.append(f.getLista().getExpresiones().get(0));
-        Iterator<Expresion> it = f.getColeccion().getLista().getExpresiones().iterator();
-        if (it.hasNext()) {
+        if(!f.getColeccion().getLista().getExpresiones().isEmpty()){
             codigo.append(",");
         }
-        while (it.hasNext()) {
-            codigo.append(it.next());
-            if (it.hasNext()) {
-                codigo.append(",");
-            }
-        }
-        codigo.append(")");
+        args(f.getColeccion(), codigo).append(")");
         f.setCodigoGenerado(codigo);
     }
 
     @Override
     public void visitar(FuncionHandle f) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append(f.getIdentificador());
-        codigo.append("(");
+        codigo.append(f.getIdentificador()).append("(");
         codigo.append(f.getHandle());
-        Iterator<Expresion> it = f.getColeccion().getLista().getExpresiones().iterator();
-        if (it.hasNext()) {
+        if(!f.getColeccion().getLista().getExpresiones().isEmpty()){
             codigo.append(",");
         }
-        while (it.hasNext()) {
-            codigo.append(it.next());
-            if (it.hasNext()) {
-                codigo.append(",");
-            }
-        }
-        codigo.append(")");
-        f.setCodigoGenerado(codigo);
+        args(f.getColeccion(), codigo).append(")");
+        f.setCodigoGenerado(codigo);        
     }
 
 }

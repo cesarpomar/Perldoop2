@@ -67,4 +67,9 @@ public class FileBox implements Box {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return stringValue();
+    }
+
 }

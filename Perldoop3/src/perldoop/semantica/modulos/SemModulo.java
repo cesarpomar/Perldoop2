@@ -1,7 +1,6 @@
 package perldoop.semantica.modulos;
 
 import java.util.List;
-import static javax.management.Query.value;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Terminal;
@@ -9,7 +8,6 @@ import perldoop.modelo.arbol.modulos.ModuloPackage;
 import perldoop.modelo.arbol.modulos.ModuloUse;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
-import static javax.management.Query.value;
 
 /**
  * Clase para la semantica de modulos

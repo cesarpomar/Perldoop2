@@ -11,7 +11,6 @@ import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.acceso.AccesoDesRef;
-import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.coleccion.ColDecMy;
@@ -21,7 +20,6 @@ import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.flujo.Return;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.sentencia.StcLista;
@@ -66,11 +64,11 @@ public class GenColeccion {
             }
             //Si es una coleccion
             Coleccion col = Buscar.getColeccion(c);
-            while(col!=null){
-                if(col.getTipo()==null || col.getTipo().getSubtipo(1).isBox()){
+            while (col != null) {
+                if (col.getTipo() == null || col.getTipo().getSubtipo(1).isBox()) {
                     break;
                 }
-                if(!col.getTipo().equals(c.getTipo())){
+                if (!col.getTipo().equals(c.getTipo())) {
                     return;
                 }
                 col = Buscar.getColeccion(col);
@@ -295,15 +293,23 @@ public class GenColeccion {
             if (!s.getLista().getSeparadores().isEmpty()) {
                 codigo.append(s.getLista().getSeparadores().get(0).getComentario());
             }
-        } else if (s.getTipo().isMap()) {
-            codigo = genMap(s.getLista(), s.getTipo());
+            //Comprobar si hay parentesis
+            if (!s.isVirtual()) {
+                codigo.insert(0, s.getParentesisI());
+                codigo.append(s.getParentesisD());
+            }
+
         } else {
-            codigo = genArrayList(s.getLista().getExpresiones(), s.getLista().getSeparadores(), s.getTipo());
-        }
-        //Comprobar si hay parentesis
-        if (!s.isVirtual()) {
-            codigo.insert(0, s.getParentesisI());
-            codigo.append(s.getParentesisD());
+            if (s.getTipo().isMap()) {
+                codigo = genMap(s.getLista(), s.getTipo());
+            } else {
+                codigo = genArrayList(s.getLista().getExpresiones(), s.getLista().getSeparadores(), s.getTipo());
+            }
+            //Comprobar si hay parentesis
+            if (!s.isVirtual()) {
+                codigo.insert(0, s.getParentesisI().getComentario());
+                codigo.append(s.getParentesisD().getComentario());
+            }
         }
         s.setCodigoGenerado(codigo);
     }

@@ -1,7 +1,6 @@
 package perldoop.generacion.cadenatexto;
 
 import java.util.Iterator;
-import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.cadena.CadenaQR;

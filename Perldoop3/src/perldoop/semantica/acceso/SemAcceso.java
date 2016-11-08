@@ -4,18 +4,14 @@ import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
-import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.semantica.util.Tipos;
 import perldoop.util.Buscar;
 import perldoop.util.ParserEtiquetas;
 
@@ -118,7 +114,11 @@ public class SemAcceso {
             tabla.getGestorErrores().error(Errores.ACCESO_VACIO_COLECCION, Buscar.tokenInicio(coleccion));
             throw new ExcepcionSemantica(Errores.ACCESO_VACIO_COLECCION);
         }
-        char contexto = Buscar.getContexto(s);
+        Character contexto = Buscar.getContexto(s);
+        if (contexto == null) {
+            tabla.getGestorErrores().error(Errores.ACCESO_SIN_CONTEXTO, Buscar.tokenInicio(s.getExpresion()));
+            throw new ExcepcionSemantica(Errores.ACCESO_SIN_CONTEXTO);
+        }
         if (!coleccion.getTipo().isColeccion() || contexto == '$') {
             s.setTipo(st);
             if (st.isColeccion()) {
@@ -134,7 +134,7 @@ public class SemAcceso {
             s.setTipo(new Tipo(Tipo.ARRAY, Tipo.BOX));
             Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
             if (uso instanceof AccesoCol || uso instanceof AccesoColRef) {
-                tabla.getGestorErrores().error(Errores.ACCESO_ANIDADO_PORCENTAJE, Buscar.tokenInicio(s));
+                tabla.getGestorErrores().error(Errores.ACCESO_ANIDADO_PORCENTAJE, Buscar.tokenInicio(s.getExpresion()));
                 throw new ExcepcionSemantica(Errores.ACCESO_ANIDADO_PORCENTAJE);
             }
         }

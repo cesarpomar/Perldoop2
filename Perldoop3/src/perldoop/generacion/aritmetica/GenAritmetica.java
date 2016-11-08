@@ -1,11 +1,9 @@
 package perldoop.generacion.aritmetica;
 
 import perldoop.generacion.acceso.GenAcceso;
-import perldoop.generacion.asignacion.GenIgual;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.SimboloAux;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.aritmetica.AritConcat;
 import perldoop.modelo.arbol.aritmetica.AritDiv;
 import perldoop.modelo.arbol.aritmetica.AritMod;

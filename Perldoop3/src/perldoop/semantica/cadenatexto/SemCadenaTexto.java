@@ -2,7 +2,6 @@ package perldoop.semantica.cadenatexto;
 
 import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.semantica.TablaSemantica;
-import perldoop.modelo.semantica.Tipo;
 
 /**
  * Clase para la semantica de cadenaTexto

@@ -1,6 +1,5 @@
 package perldoop.generacion.variable;
 
-import java.util.List;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.asignacion.Igual;
@@ -8,10 +7,6 @@ import perldoop.modelo.arbol.bloque.BloqueFor;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
 import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.coleccion.ColDecOur;
-import perldoop.modelo.arbol.coleccion.ColParentesis;
-import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.arbol.variable.*;

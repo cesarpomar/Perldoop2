@@ -1,6 +1,5 @@
 package perldoop.semantica.expresion;
 
-import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.semantica.TablaSemantica;
 

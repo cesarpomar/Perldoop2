@@ -101,6 +101,12 @@ public class SemFuncion {
         switch (id) {
             case "print":
                 return new SemFuncionPrint(tabla);
+            case "chop":
+                return new SemFuncionChop(tabla);
+            case "chomp":
+                return new SemFuncionChomp(tabla);
+            case "sort":
+                return new SemFuncionSort(tabla);
             default:
                 return null;
         }

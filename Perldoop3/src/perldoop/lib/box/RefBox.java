@@ -67,4 +67,9 @@ public class RefBox implements Box {
         throw new ClassCastException();
     }
 
+    @Override
+    public String toString() {
+        return stringValue();
+    }
+
 }

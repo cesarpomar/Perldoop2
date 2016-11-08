@@ -68,4 +68,9 @@ public final class BooleanBox implements Box {
         throw new ClassCastException();
     }
 
+    @Override
+    public String toString() {
+        return stringValue();
+    }
+    
 }

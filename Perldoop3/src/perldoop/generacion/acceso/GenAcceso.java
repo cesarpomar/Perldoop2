@@ -12,8 +12,6 @@ import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.lista.Lista;
-import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
@@ -86,7 +84,7 @@ public class GenAcceso {
      * @param escritura Acceso como escritura
      * @param codigo Codigo para generar el acceso
      */
-    public static void genMultiAcceso(Acceso s, StringBuilder expresion, Simbolo index, boolean escritura, StringBuilder codigo) {
+    private static void genMultiAcceso(Acceso s, StringBuilder expresion, Simbolo index, boolean escritura, StringBuilder codigo) {
         char contexto = Buscar.getContexto(s);
         codigo.append(contexto == '$' ? 's' : contexto == '@' ? 'a' : 'h').append("Access(");
         codigo.append(expresion).append(',').append(index);

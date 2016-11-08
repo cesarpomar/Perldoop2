@@ -1,10 +1,8 @@
 package perldoop.modelo.arbol.bloque;
 
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.contexto.Contexto;
-import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**
  * Clase que representa la reduccion -&gt;<br> bloque : '{' cuerpo '}'

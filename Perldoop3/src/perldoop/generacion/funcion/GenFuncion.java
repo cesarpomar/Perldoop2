@@ -96,6 +96,12 @@ public final class GenFuncion {
         switch (id) {
             case "print":
                 return new GenFuncionPrint(tabla);
+            case "chop":
+                return new GenFuncionChop(tabla);
+            case "chomp":
+                return new GenFuncionChomp(tabla);
+            case "sort":
+                return new GenFuncionSort(tabla);
             default:
                 return null;
         }
