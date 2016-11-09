@@ -5,21 +5,20 @@ import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
 
 /**
- * Semantica función chop
+ * Semantica función split
  *
  * @author César Pomar
  */
-public final class SemFuncionChop extends SemFuncionNativa {
+public final class SemFuncionSplit extends SemFuncionNativa {
 
-    public SemFuncionChop(TablaSemantica tabla) {
+    public SemFuncionSplit(TablaSemantica tabla) {
         super(tabla);
     }
 
     @Override
     public void visitar(FuncionBasica f) {
-        checkArgumentos(f, 1, 1);
-        checkVariable(f.getColeccion().getLista().getExpresiones().get(0), new Tipo(Tipo.STRING));
-        f.setTipo(new Tipo(Tipo.STRING));
+        checkArgumentos(f, 2, 3);
+        f.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));
     }
 
 }

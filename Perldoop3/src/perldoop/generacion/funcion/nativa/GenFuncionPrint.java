@@ -54,7 +54,7 @@ public class GenFuncionPrint extends GenFuncionNativa {
     public void visitar(FuncionBloque f) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append(f.getIdentificador()).append("(");
-        codigo.append(f.getLista().getExpresiones().get(0));
+        codigo.append(f.getExpresion());
         if(!f.getColeccion().getLista().getExpresiones().isEmpty()){
             codigo.append(",");
         }

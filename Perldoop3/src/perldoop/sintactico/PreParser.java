@@ -57,8 +57,13 @@ public final class PreParser {
      * @return Tipo del id
      */
     private int tipoId(int i) {
-        if (lista.size() > i + 1 && lista.get(i + 1).getToken().getTipo() == '(') {
-            return Parser.ID_P;
+        if(lista.size() > i + 1){
+            int t = lista.get(i + 1).getToken().getTipo();
+            if(t=='('){
+                return Parser.ID_P;
+            }else if(t=='{'){
+                return Parser.ID_L;
+            }
         }
         return Parser.ID;
 

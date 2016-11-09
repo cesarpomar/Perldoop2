@@ -37,26 +37,8 @@ public class SemVariable {
         this.tabla = tabla;
     }
 
-    /**
-     * la variable pertenece al bloque sort
-     *
-     * @param s Variable
-     * @return Es variable sort
-     */
-    private boolean isSort(VarExistente s) {
-        if (s.getContexto().getValor().charAt(0) != '$') {
-            return false;
-        }
-        String id = s.getVar().getValor();
-        if (!id.equals("a") && !id.equals("b")) {
-            return false;
-        }
-        FuncionBloque funcion = Buscar.buscarPadre(s, FuncionBloque.class);
-        return funcion != null && funcion.getIdentificador().getValor().equals("sort") && Buscar.isHijo(s, funcion.getLista());
-    }
-
     public void visitar(VarExistente s) {
-        if (isSort(s)) {
+        if (Buscar.isVariableSort(s)) {
             FuncionBloque funcion = Buscar.buscarPadre(s, FuncionBloque.class);
             Tipo t = funcion.getColeccion().getTipo();
             if (t == null) {

@@ -32,6 +32,7 @@ import perldoop.modelo.arbol.expresion.ExpNumero;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.Funcion;
+import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.variable.VarMy;
 import perldoop.modelo.arbol.variable.VarOur;
@@ -103,39 +104,21 @@ public final class Buscar {
     }
 
     /**
-     * Obtiene el tipo de una variable
+     * la variable pertenece al bloque sort
      *
-     * @param s Simbolo
-     * @return Tipo
+     * @param s Variable
+     * @return Es variable sort
      */
-    public static Tipo getTipoVar(Simbolo s) {
-        //Si no es una expresion es el mismo tipo
-        if (!(s instanceof Expresion)) {
-            return s.getTipo();
+    public static boolean isVariableSort(Variable s) {
+        if (s.getContexto().getValor().charAt(0) != '$') {
+            return false;
         }
-        Expresion exp = Buscar.getExpresion((Expresion) s);
-        if (exp instanceof ExpVariable) {
-            return exp.getTipo();
+        String id = s.getVar().getValor();
+        if (!id.equals("a") && !id.equals("b")) {
+            return false;
         }
-        Coleccion col;
-        if (exp.getValor() instanceof AccesoCol) {
-            col = ((AccesoCol) exp.getValor()).getColeccion();
-        } else {
-            col = ((AccesoColRef) exp.getValor()).getColeccion();
-        }
-        //Si solo hay un elemento es el mismo tipos
-        if (col.getLista().getExpresiones().size() == 1) {
-            return exp.getTipo();
-        }
-        //Obtenemos el tipo del valor
-        Tipo t = ((Acceso) exp.getValor()).getExpresion().getTipo();
-        if (t.isRef()) {
-            t = t.getSubtipo(1);
-        }
-        if (t.isMap()) {
-            t = t.getSubtipo(1).add(0, Tipo.LIST);
-        }
-        return t;
+        FuncionBloque funcion = Buscar.buscarPadre(s, FuncionBloque.class);
+        return funcion != null && funcion.getIdentificador().getValor().equals("sort") && Buscar.isHijo(s, funcion.getExpresion());
     }
 
     /**

@@ -33,9 +33,10 @@ public final class GenVariable {
     }
 
     public void visitar(VarExistente s) {
-        Simbolo uso = Buscar.getPadre(s, 2);
-        if (uso instanceof ColDec) {
-            declararVar(s, "", uso instanceof ColDecOur);
+        if (Buscar.isVariableSort(s)) {
+            s.setCodigoGenerado(new StringBuilder(s.getVar().getValor()));
+        } else if (Buscar.isDeclaracion(s)) {
+            declararVar(s, "");
         } else {
             EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), Buscar.getContexto(s));
             s.setCodigoGenerado(new StringBuilder(e.getAlias()).append(s.getVar().getComentario()));
@@ -79,11 +80,11 @@ public final class GenVariable {
     }
 
     public void visitar(VarMy s) {
-        declararVar(s, s.getMy().getComentario(), false);
+        declararVar(s, s.getMy().getComentario());
     }
 
     public void visitar(VarOur s) {
-        declararVar(s, s.getOur().getComentario(), true);
+        declararVar(s, s.getOur().getComentario());
     }
 
     /**
@@ -103,9 +104,10 @@ public final class GenVariable {
      * @param cdec Comentario terminal de declaracion
      * @param publica Acceso publico
      */
-    private void declararVar(Variable v, String cdec, boolean publica) {
+    private void declararVar(Variable v, String cdec) {
         //Crear alias
         EntradaVariable e = tabla.getTablaSimbolos().buscarVariable(v.getVar().toString(), Buscar.getContexto(v));
+        boolean publica = e.isPublica();
         e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(), e.isConflicto()));
         //Declarar
         StringBuilder declaracion = Tipos.declaracion(v.getTipo());

@@ -75,7 +75,7 @@ import perldoop.modelo.arbol.rango.Rango;
 %right POW
 %nonassoc MAS_MAS MENOS_MENOS
 %left FLECHA
-%right '(' ')' '[' ']' '{' '}' ID_P
+%right '(' ')' '[' ']' '{' '}' ID_P ID_L
 %left AMBITO CONTEXTO
 
 
@@ -241,7 +241,7 @@ funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1
 			|	paqueteID ID							{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(new Lista())))));}	
 			|	ID handle expresion						{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($2),add(new ColParentesis(add(args=new Lista(s($3)))))));}
 			|	ID_P '(' handle expresion ')'			{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($3),add(new ColParentesis(s($2),add(new Lista(s($4))),s($5)))));}
-			|	ID '{' lista '}' expresion				{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(add(args=new Lista(s($5)))))));}
+			|	ID_L '{' expresion '}' expresion		{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(add(args=new Lista(s($5)))))));}
 
 handle		:	STDOUT_H								{$$=set(new HandleOut(s($1)));}
 			|	STDERR_H								{$$=set(new HandleErr(s($1)));}

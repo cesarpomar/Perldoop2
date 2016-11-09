@@ -6,9 +6,10 @@ import perldoop.modelo.semantica.Tipo;
 
 /**
  * Semantica función print
+ *
  * @author César Pomar
  */
-public final class SemFuncionChomp extends SemFuncionNativa{
+public final class SemFuncionChomp extends SemFuncionNativa {
 
     public SemFuncionChomp(TablaSemantica tabla) {
         super(tabla);
@@ -16,10 +17,9 @@ public final class SemFuncionChomp extends SemFuncionNativa{
 
     @Override
     public void visitar(FuncionBasica f) {
-        checkArgumentos(f, 1);
+        checkArgumentos(f, 1, 1);
         checkVariable(f.getColeccion().getLista().getExpresiones().get(0), new Tipo(Tipo.STRING));
         f.setTipo(new Tipo(Tipo.INTEGER));
     }
 
-     
 }

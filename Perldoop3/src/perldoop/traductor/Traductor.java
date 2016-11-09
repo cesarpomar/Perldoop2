@@ -1,5 +1,6 @@
 package perldoop.traductor;
 
+import java.util.ArrayList;
 import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.generacion.Generador;
@@ -97,17 +98,18 @@ public final class Traductor implements Acciones {
     @Override
     public void reAnalizarDespuesDe(Simbolo s) {
         List<Simbolo> l = simbolos.subList(index, simbolos.size());
+        List<Simbolo> dependencias = new ArrayList<>(10);
         int posicion = l.indexOf(s);
-        int distancia = 1;
-        Simbolo padre = l.get(0).getPadre();
-        while (padre != null && l.indexOf(padre) < posicion) {
-            distancia++;
+        Simbolo padre = l.get(0);
+        //Calculamos las dependicias
+        while (padre != null && l.indexOf(padre) <= posicion) {
+            dependencias.add(padre);
             padre = padre.getPadre();
         }
-        int i = 0;
-        for (; distancia > 0; distancia--) {
-            for (; i < posicion - distancia + 1; i++) {
-                l.set(i, l.set(i + distancia, l.get(i)));
+        //Vamos moviendo todas las dependencias
+        for (Simbolo actual : dependencias) {
+            for (int i = l.indexOf(actual); i < posicion; i++) {
+                l.set(i, l.set(i + 1, l.get(i)));
             }
         }
         index--;

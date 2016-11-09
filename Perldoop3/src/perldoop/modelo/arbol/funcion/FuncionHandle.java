@@ -8,7 +8,8 @@ import perldoop.modelo.arbol.handle.Handle;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -&gt; funcion : Paquete ID expresion
+ * Clase que representa la reduccion -&gt; funcion : ID handle expresion | ID_P '(' handle expresion ')'
+ * 
  *
  * @author César Pomar
  */

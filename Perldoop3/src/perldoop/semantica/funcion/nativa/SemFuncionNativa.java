@@ -89,18 +89,19 @@ public abstract class SemFuncionNativa {
      * Comprueba que la funcion solo tenga n argumentos
      *
      * @param f Funcion
-     * @param n Numero de argumentos esperados
+     * @param min Argumentos minimos
+     * @param max Argumentos maximos
      */
-    protected void checkArgumentos(Funcion f, int n) {
+    protected void checkArgumentos(Funcion f, int min, int max) {
         int cn = Buscar.getExpresiones(f.getColeccion()).size();
-        if (cn != n) {
-            if (cn > n) {
-                tabla.getGestorErrores().error(Errores.FUNCION_NUM_ARGS, f.getColeccion().getLista().getSeparadores().get(cn).getToken(),
-                        f.getIdentificador().getValor(), n, cn);
-            } else {
-                tabla.getGestorErrores().error(Errores.FUNCION_NUM_ARGS, f.getIdentificador().getToken(),
-                        f.getIdentificador().getValor(), n, cn);
-            }
+        if (cn > max) {
+            tabla.getGestorErrores().error(Errores.FUNCION_NUM_ARGS, f.getColeccion().getLista().getSeparadores().get(cn).getToken(),
+                    f.getIdentificador().getValor(), max, cn);
+            throw new ExcepcionSemantica(Errores.FUNCION_NUM_ARGS);
+        }
+        if (cn < min) {
+            tabla.getGestorErrores().error(Errores.FUNCION_NUM_ARGS, f.getIdentificador().getToken(),
+                    f.getIdentificador().getValor(), min, cn);
             throw new ExcepcionSemantica(Errores.FUNCION_NUM_ARGS);
         }
     }

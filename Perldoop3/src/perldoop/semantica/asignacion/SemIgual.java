@@ -58,7 +58,7 @@ public class SemIgual {
      * @param s Simbolo de asignacion
      */
     private void simple(Igual s) {
-        s.setTipo(Buscar.getTipoVar(s.getIzquierda()));
+        s.setTipo(s.getIzquierda().getTipo());
         checkAsignacion(s.getIzquierda(), s.getOperador(), s.getDerecha());    
     }
 

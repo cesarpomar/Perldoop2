@@ -10,7 +10,7 @@ import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 
 /**
- * Generador de la funcion print
+ * Generador de la funcion chomp
  *
  * @author César Pomar
  */

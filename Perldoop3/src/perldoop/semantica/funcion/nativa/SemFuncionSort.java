@@ -10,7 +10,7 @@ import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
 /**
- * Semantica función print
+ * Semantica función sort
  *
  * @author César Pomar
  */
@@ -27,7 +27,7 @@ public final class SemFuncionSort extends SemFuncionNativa {
      */
     private void checkTipo(Coleccion col) {
         Tipo t = col.getTipo();
-        if (t.getSubtipo(1).isColeccion()) {
+        if (t.isColeccion() && t.getSubtipo(1).isColeccion()) {
             tabla.getGestorErrores().error(Errores.SORT_MULTI_COLECCION, Buscar.tokenInicio(col));
             throw new ExcepcionSemantica(Errores.SORT_MULTI_COLECCION);
         }

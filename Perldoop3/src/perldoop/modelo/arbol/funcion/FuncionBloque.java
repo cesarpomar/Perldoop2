@@ -4,18 +4,19 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
+import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -&gt; funcion : Paquete ID expresion
+ * Clase que representa la reduccion -&gt; funcion : Paquete ID '{' expresion '}' expresion
  *
  * @author César Pomar
  */
 public final class FuncionBloque extends Funcion {
 
     protected Terminal llaveI;
-    protected Lista lista;
+    protected Expresion expresion;
     protected Terminal llaveD;
 
     /**
@@ -24,14 +25,14 @@ public final class FuncionBloque extends Funcion {
      * @param paquetes Paquetes
      * @param identificador Identificador
      * @param llaveI Llave izquierda
-     * @param lista Lista
+     * @param expresion Expresion
      * @param llaveD Llave derecha
      * @param coleccion Colección
      */
-    public FuncionBloque(Paquetes paquetes, Terminal identificador, Terminal llaveI, Lista lista, Terminal llaveD, ColParentesis coleccion) {
+    public FuncionBloque(Paquetes paquetes, Terminal identificador, Terminal llaveI, Expresion expresion, Terminal llaveD, ColParentesis coleccion) {
         super(paquetes, identificador, coleccion);
         setLlaveI(llaveI);
-        setLista(lista);
+        setExpresion(expresion);
         setLlaveD(llaveD);
     }
 
@@ -55,22 +56,22 @@ public final class FuncionBloque extends Funcion {
     }
 
     /**
-     * Obtiene la lista
+     * Obtiene la expresión
      *
-     * @return Lista
+     * @return Expresión
      */
-    public Lista getLista() {
-        return lista;
+    public Expresion getExpresion() {
+        return expresion;
     }
 
     /**
-     * Establece la lista
+     * Establece la expresión
      *
-     * @param lista Lista
+     * @param expresion Expresión
      */
-    public void setLista(Lista lista) {
-        lista.setPadre(this);
-        this.lista = lista;
+    public void setExpresion(Expresion expresion) {
+        expresion.setPadre(this);
+        this.expresion = expresion;
     }
 
     /**
@@ -99,7 +100,7 @@ public final class FuncionBloque extends Funcion {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{paquetes, identificador, llaveI, lista, llaveD, coleccion};
+        return new Simbolo[]{paquetes, identificador, llaveI, expresion, llaveD, coleccion};
     }
 
 }

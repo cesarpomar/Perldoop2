@@ -9,9 +9,10 @@ import perldoop.semantica.util.Tipos;
 
 /**
  * Semantica función print
+ *
  * @author César Pomar
  */
-public final class SemFuncionPrint extends SemFuncionNativa{
+public final class SemFuncionPrint extends SemFuncionNativa {
 
     public SemFuncionPrint(TablaSemantica tabla) {
         super(tabla);
@@ -25,7 +26,7 @@ public final class SemFuncionPrint extends SemFuncionNativa{
     @Override
     public void visitar(FuncionBloque f) {
         f.setTipo(new Tipo(Tipo.INTEGER));
-        Tipos.casting(f.getLista().getExpresiones().get(0), new Tipo(Tipo.FILE), tabla.getGestorErrores());
+        Tipos.casting(f.getExpresion(), new Tipo(Tipo.FILE), tabla.getGestorErrores());
     }
 
     @Override
@@ -33,7 +34,5 @@ public final class SemFuncionPrint extends SemFuncionNativa{
         f.setTipo(new Tipo(Tipo.INTEGER));
         Tipos.casting(f.getHandle(), new Tipo(Tipo.FILE), tabla.getGestorErrores());
     }
-    
-    
-    
+
 }
