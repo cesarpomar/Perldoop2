@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import perldoop.modelo.Opciones;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.preprocesador.EtiquetasTipo;
 
@@ -19,6 +20,8 @@ public final class TablaSimbolos {
     private Map<String, EntradaFuncion> funciones;
     private Map<String, EntradaFuncionNoDeclarada> funcionesNoDeclaradas;
     private ArbolPaquetes paquetes;
+    private Opciones opciones;
+    private Jimporter jImporter;
     private Map<String, Paquete> imports;
     private Paquete paquete;
     private boolean vacia;
@@ -27,14 +30,17 @@ public final class TablaSimbolos {
      * Construye la tabla de símbolos
      *
      * @param paquetes Arbol de paquetes
+     * @param opciones Opciones
      */
-    public TablaSimbolos(ArbolPaquetes paquetes) {
+    public TablaSimbolos(ArbolPaquetes paquetes, Opciones opciones) {
         bloques = new ArrayList<>(20);
         bloques.add(new HashMap<>(20));//Atributos
         predeclaraciones = new HashMap<>(20);
         funciones = new HashMap<>(20);
         funcionesNoDeclaradas = new HashMap<>(20);
         this.paquetes = paquetes;
+        this.opciones = opciones;
+        jImporter = (opciones.isjImporter()) ? new Jimporter(paquetes) : null;
         imports = new HashMap<>(20);
         vacia = true;
     }
@@ -198,7 +204,7 @@ public final class TablaSimbolos {
     public void addFuncion(EntradaFuncion entrada) {
         EntradaFuncionNoDeclarada noDeclarada = funcionesNoDeclaradas.remove(entrada.getIdentificador());
         funciones.put(entrada.getIdentificador(), entrada);
-        if(noDeclarada!=null){
+        if (noDeclarada != null) {
             entrada.setAlias(noDeclarada.getAlias());
         }
     }
@@ -279,9 +285,9 @@ public final class TablaSimbolos {
      * @param fichero Fichero
      */
     public void crearPaquete(String fichero) {
-        String id=String.join(".", paquetes.getDirectorios(fichero))+"."+paquetes.getClases().get(fichero);
-        paquete = new Paquete(paquetes.getClases().get(fichero), funciones);
-        paquetes.getPaquetes().put(id, paquete);
+        String ruta = String.join(".", paquetes.getDirectorios(fichero)) + "." + paquetes.getClases().get(fichero);
+        paquete = new Paquete(ruta, paquetes.getClases().get(fichero), funciones);
+        paquetes.getPaquetes().put(ruta, paquete);
     }
 
     /**
@@ -292,8 +298,19 @@ public final class TablaSimbolos {
      * @return Paquete
      */
     public Paquete getPaquete(String fichero, String[] paquete) {
-        String ruta = String.join(".",paquetes.getDirectorios(fichero))+"."+String.join(".",paquete);
-        return paquetes.getPaquetes().get(ruta);
+        //Busqueda relativa, libreria de usuario
+        String ruta = String.join(".", paquetes.getDirectorios(fichero)) + "." + String.join(".", paquete);
+        Paquete p = paquetes.getPaquetes().get(ruta);
+        if (p != null) {
+            return p;
+        }
+        //Busqueda absoluta, libreria de perl
+        ruta = String.join(".", paquete);
+        p = paquetes.getPaquetes().get(ruta);
+        if (p == null && jImporter != null) {
+            return jImporter.importar(ruta);
+        }
+        return p;
     }
 
 }

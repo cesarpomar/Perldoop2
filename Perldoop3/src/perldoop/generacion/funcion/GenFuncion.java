@@ -104,6 +104,18 @@ public final class GenFuncion {
                 return new GenFuncionSort(tabla);
             case "split":
                 return new GenFuncionSplit(tabla);
+            case "join":
+                return new GenFuncionJoin(tabla);
+            case "push":
+                return new GenFuncionPush(tabla);
+            case "pop":
+                return new GenFuncionPop(tabla);
+            case "shift":
+                return new GenFuncionShift(tabla);
+            case "unshift":
+                return new GenFuncionUnshift(tabla);
+            case "delete":
+                return new GenFuncionDelete(tabla);
             default:
                 return null;
         }

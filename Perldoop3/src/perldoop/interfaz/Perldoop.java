@@ -12,6 +12,7 @@ import perldoop.internacionalizacion.Errores;
 import perldoop.io.CodeReader;
 import perldoop.io.CodeWriter;
 import perldoop.jar.LibJar;
+import perldoop.modelo.semantica.Jimporter;
 import perldoop.lexico.Lexer;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;
@@ -44,6 +45,7 @@ public final class Perldoop {
         GestorErrores gestorErrores;
         checkFicheros(consola);
         ArbolPaquetes paquetes = new ArbolPaquetes(consola.getFicheros(), opciones.getPaquetes());
+        new Jimporter(paquetes).importar("sentences.sentences_es");
         for (String ruta : consola.getFicheros()) {
             gestorErrores = new GestorErrores(ruta.trim(), opciones);
             File fichero = new File(ruta);
@@ -99,7 +101,7 @@ public final class Perldoop {
                 continue;
             }
             /*--------------------------------Traductor---------------------------------*/
-            TablaSimbolos tablaSimbolos = new TablaSimbolos(paquetes);
+            TablaSimbolos tablaSimbolos = new TablaSimbolos(paquetes, opciones);
             Semantica semantica = new Semantica(tablaSimbolos, opciones, gestorErrores);
             Generador generador = new Generador(tablaSimbolos, opciones, gestorErrores);
             Traductor traductor = new Traductor(simbolos, semantica, generador, opciones);
@@ -113,7 +115,7 @@ public final class Perldoop {
             }
             /*--------------------------------Escritura---------------------------------*/
             try {
-                writer.escribir(generador.getClase(),gestorErrores);
+                writer.escribir(generador.getClase(), gestorErrores);
             } catch (IOException ex) {
                 gestorErrores.error(Errores.ERROR_ESCRITURA);
             }

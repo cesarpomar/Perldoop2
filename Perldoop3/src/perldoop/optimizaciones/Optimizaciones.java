@@ -44,7 +44,7 @@ public class Optimizaciones {
      * @param codigo Codigo fuente
      */
     private void notacionDiamante(StringBuilder codigo) {
-        String s = Pattern.compile("(=[\\w\\d\\s]+<)([^(]*)(>)", 0).matcher(codigo).replaceAll("$1$3");
+        String s = Pattern.compile("(=\\s*[\\w\\d\\s]+<)([^(]*)(>)", 0).matcher(codigo).replaceAll("$1$3");
         codigo.replace(0, codigo.length(), s);
     }
 

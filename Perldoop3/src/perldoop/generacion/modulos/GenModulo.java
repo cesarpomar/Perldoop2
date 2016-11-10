@@ -42,10 +42,10 @@ public class GenModulo {
             return;
         }
         List<String> paquetes = new ArrayList<>(20);
-        String clase = s.getPaquetes().getIdentificadores().get(s.getPaquetes().size()-1).getValor();
+        String ruta = s.getPaquetes().getIdentificadores().get(s.getPaquetes().size()-1).getValor();
         paquetes.addAll(Arrays.asList(tabla.getTablaSimbolos().getArbolPaquete().getDirectorios(tabla.getGestorErrores().getFichero())));      
         paquetes.addAll(Arrays.asList(Arrays.copyOf(s.getPaquetes().getArrayString(), s.getPaquetes().size()-1)));
-        paquetes.add(tabla.getTablaSimbolos().getImports().get(clase).getAlias());
+        paquetes.add(tabla.getTablaSimbolos().getImports().get(ruta).getAlias());
         StringBuilder codigo = new StringBuilder(100);
         codigo.append("import ");
         codigo.append(String.join(".", paquetes));

@@ -18,6 +18,7 @@ public class Opciones {
     private String codificacion;
     private String[] paquetes;
     private boolean libreria;
+    private boolean jImporter;
     //Argumentos Optimización
     private boolean optNulos;
     private boolean optIntancias;
@@ -334,6 +335,24 @@ public class Opciones {
      */
     public void setLibreria(boolean libreria) {
         this.libreria = libreria;
+    }
+
+    /**
+     * Obtiene usar jImporter
+     *
+     * @return Usar jImporter
+     */
+    public boolean isjImporter() {
+        return jImporter;
+    }
+
+    /**
+     * Establece usar jImporter
+     *
+     * @param jImporter Usar jImporter
+     */
+    public void setjImporter(boolean jImporter) {
+        this.jImporter = jImporter;
     }
 
 }

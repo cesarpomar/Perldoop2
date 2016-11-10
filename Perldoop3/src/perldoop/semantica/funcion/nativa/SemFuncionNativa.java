@@ -1,5 +1,7 @@
 package perldoop.semantica.funcion.nativa;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.expresion.Expresion;
@@ -89,26 +91,28 @@ public abstract class SemFuncionNativa {
      * @param exp Expresion de la variable
      * @param t Tipo esperador
      */
-    protected void errorVariableTipo(Expresion exp, Tipo t) {
-        tabla.getGestorErrores().error(Errores.FUNCION_VARIABLE_TIPO, Buscar.tokenInicio(exp), String.join("", ParserEtiquetas.parseTipo(t)));
+    protected void errorVariableTipo(Expresion exp, Tipo... t) {
+        tabla.getGestorErrores().error(Errores.FUNCION_VARIABLE_TIPO, Buscar.tokenInicio(exp),
+                Arrays.stream(t).map(ti -> String.join("", ParserEtiquetas.parseTipo(ti))).collect(Collectors.joining("|"))
+        );
         throw new ExcepcionSemantica(Errores.FUNCION_VARIABLE_TIPO);
     }
 
     /**
-     * Comprueba que la funcion solo tenga n argumentos
+     * Comprueba que la funcion solo tenga el numero de argumentos en un rango acotado
      *
      * @param f Funcion
      * @param min Argumentos minimos
      * @param max Argumentos maximos
      */
-    protected void checkArgumentos(Funcion f, int min, int max) {
+    protected void checkArgumentos(Funcion f, Integer min, Integer max) {
         int cn = Buscar.getExpresiones(f.getColeccion()).size();
-        if (cn > max) {
+        if (max != null && cn > max) {
             tabla.getGestorErrores().error(Errores.FUNCION_NUM_ARGS, f.getColeccion().getLista().getSeparadores().get(cn).getToken(),
                     f.getIdentificador().getValor(), max, cn);
             throw new ExcepcionSemantica(Errores.FUNCION_NUM_ARGS);
         }
-        if (cn < min) {
+        if (min != null && cn < min) {
             tabla.getGestorErrores().error(Errores.FUNCION_NUM_ARGS, f.getIdentificador().getToken(),
                     f.getIdentificador().getValor(), min, cn);
             throw new ExcepcionSemantica(Errores.FUNCION_NUM_ARGS);

@@ -26,6 +26,7 @@ public class Interfaz extends Internacionalizacion {
     public static final String CODIFICACION = "CODIFICACION";
     public static final String PAQUETES = "PAQUETES";
     public static final String LIBRERIA = "LIBRERIA";
+    public static final String J_IMPORTER = "J_IMPORTER";
 
     //Argumentos Optimización
     public static final String ARGS_OPTIMIZACION = "ARGS_OPTIMIZACION";

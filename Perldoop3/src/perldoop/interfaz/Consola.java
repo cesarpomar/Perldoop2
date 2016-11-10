@@ -99,6 +99,7 @@ public final class Consola {
         opcionales.addArgument("-se", "--show-errors").metavar("n").action(new StoreArgumentAction()).type(Integer.class).help(interfaz.get(Interfaz.MOSTRAR_ERRORES));
         opcionales.addArgument("-en", "--encoding").metavar("e").action(new StoreArgumentAction()).help(interfaz.get(Interfaz.CODIFICACION));
         opcionales.addArgument("-pk", "--package").metavar("p").action(new StoreArgumentAction()).type(new ArgumentPaquete()).help(interfaz.get(Interfaz.PAQUETES));
+        opcionales.addArgument("-jim", "--java-importer").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.J_IMPORTER));
         //Optimizaciones
         ArgumentGroup optimizacion = parser.addArgumentGroup(interfaz.get(Interfaz.ARGS_OPTIMIZACION));
         optimizacion.addArgument("-on", "--optimize-nulls").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_NULOS));
@@ -137,9 +138,9 @@ public final class Consola {
         public String[] convert(ArgumentParser parser, Argument arg, String value) throws ArgumentParserException {
             String[] paquetes = value.split("\\.");
             for (String paquete : paquetes) {
-                if(!paquete.matches("[_a-zA-Z][_a-zA-Z0-9]*") || GestorReservas.isReservadaJava(paquete)){
+                if (!paquete.matches("[_a-zA-Z][_a-zA-Z0-9]*") || GestorReservas.isReservadaJava(paquete)) {
                     throw new ArgumentParserException(new Errores().get(Errores.PAQUETE_INVALIDO), parser, arg);
-                }            
+                }
             }
             return paquetes;
         }
@@ -158,6 +159,7 @@ public final class Consola {
         opciones.setMostrarErrores(comandos.getInt("show_errors"));
         opciones.setCodificacion(comandos.getString("encoding"));
         opciones.setPaquetes(comandos.get("package"));
+        opciones.setjImporter(comandos.getBoolean("java_importer"));
         opciones.setOptNulos(comandos.getBoolean("optimize_nulls"));
         opciones.setOptIntancias(comandos.getBoolean("optimize_instance"));
         opciones.setOptDiamante(comandos.getBoolean("optimize_diamond"));

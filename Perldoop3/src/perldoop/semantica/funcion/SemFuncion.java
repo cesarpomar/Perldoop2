@@ -109,6 +109,18 @@ public class SemFuncion {
                 return new SemFuncionSort(tabla);
             case "split":
                 return new SemFuncionSplit(tabla);
+            case "join":
+                return new SemFuncionJoin(tabla);
+            case "push":
+                return new SemFuncionPush(tabla);
+            case "pop":
+                return new SemFuncionPop(tabla);
+            case "shift":
+                return new SemFuncionShift(tabla);
+            case "unshift":
+                return new SemFuncionUnshift(tabla);
+            case "delete":
+                return new SemFuncionDelete(tabla);
             default:
                 return null;
         }

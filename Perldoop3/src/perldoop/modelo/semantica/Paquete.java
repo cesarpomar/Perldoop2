@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public final class Paquete {
 
+    private String ruta;
     private String identificador;
     private String alias;
     private Map<String, ContextoVariable> atributos;
@@ -18,13 +19,33 @@ public final class Paquete {
     /**
      * Constructor del paquete
      *
+     * @param ruta Ruta del paquete
      * @param identifiador Identificador
      * @param funciones Funciones
      */
-    public Paquete(String identifiador, Map<String, EntradaFuncion> funciones) {
+    public Paquete(String ruta, String identifiador, Map<String, EntradaFuncion> funciones) {
         this.identificador = identifiador;
         this.funciones = funciones;
+        this.ruta = ruta;
         atributos = new HashMap<>(10);
+    }
+
+    /**
+     * Obtiene la ruta del paquete
+     *
+     * @return Ruta del paquete
+     */
+    public String getRuta() {
+        return ruta;
+    }
+
+    /**
+     * Establece la ruta del pauqte
+     *
+     * @param ruta Ruta del paquete
+     */
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
     }
 
     /**
