@@ -107,6 +107,8 @@ public class SemFuncion {
                 return new SemFuncionChomp(tabla);
             case "sort":
                 return new SemFuncionSort(tabla);
+            case "split":
+                return new SemFuncionSplit(tabla);
             default:
                 return null;
         }

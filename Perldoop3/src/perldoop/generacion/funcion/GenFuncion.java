@@ -102,6 +102,8 @@ public final class GenFuncion {
                 return new GenFuncionChomp(tabla);
             case "sort":
                 return new GenFuncionSort(tabla);
+            case "split":
+                return new GenFuncionSplit(tabla);
             default:
                 return null;
         }

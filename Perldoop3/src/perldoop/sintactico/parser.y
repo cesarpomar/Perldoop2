@@ -139,8 +139,8 @@ rango		:	expresion DOS_PUNTOS expresion			{$$=set(new Rango(s($1),s($2),s($3)));
 lista		:	listaR									{$$=set(s($1));}
 			|	listaR ','								{$$=set(s(ParseValLista.add($1, s($2))));}
 
-listaR		:	listaR ',' expresion					{$$=ParseValLista.add($1, s($2), s($3), args);args=null;}
-			|	expresion								{$$=new ParseValLista(new Lista(), s($1), args, simbolos);args=null;}			
+listaR		:	listaR ',' expresion					{$$=ParseValLista.add($1, s($2), s($3), args);args[0]=null;}
+			|	expresion								{$$=new ParseValLista(new Lista(), s($1), args, simbolos);args[0]=null;}			
 
 modificador :											{$$=set(new ModNada());}
 			|	IF expresion							{$$=set(new ModIf(s($1), s($2)));}
@@ -233,15 +233,15 @@ acceso		:	expresion colRef						{$$=set(new AccesoCol(s($1),s($2)));}
 			|	'%' expresion %prec CONTEXTO			{$$=set(new AccesoDesRef(s($1),s($2)));} 			
 			|	'\\' expresion %prec CONTEXTO			{$$=set(new AccesoRef(s($1),s($2)));} 
 
-funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(args=add(new Lista(s($2)))))));}
+funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(ParseValLista.args(add(new Lista(s($2))),args)))));}
 			|	ID_P colParen							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),s($2)));}
 			|	ID										{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(add(new Lista())))));}
-			|	paqueteID ID expresion					{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(args=new Lista(s($3)))))));}
+			|	paqueteID ID expresion					{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(ParseValLista.args(add(new Lista(s($3))),args)))));}
 			|	paqueteID ID_P colParen					{$$=set(new FuncionBasica(s($1),s($2),s($3)));}
 			|	paqueteID ID							{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(new Lista())))));}	
-			|	ID handle expresion						{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($2),add(new ColParentesis(add(args=new Lista(s($3)))))));}
+			|	ID handle expresion						{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($2),add(new ColParentesis(ParseValLista.args(add(new Lista(s($3))),args)))));}
 			|	ID_P '(' handle expresion ')'			{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($3),add(new ColParentesis(s($2),add(new Lista(s($4))),s($5)))));}
-			|	ID_L '{' expresion '}' expresion		{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(add(args=new Lista(s($5)))))));}
+			|	ID_L '{' expresion '}' expresion		{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(ParseValLista.args(add(new Lista(s($2))),args)))));}
 
 handle		:	STDOUT_H								{$$=set(new HandleOut(s($1)));}
 			|	STDERR_H								{$$=set(new HandleErr(s($1)));}
@@ -340,7 +340,7 @@ condicional	:																					{$$=set(new CondicionalNada());}
 	private PreParser preParser;
 	private Opciones opciones;
 	private GestorErrores gestorErrores;
-	private Lista args;
+	private Lista[] args;
 	
 	/**
 	 * Constructor del analizador sintactico
@@ -353,6 +353,7 @@ condicional	:																					{$$=set(new CondicionalNada());}
 		simbolos = new ArrayList<>(terminales.size()*10);
 		this.opciones = opciones;
 		this.gestorErrores = gestorErrores;
+		args= new Lista[1];//Para usar el valor por referencia
 	}
 
 	/**

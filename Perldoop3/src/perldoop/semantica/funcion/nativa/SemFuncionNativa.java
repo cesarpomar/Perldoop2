@@ -72,17 +72,26 @@ public abstract class SemFuncionNativa {
         if (t != null) {
             //Evitar conversion col to escalar
             if (exp.getTipo().isColeccion() != t.isColeccion()) {
-                tabla.getGestorErrores().error(Errores.FUNCION_VARIABLE_TIPO, Buscar.tokenInicio(exp), String.join("", ParserEtiquetas.parseTipo(t)));
-                throw new ExcepcionSemantica(Errores.FUNCION_VARIABLE_TIPO);
+                errorVariableTipo(exp, t);
             }
             //Comprobar resto de lo casting
             try {
                 Tipos.casting(exp, t, tabla.getGestorErrores());
             } catch (ExcepcionSemantica es) {
-                tabla.getGestorErrores().error(Errores.FUNCION_VARIABLE_TIPO, Buscar.tokenInicio(exp), String.join("", ParserEtiquetas.parseTipo(t)));
-                throw new ExcepcionSemantica(Errores.FUNCION_VARIABLE_TIPO);
+                errorVariableTipo(exp, t);
             }
         }
+    }
+
+    /**
+     * Lanza un error cuando la variable no es compatible con el tipo
+     *
+     * @param exp Expresion de la variable
+     * @param t Tipo esperador
+     */
+    protected void errorVariableTipo(Expresion exp, Tipo t) {
+        tabla.getGestorErrores().error(Errores.FUNCION_VARIABLE_TIPO, Buscar.tokenInicio(exp), String.join("", ParserEtiquetas.parseTipo(t)));
+        throw new ExcepcionSemantica(Errores.FUNCION_VARIABLE_TIPO);
     }
 
     /**

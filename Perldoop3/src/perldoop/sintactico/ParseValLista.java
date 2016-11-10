@@ -4,7 +4,6 @@ import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.expresion.Expresion;
-import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.sintactico.ParserVal;
 
@@ -26,12 +25,10 @@ public final class ParseValLista extends ParserVal {
      * @param args Argumento
      * @param simbolos Lista de simbolos del analizador
      */
-    public ParseValLista(Simbolo lista, Expresion exp, Lista args, List<Simbolo> simbolos) {
+    public ParseValLista(Simbolo lista, Expresion exp, Lista[] args, List<Simbolo> simbolos) {
         super(lista);
         ((Lista) lista).add(exp);
-        if (check(exp)) {
-            this.args = args;
-        }
+        this.args = args[0];
         this.simbolos = simbolos;
     }
 
@@ -44,7 +41,7 @@ public final class ParseValLista extends ParserVal {
      * @param args Lista argumento
      * @return Lista
      */
-    public static ParseValLista add(ParserVal pv, Terminal coma, Expresion exp, Lista args) {
+    public static ParseValLista add(ParserVal pv, Terminal coma, Expresion exp, Lista[] args) {
         ParseValLista lista = (ParseValLista) pv;
         if (lista.args == null) {
             ((Lista) lista.get()).add(coma, exp);
@@ -52,8 +49,8 @@ public final class ParseValLista extends ParserVal {
             lista.args.add(coma, exp);
             lista.dependencias();
         }
-        if (args != null && check(exp)) {
-            lista.args = args;
+        if (args != null) {
+            lista.args = args[0];
         }
         return lista;
     }
@@ -102,22 +99,17 @@ public final class ParseValLista extends ParserVal {
     }
 
     /**
-     * Para que la funcion absorba los paramentros debe tener la maxima precedencia de la expresion
+     * Comprueba cual de las listas debe ser el nuevo capturador de arugmentos de funcion
      *
-     * @param exp Expresiom
-     * @return Funcion acepta argumentos
+     * @param l Lista nueva
+     * @param args Lista actual
+     * @return Lista nueva
      */
-    private static boolean check(Expresion exp) {
-        Simbolo[] hijos = new Simbolo[]{exp};
-        Simbolo find;
-        do {
-            if (hijos.length == 0) {
-                return false;
-            }
-            find = hijos[hijos.length - 1];
-            hijos = find.getHijos();
-        } while (!(find instanceof Funcion));
-        return true;
+    public static Lista args(Lista l, Lista[] args) {
+        if (args[0] == null) {
+            args[0] = l;
+        }
+        return l;
     }
 
 }

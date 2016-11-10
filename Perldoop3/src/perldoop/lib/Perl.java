@@ -1,8 +1,6 @@
 package perldoop.lib;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 
 /**
@@ -118,7 +116,40 @@ public final class Perl {
         }
         return copia;
     }
-    
-    
+
+    /**
+     * Separa una cadena usando un separador expresado en forma de expresion regular como cadena
+     *
+     * @param regex Separador
+     * @param str Cadena
+     * @param limit Limite
+     * @return Array de cadenas
+     */
+    public static String[] split(String regex, String str, Integer... limit) {
+        int lt = -1;
+        if (limit.length > 0) {
+            lt = limit[0];
+        }
+        if (regex.equals(" ")) {
+            return str.split("(\\s)+", lt);
+        }
+        return str.split("(" + regex + ")+", lt);
+    }
+
+    /**
+     * Separa una cadena usando un separador expresado en forma de expresion regular
+     *
+     * @param regex Separador
+     * @param str Cadena
+     * @param limit Limite
+     * @return Array de cadenas
+     */
+    public static String[] split2(String regex, String str, Integer... limit) {
+        int lt = -1;
+        if (limit.length > 0) {
+            lt = limit[0];
+        }
+        return str.split("(" + regex + ")+", lt);
+    }
 
 }
