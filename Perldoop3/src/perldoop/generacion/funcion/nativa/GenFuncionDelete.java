@@ -1,6 +1,5 @@
 package perldoop.generacion.funcion.nativa;
 
-
 import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.generacion.TablaGenerador;
 
@@ -17,7 +16,7 @@ public class GenFuncionDelete extends GenFuncionNativa {
 
     @Override
     public void visitar(FuncionBasica f) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(f.getIdentificador().getValor() + " Not supported yet.");
     }
 
 }

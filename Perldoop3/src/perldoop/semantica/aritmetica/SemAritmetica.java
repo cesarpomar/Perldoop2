@@ -33,7 +33,6 @@ public class SemAritmetica {
      * Calcula el tipo minimo para las dos expresiones
      *
      * @param s Simbolo
-     * @return Tipo
      */
     private void tipoMinimo(AritOpBinario s) {
         Tipo ti = Tipos.asNumber(s.getIzquierda());

@@ -51,7 +51,6 @@ public class SemAcceso {
      * Comprueba el acceso a una referencia
      *
      * @param s Simbolo Acceso
-     * @param contexto Contexto del acceso
      */
     private void checkAccesoColRef(AccesoDesRef s) {
         char c = s.getContexto().getValor().charAt(0);

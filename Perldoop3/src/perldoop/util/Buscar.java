@@ -40,7 +40,6 @@ import perldoop.modelo.arbol.variable.VarPaqueteSigil;
 import perldoop.modelo.arbol.variable.VarSigil;
 import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.lexico.Token;
-import perldoop.modelo.semantica.Tipo;
 
 /**
  * Clase para hacer busquedas en el arbol
@@ -292,13 +291,17 @@ public final class Buscar {
      * @return comprobacion
      */
     public static boolean isVariable(Simbolo s) {
-        Simbolo acceso = s;
-        while (acceso instanceof ExpAcceso) {
-            ExpAcceso expAcceso = (ExpAcceso) acceso;
-            acceso = expAcceso.getAcceso().getExpresion();
+        Simbolo aux = s;
+        while (aux instanceof ExpAcceso) {
+            Acceso acceso=((ExpAcceso) aux).getAcceso();    
+            if(acceso instanceof AccesoDesRef && acceso.getExpresion().getValor() instanceof ColLlave){
+                 aux = ((ColLlave)acceso.getExpresion().getValor()).getLista().getExpresiones().get(0);
+            }else{
+                aux = acceso.getExpresion();
+            }
         }
-        if (acceso instanceof ExpVariable) {
-            Variable var = ((ExpVariable) acceso).getVariable();
+        if (aux instanceof ExpVariable) {
+            Variable var = ((ExpVariable) aux).getVariable();
             if (!(var instanceof VarSigil || var instanceof VarPaqueteSigil)) {
                 return true;
             }

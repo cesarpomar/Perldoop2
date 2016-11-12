@@ -1,11 +1,11 @@
 package perldoop.generacion.modulos;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import perldoop.modelo.arbol.modulos.ModuloPackage;
 import perldoop.modelo.arbol.modulos.ModuloUse;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.modelo.semantica.Paquete;
 
 /**
  * Clase generadora de modulo
@@ -41,14 +41,12 @@ public class GenModulo {
             //Si solo hay un identificador estan en el mismo paquete y pude omitirse la sentencia import
             return;
         }
-        List<String> paquetes = new ArrayList<>(20);
-        String ruta = s.getPaquetes().getIdentificadores().get(s.getPaquetes().size()-1).getValor();
-        paquetes.addAll(Arrays.asList(tabla.getTablaSimbolos().getArbolPaquete().getDirectorios(tabla.getGestorErrores().getFichero())));      
-        paquetes.addAll(Arrays.asList(Arrays.copyOf(s.getPaquetes().getArrayString(), s.getPaquetes().size()-1)));
-        paquetes.add(tabla.getTablaSimbolos().getImports().get(ruta).getAlias());
+        String fichero = tabla.getGestorErrores().getFichero();
+        String[] paquetes = s.getPaquetes().getArrayString();
+        Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, paquetes);
         StringBuilder codigo = new StringBuilder(100);
         codigo.append("import ");
-        codigo.append(String.join(".", paquetes));
+        codigo.append(paquete.getRuta());
         codigo.append(s.getPuntoComa());
         tabla.getClase().getImports().add(codigo.toString());
     }

@@ -46,67 +46,67 @@ public class GenAsignacion {
     }
 
     public void visitar(MasIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(MenosIgual s) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(MultiIgual s) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(DivIgual s) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(ModIgual s) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(PowIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(AndIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(OrIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(XorIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(DespDIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(DespIIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(LOrIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(DLOrIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(LAndIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(XIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
     public void visitar(ConcatIgual s) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException(s.getOperador().getValor()+" Not supported yet."); 
     }
 
 }

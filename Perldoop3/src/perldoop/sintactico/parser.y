@@ -432,6 +432,7 @@ condicional	:																					{$$=set(new CondicionalNada());}
 	/**
 	 * Función interna auxiliar que añade el simbolo a la lista de analizador
 	 * y luego lo retorna encapsulado en un ParseVal del analizador.
+	 * @param <T> Tipo del simoblo
 	 * @param s Simbolo
 	 * @param add Añadir a la lista
 	 * @return ParseVal

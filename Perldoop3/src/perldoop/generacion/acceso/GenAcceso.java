@@ -12,6 +12,8 @@ import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.lista.Lista;
+import perldoop.modelo.arbol.variable.VarExistente;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
@@ -49,7 +51,8 @@ public class GenAcceso {
         Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
         //Si hay otro acceso anidado o una desreferenciacion, obviamos crear la referencia
         if (uso instanceof Acceso || (Buscar.isCamino(uso, ColLlave.class, ExpColeccion.class)
-                && Buscar.getUso((Expresion) Buscar.getPadre(uso, 1)) instanceof AccesoDesRef)) {
+                && Buscar.getUso((Expresion) Buscar.getPadre(uso, 1)) instanceof AccesoDesRef)
+                || (uso instanceof Lista && uso.getPadre() instanceof Coleccion)) {
             noRef = true;
         } else {
             uso = Buscar.getUsoCol((Expresion) s.getPadre());
@@ -139,14 +142,51 @@ public class GenAcceso {
      */
     public static void getReplica(ExpAcceso exp, Simbolo lectura, Simbolo escritura, TablaGenerador tabla) {
         Acceso acceso = exp.getAcceso();
+        //Comporbar que la expresion es repetible
+        if (!Buscar.isRepetible(acceso.getExpresion())) {
+            Tipo te = acceso.getExpresion().getTipo().getSubtipo(1);//Quitar el ref de acceso anidado
+            //Declarar variable aux
+            String aux = tabla.getGestorReservas().getAux();
+            StringBuilder declaracion = Tipos.declaracion(te);
+            declaracion.append(" ").append(aux).append(";");
+            tabla.getDeclaraciones().add(declaracion);
+            //Subtituir codigo original
+            lectura.setCodigoGenerado(new StringBuilder(aux));
+            escritura.setCodigoGenerado(new StringBuilder(100).append("(").append(aux).append("=").append(acceso.getExpresion()).append(")"));
+        } else {
+            lectura.setCodigoGenerado(new StringBuilder(100).append(acceso.getExpresion()));
+            escritura.setCodigoGenerado(new StringBuilder(100).append(acceso.getExpresion()));
+        }
+        //Acceso a referencia
+        if (acceso instanceof AccesoDesRef) {
+            String get = genDesRef(acceso);
+            if (!get.isEmpty()) {
+                escritura.getCodigoGenerado().insert(0, ((AccesoDesRef) acceso).getContexto().getComentario());
+                escritura.getCodigoGenerado().append(Tipos.declaracion(exp.getTipo()).insert(0, " = new ").append("("));
+                lectura.getCodigoGenerado().append(get);
+                return;
+            }
+            Simbolo valor = Buscar.getExpresion(acceso.getExpresion()).getValor();
+            if (valor instanceof ColLlave) {
+                valor = ((ColLlave) valor).getLista().getExpresiones().get(0);
+            }
+            if (valor instanceof ExpAcceso) {
+                lectura.getCodigoGenerado().setLength(0);
+                escritura.getCodigoGenerado().setLength(0);
+                getReplica((ExpAcceso) valor, lectura, escritura, tabla);
+            } else {
+                escritura.setCodigoGenerado(exp.getCodigoGenerado());
+                lectura.setCodigoGenerado(exp.getCodigoGenerado());
+            }
+            return;
+        }
+        //Acceso a coleccion
         Simbolo colL;
         Simbolo colE;
-        String Refcomen;
         if (acceso instanceof AccesoCol) {
-            Refcomen = "";
             colE = colL = ((AccesoCol) acceso).getColeccion();
         } else {
-            Refcomen = ((AccesoColRef) acceso).getFlecha().getComentario();
+            escritura.getCodigoGenerado().append(((AccesoColRef) acceso).getFlecha().getComentario());
             colE = colL = ((AccesoColRef) acceso).getColeccion();
         }
         if (!Buscar.isRepetible(colL)) {
@@ -159,20 +199,6 @@ public class GenAcceso {
             colL = new SimboloAux(colL.getTipo(), new StringBuilder(aux));
             colE = new SimboloAux(colE.getTipo(), new StringBuilder(100).append(aux).append("=").append(colE));
         }
-        if (!Buscar.isRepetible(acceso.getExpresion())) {
-            Tipo te = acceso.getExpresion().getTipo().getSubtipo(1);//Quitar el ref de acceso anidado
-            //Declarar variable aux
-            String aux = tabla.getGestorReservas().getAux();
-            StringBuilder declaracion = Tipos.declaracion(te);
-            declaracion.append(" ").append(aux).append(";");
-            tabla.getDeclaraciones().add(declaracion);
-            //Subtituir codigo original
-            lectura.setCodigoGenerado(new StringBuilder(aux));
-            escritura.setCodigoGenerado(new StringBuilder(100).append("(").append(aux).append("=").append(acceso.getExpresion()).append(Refcomen).append(")"));
-        } else {
-            lectura.setCodigoGenerado(new StringBuilder(100).append(acceso.getExpresion()));
-            escritura.setCodigoGenerado(new StringBuilder(100).append(acceso.getExpresion()).append(Refcomen));
-        }
         genAcceso(acceso, colL, false, lectura.getCodigoGenerado());
         genAcceso(acceso, colE, true, escritura.getCodigoGenerado());
     }
@@ -180,17 +206,25 @@ public class GenAcceso {
     /**
      * Genera el get para acceder a una referencia siempre que este sea necesario
      *
-     * @param exp Expresion
+     * @param a Acceso
      * @return Acceso a referencia
      */
-    private String genGet(Expresion exp) {
-        exp = Buscar.getExpresion(exp);
+    private static String genDesRef(Acceso a) {
+        Expresion exp = Buscar.getExpresion(a.getExpresion());
         //Si esta entre llaves cogemos el contenido
         if (exp.getValor() instanceof ColLlave) {
-            exp = ((ColLlave) exp.getValor()).getLista().getExpresiones().get(0);
+            exp = Buscar.getExpresion(((ColLlave) exp.getValor()).getLista().getExpresiones().get(0));
         }
-        if (!(exp.getValor() instanceof AccesoCol) && !(exp.getValor() instanceof AccesoColRef) 
-                && !(exp.getValor() instanceof ColCorchete)&& !(exp.getValor() instanceof ColLlave)) {
+        //Acceso apra escirtura
+        if (a instanceof AccesoDesRef) {
+            Simbolo uso = Buscar.getUsoCol((Expresion) a.getPadre());
+            if (uso instanceof Igual && Buscar.isHijo(exp, ((Igual) uso).getIzquierda()) && exp.getValor() instanceof VarExistente) {
+                return Tipos.declaracion(exp.getTipo()).insert(0, " = new ").append("(").toString();
+            }
+        }
+        //Acceso para lectura
+        if (!(exp.getValor() instanceof AccesoCol) && !(exp.getValor() instanceof AccesoColRef)
+                && !(exp.getValor() instanceof ColCorchete) && !(exp.getValor() instanceof ColLlave)) {
             return ".get()";
         }
         return "";
@@ -205,8 +239,8 @@ public class GenAcceso {
     private void AccesoReferencia(Acceso s, String comenrarioSimbolo) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append(comenrarioSimbolo);
-        codigo.append(s.getExpresion().getCodigoGenerado());
-        codigo.append(genGet(s.getExpresion()));
+        codigo.append(s.getExpresion());
+        codigo.append(genDesRef(s));
         s.setCodigoGenerado(codigo);
     }
 
@@ -216,7 +250,7 @@ public class GenAcceso {
 
     public void visitar(AccesoColRef s) {
         Expresion exp = s.getExpresion();
-        accesoColeccion(s, new StringBuilder(100).append(exp).append(genGet(exp)), s.getColeccion(), s.getFlecha().getComentario());
+        accesoColeccion(s, new StringBuilder(100).append(exp).append(genDesRef(s)), s.getColeccion(), s.getFlecha().getComentario());
     }
 
     public void visitar(AccesoDesRef s) {

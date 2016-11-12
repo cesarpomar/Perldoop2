@@ -1,7 +1,10 @@
 package perldoop.lib;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * TEMPORAL hasta definir clases de funciones auxiliares
@@ -41,7 +44,7 @@ public final class Perl {
      * Procesa la cadena str y elimina y retorna su ultimo caracter
      *
      * @param str Cadena a procesar
-     * @param rn Retorno de la funcion
+     * @param rn Retorno de la funcion, ultimo caracter
      * @return Actualizacion de variable
      */
     public static String chop(String str, Ref<String>... rn) {
@@ -62,7 +65,7 @@ public final class Perl {
      * Procesa la cadena str y elimina y retorna el numero de caracteres eliminados
      *
      * @param str Cadena a procesar
-     * @param rn Retorno de la funcion
+     * @param rn Retorno de la funcion, numero de elementos eliminados
      * @return Actualizacion de variable
      */
     public static String chomp(String str, Ref<Integer>... rn) {
@@ -150,6 +153,207 @@ public final class Perl {
             lt = limit[0];
         }
         return str.split("(" + regex + ")+", lt);
+    }
+
+    /**
+     * Une una lista de elementos usando un separador
+     *
+     * @param sep Separador
+     * @param list Lista
+     * @return Resultado
+     */
+    public static String join(String sep, List list) {
+        StringJoiner joiner = new StringJoiner(sep);
+        for (Object e : list) {
+            joiner.add(e.toString());
+        }
+        return joiner.toString();
+    }
+
+    /**
+     * Añade un valor al final de la lista
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
+     * @param value Valor
+     * @return Numero de elementos añadidos, es decir 1
+     */
+    public static <T> Integer push(PerlList<T> list, T value) {
+        list.add(value);
+        return 1;
+    }
+
+    /**
+     * Añade un valor al final del array
+     *
+     * @param <T> Tipo de los elementos
+     * @param array Array
+     * @param value Valor
+     * @param rn Retorno de la funcion, numero de elementos añadidos
+     * @return Actualizacion de variable
+     */
+    public static <T> T[] push(T[] array, T value, Ref<Integer>... rn) {
+        if (rn.length > 0) {
+            rn[0].set(1);
+        }
+        T[] copia = Arrays.copyOf(array, array.length + 1);
+        copia[array.length] = value;
+        return copia;
+    }
+
+    /**
+     * Añade una lista de valores valores al final de la lista
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
+     * @param values Lista de valores
+     * @return Numero de elementos añadidos
+     */
+    public static <T> Integer push(PerlList<T> list, List<T> values) {
+        list.addAll(values);
+        return values.size();
+    }
+
+    /**
+     * Añade una lista de valores valores al final del array
+     *
+     * @param <T> Tipo de los elementos
+     * @param array Array
+     * @param values Lista de valores
+     * @param rn Retorno de la funcion, numero de elementos añadidos
+     * @return Actualizacion de variable
+     */
+    public static <T> T[] push(T[] array, List<T> values, Ref<Integer>... rn) {
+        if (rn.length > 0) {
+            rn[0].set(values.size());
+        }
+        T[] copia = Arrays.copyOf(array, array.length + values.size());
+        for (int i = 0; i < values.size(); i++) {
+            copia[array.length + i] = values.get(i);
+        }
+        return copia;
+    }
+
+    /**
+     * Elimina el ultimo elemento de la lista y lo retorna
+     *
+     * @param <T> Tipo del elemento
+     * @param list Lista
+     * @return Ultimo elemento
+     */
+    public static <T> T pop(PerlList<T> list) {
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.remove(list.size() - 1);
+    }
+
+    /**
+     * Elimina el ultimo elemento de la lista y lo retorna
+     *
+     * @param <T> Tipo del elemento
+     * @param array Array
+     * @param rn Retorno de la funcion, ultimo elemento
+     * @return Actualizacion de variable
+     */
+    public static <T> T[] pop(T[] array, Ref<Integer>... rn) {
+        if (array.length == 0) {
+            return array;
+        }
+        return Arrays.copyOf(array, array.length - 1);
+    }
+
+    /**
+     * Añade un valor al principio de la lista
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
+     * @param value Valor
+     * @return Numero de elementos añadidos, es decir 1
+     */
+    public static <T> Integer unshift(PerlList<T> list, T value) {
+        list.add(0, value);
+        return 1;
+    }
+
+    /**
+     * Añade un valor al principio del array
+     *
+     * @param <T> Tipo de los elementos
+     * @param array Array
+     * @param value Valor
+     * @param rn Retorno de la funcion, numero de elementos añadidos
+     * @return Actualizacion de variable
+     */
+    public static <T> T[] unshift(T[] array, T value, Ref<Integer>... rn) {
+        if (rn.length > 0) {
+            rn[0].set(1);
+        }
+        T[] copia = (T[]) Array.newInstance(array.getClass().getComponentType(), array.length + 1);
+        copia[0] = value;
+        System.arraycopy(array, 0, copia, 1, array.length);
+        return copia;
+    }
+
+    /**
+     * Añade una lista de valores valores al principio de la lista
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
+     * @param values Lista de valores
+     * @return Numero de elementos añadidos
+     */
+    public static <T> Integer unshift(PerlList<T> list, List<T> values) {
+        list.addAll(0, values);
+        return values.size();
+    }
+
+    /**
+     * Añade una lista de valores valores al principio del array
+     *
+     * @param <T> Tipo de los elementos
+     * @param array Array
+     * @param values Lista de valores
+     * @param rn Retorno de la funcion, numero de elementos añadidos
+     * @return Actualizacion de variable
+     */
+    public static <T> T[] unshift(T[] array, List<T> values, Ref<Integer>... rn) {
+        if (rn.length > 0) {
+            rn[0].set(values.size());
+        }
+        T[] copia = (T[]) Array.newInstance(array.getClass().getComponentType(), array.length + values.size());
+        values.toArray(copia);
+        System.arraycopy(array, 0, copia, values.size(), array.length);
+        return copia;
+    }
+
+    /**
+     * Elimina el primer elemento de la lista y lo retorna
+     *
+     * @param <T> Tipo del elemento
+     * @param list Lista
+     * @return Primer elemento
+     */
+    public static <T> T shift(PerlList<T> list) {
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.remove(0);
+    }
+
+    /**
+     * Elimina el primer elemento de la lista y lo retorna
+     *
+     * @param <T> Tipo del elemento
+     * @param array Array
+     * @param rn Retorno de la funcion, primer elemento
+     * @return Actualizacion de variable
+     */
+    public static <T> T[] shift(T[] array, Ref<Integer>... rn) {
+        if (array.length == 0) {
+            return array;
+        }
+        return Arrays.copyOfRange(array, 1, array.length);
     }
 
 }

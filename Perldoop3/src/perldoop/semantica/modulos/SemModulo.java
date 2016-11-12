@@ -46,7 +46,7 @@ public class SemModulo {
         String[] paquetes = s.getPaquetes().getArrayString();
         Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, paquetes);
         if(paquete==null){
-            tabla.getGestorErrores().error(Errores.MODULO_NO_EXISTE,s.getPuntoComa());
+            tabla.getGestorErrores().error(Errores.MODULO_NO_EXISTE,s.getPuntoComa().getToken());
             throw new ExcepcionSemantica(Errores.MODULO_NO_EXISTE);
         }
         tabla.getTablaSimbolos().getImports().put(clase, paquete);

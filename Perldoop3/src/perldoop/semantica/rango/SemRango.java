@@ -26,7 +26,7 @@ public final class SemRango {
         if (s.getIzquierda().getTipo().isInteger() && s.getDerecha().getTipo().isInteger()) {
             s.setTipo(new Tipo(Tipo.ARRAY, Tipo.INTEGER));
         } else {
-            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.LONG));
+            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));
         }
     }
 

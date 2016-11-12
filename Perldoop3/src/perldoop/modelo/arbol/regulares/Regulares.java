@@ -89,7 +89,7 @@ public abstract class Regulares extends Simbolo {
     /**
      * Establece el separador inicial
      *
-     * @param separadorIni
+     * @param separadorIni Separador inicial
      */
     public final void setSeparadorIni(Terminal separadorIni) {
         separadorIni.setPadre(this);

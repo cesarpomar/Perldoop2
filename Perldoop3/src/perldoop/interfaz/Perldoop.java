@@ -38,6 +38,7 @@ public final class Perldoop {
      * @param args Argumentos de ejecución
      */
     public static void main(String[] args) {
+        Test.global();
         Consola consola = new Consola(args);
         consola.parse();
         Opciones opciones = consola.getOpciones();
@@ -45,7 +46,6 @@ public final class Perldoop {
         GestorErrores gestorErrores;
         checkFicheros(consola);
         ArbolPaquetes paquetes = new ArbolPaquetes(consola.getFicheros(), opciones.getPaquetes());
-        new Jimporter(paquetes).importar("sentences.sentences_es");
         for (String ruta : consola.getFicheros()) {
             gestorErrores = new GestorErrores(ruta.trim(), opciones);
             File fichero = new File(ruta);

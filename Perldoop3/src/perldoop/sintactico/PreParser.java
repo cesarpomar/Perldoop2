@@ -87,7 +87,6 @@ public final class PreParser {
      * Obtiene el tipo de un terminal con token handle
      *
      * @param i Posicion del terminal
-     * @param tipo Tipo de handle
      * @return Tipo del handle
      */
     private int tipoHandleFile(int i) {

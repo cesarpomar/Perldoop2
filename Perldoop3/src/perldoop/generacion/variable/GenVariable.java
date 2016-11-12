@@ -6,7 +6,6 @@ import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.bloque.BloqueFor;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
 import perldoop.modelo.arbol.coleccion.ColDec;
-import perldoop.modelo.arbol.coleccion.ColDecOur;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.arbol.variable.*;
@@ -102,7 +101,6 @@ public final class GenVariable {
      *
      * @param v Variable
      * @param cdec Comentario terminal de declaracion
-     * @param publica Acceso publico
      */
     private void declararVar(Variable v, String cdec) {
         //Crear alias
@@ -162,9 +160,9 @@ public final class GenVariable {
     }
 
     /**
-     * Comrpueba si Varriable sera asignado
+     * Comprueba si Varriable sera asignado
      *
-     * @param s Simbolo
+     * @param v Simbolo variable
      * @return Asignada
      */
     private boolean isAsignada(Variable v) {

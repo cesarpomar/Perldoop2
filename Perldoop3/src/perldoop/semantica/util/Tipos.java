@@ -54,13 +54,17 @@ public final class Tipos {
      * @param td Tipo destino
      * @param ge Sistema de errores
      */
-    private static void toScalar(Simbolo s, Tipo to, Tipo td, GestorErrores ge) {
+    public static void toScalar(Simbolo s, Tipo to, Tipo td, GestorErrores ge) {
         if (td.isFile()) {
             if (!to.isFile() && !to.isBox()) {
                 error(s, to, td, ge);
             }
         } else if (td.isRef()) {
-            if (!to.isRef() && !to.isBox()) {
+            if(to.isRef()){
+                if(!to.getTipo().equals(td.getTipo())){
+                    error(s, to, td, ge);
+                }
+            }else if (!to.isBox()) {
                 error(s, to, td, ge);
             }
         }
@@ -74,13 +78,13 @@ public final class Tipos {
      * @param td Tipo destino
      * @param ge Sistema de errores
      */
-    private static void toColeccion(Simbolo s, Tipo to, Tipo td, GestorErrores ge) {
+    public static void toColeccion(Simbolo s, Tipo to, Tipo td, GestorErrores ge) {
         if (!td.isColeccion()) {
-           // error(s, to, td, ge);
+            error(s, to, td, ge);
         }
         if (to.getTipo().size() != td.getTipo().size()) {
             if (!to.getSimple().isBox() || !td.getSimple().isBox()) {
-             //   error(s, to, td, ge);
+                error(s, to, td, ge);
             }
         }
     }
@@ -144,7 +148,7 @@ public final class Tipos {
      * @param ge Sistema de errores
      */
     public static void error(Simbolo s, Tipo to, Tipo td, GestorErrores ge) {
-        ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), String.join("",ParserEtiquetas.parseTipo(to)), String.join("",ParserEtiquetas.parseTipo(td)));
+        ge.error(Errores.ERROR_CASTING, Buscar.tokenInicio(s), String.join("", ParserEtiquetas.parseTipo(to)), String.join("", ParserEtiquetas.parseTipo(td)));
         throw new ExcepcionSemantica(Errores.ERROR_CASTING);
     }
 

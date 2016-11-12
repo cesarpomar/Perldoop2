@@ -58,7 +58,6 @@ public final class Casting {
      * Transforma un escalar retornando su ultimo elemento
      *
      * @param col Simbolo coleccion
-     * @param escalar Simbolo escalar
      * @return Ultimo elemento de la colecciones
      */
     private static Simbolo colToScalar(Simbolo col) {

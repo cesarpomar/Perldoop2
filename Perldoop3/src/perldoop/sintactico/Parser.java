@@ -3533,6 +3533,7 @@ final static String yyrule[] = {
 	/**
 	 * Función interna auxiliar que añade el simbolo a la lista de analizador
 	 * y luego lo retorna encapsulado en un ParseVal del analizador.
+	 * @param <T> Tipo del simoblo
 	 * @param s Simbolo
 	 * @param add Añadir a la lista
 	 * @return ParseVal
@@ -3591,7 +3592,7 @@ final static String yyrule[] = {
 	}
 	
 	
-//#line 3255 "Parser.java"
+//#line 3256 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -4581,7 +4582,7 @@ case 209:
 //#line 333 "parser.y"
 {yyval=set(new CondicionalElse(s(val_peek(3)),new Contexto(s(val_peek(2)),s(val_peek(1)),s(val_peek(0)))));}
 break;
-//#line 4240 "Parser.java"
+//#line 4241 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

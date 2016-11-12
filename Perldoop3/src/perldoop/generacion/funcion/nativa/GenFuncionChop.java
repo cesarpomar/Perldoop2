@@ -37,7 +37,6 @@ public class GenFuncionChop extends GenFuncionNativa {
         codigo = updateVariable(exp, escritura, new SimboloAux(new Tipo(Tipo.STRING),codigo));
         genReturn(aux, codigo);
         f.setCodigoGenerado(codigo);
-        
     }
 
 }

@@ -30,12 +30,12 @@ public class SemRegulares {
     /**
      * Comrpueba que no se une un modificador desconocido o no soportador
      *
-     * @param mods Nombre de la expresion regular(Errores)
+     * @param regex Nombre de la expresion regular(Errores)
      * @param mods Modificadores usados
      * @param sopotados Modificadores soportados
      */
     private void checkModificadores(String regex, Terminal mods, String sopotados) {
-        if(mods==null){
+        if (mods == null) {
             return;
         }
         for (char m : mods.getValor().toCharArray()) {
@@ -48,6 +48,9 @@ public class SemRegulares {
 
     /**
      * Comrprueba que la expresion es una variable
+     *
+     * @param regex Nombre de la expresion regular
+     * @param exp Expresion de la variable
      */
     private void checkVariable(String regex, Expresion exp) {
         if (!Buscar.isVariable(exp)) {

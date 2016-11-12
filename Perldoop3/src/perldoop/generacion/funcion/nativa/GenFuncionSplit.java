@@ -3,7 +3,6 @@ package perldoop.generacion.funcion.nativa;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.ColIterator;
 import perldoop.modelo.arbol.cadena.CadenaQR;
-import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.util.Buscar;

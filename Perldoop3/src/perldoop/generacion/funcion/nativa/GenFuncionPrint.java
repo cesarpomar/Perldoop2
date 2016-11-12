@@ -6,6 +6,7 @@ import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.funcion.FuncionHandle;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.util.Buscar;
 
 /**
  * Generador de la funcion print
@@ -26,17 +27,18 @@ public class GenFuncionPrint extends GenFuncionNativa {
      * @return Argumento codigo
      */
     private StringBuilder args(Coleccion col, StringBuilder codigo) {
-        ColIterator it = new ColIterator(col);
-        codigo.append(it.getComentario());
-        if (col.getLista().getExpresiones().size() == 1 && col.getLista().getExpresiones().get(0).getTipo().isArray()) {
-            codigo.append("(Object)");
-        }
-        while (it.hasNext()) {
-            codigo.append(it.next());
-            if (it.hasNext()) {
-                codigo.append(",");
-            }
+        if (!Buscar.getExpresiones(col).stream().anyMatch(i -> i.getTipo().isColeccion())) {
+            ColIterator it = new ColIterator(col);
             codigo.append(it.getComentario());
+            while (it.hasNext()) {
+                codigo.append(it.next());
+                if (it.hasNext()) {
+                    codigo.append(",");
+                }
+                codigo.append(it.getComentario());
+            }
+        }else{
+            codigo.append(col);
         }
         return codigo;
     }
@@ -55,7 +57,7 @@ public class GenFuncionPrint extends GenFuncionNativa {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append(f.getIdentificador()).append("(");
         codigo.append(f.getExpresion());
-        if(!f.getColeccion().getLista().getExpresiones().isEmpty()){
+        if (!f.getColeccion().getLista().getExpresiones().isEmpty()) {
             codigo.append(",");
         }
         args(f.getColeccion(), codigo).append(")");
@@ -67,11 +69,11 @@ public class GenFuncionPrint extends GenFuncionNativa {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append(f.getIdentificador()).append("(");
         codigo.append(f.getHandle());
-        if(!f.getColeccion().getLista().getExpresiones().isEmpty()){
+        if (!f.getColeccion().getLista().getExpresiones().isEmpty()) {
             codigo.append(",");
         }
         args(f.getColeccion(), codigo).append(")");
-        f.setCodigoGenerado(codigo);        
+        f.setCodigoGenerado(codigo);
     }
 
 }

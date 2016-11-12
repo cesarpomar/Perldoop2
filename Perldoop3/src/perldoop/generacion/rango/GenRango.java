@@ -22,7 +22,7 @@ public class GenRango {
     }
 
     public void visitar(Rango s) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException(s.getDosPuntos().getValor()+" Not supported yet."); 
     }
 
 

@@ -57,6 +57,16 @@ public abstract class GenFuncionNativa {
     }
 
     /**
+     * Comprueba si la funcion pertenece a una sentencia
+     *
+     * @param f Funcion
+     * @return Es sentencia
+     */
+    protected boolean isSentencia(Funcion f) {
+        return Buscar.getUso((Expresion) f.getPadre()).getPadre() instanceof StcLista;
+    }
+
+    /**
      * Genera una variable auxiliar cuando se necesita usar el retorno para actualizar variables
      *
      * @param f Funcion
@@ -64,7 +74,7 @@ public abstract class GenFuncionNativa {
      * @return Variable auxiliar
      */
     protected String genReturnVar(Funcion f, StringBuilder codigo) {
-        if (Buscar.getUso((Expresion) f.getPadre()).getPadre() instanceof StcLista) {
+        if (isSentencia(f)) {
             codigo.append(")");
             return null;
         }
@@ -90,9 +100,9 @@ public abstract class GenFuncionNativa {
     /**
      * Genera la lectura y la escritura para una variable que necesita ser actualizada
      *
-     * @param exp
-     * @param lectura
-     * @param escritura
+     * @param exp Expresion variable
+     * @param lectura Simbolo para lectura
+     * @param escritura Simbolo para escritura
      */
     protected void genVariable(Expresion exp, Simbolo lectura, Simbolo escritura) {
         Expresion aux = Buscar.getExpresion(exp);
@@ -101,6 +111,14 @@ public abstract class GenFuncionNativa {
         }
     }
 
+    /**
+     * Actualiza la variable con expresion usando el codigo almacenado en escritura y el codigo valor
+     *
+     * @param exp Expresion de la variable
+     * @param escritura Codigo de escritura en la variable
+     * @param valor Valor
+     * @return Codigo de asignacion de la varirable
+     */
     protected StringBuilder updateVariable(Expresion exp, Simbolo escritura, Simbolo valor) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append(escritura);

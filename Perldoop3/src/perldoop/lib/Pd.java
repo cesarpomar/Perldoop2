@@ -56,7 +56,7 @@ public final class Pd {
      * @param array Arrays
      * @return Lista temporal
      */
-    public static <T> List<T> tList(T[] array) {
+    public static <T> List<T> tList(T... array) {
         return Arrays.asList(array);
     }
 
@@ -87,7 +87,7 @@ public final class Pd {
      */
     public static <T> T[] aAccess(T[] array, Number[] indexs, T... values) {
         T[] res = (T[]) Array.newInstance(array.getClass().getComponentType(), indexs.length);
-        for (int i = 0; i < indexs.length; i++) {
+        for (int i = 0; i < indexs.length && i < values.length; i++) {
             res[i] = array[indexs[i].intValue()] = values[i];
         }
         return res;
@@ -163,7 +163,7 @@ public final class Pd {
      */
     public static <T> PerlList<T> aAccess(List<T> list, Number[] indexs, List<T> values) {
         PerlList<T> res = new PerlList<>(indexs.length);
-        for (int i = 0; i < indexs.length; i++) {
+        for (int i = 0; i < indexs.length && i < values.size(); i++) {
             res.set(i, list.set(indexs[i].intValue(), values.get(i)));
         }
         return res;
@@ -239,10 +239,13 @@ public final class Pd {
      */
     public static <T> PerlList<T> aAccess(PerlMap<T> map, String[] keys, List<T> values) {
         PerlList<T> res = new PerlList<>(keys.length);
-        for (int i = 0; i < keys.length; i++) {
+        int i;
+        for (i = 0; i < keys.length && i < values.size(); i++) {
             res.set(i, map.put(keys[i], values.get(i)));
         }
-        PerlList<PerlList<String>> a = null;
+        for (i = 0; i < keys.length; i++) {
+            map.put(keys[i], null);
+        }
         return res;
     }
 
@@ -363,7 +366,7 @@ public final class Pd {
      *
      * @param str1 Cadena 1
      * @param str2 Cadena 2
-     * @return 0 si str1 == str2, 1 si str1 '-&gt' str2, -1 si str1 '-&lt' str1
+     * @return 0 si str1 == str2, 1 si str1 '-&gt;' str2, -1 si str1 '-&lt;' str1
      */
     public static int compare(String str1, String str2) {
         return str1.compareTo(str2) % 2;
@@ -374,7 +377,7 @@ public final class Pd {
      *
      * @param n1 Numero 1
      * @param n2 Numero 2
-     * @return 0 si n1 == n2, 1 si n1 '-&gt' n2, -1 si n1 '-&lt' n1
+     * @return 0 si n1 == n2, 1 si n1 '-&gt;' n2, -1 si n1 '-&lt;' n1
      */
     public static int compare(Number n1, Number n2) {
         return Double.compare(n1.doubleValue(), n2.doubleValue()) % 2;
@@ -491,7 +494,7 @@ public final class Pd {
      *
      * @param exp1 Expresion 1
      * @param exp2 Expresion 2
-     * @return !exp1 && exp2 || exp1 && !exp2
+     * @return !exp1 &amp;&amp; exp2 || exp1 &amp;&amp; !exp2
      */
     public static Boolean xor(Boolean exp1, Boolean exp2) {
         return !exp1 && exp2 || exp1 && !exp2;

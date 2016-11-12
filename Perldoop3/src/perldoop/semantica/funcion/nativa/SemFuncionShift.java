@@ -5,7 +5,6 @@ import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.semantica.coleccion.SemColeccion;
 import perldoop.util.Buscar;
 
 /**

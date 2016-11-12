@@ -309,7 +309,7 @@ public final class Preprocesador {
     /**
      * Crea un terminal de un token y luego le establece las etiquetas asociadas
      *
-     * @param i Posición del token
+     * @param t Token
      * @param etiquetas Etiquetas
      * @return Terminal
      */

@@ -1,6 +1,7 @@
 package perldoop.semantica.funcion.nativa;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
@@ -11,6 +12,7 @@ import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.funcion.FuncionHandle;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
+import perldoop.semantica.coleccion.SemColeccion;
 import perldoop.semantica.util.Tipos;
 import perldoop.util.Buscar;
 import perldoop.util.ParserEtiquetas;
@@ -117,6 +119,16 @@ public abstract class SemFuncionNativa {
                     f.getIdentificador().getValor(), min, cn);
             throw new ExcepcionSemantica(Errores.FUNCION_NUM_ARGS);
         }
+    }
+
+    /**
+     * Comprueba si una lista de argumentos pueden convertirse a la coleccion deseada
+     *
+     * @param tc Tipo de la coleccion
+     * @param lista Lista de expresiones
+     */
+    protected void checkTipoArgs(Tipo tc, List<Expresion> lista) {
+        SemColeccion.comprobarElems(tc, lista, tabla);
     }
 
 }

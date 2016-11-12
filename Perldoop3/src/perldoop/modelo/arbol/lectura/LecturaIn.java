@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 
 /**
- * Clase que representa la reduccion -&gt; lectura : '-&lt' '-&gt'
+ * Clase que representa la reduccion -&gt; lectura : '-&lt;' '-&gt;'
  *
  * @author César Pomar
  */

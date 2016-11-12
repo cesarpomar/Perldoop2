@@ -6,6 +6,7 @@ import java.util.List;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.acceso.AccesoCol;
@@ -49,7 +50,6 @@ public class GenColeccion {
      * Genera la referencia cuando es necesario
      *
      * @param c Coleccion
-     * @param t Tipo
      */
     private void genRef(Coleccion c) {
         //Si no es una referencia
@@ -63,15 +63,8 @@ public class GenColeccion {
                 return;
             }
             //Si es una coleccion
-            Coleccion col = Buscar.getColeccion(c);
-            while (col != null) {
-                if (col.getTipo() == null || col.getTipo().getSubtipo(1).isBox()) {
-                    break;
-                }
-                if (!col.getTipo().equals(c.getTipo())) {
-                    return;
-                }
-                col = Buscar.getColeccion(col);
+            if (Buscar.getColeccion(c) != null) {
+                return;
             }
         }
         c.getCodigoGenerado().insert(0, Tipos.declaracion(c.getTipo()).insert(0, "new ").append('(')).append(')');
@@ -118,7 +111,12 @@ public class GenColeccion {
                 coleccion.append(inicializacion).append("{");
                 Iterator<Simbolo> it2 = consecutivas.iterator();
                 while (it2.hasNext()) {
-                    coleccion.append(Casting.casting(it2.next(), st));
+                    Simbolo elem = it2.next();
+                    if (st.isBox() && elem.getTipo().isRef()) {
+                        elem = new SimboloAux(elem);
+                        elem.getCodigoGenerado().insert(0, Tipos.declaracion(exp.getTipo()).insert(0, " = new ").append("("));
+                    }
+                    coleccion.append(Casting.casting(elem, st));
                     if (it2.hasNext()) {
                         coleccion.append(",");
                     }
@@ -255,7 +253,7 @@ public class GenColeccion {
     /**
      * Concatena las declaraciones
      *
-     * @param v Coleccion de variables
+     * @param c Coleccion de variables
      */
     private void genDec(ColDec c) {
         if (!(Buscar.getUso((Expresion) c.getPadre()) instanceof StcLista)) {

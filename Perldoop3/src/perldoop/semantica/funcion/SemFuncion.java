@@ -31,6 +31,7 @@ public class SemFuncion {
     public void visitar(FuncionBasica s) {
         if (!s.getPaquetes().isVacio()) {
             comprobarFuncionPaquete(s, s.getPaquetes());
+            return;
         }
         SemFuncionNativa fn = null;
         if (s.getPadre() instanceof ExpFuncion) {

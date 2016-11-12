@@ -212,6 +212,10 @@ public class SemColeccion {
                         texp.add(0, Tipo.REF);
                     }
                 }
+                //Dentro de una coleccion una ref es como una coleccion
+                if(subT.getTipo().size()==1 && !subT.isBox() && texp.isRef()){
+                    Tipos.error(expresiones.get(i), expresiones.get(i).getTipo(), t, tabla.getGestorErrores());
+                }
                 Tipos.casting(expresiones.get(i), texp, subT, tabla.getGestorErrores());
             } else {
                 Tipos.casting(expresiones.get(i), texp, new Tipo(Tipo.STRING), tabla.getGestorErrores());

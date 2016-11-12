@@ -1,9 +1,16 @@
 package perldoop.modelo.semantica;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import perldoop.lib.Box;
 
 /**
@@ -13,6 +20,9 @@ import perldoop.lib.Box;
  */
 public final class Jimporter {
 
+    private static String ENV_VAR = "PERLDOOP";
+    private static String DEFAULT = "imports";
+    private static Loader loader = new Loader();
     private ArbolPaquetes paquetes;
 
     /**
@@ -38,7 +48,7 @@ public final class Jimporter {
         }
         try {
             //Busca si existe la clase
-            c = Jimporter.class.getClassLoader().loadClass(ruta);
+            c = loader.loadClass(ruta);
         } catch (ClassNotFoundException cne) {
             return null;
         }
@@ -108,6 +118,31 @@ public final class Jimporter {
                 return new Tipo(Tipo.FILE);
             default:
                 return null;
+        }
+    }
+
+    /**
+     * Cargador de la clase que se inicializa con todas las dependencias en la variable de entorno ENV_VAR y en la
+     * carpeta o jar llamados DEFAULT dentro de la ruta actual
+     */
+    private static class Loader extends URLClassLoader {
+
+        public Loader() {
+            super(new URL[0]);
+            Set<String> libs = new HashSet<>(100);
+            String env = System.getenv().get(ENV_VAR);
+            if(env!=null){
+                libs.addAll(Arrays.asList(env.split(";")));
+            }
+            libs.add(DEFAULT);
+            libs.add(DEFAULT+".jar");
+            for (String lib : libs) {
+                try {
+                    addURL(new File(lib).toURI().toURL());
+                } catch (MalformedURLException ex) {
+                }
+            }
+
         }
     }
 
