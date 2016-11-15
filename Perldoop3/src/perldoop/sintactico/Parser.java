@@ -388,7 +388,7 @@ final static short yydgoto[] = {                          1,
   360,  445,
 };
 final static short yysindex[] = {                         0,
-    0, -275,  796, -281,    0,  -70,  -54,    0,    0,    0,
+    0, -275,  796, -310,    0,  -70,  -54,    0,    0,    0,
     0,    0,    0,    0,    0,    0,   -6,    1, -258,    0,
     0,    0,    0, -252,    0,    0,   15,   19, 1120, -196,
  -190, -184, -166, -161, 1694,  437, -320, 1211, 1694, 1694,
@@ -1849,7 +1849,7 @@ yycheck[0] = new short[] {
     38,    39,    40,    41,    42,    43,    44,    45,    35,
     59,    59,    59,    55,    56,   386,   401,    91,    55,
     56,    57,    59,    36,    37,   352,   353,    40,   412,
-    67,    36,    37,     0,   417,    40,   125,   324,    88,
+    67,    36,    37,     0,   417,    40,   125,   353,    88,
     36,    37,   324,    93,    36,    37,   437,    97,   123,
    270,   271,   272,   123,    64,   422,   276,   438,   439,
     91,   270,    64,   324,   112,     0,   123,   276,   125,
@@ -3229,7 +3229,7 @@ final static String yyrule[] = {
 "masFuente :",
 "masFuente : fuente funcionDef",
 "funcionDef : funcionSub '{' cuerpo '}'",
-"funcionSub : SUB ID",
+"funcionSub : SUB ID_L",
 "cuerpoR : sentencia",
 "cuerpoR : cuerpoR sentencia",
 "cuerpoNV : cuerpoR",
@@ -4276,7 +4276,7 @@ case 132:
 break;
 case 133:
 //#line 244 "parser.y"
-{yyval=set(new FuncionBloque(add(new Paquetes()),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),add(new ColParentesis(ParseValLista.args(add(new Lista(s(val_peek(3)))),args)))));}
+{yyval=set(new FuncionBloque(add(new Paquetes()),s(val_peek(4)),s(val_peek(3)),s(val_peek(2)),s(val_peek(1)),add(new ColParentesis(ParseValLista.args(add(new Lista(s(val_peek(0)))),args)))));}
 break;
 case 134:
 //#line 246 "parser.y"

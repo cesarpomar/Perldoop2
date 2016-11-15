@@ -243,7 +243,7 @@ public final class Pd {
         for (i = 0; i < keys.length && i < values.size(); i++) {
             res.set(i, map.put(keys[i], values.get(i)));
         }
-        for (i = 0; i < keys.length; i++) {
+        for (; i < keys.length; i++) {
             map.put(keys[i], null);
         }
         return res;

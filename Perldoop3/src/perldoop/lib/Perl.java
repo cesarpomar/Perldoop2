@@ -356,4 +356,128 @@ public final class Perl {
         return Arrays.copyOfRange(array, 1, array.length);
     }
 
+    /**
+     * Borra varias posiciones en un array
+     *
+     * @param <T> Tipo de los elementos
+     * @param array Array
+     * @param indexs Posiciones
+     * @return Valores eliminados
+     */
+    public static <T> T[] delete(T[] array, Number[] indexs) {
+        T[] res = (T[]) Array.newInstance(array.getClass().getComponentType(), indexs.length);
+        for (int i = 0; i < indexs.length; i++) {
+            res[i] = array[indexs[i].intValue()];
+            array[indexs[i].intValue()] = null;
+        }
+        return res;
+    }
+
+    /**
+     * Borra una posicion en un array
+     *
+     * @param <T> Tipo de los elementos
+     * @param array Array
+     * @param index Posicion
+     * @return Valor eliminado
+     */
+    public static <T> T delete(T[] array, Integer index) {
+        T res = array[index];
+        array[index] = null;
+        return res;
+    }
+
+    /**
+     * Borra varias posiciones en una lista
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
+     * @param indexs Posiciones
+     * @return Valores eliminados
+     */
+    public static <T> PerlList<T> delete(PerlList<T> list, Number[] indexs) {
+        PerlList<T> res = new PerlList<>(indexs.length);
+        for (Number n : indexs) {
+            res.add(list.get(n.intValue()));
+            list.set(n.intValue(), null);
+        }
+        return res;
+    }
+
+    /**
+     * Borra una posicion en una lista
+     *
+     * @param <T> Tipo de los elementos
+     * @param list Lista
+     * @param index Posicion
+     * @return Valor eliminado
+     */
+    public static <T> T delete(PerlList<T> list, Integer index) {
+        T res = list.get(index);
+        list.set(index, null);
+        return res;
+    }
+
+    /**
+     * Borra varias posiciones en un hash
+     *
+     * @param <T> Tipo de los elementos
+     * @param map Mapa
+     * @param keys Claves
+     * @return Valores eliminados
+     */
+    public static <T> PerlList<T> delete(PerlMap<T> map, String[] keys) {
+        PerlList<T> res = new PerlList<>(keys.length);
+        for (String k : keys) {
+            res.add(map.remove(k));
+        }
+        return res;
+    }
+
+    /**
+     * Borra una posicion en un hash
+     *
+     * @param <T> Tipo de los elementos
+     * @param map Mapa
+     * @param key Clave
+     * @return Valor eliminado
+     */
+    public static <T> T delete(PerlMap<T> map, String key) {
+        return map.remove(key);
+    }
+
+    /**
+     * Borra una posicion multiclave en un hash
+     *
+     * @param <T> Tipo de los elementos
+     * @param map Mapa
+     * @param keys Claves
+     * @param multiKey Clave multiple
+     * @return Valor eliminado
+     */
+    public static <T> T delete(PerlMap<T> map, String[] keys, boolean multiKey) {
+        return map.remove(Arrays.asList(keys));
+    }
+
+    /**
+     * Obtiene las claves de un mapa
+     *
+     * @param map Mapa
+     * @return Lista de claves
+     */
+    public static List<String> keys(PerlMap map) {
+        return new PerlList<>(map.keySet());
+    }
+
+    /**
+     * Obitne los valores de un mapa
+     *
+     * @param <T> Tipo de los valores
+     * @param map mapa
+     * @return Lista de valores
+     */
+    public static <T> List<T> values(PerlMap<T> map) {
+        return new PerlList<>(map.values());
+    }
+
 }

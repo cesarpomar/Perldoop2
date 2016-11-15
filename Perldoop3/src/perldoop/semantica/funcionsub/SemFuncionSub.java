@@ -30,6 +30,6 @@ public class SemFuncionSub {
         f.setConflicto(tabla.getTablaSimbolos().buscarFuncion(id)!=null);
         tabla.getTablaSimbolos().addFuncion(f);
         tabla.getTablaSimbolos().abrirBloque();
-        tabla.getTablaSimbolos().addVariable(new EntradaVariable("__", new Tipo(Tipo.ARRAY,Tipo.BOX), false), '@');
+        tabla.getTablaSimbolos().addVariable(new EntradaVariable("_", new Tipo(Tipo.ARRAY,Tipo.BOX), false), '@');
     }
 }

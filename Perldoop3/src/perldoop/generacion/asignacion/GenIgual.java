@@ -118,7 +118,7 @@ public class GenIgual {
                 //Si no es coleccion coge su valor
                 if (!var.getTipo().isColeccion()) {
                     valIt.next();
-                    asignaciones.add(new SimboloAux(var.getTipo(), asignacion(var, "", valores.get(i))));
+                    asignaciones.add(new SimboloAux(var.getTipo(), asignacion(var, "", checkRef(var, valores.get(i)))));
                 } else {
                     //Si es coleccion coge todos los valores restantes
                     Simbolo aux = new SimboloAux(var.getTipo());
@@ -199,7 +199,7 @@ public class GenIgual {
             comentarios.add(new StringBuilder(varIt.getComentario()));
             varIt.next();
             Simbolo var = variables.get(i);
-            asignaciones.add(new SimboloAux(var.getTipo(), asignacion(var, "", it.next())));
+            asignaciones.add(new SimboloAux(var.getTipo(), asignacion(var, "", checkRef(var, it.next()))));
         }
         comentarios.add(new StringBuilder(varIt.getComentario()));
         //Escritura de asignaciones

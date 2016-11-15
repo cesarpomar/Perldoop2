@@ -89,7 +89,7 @@ masFuente	:											{$$=set(new Fuente(), false);}
 
 funcionDef	:	funcionSub '{' cuerpo '}'				{$$=set(new FuncionDef(s($1), new Contexto(s($2), s($3), s($4))));}
 
-funcionSub	:	SUB ID									{$$=set(new FuncionSub(s($1), s($2)));}
+funcionSub	:	SUB ID_L								{$$=set(new FuncionSub(s($1), s($2)));}
 
 cuerpoR		:	sentencia								{$$=set(new Cuerpo(add(new AbrirBloque()), s($1)), false);}
 			|	cuerpoR	sentencia				        {$$=set(Cuerpo.add(s($1), s($2)), false);}
@@ -241,7 +241,7 @@ funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1
 			|	paqueteID ID							{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(new Lista())))));}	
 			|	ID handle expresion						{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($2),add(new ColParentesis(ParseValLista.args(add(new Lista(s($3))),args)))));}
 			|	ID_P '(' handle expresion ')'			{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($3),add(new ColParentesis(s($2),add(new Lista(s($4))),s($5)))));}
-			|	ID_L '{' expresion '}' expresion		{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(ParseValLista.args(add(new Lista(s($2))),args)))));}
+			|	ID_L '{' expresion '}' expresion		{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(ParseValLista.args(add(new Lista(s($5))),args)))));}
 
 handle		:	STDOUT_H								{$$=set(new HandleOut(s($1)));}
 			|	STDERR_H								{$$=set(new HandleErr(s($1)));}

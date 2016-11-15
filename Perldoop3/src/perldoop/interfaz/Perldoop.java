@@ -12,7 +12,6 @@ import perldoop.internacionalizacion.Errores;
 import perldoop.io.CodeReader;
 import perldoop.io.CodeWriter;
 import perldoop.jar.LibJar;
-import perldoop.modelo.semantica.Jimporter;
 import perldoop.lexico.Lexer;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;

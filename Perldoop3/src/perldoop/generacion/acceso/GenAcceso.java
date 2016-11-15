@@ -1,6 +1,5 @@
 package perldoop.generacion.acceso;
 
-import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
@@ -10,8 +9,11 @@ import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
+import perldoop.modelo.arbol.expresion.ExpAsignacion;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
+import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.variable.VarExistente;
 import perldoop.modelo.generacion.TablaGenerador;
@@ -48,20 +50,36 @@ public class GenAcceso {
         StringBuilder codigo = new StringBuilder(100);
         boolean escritura = false;//Acceso para escribir
         boolean noRef = false;//No generar referencia
-        Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
-        //Si hay otro acceso anidado o una desreferenciacion, obviamos crear la referencia
-        if (uso instanceof Acceso || (Buscar.isCamino(uso, ColLlave.class, ExpColeccion.class)
-                && Buscar.getUso((Expresion) Buscar.getPadre(uso, 1)) instanceof AccesoDesRef)
-                || (uso instanceof Lista && uso.getPadre() instanceof Coleccion)) {
+        Simbolo uso = Buscar.getUsoCol((Expresion) s.getPadre());
+        if (uso instanceof Igual) {
             noRef = true;
+            escritura = Buscar.isHijo(s, ((Igual) uso).getIzquierda());
         } else {
-            uso = Buscar.getUsoCol((Expresion) s.getPadre());
-            if (uso instanceof Igual) {
+            uso = Buscar.getUso((Expresion) s.getPadre());
+            //Si hay otro acceso anidado o una desreferenciacion, obviamos crear la referencia
+            if (uso instanceof Acceso || (Buscar.isCamino(uso, ColLlave.class, ExpColeccion.class)
+                    && Buscar.getUso((Expresion) Buscar.getPadre(uso, 1)) instanceof AccesoDesRef)
+                    || (uso instanceof Lista && uso.getPadre() instanceof Coleccion)) {
                 noRef = true;
-                escritura = Buscar.isHijo(s, ((Igual) uso).getIzquierda());
+
             }
         }
-        if (!coleccion.getTipo().isColeccion()) {
+        if (isDelete(s)) {//Codigo para funcion delete
+            codigo.append(comentarioRef);
+            codigo.append(expresion).append(",");
+            Tipo t = s.getExpresion().getTipo();
+            Character c = Buscar.getContexto(s);
+            t = t.isRef() ? t.getSubtipo(1) : t;
+            if (c == '$' && coleccion.getTipo().isColeccion()) {
+                if (t.isMap()) {
+                    codigo.append(coleccion).append(",true");
+                } else {
+                    codigo.append("Pd.last(").append(coleccion).append(")");
+                }
+            } else {
+                codigo.append(coleccion);
+            }
+        } else if (!coleccion.getTipo().isColeccion()) {
             //Encampsular en Referencia solo si es necesario
             if (s.getTipo().isRef() && !noRef) {
                 codigo.append("new ").append(Tipos.declaracion(s.getTipo())).append("(");
@@ -87,7 +105,7 @@ public class GenAcceso {
      * @param escritura Acceso como escritura
      * @param codigo Codigo para generar el acceso
      */
-    private static void genMultiAcceso(Acceso s, StringBuilder expresion, Simbolo index, boolean escritura, StringBuilder codigo) {
+    private void genMultiAcceso(Acceso s, StringBuilder expresion, Simbolo index, boolean escritura, StringBuilder codigo) {
         char contexto = Buscar.getContexto(s);
         codigo.append(contexto == '$' ? 's' : contexto == '@' ? 'a' : 'h').append("Access(");
         codigo.append(expresion).append(',').append(index);
@@ -101,6 +119,21 @@ public class GenAcceso {
             }
         }
         codigo.append(escritura ? ',' : ')');
+    }
+
+    /**
+     * Comprueba si el acceso es con fines de borrado
+     *
+     * @param s Simbolo acceso
+     * @return Acceso para borrado
+     */
+    private boolean isDelete(Acceso s) {
+        Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
+        if (uso instanceof ExpFuncion) {
+            Funcion f = ((ExpFuncion) uso).getFuncion();
+            return f.getPaquetes().isVacio() && f.getIdentificador().getValor().equals("delete");
+        }
+        return false;
     }
 
     /**
@@ -118,17 +151,17 @@ public class GenAcceso {
             t = t.getSubtipo(1);
         }
         if (t.isArray()) {
-            codigo.append("[").append(Casting.casting(index, new Tipo(Tipo.INTEGER))).append("]");
+            codigo.append("[").append(index).append("]");
         } else if (t.isList()) {
             if (escritura) {
-                codigo.append(".set(").append(Casting.casting(index, new Tipo(Tipo.INTEGER))).append(",");
+                codigo.append(".set(").append(index).append(",");
             } else {
-                codigo.append(".get(").append(Casting.casting(index, new Tipo(Tipo.INTEGER))).append(")");
+                codigo.append(".get(").append(index).append(")");
             }
         } else if (escritura) {
-            codigo.append(".put(").append(Casting.casting(index, new Tipo(Tipo.STRING))).append(",");
+            codigo.append(".put(").append(index).append(",");
         } else {
-            codigo.append(".get(").append(Casting.casting(index, new Tipo(Tipo.STRING))).append(")");
+            codigo.append(".get(").append(index).append(")");
         }
     }
 

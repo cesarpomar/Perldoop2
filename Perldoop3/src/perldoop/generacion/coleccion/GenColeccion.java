@@ -63,8 +63,15 @@ public class GenColeccion {
                 return;
             }
             //Si es una coleccion
-            if (Buscar.getColeccion(c) != null) {
-                return;
+            Coleccion col = Buscar.getColeccion(c);
+            while (col != null) {
+                if (col.getTipo() == null) {
+                    break;
+                }
+                if ((!col.getTipo().equals(c.getTipo()) || col.getLista().getExpresiones().size() > 1) && !col.getTipo().getSubtipo(1).isBox()) {
+                    return;
+                }
+                col = Buscar.getColeccion(col);
             }
         }
         c.getCodigoGenerado().insert(0, Tipos.declaracion(c.getTipo()).insert(0, "new ").append('(')).append(')');
@@ -112,10 +119,6 @@ public class GenColeccion {
                 Iterator<Simbolo> it2 = consecutivas.iterator();
                 while (it2.hasNext()) {
                     Simbolo elem = it2.next();
-                    if (st.isBox() && elem.getTipo().isRef()) {
-                        elem = new SimboloAux(elem);
-                        elem.getCodigoGenerado().insert(0, Tipos.declaracion(exp.getTipo()).insert(0, " = new ").append("("));
-                    }
                     coleccion.append(Casting.casting(elem, st));
                     if (it2.hasNext()) {
                         coleccion.append(",");

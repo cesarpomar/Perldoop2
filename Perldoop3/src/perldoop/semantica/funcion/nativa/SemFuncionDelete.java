@@ -1,12 +1,12 @@
 package perldoop.semantica.funcion.nativa;
 
 import java.util.List;
+import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.semantica.TablaSemantica;
-import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
 /**
@@ -29,7 +29,7 @@ public final class SemFuncionDelete extends SemFuncionNativa {
         //Comprobar que la variable es un acceso
         Expresion origen = Buscar.getExpresion(exp);
         if (!(origen.getValor() instanceof AccesoCol || origen.getValor() instanceof AccesoColRef)) {
-            errorVariableTipo(lista.get(0), new Tipo(Tipo.LIST), new Tipo(Tipo.MAP));
+            tabla.getGestorErrores().error(Errores.DELETE_NO_ACCESO, Buscar.tokenInicio(origen));
         }
         f.setTipo(origen.getTipo());
     }

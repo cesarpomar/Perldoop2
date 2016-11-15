@@ -292,16 +292,21 @@ public final class Buscar {
      */
     public static boolean isVariable(Simbolo s) {
         Simbolo aux = s;
+        boolean accesos = false;
         while (aux instanceof ExpAcceso) {
-            Acceso acceso=((ExpAcceso) aux).getAcceso();    
-            if(acceso instanceof AccesoDesRef && acceso.getExpresion().getValor() instanceof ColLlave){
-                 aux = ((ColLlave)acceso.getExpresion().getValor()).getLista().getExpresiones().get(0);
+            accesos = true;
+            Acceso acceso = ((ExpAcceso) aux).getAcceso();
+            if (acceso instanceof AccesoDesRef && acceso.getExpresion().getValor() instanceof ColLlave) {
+                aux = ((ColLlave) acceso.getExpresion().getValor()).getLista().getExpresiones().get(0);
             }else{
                 aux = acceso.getExpresion();
             }
         }
         if (aux instanceof ExpVariable) {
             Variable var = ((ExpVariable) aux).getVariable();
+            if (accesos && var.getContexto().getValor().equals("%")) {//Los acesos en % no son variables
+                return false;
+            }
             if (!(var instanceof VarSigil || var instanceof VarPaqueteSigil)) {
                 return true;
             }
@@ -338,8 +343,9 @@ public final class Buscar {
         if (exp.getValor() instanceof Igual) {
             return isNotNull(((Igual) exp.getValor()).getDerecha());
         }
-        if (exp.getValor() instanceof Funcion) {
-            if (((ExpFuncion) exp).getFuncion().getIdentificador().getValor().equals("undef")) {
+        if (exp instanceof ExpFuncion) {
+            Funcion f = ((ExpFuncion) exp).getFuncion();
+            if (f.getIdentificador().getValor().equals("undef") && f.getPaquetes().isVacio()) {
                 return false;
             }
         }
@@ -660,7 +666,7 @@ public final class Buscar {
      * @return Es una variable o un acceso a un array
      */
     public static boolean isArrayOrVar(Expresion exp) {
-        Expresion aux = Buscar.getExpresion(exp);       
+        Expresion aux = Buscar.getExpresion(exp);
         return aux instanceof ExpVariable || (aux instanceof ExpAcceso && ((ExpAcceso) aux).getAcceso().getExpresion().getTipo().isArray());
     }
 

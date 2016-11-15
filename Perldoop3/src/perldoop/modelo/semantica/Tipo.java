@@ -262,7 +262,7 @@ public final class Tipo {
      * @return Tipo es un Numero
      */
     public boolean isNumberType() {
-        return !tipo.isEmpty() && tipo.get(0) >= INTEGER && tipo.get(0) <= NUMBER;
+        return !tipo.isEmpty() && ((tipo.get(0) >= INTEGER && tipo.get(0) <= DOUBLE) || tipo.get(0) == NUMBER);
     }
 
     /**

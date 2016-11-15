@@ -3,6 +3,7 @@ package perldoop.generacion.funcionsub;
 import perldoop.modelo.arbol.funcionsub.FuncionSub;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.EntradaFuncion;
+import perldoop.modelo.semantica.EntradaVariable;
 
 /**
  * Clase generadora de funcionSub
@@ -28,6 +29,8 @@ public class GenFuncionSub {
         if (fun.getAlias() == null) {
             fun.setAlias(tabla.getGestorReservas().getAlias(fun.getIdentificador(), fun.isConflicto()));
         }
+        EntradaVariable var = tabla.getTablaSimbolos().buscarVariable("_", '@');
+        var.setAlias("__");
         codigo.append("public static Box[] ").append(fun.getAlias()).append(" (Box[] __)");
         s.setCodigoGenerado(codigo);
     }

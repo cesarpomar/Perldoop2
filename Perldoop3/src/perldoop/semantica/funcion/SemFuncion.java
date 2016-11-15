@@ -122,6 +122,10 @@ public class SemFuncion {
                 return new SemFuncionUnshift(tabla);
             case "delete":
                 return new SemFuncionDelete(tabla);
+            case "keys":
+                return new SemFuncionKeys(tabla);
+            case "values":
+                return new SemFuncionValues(tabla);
             default:
                 return null;
         }

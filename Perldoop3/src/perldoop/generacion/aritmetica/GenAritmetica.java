@@ -53,7 +53,7 @@ public class GenAritmetica {
      * @param t Tipo
      * @return Numero
      */
-    public StringBuilder genExpresionNum(Expresion exp, Tipo t) {
+    private StringBuilder genExpresionNum(Expresion exp, Tipo t) {
         if (exp.getTipo().isNumberType()) {
             if (tabla.getOpciones().isOptNulos()) {
                 return exp.getCodigoGenerado();
@@ -179,7 +179,7 @@ public class GenAritmetica {
         boolean opt = tabla.getOpciones().isOptNulos();
         boolean arrayVar = Buscar.isArrayOrVar(expresion);
         Tipo t = s.getTipo();
-        if ((t.isInteger() || t.isInteger()) && opt && arrayVar && Buscar.isRepetible(expresion)) {
+        if ((t.isInteger() || t.isLong()) && opt && arrayVar && Buscar.isRepetible(expresion)) {
             codigo.append(s.getOperador()).append(expresion);
         } else {
             SimboloAux lectura;
@@ -221,7 +221,7 @@ public class GenAritmetica {
         boolean opt = tabla.getOpciones().isOptNulos();
         boolean arrayVar = Buscar.isArrayOrVar(expresion);
         Tipo t = s.getTipo();
-        if ((t.isInteger() || t.isInteger()) && opt && arrayVar && Buscar.isRepetible(expresion)) {
+        if ((t.isInteger() || t.isLong()) && opt && arrayVar && Buscar.isRepetible(expresion)) {
             codigo = new StringBuilder(100);
             codigo.append(expresion).append(s.getOperador());
         } else {

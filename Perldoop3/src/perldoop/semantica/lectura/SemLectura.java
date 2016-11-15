@@ -49,7 +49,7 @@ public class SemLectura {
 
     public void visitar(LecturaFile s) {
         setTipo(s);
-        Tipos.casting(s, new Tipo(Tipo.FILE), tabla.getGestorErrores());
+        Tipos.casting(s.getExpresion(), new Tipo(Tipo.FILE), tabla.getGestorErrores());
     }
 
 }

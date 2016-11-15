@@ -85,6 +85,7 @@ public class Errores extends Internacionalizacion {
     public static final String FUNCION_VARIABLE_TIPO = "FUNCION_VARIABLE_TIPO";
     public static final String FUNCION_NUM_ARGS = "FUNCION_NUM_ARGS";
     public static final String SORT_MULTI_COLECCION = "SORT_MULTI_COLECCION";
+    public static final String DELETE_NO_ACCESO = "DELETE_NO_ACCESO";
     
 
     public Errores() {

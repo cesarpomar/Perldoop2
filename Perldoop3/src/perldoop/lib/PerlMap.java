@@ -86,4 +86,14 @@ public final class PerlMap<T> extends HashMap<String, T> {
     public T get(List<String> keys) {
         return get(String.join("\034", keys));
     }
+
+    /**
+     * Borra un valor usando una clave compuesta
+     *
+     * @param keys Lista de claves
+     * @return Value
+     */
+    public T remove(List<String> keys) {
+        return remove(String.join("\034", keys));
+    }
 }
