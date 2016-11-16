@@ -130,7 +130,7 @@ public class GenIgual {
                         terminal.setComentario(valIt.getComentario().toString());
                         seps.add(terminal);
                     }
-                    aux.setCodigoGenerado(GenColeccion.genArrayList(subVals, seps, var.getTipo()));
+                    aux.setCodigoGenerado(GenColeccion.genColeccion(subVals, seps, var.getTipo()));
                     asignaciones.add(new SimboloAux(var.getTipo(), asignacion(var, "", aux)));
                     valores.clear();
                     break;
@@ -345,7 +345,7 @@ public class GenIgual {
                 ter.setCodigoGenerado(c);
                 separadores.add(ter);
             }
-            codigo.append(GenColeccion.genArrayList(asignacion, separadores, new Tipo(Tipo.ARRAY, Tipo.BOX)));
+            codigo.append(GenColeccion.genColeccion(asignacion, separadores, new Tipo(Tipo.ARRAY, Tipo.BOX)));
             codigo.append(")");
         }
         s.setCodigoGenerado(codigo);

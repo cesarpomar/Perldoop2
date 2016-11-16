@@ -20,13 +20,13 @@ public class GenFuncionPrint extends GenFuncionNativa {
     }
 
     /**
-     * Construye los argumentos de una funcion print
+     * Construye los argumentos de una funcion tipo print
      *
      * @param col Coleccion de argumentos
      * @param codigo Codigo para la escritura
      * @return Argumento codigo
      */
-    private StringBuilder args(Coleccion col, StringBuilder codigo) {
+    public static StringBuilder args(Coleccion col, StringBuilder codigo) {
         if (!Buscar.getExpresiones(col).stream().anyMatch(i -> i.getTipo().isColeccion())) {
             ColIterator it = new ColIterator(col);
             codigo.append(it.getComentario());
@@ -37,7 +37,7 @@ public class GenFuncionPrint extends GenFuncionNativa {
                 }
                 codigo.append(it.getComentario());
             }
-        }else{
+        } else {
             codigo.append(col);
         }
         return codigo;

@@ -1,5 +1,6 @@
 package perldoop.semantica.variable;
 
+import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
@@ -8,6 +9,8 @@ import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
 import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.coleccion.ColDecOur;
+import perldoop.modelo.arbol.coleccion.Coleccion;
+import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.variable.*;
@@ -44,6 +47,10 @@ public class SemVariable {
             if (t == null) {
                 tabla.getAcciones().reAnalizarDespuesDe(funcion.getColeccion());
             } else {
+                List<Expresion> exps = Buscar.getExpresiones(funcion.getColeccion());
+                if (exps.size() == 1) {
+                    t = exps.get(0).getTipo();
+                }
                 t = t.getSubtipo(1);
                 if (t.isColeccion()) {
                     t.add(0, Tipo.REF);

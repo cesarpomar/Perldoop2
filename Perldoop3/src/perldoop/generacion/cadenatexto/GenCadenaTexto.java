@@ -1,6 +1,7 @@
 package perldoop.generacion.cadenatexto;
 
 import java.util.Iterator;
+import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.cadena.CadenaQ;
@@ -8,8 +9,11 @@ import perldoop.modelo.arbol.cadena.CadenaQR;
 import perldoop.modelo.arbol.cadena.CadenaQW;
 import perldoop.modelo.arbol.cadena.CadenaSimple;
 import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
+import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.regulares.Regulares;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.util.Buscar;
 
 /**
  * Clase generadora de cadenas
@@ -29,6 +33,20 @@ public class GenCadenaTexto {
         this.tabla = tabla;
     }
 
+    /**
+     * La cadena es usada como expresion regular en split
+     * @param s Cadena Texto
+     * @return Uso en split
+     */
+    public boolean isSplit(CadenaTexto s){
+        Funcion f = Buscar.buscarPadre(s, Funcion.class);
+        if(f!=null && f.getPaquetes().isVacio() && f.getIdentificador().getValor().equals("split")){
+            List<Expresion> args = Buscar.getExpresiones(f.getColeccion());
+            return !args.isEmpty() && Buscar.isHijo(s, args.get(0));
+        }
+        return false;
+    }
+    
     public void visitar(CadenaTexto s) {
         StringBuilder codigo = new StringBuilder(300);
         if (s.getElementos().isEmpty()) {
@@ -41,7 +59,7 @@ public class GenCadenaTexto {
             codigo.append(String.join("\",\"", splits));
             codigo.append('"');
         } else {
-            boolean regex = s.getPadre() instanceof CadenaQR || s.getPadre() instanceof Regulares;
+            boolean regex = s.getPadre() instanceof CadenaQR || s.getPadre() instanceof Regulares || isSplit(s);
             boolean literal = s.getPadre() instanceof CadenaQ || s.getPadre() instanceof CadenaSimple;
             Iterator<Simbolo> it = s.getElementos().iterator();
             Simbolo inicial = s.getElementos().get(0);

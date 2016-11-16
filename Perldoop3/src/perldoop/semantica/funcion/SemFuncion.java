@@ -126,6 +126,14 @@ public class SemFuncion {
                 return new SemFuncionKeys(tabla);
             case "values":
                 return new SemFuncionValues(tabla);
+            case "die":
+                return new SemFuncionDie(tabla);
+            case "warn":
+                return new SemFuncionWarn(tabla);
+            case "exit":
+                return new SemFuncionExit(tabla);
+            case "open":
+                return new SemFuncionOpen(tabla);
             default:
                 return null;
         }

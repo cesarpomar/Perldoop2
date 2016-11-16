@@ -456,7 +456,7 @@ public final class Pd {
     }
 
     /**
-     * lee una linea de file
+     * Lee una linea de file
      *
      * @param file Fichero
      * @return linea
@@ -479,6 +479,24 @@ public final class Pd {
             return new String[0];
         }
         return file.readLines();
+    }
+
+    /**
+     * Lee una linea de la entrada estandar
+     *
+     * @return linea
+     */
+    public static String read() {
+        return read(PerlFile.STDIN);
+    }
+
+    /**
+     * Lee todas las lineas de la entrada estandar
+     *
+     * @return Array de lineas
+     */
+    public static String[] readLines() {
+        return readLines(PerlFile.STDIN);
     }
 
     /**

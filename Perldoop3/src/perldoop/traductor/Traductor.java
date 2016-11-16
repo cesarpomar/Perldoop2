@@ -6,6 +6,8 @@ import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.generacion.Generador;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
+import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.arbol.sentencia.Sentencia;
 import perldoop.semantica.Semantica;
 
@@ -75,8 +77,10 @@ public final class Traductor implements Acciones {
                     error = true;
                     errores++;
                 }
-            } else if (simbolos.get(index) instanceof Sentencia) {
+            } else if (simbolos.get(index) instanceof Sentencia || simbolos.get(index) instanceof Bloque) {
                 error = false;
+            } else if (simbolos.get(index) instanceof AbrirBloque) {//Asegurar que se abren los contextos
+                simbolos.get(index).aceptar(semantica);
             }
         }
         return errores;

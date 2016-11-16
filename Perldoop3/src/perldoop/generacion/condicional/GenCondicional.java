@@ -1,5 +1,6 @@
 package perldoop.generacion.condicional;
 
+import perldoop.generacion.bloque.GenBloque;
 import perldoop.generacion.util.Casting;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.expresion.Expresion;
@@ -29,7 +30,9 @@ public class GenCondicional {
         StringBuilder codigo = new StringBuilder(100);
         genDeclaraciones(codigo);
         codigo.append(s.getId());
-        codigo.append(s.getContexto());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         s.setCodigoGenerado(codigo);
     }
 
@@ -38,9 +41,11 @@ public class GenCondicional {
         genDeclaraciones(codigo);
         codigo.append("else if").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
-        codigo.append(genExpresion(s.getExpresion()));
+        codigo.append(GenBloque.genExpresion(tabla, s.getExpresion()));
         codigo.append(s.getParentesisD());
-        codigo.append(s.getContexto());
+        codigo.append(s.getContexto().getLlaveI());
+        codigo.append(s.getContexto().getCuerpo());
+        codigo.append(s.getContexto().getLlaveD());
         codigo.append(s.getBloqueElse());
         s.setCodigoGenerado(codigo);
     }
@@ -59,21 +64,6 @@ public class GenCondicional {
             codigo.append(dec);
         }
         tabla.getDeclaraciones().clear();
-    }
-
-    /**
-     * Genera la expresion que evalua el bloque de control para su ejecucion
-     *
-     * @param exp Expresion
-     * @return Codigo expresion
-     */
-    public StringBuilder genExpresion(Expresion exp) {
-        StringBuilder codigo = new StringBuilder(100);
-        codigo.append(Casting.casting(exp, new Tipo(Tipo.BOOLEAN)));
-        if (!Buscar.isNotNull(exp)) {
-            codigo.insert(0, "Pd.checkNull(").append(")");
-        }
-        return codigo;
     }
 
 }

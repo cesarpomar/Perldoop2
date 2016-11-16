@@ -85,172 +85,167 @@ public class GenColeccion {
      * @param t Tipo
      * @return Codigo
      */
-    public static StringBuilder genArrayList(List<? extends Simbolo> expresiones, List<Terminal> seps, Tipo t) {
+    public static StringBuilder genColeccion(List<? extends Simbolo> expresiones, List<Terminal> seps, Tipo t) {
         if (expresiones.isEmpty()) {
             if (t.isArray()) {
                 return Tipos.inicializacion(t, "0");
             }
             return Tipos.inicializacion(t);
         }
-        //Tipo en Array
-        Tipo ta = t.getSubtipo(1).add(0, Tipo.ARRAY);
         //Subtipo expresiones
         Tipo st = t.getSubtipo(1);
         if (st.isColeccion()) {
             st.add(0, Tipo.REF);
         }
-        //Tipo que contendra las expresiones
-        StringBuilder inicializacion = Tipos.inicializacion(ta);
         //Colecciones generadas en el proceso
-        List<StringBuilder> colecciones = new ArrayList<>(10);
+        List<Simbolo> colecciones = new ArrayList<>(10);
+        List<String> comentarios = new ArrayList<>(10);
         //Expresiones consecutivas
         List<Simbolo> consecutivas = new ArrayList<>(expresiones.size());
+        List<String> conComentarios = new ArrayList<>(expresiones.size());
         Iterator<? extends Simbolo> it = expresiones.iterator();
+        Iterator<Terminal> itSep = seps.iterator();
+        //Convertimos todas las expresiones en colecciones
         while (it.hasNext()) {
             Simbolo exp = it.next();
             boolean iscoleccion = exp.getTipo().isColeccion();
             if (!iscoleccion) {
                 consecutivas.add(exp);
+                if (itSep.hasNext()) {
+                    conComentarios.add(itSep.next().getComentario());
+                }
             }
             if (!consecutivas.isEmpty() && (!it.hasNext() || exp.getTipo().isColeccion())) {
-                //Creamos una coleccion con todos las expresiones
-                StringBuilder coleccion = new StringBuilder(100);
-                coleccion.append(inicializacion).append("{");
-                Iterator<Simbolo> it2 = consecutivas.iterator();
-                while (it2.hasNext()) {
-                    Simbolo elem = it2.next();
-                    coleccion.append(Casting.casting(elem, st));
-                    if (it2.hasNext()) {
-                        coleccion.append(",");
-                    }
+                if (t.isArrayOrList()) {
+                    colecciones.add(genArrayListExps(t, colecciones, comentarios));
+                } else {
+                    colecciones.add(genMapExps(t, colecciones, comentarios));
                 }
-                coleccion.append("}");
-                colecciones.add(coleccion);
                 consecutivas.clear();
+                conComentarios.clear();
             }
             //Si es una coleccion habra que agregarla
             if (!iscoleccion) {
                 continue;
             }
             if (exp.getTipo().getSubtipo(1).equals(st) && exp.getTipo().isArrayOrList()) {
-                colecciones.add(exp.getCodigoGenerado());
+                colecciones.add(exp);
             } else {
-                colecciones.add(Casting.casting(exp, t));
+                colecciones.add(new SimboloAux(t, Casting.casting(exp, t)));
+            }
+            if (itSep.hasNext()) {
+                conComentarios.add(itSep.next().getComentario());
             }
         }
+        //Unimos todas las colecciones en una
         if (colecciones.size() == 1) {
-            Terminal term = new Terminal();
-            term.setCodigoGenerado(colecciones.get(0));
-            term.setTipo(ta);
-            return Casting.casting(term, t);
+            return Casting.casting(colecciones.get(0), t);
         } else {
-            StringBuilder codigo = new StringBuilder(200);
+            StringBuilder codigo = new StringBuilder(500);
+            it = colecciones.iterator();
+            Iterator<String> itC = comentarios.iterator();
             codigo.append("Pd.union()");
-            for (StringBuilder col : colecciones) {
-                codigo.append(".append(").append(col).append(")");
+            while (it.hasNext()) {
+                codigo.append(".append(").append(it.next()).append(")");
+                if (itC.hasNext()) {
+                    codigo.append(itC.next());
+                }
             }
             if (t.isArray()) {
                 codigo.append(".toArray(").append(Tipos.declaracion(t)).append(".class)");
-            } else {
+            } else if (t.isList()) {
                 codigo.append(".toList()");
+            } else {
+                codigo.append(".toMap()");
             }
             return codigo;
         }
     }
 
     /**
-     * Genera una mapa con expresiones simple alternando clave y valor
+     * Genera una lista o un array con expresiones simples
      *
-     * @param l Lista de expresiones
-     * @param st Tipo contenido en el mapa
-     * @return Codigo
+     * @param t Tipo del array
+     * @param exps Expresiones
+     * @param comentarios Comentarios
+     * @return Simbolo coleccion
      */
-    private StringBuilder genMapExps(List<Expresion> l, Tipo st) {
+    public static Simbolo genArrayListExps(Tipo t, List<Simbolo> exps, List<String> comentarios) {
         StringBuilder codigo = new StringBuilder(100);
-        Iterator<Expresion> it = l.iterator();
-        boolean clave = true;
-        codigo.append(codigo).append("new PerlMap<");
-        if (st.isRef()) {
-            codigo.append(Tipos.declaracion(st.getSubtipo(1)));
+        String cierre;
+        if (t.isArray()) {
+            codigo.append(Tipos.inicializacion(t)).append("{");
+            cierre = "}";
         } else {
-            codigo.append(Tipos.declaracion(st));
-        }
-        codigo.append(">(");
-        StringBuilder claves = new StringBuilder(100);
-        StringBuilder valores = new StringBuilder(100);
-        while (it.hasNext()) {
-            if (clave) {
-                claves.append(Casting.casting(it.next(), new Tipo(Tipo.STRING)));
-            } else {
-                valores.append(Casting.casting(it.next(), st));
-                if (it.hasNext()) {
-                    claves.append(", ");
-                    valores.append(", ");
-                }
-            }
-            clave = !clave;
-        }
-        if (st.isRef()) {
-            st = st.getSubtipo(1);
-        }
-        st.add(0, Tipo.ARRAY);//Usamos el mismo convirtiendolo en array
-        codigo.append("new String[]{").append(claves).append("}, ");
-        codigo.append(Tipos.inicializacion(st)).append("{").append(valores).append("}");
-        codigo.append(")");
-        return codigo;
-    }
-
-    /**
-     * Crea un mapa usando una lista de expresiones
-     *
-     * @param l Lista de expresiones
-     * @param t Tipo
-     * @return Codigo
-     */
-    private StringBuilder genMap(Lista l, Tipo t) {
-        if (l.getExpresiones().isEmpty()) {
-            return Tipos.inicializacion(t);
+            codigo.append(Tipos.inicializacion(t)).setLength(codigo.length() - 1);
+            cierre = ")";
         }
         //Subtipo expresiones
         Tipo st = t.getSubtipo(1);
         if (st.isColeccion()) {
             st.add(0, Tipo.REF);
         }
-        //Colecciones generadas en el proceso
-        List<StringBuilder> colecciones = new ArrayList<>(10);
-        //Expresiones consecutivas
-        List<Expresion> expresiones = new ArrayList<>(l.getExpresiones().size());
-        Iterator<Expresion> it = l.getExpresiones().iterator();
+        Iterator<Simbolo> it = exps.iterator();
+        Iterator<String> itC = comentarios.iterator();
         while (it.hasNext()) {
-            Expresion exp = it.next();
-            boolean iscoleccion = exp.getTipo().isColeccion();
-            if (!iscoleccion) {
-                expresiones.add(exp);
+            Simbolo elem = it.next();
+            codigo.append(Casting.casting(elem, st));
+            //Separador
+            if (it.hasNext()) {
+                codigo.append(",");
             }
-            if (!expresiones.isEmpty() && (!it.hasNext() || exp.getTipo().isColeccion())) {
-                colecciones.add(genMapExps(expresiones, st));
+            //Comentario
+            if (itC.hasNext()) {
+                codigo.append(itC.next());
             }
-            //Si es una coleccion habra que agregarla
-            if (!iscoleccion) {
-                continue;
-            }
-            if (exp.getTipo().equals(t) && exp.getTipo().isMap()) {
-                colecciones.add(exp.getCodigoGenerado());
+        }
+        codigo.append(cierre);
+        return new SimboloAux(t, codigo);
+    }
+
+    /**
+     * Genera una lista o un array con expresiones simples alternando clave y valor
+     *
+     * @param t Tipo del array
+     * @param exps Expresiones
+     * @param comentarios Comentarios
+     * @return Simbolo coleccion
+     */
+    private static Simbolo genMapExps(Tipo t, List<Simbolo> exps, List<String> comentarios) {
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append(Tipos.inicializacion(t)).setLength(codigo.length() - 1);
+        //Subtipo expresiones
+        Tipo st = t.getSubtipo(1);
+        if (st.isColeccion()) {
+            st.add(0, Tipo.REF);
+        }
+        Iterator<Simbolo> it = exps.iterator();
+        Iterator<String> itC = comentarios.iterator();
+        StringBuilder claves = new StringBuilder(100);
+        StringBuilder valores = new StringBuilder(100);
+        boolean clave = true;
+        while (it.hasNext()) {
+            if (clave) {
+                claves.append(Casting.casting(it.next(), new Tipo(Tipo.STRING)));
             } else {
-                colecciones.add(Casting.casting(exp, t));
+                valores.append(Casting.casting(it.next(), st));
+                //Separador
+                if (it.hasNext()) {
+                    claves.append(",");
+                    valores.append(",");
+                }
+                //Comentarios
+                claves.append(itC.next());
+                if (itC.hasNext()) {
+                    valores.append(itC.next());
+                }
             }
+            clave = !clave;
         }
-        if (colecciones.size() == 1) {
-            return colecciones.get(0);
-        } else {
-            StringBuilder codigo = new StringBuilder(200);
-            codigo.append("Pd.union()");
-            for (StringBuilder col : colecciones) {
-                codigo.append(".append(").append(col).append(")");
-            }
-            codigo.append(".toMap()");
-            return codigo;
-        }
+        codigo.append("new String[]{").append(claves).append("}, ");
+        codigo.append(Tipos.inicializacion(t.getSubtipo(1).add(0, Tipo.ARRAY))).append("{").append(valores).append("}");
+        codigo.append(")");
+        return new SimboloAux(t, codigo);
     }
 
     /**
@@ -299,13 +294,8 @@ public class GenColeccion {
                 codigo.insert(0, s.getParentesisI());
                 codigo.append(s.getParentesisD());
             }
-
         } else {
-            if (s.getTipo().isMap()) {
-                codigo = genMap(s.getLista(), s.getTipo());
-            } else {
-                codigo = genArrayList(s.getLista().getExpresiones(), s.getLista().getSeparadores(), s.getTipo());
-            }
+            codigo = genColeccion(s.getLista().getExpresiones(), s.getLista().getSeparadores(), s.getTipo());
             //Comprobar si hay parentesis
             if (!s.isVirtual()) {
                 codigo.insert(0, s.getParentesisI().getComentario());
@@ -333,7 +323,7 @@ public class GenColeccion {
             if (t.isRef()) {
                 t = t.getSubtipo(1);
             }
-            s.setCodigoGenerado(genArrayList(s.getLista().getExpresiones(), s.getLista().getSeparadores(), t));
+            s.setCodigoGenerado(genColeccion(s.getLista().getExpresiones(), s.getLista().getSeparadores(), t));
             genRef(s);
         }
         s.getCodigoGenerado().insert(0, s.getCorcheteI().getComentario());
@@ -351,11 +341,7 @@ public class GenColeccion {
             if (t.isRef()) {
                 t = t.getSubtipo(1);//Quitar ref
             }
-            if (t.isArrayOrList()) {//En caso de multiacceso
-                s.setCodigoGenerado(genArrayList(s.getLista().getExpresiones(), s.getLista().getSeparadores(), t));
-            } else if (t.isMap()) {//Creacion de mapa
-                s.setCodigoGenerado(genMap(s.getLista(), t));
-            }
+            s.setCodigoGenerado(genColeccion(s.getLista().getExpresiones(), s.getLista().getSeparadores(), t));
             genRef(s);
         }
         s.getCodigoGenerado().insert(0, s.getLlaveI().getComentario());

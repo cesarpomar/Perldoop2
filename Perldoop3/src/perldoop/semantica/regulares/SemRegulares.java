@@ -2,8 +2,12 @@ package perldoop.semantica.regulares;
 
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
+import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.logico.LogTernario;
+import perldoop.modelo.arbol.logico.Logico;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
@@ -65,7 +69,13 @@ public class SemRegulares {
     }
 
     public void visitar(RegularMatch s) {
-        s.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));
+        Bloque bloque = Buscar.buscarPadre(s, Bloque.class);
+        Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
+        if (bloque != null && !Buscar.isHijo(s, bloque.getContexto()) && uso instanceof Logico && !(uso instanceof LogTernario)) {
+            s.setTipo(new Tipo(Tipo.BOOLEAN));
+        } else {
+            s.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));
+        }
         checkModificadores("m", s.getModificadores(), "imosxg");
     }
 

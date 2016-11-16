@@ -612,7 +612,7 @@ public final class Casting {
     public static StringBuilder toArray(Simbolo s) {
         StringBuilder cst = new StringBuilder(50);
         Tipo array = s.getTipo().getSubtipo(1).add(0, Tipo.ARRAY);
-        cst.append(s.getCodigoGenerado()).append(".toArray(").append(Tipos.inicializacion(array)).append(")");
+        cst.append(s.getCodigoGenerado()).append(".toArray(").append(Tipos.inicializacion(array,"0")).append(")");
         return cst;
     }
 

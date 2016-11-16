@@ -24,14 +24,13 @@ public class GenLectura {
 
     public void visitar(LecturaIn s) {
         StringBuilder codigo = new StringBuilder(100);
-        if (s.getTipo().isString()) {
-            codigo.append("Pd.read(");
-        } else {
-            codigo.append("Pd.readLines(");
-        }
         codigo.append(s.getMenor().getComentario());
-        codigo.append("PerlFile.STDIN");
-        codigo.append(")").append(s.getMayor().getComentario());
+        if (s.getTipo().isString()) {
+            codigo.append("Pd.read()");
+        } else {
+            codigo.append("Pd.readLines()");
+        }
+        codigo.append(s.getMayor().getComentario());
         s.setCodigoGenerado(codigo);
     }
 

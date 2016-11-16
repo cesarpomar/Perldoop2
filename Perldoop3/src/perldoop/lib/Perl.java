@@ -20,10 +20,7 @@ public final class Perl {
      * @return Retorna 1 si tiene exito
      */
     public static int print(Object... args) {
-        for (Object arg : args) {
-            System.out.print(arg);
-        }
-        return 1;
+        return print(PerlFile.STDOUT, args);
     }
 
     /**
@@ -465,7 +462,7 @@ public final class Perl {
      * @param map Mapa
      * @return Lista de claves
      */
-    public static List<String> keys(PerlMap map) {
+    public static PerlList<String> keys(PerlMap map) {
         return new PerlList<>(map.keySet());
     }
 
@@ -476,8 +473,64 @@ public final class Perl {
      * @param map mapa
      * @return Lista de valores
      */
-    public static <T> List<T> values(PerlMap<T> map) {
+    public static <T> PerlList<T> values(PerlMap<T> map) {
         return new PerlList<>(map.values());
+    }
+
+    /**
+     * Abre un fichero para lectura
+     *
+     * @param file Descriptor del fichero
+     * @param path Ruta del fichero
+     * @return 1 si tuvo existo, 0 en otro caso
+     */
+    public static Integer open(PerlFile file, String path) {
+        return file.open(path, "<");
+    }
+
+    /**
+     * Abre un fichero
+     *
+     * @param file Descriptor del fichero
+     * @param mode Modo de apertura
+     * @param path Ruta del fichero
+     * @return 1 si tuvo existo, 0 en otro caso
+     */
+    public static Integer open(PerlFile file, String mode, String path) {
+        return file.open(mode, path);
+    }
+
+    /**
+     * Aborta la ejecucion y muestra el status de salida
+     *
+     * @param status Status
+     * @return Sin retorno
+     */
+    public static Boolean exit(Integer status) {
+        System.exit(status);
+        return null;
+    }
+
+    /**
+     * Muestra un mensaje de error por pantalla
+     *
+     * @param args Mensaje
+     * @return  True si tuvo existo, False en otro caso
+     */
+    public static Boolean warn(Object... args) {
+        return PerlFile.STDERR.println(args) == 1;
+    }
+
+    /**
+     * Aborta la ejecucuin y muestra un mensaje por pantalla
+     *
+     * @param args Mensaje
+     * @return Sin retorno
+     */
+    public static Boolean die(Object... args) {
+        PerlFile.STDERR.println(args);
+        System.exit(-1);
+        return null;
     }
 
 }

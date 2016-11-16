@@ -231,7 +231,7 @@ public final class Buscar {
     public static <T extends Simbolo> T buscarPadre(Simbolo s, Class<T> clase) {
         Simbolo padre = s.getPadre();
         while (padre != null) {
-            if (padre.getClass().isAssignableFrom(clase)) {
+            if (clase.isAssignableFrom(padre.getClass())) {
                 return (T) padre;
             }
             padre = padre.getPadre();

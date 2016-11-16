@@ -51,7 +51,7 @@ public class GenFuncionJoin extends GenFuncionNativa {
                 ter.setComentario(it.getComentario().toString());
                 seps.add(ter);
             }
-            codigo.append(GenColeccion.genArrayList(exps, seps, new Tipo(Tipo.LIST, Tipo.STRING)));
+            codigo.append(GenColeccion.genColeccion(exps, seps, new Tipo(Tipo.LIST, Tipo.STRING)));
         }
         codigo.append(")");
         f.setCodigoGenerado(codigo);

@@ -19,11 +19,17 @@ public final class PerlFile {
     private Fwrite write;
 
     /**
+     * Crea un fichero para lectura o escritura
+     */
+    public PerlFile() {
+    }
+
+    /**
      * Crea un fichero con el descriptor de entrada
      *
      * @param read Decriptor de entrada
      */
-    public PerlFile(Fread read) {
+    private PerlFile(Fread read) {
         this.read = read;
     }
 
@@ -32,28 +38,47 @@ public final class PerlFile {
      *
      * @param write Descritor de salida
      */
-    public PerlFile(Fwrite write) {
+    private PerlFile(Fwrite write) {
         this.write = write;
     }
 
     /**
      *
      * @param path Ruta del fichero
-     * @param mode Finalidad de apertura del fichero
-     * @return 1 si tuvo existe, 0 en otro caso
+     * @param mode Modo de apertura del fichero
+     * @return 1 si tuvo existo, 0 en otro caso
      */
     public Integer open(String path, String mode) {
         try {
-            switch (mode) {
-                case "<":
-                    read = new Fread(path);
-                    break;
-                case ">":
-                    write = new Fwrite(path, false);
-                    break;
-                case ">>":
-                    write = new Fwrite(path, true);
-                    break;
+            if (mode.indexOf(':') > 0) {
+                String[] split = mode.split(":");
+                String encode = split[1];
+                if (encode.startsWith("encoding")) {
+                    encode = encode.substring(9, encode.length());
+                }
+                switch (split[0]) {
+                    case "<":
+                        read = new Fread(path, encode);
+                        break;
+                    case ">":
+                        write = new Fwrite(path, false, encode);
+                        break;
+                    case ">>":
+                        write = new Fwrite(path, true, encode);
+                        break;
+                }
+            } else {
+                switch (mode) {
+                    case "<":
+                        read = new Fread(path);
+                        break;
+                    case ">":
+                        write = new Fwrite(path, false);
+                        break;
+                    case ">>":
+                        write = new Fwrite(path, true);
+                        break;
+                }
             }
         } catch (IOException ex) {
             return 0;
@@ -134,7 +159,7 @@ public final class PerlFile {
 
     @Override
     public String toString() {
-        return "GLOB(" +super.toString()+ ')';
+        return "GLOB(" + super.toString() + ')';
     }
 
 }

@@ -37,10 +37,18 @@ public class SemFlujo {
      */
     private void isBucle(Flujo s, Terminal t) {
         Bloque bloque = Buscar.buscarPadre(s, Bloque.class);
-        if (bloque == null || bloque instanceof BloqueIf || bloque instanceof BloqueUnless) {
-            tabla.getGestorErrores().error(Errores.NEXT_LAST_SIN_BUCLE, t.getToken());
-            throw new ExcepcionSemantica(Errores.NEXT_LAST_SIN_BUCLE);
+        while (bloque != null) {
+            //Ignoramos los bloques condicionales
+            if ((bloque instanceof BloqueIf || bloque instanceof BloqueUnless)) {
+                bloque = Buscar.buscarPadre(bloque, Bloque.class);
+            } else {
+                //Si encontramos un bucle retornamos
+                return;
+            }
+
         }
+        tabla.getGestorErrores().error(Errores.NEXT_LAST_SIN_BUCLE, t.getToken());
+        throw new ExcepcionSemantica(Errores.NEXT_LAST_SIN_BUCLE);
     }
 
     /**
@@ -65,6 +73,7 @@ public class SemFlujo {
     public void visitar(Return s) {
         FuncionDef funcion = Buscar.buscarPadre(s, FuncionDef.class);
         if (funcion == null) {
+            Buscar.buscarPadre(s, FuncionDef.class);
             tabla.getGestorErrores().error(Errores.RETURN_SIN_FUNCION, s.getId().getToken());
             throw new ExcepcionSemantica(Errores.RETURN_SIN_FUNCION);
         }

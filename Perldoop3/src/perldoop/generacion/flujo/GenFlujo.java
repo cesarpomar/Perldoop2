@@ -27,14 +27,14 @@ public class GenFlujo {
 
     public void visitar(Next s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append(s.getNext());
+        codigo.append("continue").append(s.getNext().getComentario());
         codigo.append(s.getPuntoComa());
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(Last s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("continue").append(s.getLast().getComentario());
+        codigo.append("break").append(s.getLast().getComentario());
         codigo.append(s.getPuntoComa());
         s.setCodigoGenerado(codigo);
     }

@@ -116,6 +116,18 @@ public final class GenFuncion {
                 return new GenFuncionUnshift(tabla);
             case "delete":
                 return new GenFuncionDelete(tabla);
+            case "keys":
+                return new GenFuncionKeys(tabla);
+            case "values":
+                return new GenFuncionValues(tabla);
+            case "die":
+                return new GenFuncionDie(tabla);
+            case "warn":
+                return new GenFuncionWarn(tabla);
+            case "exit":
+                return new GenFuncionExit(tabla);
+            case "open":
+                return new GenFuncionOpen(tabla);
             default:
                 return null;
         }

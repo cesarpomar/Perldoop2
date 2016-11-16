@@ -32,20 +32,11 @@ public class GenComparacion {
      */
     private void compNum(Comparacion s) {
         StringBuilder codigo = new StringBuilder(100);
-        if (tabla.getOpciones().isOptNulos() || (Buscar.isNotNull(s.getIzquierda()) && Buscar.isNotNull(s.getDerecha()))) {
-            codigo.append(Casting.toNumber(s.getIzquierda()));
-            codigo.append(s.getOperador());
-            codigo.append(Casting.toNumber(s.getDerecha()));
-        } else {
-            Tipo t = new Tipo(Tipo.NUMBER);
-            codigo.append("Pd.compare(");
-            codigo.append(Casting.castingNotNull(s.getIzquierda(), t));
-            codigo.append(',');
-            codigo.append(Casting.castingNotNull(s.getDerecha(), t));
-            codigo.append(")");
-            codigo.append(s.getOperador());
-            codigo.append("0");
-        }
+        boolean notNull = !tabla.getOpciones().isOptNulos();
+        Tipo t = new Tipo(Tipo.NUMBER);
+        codigo.append(Casting.casting(s.getIzquierda(), t, notNull));
+        codigo.append(s.getOperador()).append(s.getOperador().getComentario());
+        codigo.append(Casting.casting(s.getDerecha(), t, notNull));
         s.setCodigoGenerado(codigo);
     }
 
@@ -57,13 +48,14 @@ public class GenComparacion {
      */
     private void compSrt(Comparacion s, String operacion) {
         StringBuilder codigo = new StringBuilder(100);
+        boolean notNull = !tabla.getOpciones().isOptNulos();
         Tipo t = new Tipo(Tipo.STRING);
         codigo.append("Pd.compare(");
-        codigo.append(Casting.castingNotNull(s.getIzquierda(), t));
-        codigo.append(',');
-        codigo.append(Casting.castingNotNull(s.getDerecha(), t));
+        codigo.append(Casting.casting(s.getIzquierda(), t, notNull));
+        codigo.append(',').append(s.getOperador().getComentario());
+        codigo.append(Casting.casting(s.getDerecha(), t, notNull));
         codigo.append(")");
-        codigo.append(operacion).append(s.getOperador().getComentario());
+        codigo.append(operacion);
         codigo.append("0");
         s.setCodigoGenerado(codigo);
     }
@@ -94,18 +86,13 @@ public class GenComparacion {
 
     public void visitar(CompNumCmp s) {
         StringBuilder codigo = new StringBuilder(100);
+        boolean notNull = !tabla.getOpciones().isOptNulos();
         codigo.append("Pd.compare(");
-        if (tabla.getOpciones().isOptNulos() || (Buscar.isNotNull(s.getIzquierda()) && Buscar.isNotNull(s.getDerecha()))) {
-            codigo.append(Casting.toNumber(s.getIzquierda()));
-            codigo.append(',');
-            codigo.append(Casting.toNumber(s.getDerecha()));
-        } else {
-            Tipo t = new Tipo(Tipo.NUMBER);
-            codigo.append(Casting.castingNotNull(s.getIzquierda(), t));
-            codigo.append(',');
-            codigo.append(Casting.castingNotNull(s.getDerecha(), t));
-        }
-        codigo.append(")").append(s.getOperador().getComentario());
+        Tipo t = new Tipo(Tipo.NUMBER);
+        codigo.append(Casting.casting(s.getIzquierda(), t, notNull));
+        codigo.append(',').append(s.getOperador().getComentario());
+        codigo.append(Casting.casting(s.getDerecha(), t, notNull));
+        codigo.append(")");
         s.setCodigoGenerado(codigo);
     }
 
@@ -135,18 +122,13 @@ public class GenComparacion {
 
     public void visitar(CompStrCmp s) {
         StringBuilder codigo = new StringBuilder(100);
+        boolean notNull = !tabla.getOpciones().isOptNulos();
         codigo.append("Pd.compare(");
-        if (tabla.getOpciones().isOptNulos() || (Buscar.isNotNull(s.getIzquierda()) && Buscar.isNotNull(s.getDerecha()))) {
-            codigo.append(Casting.toString(s.getIzquierda()));
-            codigo.append(',');
-            codigo.append(Casting.toString(s.getDerecha()));
-        } else {
-            Tipo t = new Tipo(Tipo.STRING);
-            codigo.append(Casting.castingNotNull(s.getIzquierda(), t));
-            codigo.append(',');
-            codigo.append(Casting.castingNotNull(s.getDerecha(), t));
-        }
-        codigo.append(")").append(s.getOperador().getComentario());
+        Tipo t = new Tipo(Tipo.STRING);
+        codigo.append(Casting.casting(s.getIzquierda(), t, notNull));
+        codigo.append(',').append(s.getOperador().getComentario());
+        codigo.append(Casting.casting(s.getDerecha(), t, notNull));
+        codigo.append(")");
         s.setCodigoGenerado(codigo);
     }
 

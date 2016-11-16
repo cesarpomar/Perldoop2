@@ -175,8 +175,10 @@ public class GenAcceso {
      */
     public static void getReplica(ExpAcceso exp, Simbolo lectura, Simbolo escritura, TablaGenerador tabla) {
         Acceso acceso = exp.getAcceso();
-        //Comporbar que la expresion es repetible
-        if (!Buscar.isRepetible(acceso.getExpresion())) {
+        if (lectura == null) {//Si no se necesita lectura obviamos esta comporbacion
+            lectura = new SimboloAux(null, new StringBuilder());
+            escritura.getCodigoGenerado().append(acceso.getExpresion());
+        } else if (!Buscar.isRepetible(acceso.getExpresion())) {//Comporbar que la expresion es repetible
             Tipo te = acceso.getExpresion().getTipo().getSubtipo(1);//Quitar el ref de acceso anidado
             //Declarar variable aux
             String aux = tabla.getGestorReservas().getAux();

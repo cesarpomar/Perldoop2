@@ -68,7 +68,7 @@ public class GenFuncionUnshift extends GenFuncionNativa {
                 ter.setComentario(it.getComentario().toString());
                 seps.add(ter);
             }
-            codigo.append(GenColeccion.genArrayList(exps, seps, coleccion.getTipo()));
+            codigo.append(GenColeccion.genColeccion(exps, seps, coleccion.getTipo()));
         }
         if (coleccion.getTipo().isArray()) {//Retornar valor real  
             String varAux = genReturnVar(f, codigo);

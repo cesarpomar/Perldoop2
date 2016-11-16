@@ -47,7 +47,11 @@ public class GenRegulares {
 
     public void visitar(RegularMatch s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("Regex.matcher(");
+        if(s.getTipo().isArray()){
+            codigo.append("Regex.matcher(");
+        }else{
+            codigo.append("Regex.match(");
+        }
         codigo.append(Casting.toString(s.getExpresion())).append(",");
         codigo.append(s.getPatron()).append(",");
         codigo.append(genMods(s));

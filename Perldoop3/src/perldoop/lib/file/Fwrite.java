@@ -2,11 +2,13 @@ package perldoop.lib.file;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 
 /**
  * Clase para almacenar un fichero de escritura.
@@ -18,9 +20,9 @@ public final class Fwrite implements Closeable {
     public static final boolean STDOUT = false;
     public static final boolean STDERR = true;
 
+    private OutputStream output;
+    private Writer escritura;
     private BufferedWriter buffer;
-    private FileWriter file;
-    private boolean cerrado;
 
     /**
      * Escribe por pantalla
@@ -39,13 +41,28 @@ public final class Fwrite implements Closeable {
      * Abre el fichero para la escritura
      *
      * @param path Ruta del fichero
-     * @param append true para añadir al fichero, false para borrarlo
-     * @throws java.io.IOException Si no se puede abrir
+     * @param append Continuar fichero existente
+     * @throws IOException Error al abrir el fichero
      */
     public Fwrite(String path, boolean append) throws IOException {
-        file = new FileWriter(path, append);
-        buffer = new BufferedWriter(file);
+        escritura = new FileWriter(path, append);
+        buffer = new BufferedWriter(escritura);
 
+    }
+
+    /**
+     * Abre el fichero para la escritura
+     *
+     * @param path Ruta del fichero
+     * @param append Continuar fichero existente
+     * @param encode Codificación
+     * @throws UnsupportedEncodingException Codificación no soportada
+     * @throws IOException Error al abrir el fichero
+     */
+    public Fwrite(String path, boolean append, String encode) throws UnsupportedEncodingException, IOException {
+        output = new FileOutputStream(path);
+        escritura = new OutputStreamWriter(output, encode);
+        buffer = new BufferedWriter(escritura);
     }
 
     /**
@@ -53,10 +70,10 @@ public final class Fwrite implements Closeable {
      */
     @Override
     public void close() throws IOException {
-        cerrado=true;
         buffer.close();
-        if (file != null) {
-            file.close();
+        escritura.close();
+        if (output != null) {
+            output.close();
         }
     }
 
@@ -67,15 +84,11 @@ public final class Fwrite implements Closeable {
      * @return 1 si tiene exito, 0 en caso contrario
      */
     public int print(Object... values) {
-        if (cerrado) {
-            return 0;
-        }
         try {
             for (Object value : values) {
                 buffer.write(value.toString());
             }
         } catch (IOException ex) {
-            Logger.getLogger(Fwrite.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
         }
         return 1;
@@ -88,16 +101,12 @@ public final class Fwrite implements Closeable {
      * @return 1 si tiene exito, 0 en caso contrario
      */
     public int println(Object... values) {
-        if (cerrado) {
-            return 0;
-        }
         try {
             for (Object value : values) {
                 buffer.write(value.toString());
                 buffer.newLine();
             }
         } catch (IOException ex) {
-            Logger.getLogger(Fwrite.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
         }
         return 1;

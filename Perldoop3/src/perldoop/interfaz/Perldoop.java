@@ -37,7 +37,6 @@ public final class Perldoop {
      * @param args Argumentos de ejecución
      */
     public static void main(String[] args) {
-        Test.global();
         Consola consola = new Consola(args);
         consola.parse();
         Opciones opciones = consola.getOpciones();

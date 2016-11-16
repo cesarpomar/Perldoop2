@@ -26,7 +26,7 @@ public final class SemFuncionValues extends SemFuncionNativa {
         checkVariable(exp, null);
         //Comprobar que la variable es un mapa
         Expresion var = Buscar.getExpresion(exp);
-        if (var.getTipo().isMap()) {
+        if (!var.getTipo().isMap()) {
             errorVariableTipo(exp, new Tipo(Tipo.MAP));
         }
         f.setTipo(var.getTipo().getSubtipo(1).add(0, Tipo.LIST));

@@ -1,9 +1,17 @@
 package perldoop.generacion.expresion;
 
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.acceso.AccesoColRef;
+import perldoop.modelo.arbol.aritmetica.AritNegativo;
+import perldoop.modelo.arbol.aritmetica.AritOpUnitario;
+import perldoop.modelo.arbol.aritmetica.AritPositivo;
+import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.sentencia.StcLista;
+import perldoop.modelo.arbol.variable.VarMy;
+import perldoop.modelo.arbol.variable.VarOur;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.util.Buscar;
 
@@ -26,81 +34,86 @@ public class GenExpresion {
     }
 
     /**
-     * Prepara las expresiones en caso de que sean sentencias
+     * Prepara las expresiones en caso de que sean sentencias y establece su codigo
      *
-     * @param s Simbolo para expresion
-     * @return Codigo valido para sentencia en caso de ser necesario
+     * @param exp Expresion
+     * @param check Comprobacion extra
      */
-    public StringBuilder checkSentencia(Simbolo s) {
-        Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
-        if (uso instanceof Lista && uso.getPadre().getPadre() instanceof StcLista) {
-            return new StringBuilder("Pd.eval(").append(s).append(")");
+    public void genExpresion(Expresion exp, boolean check) {
+        Simbolo uso = Buscar.getUso(exp);
+        if (check && uso instanceof Lista && uso.getPadre() instanceof StcLista) {
+            exp.setCodigoGenerado(new StringBuilder("Pd.eval(").append(exp.getValor()).append(")"));
+        } else {
+            exp.setCodigoGenerado(exp.getValor().getCodigoGenerado());
         }
-        return s.getCodigoGenerado();
     }
 
     public void visitar(ExpCadena s) {
-        s.setCodigoGenerado(checkSentencia(s.getCadena()));
+        genExpresion(s, true);
     }
 
     public void visitar(ExpNumero s) {
-        s.setCodigoGenerado(checkSentencia(s.getNumero()));
+        genExpresion(s, true);
     }
 
     public void visitar(ExpVariable s) {
-        s.setCodigoGenerado(checkSentencia(s.getVariable()));
+        genExpresion(s, !(s.getVariable() instanceof VarMy || s.getVariable() instanceof VarOur));
     }
 
     public void visitar(ExpAsignacion s) {
-        s.setCodigoGenerado(checkSentencia(s.getAsignacion()));
+        genExpresion(s, false);
     }
 
     public void visitar(ExpBinario s) {
-        s.setCodigoGenerado(checkSentencia(s.getBinario()));
+        genExpresion(s, true);
     }
 
     public void visitar(ExpAritmetica s) {
-        s.setCodigoGenerado(checkSentencia(s.getAritmetica()));
+        genExpresion(s, !(s.getAritmetica() instanceof AritOpUnitario
+                && !(s.getAritmetica() instanceof AritPositivo)
+                && !(s.getAritmetica() instanceof AritNegativo))
+        );
     }
 
     public void visitar(ExpComparacion s) {
-        s.setCodigoGenerado(checkSentencia(s.getComparacion()));
+        genExpresion(s, true);
     }
 
     public void visitar(ExpLogico s) {
-        s.setCodigoGenerado(checkSentencia(s.getLogico()));
+        genExpresion(s, true);
     }
 
     public void visitar(ExpColeccion s) {
-        s.setCodigoGenerado(checkSentencia(s.getColeccion()));
+        genExpresion(s, !(s.getColeccion() instanceof ColDec));
     }
 
     public void visitar(ExpAcceso s) {
-        s.setCodigoGenerado(checkSentencia(s.getAcceso()));
+        genExpresion(s, (s.getAcceso() instanceof AccesoCol || s.getAcceso() instanceof AccesoColRef)
+                && s.getAcceso().getExpresion().getTipo().isArray());
     }
 
     public void visitar(ExpFuncion s) {
-        s.setCodigoGenerado(checkSentencia(s.getFuncion()));
+        genExpresion(s, false);
     }
 
     public void visitar(ExpFuncion5 s) {
-        s.setCodigoGenerado(checkSentencia(s.getFuncion()));
+        genExpresion(s, false);
     }
 
     public void visitar(ExpRegulares s) {
-        s.setCodigoGenerado(checkSentencia(s.getRegulares()));
+        genExpresion(s, false);
     }
 
     public void visitar(ExpLectura s) {
-        s.setCodigoGenerado(checkSentencia(s.getLectura()));
+        genExpresion(s, false);
     }
 
     public void visitar(ExpStd s) {
-        s.setCodigoGenerado(checkSentencia(s.getStd()));
+        genExpresion(s, true);
     }
 
     public void visitar(ExpRango s) {
-        s.setCodigoGenerado(checkSentencia(s.getRango()));
+        genExpresion(s, false);
     }
 
 }

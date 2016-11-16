@@ -60,11 +60,11 @@ public final class Tipos {
                 error(s, to, td, ge);
             }
         } else if (td.isRef()) {
-            if(to.isRef()){
-                if(!to.getTipo().equals(td.getTipo())){
+            if (to.isRef()) {
+                if (!to.getTipo().equals(td.getTipo())) {
                     error(s, to, td, ge);
                 }
-            }else if (!to.isBox()) {
+            } else if (!to.isBox()) {
                 error(s, to, td, ge);
             }
         }
@@ -104,7 +104,8 @@ public final class Tipos {
         } else {
             return false;
         }
-        return exp.getTipo().isArrayOrList() && (exp.getValor() instanceof Funcion || exp.getValor() instanceof ColParentesis);
+        return exp.getTipo() != null && exp.getTipo().isArrayOrList()
+                && (exp.getValor() instanceof Funcion || exp.getValor() instanceof ColParentesis);
     }
 
     /**

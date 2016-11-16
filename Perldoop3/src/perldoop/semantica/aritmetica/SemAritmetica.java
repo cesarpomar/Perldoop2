@@ -114,11 +114,11 @@ public class SemAritmetica {
     }
 
     public void visitar(AritPositivo s) {
-        s.setTipo(Tipos.asNumber(s));
+        s.setTipo(Tipos.asNumber(s.getExpresion()));
     }
 
     public void visitar(AritNegativo s) {
-        s.setTipo(Tipos.asNumber(s));
+        s.setTipo(Tipos.asNumber(s.getExpresion()));
     }
 
     public void visitar(AritPreIncremento s) {

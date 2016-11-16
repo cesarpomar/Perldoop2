@@ -92,7 +92,7 @@ public class GenBloque {
     public void visitar(BloqueFor s) {
         StringBuilder codigo = new StringBuilder(1000);
         genDeclaraciones(codigo);
-        codigo.append(s.getId());
+        codigo.append("for").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
         Iterator<Terminal> itt;
         Iterator<Expresion> itexp;
@@ -144,7 +144,7 @@ public class GenBloque {
     public void visitar(BloqueForeachVar s) {
         StringBuilder codigo = new StringBuilder(1000);
         StringBuilder asignacion = new StringBuilder(0);
-        codigo.append(s.getId());
+        codigo.append("for").append(s.getId().getComentario());
         codigo.append("(");
         if (s.getVariable() instanceof VarMy) {
             codigo.append(s.getVariable());
@@ -160,7 +160,7 @@ public class GenBloque {
         }
         codigo.append(":");
         if (s.getColeccion().getTipo().isMap()) {
-            codigo.append(Casting.casting(s.getColeccion(), s.getTipo().getSubtipo(1).add(0, Tipo.LIST)));
+            codigo.append(Casting.casting(s.getColeccion(), s.getColeccion().getTipo().getSubtipo(1).add(0, Tipo.LIST)));
         } else {
             codigo.append(s.getColeccion());
         }
@@ -178,7 +178,7 @@ public class GenBloque {
         genDeclaraciones(codigo);
         String aux = tabla.getGestorReservas().getAux();
         Tipo t = new Tipo(Tipo.INTEGER);
-        codigo.append(s.getId());
+        codigo.append("for").append(s.getId().getComentario());
         codigo.append("(");
         codigo.append(Tipos.declaracion(t)).append(" ").append(aux).append(";");
         codigo.append(aux).append("<").append(Casting.casting(s.getColeccion(), t)).append(";");
@@ -259,10 +259,7 @@ public class GenBloque {
      * @return Codigo expresion
      */
     public static StringBuilder genExpresion(TablaGenerador tabla, Expresion exp) {
-        if (!tabla.getOpciones().isOptNulos()) {
-            return Casting.castingNotNull(exp, new Tipo(Tipo.BOOLEAN));
-        }
-        return exp.getCodigoGenerado();
+        return Casting.casting(exp, new Tipo(Tipo.BOOLEAN),!tabla.getOpciones().isOptNulos());
     }
 
 }

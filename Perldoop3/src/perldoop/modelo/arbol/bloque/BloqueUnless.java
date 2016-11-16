@@ -48,6 +48,7 @@ public final class BloqueUnless extends BloqueControlBasico {
      * @param bloqueElse Bloque Else
      */
     public void setBloqueElse(Condicional bloqueElse) {
+        bloqueElse.setPadre(this);
         this.bloqueElse = bloqueElse;
     }
 
