@@ -1,6 +1,7 @@
 package perldoop.generacion.condicional;
 
 import perldoop.generacion.bloque.GenBloque;
+import perldoop.generacion.sentencia.GenSentencia;
 import perldoop.generacion.util.Casting;
 import perldoop.modelo.arbol.condicional.*;
 import perldoop.modelo.arbol.expresion.Expresion;
@@ -28,7 +29,6 @@ public class GenCondicional {
 
     public void visitar(CondicionalElse s) {
         StringBuilder codigo = new StringBuilder(100);
-        genDeclaraciones(codigo);
         codigo.append(s.getId());
         codigo.append(s.getContexto().getLlaveI());
         codigo.append(s.getContexto().getCuerpo());
@@ -38,7 +38,6 @@ public class GenCondicional {
 
     public void visitar(CondicionalElsif s) {
         StringBuilder codigo = new StringBuilder(100);
-        genDeclaraciones(codigo);
         codigo.append("else if").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
         codigo.append(GenBloque.genExpresion(tabla, s.getExpresion()));
@@ -54,16 +53,5 @@ public class GenCondicional {
         s.setCodigoGenerado(new StringBuilder());
     }
 
-    /**
-     * Añade las declaraciones de la expresion si las hay
-     *
-     * @param codigo Codigo bloque
-     */
-    public void genDeclaraciones(StringBuilder codigo) {
-        for (StringBuilder dec : tabla.getDeclaraciones()) {
-            codigo.append(dec);
-        }
-        tabla.getDeclaraciones().clear();
-    }
 
 }

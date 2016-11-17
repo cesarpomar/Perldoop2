@@ -30,6 +30,7 @@ import perldoop.modelo.semantica.Tipo;
 import perldoop.generacion.util.ColIterator;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.acceso.AccesoColRef;
+import perldoop.modelo.generacion.Declaracion;
 import perldoop.util.Buscar;
 
 /**
@@ -103,7 +104,7 @@ public class GenIgual {
         comentarios.add(new StringBuilder(s.getOperador().getComentario()));
         ColIterator varIt = new ColIterator((Coleccion) s.getIzquierda().getValor());
         //Comprobamos intercambios de variables
-        atomicidad(atomicidad, variables, valores, sentencia);
+        atomicidad(s, atomicidad, variables, valores, sentencia);
         int i;
         String nValores = null;
         if (sentencia && (valores.size() > 1 || !valores.get(0).getTipo().isColeccion())) {
@@ -159,11 +160,9 @@ public class GenIgual {
                         t = t.getSubtipo(1);
                         t.add(0, Tipo.ARRAY);
                     }
-                    StringBuilder variable = new StringBuilder(100);
                     valor = tabla.getGestorReservas().getAux();
-                    variable.append(Tipos.declaracion(t)).append(" ").append(valor).append(";");
+                    tabla.getDeclaraciones().add(new Declaracion(s, t, valor));
                     atomicidad.add(new StringBuilder(100).append(valor).append("=").append(Casting.casting(s.getDerecha(), t)));
-                    tabla.getDeclaraciones().add(variable);
                     nValores = valor + ".length";
                 } else {
                     valor = exp.toString();
@@ -438,12 +437,13 @@ public class GenIgual {
     /**
      * Asegura la atomicidad entre las asignaciones
      *
+     * @param s Simbolo igual
      * @param asignaciones Asignaciones
      * @param variables Variables
      * @param valores Valores
      * @param stc Es sentencia
      */
-    private void atomicidad(List<StringBuilder> asignaciones, List<Expresion> variables, List<Simbolo> valores, boolean stc) {
+    public void atomicidad(Igual s, List<StringBuilder> asignaciones, List<Expresion> variables, List<Simbolo> valores, boolean stc) {
         HashSet<String> escrituras = new HashSet<>(variables.size());
         List<Integer> noAtomica = new ArrayList<>(variables.size());
         //Cargamos el nombre de todas las variables
@@ -482,9 +482,7 @@ public class GenIgual {
             if (stc) {
                 array.append("Object[] ");
             } else {
-                StringBuilder dec = new StringBuilder(20);
-                dec.append("Object[] ").append(var).append(";");
-                tabla.getDeclaraciones().add(dec);
+                tabla.getDeclaraciones().add(new Declaracion(s, (Tipo) null, "Object[] " + var));
             }
             //Substituimos
             asignaciones.add(array);

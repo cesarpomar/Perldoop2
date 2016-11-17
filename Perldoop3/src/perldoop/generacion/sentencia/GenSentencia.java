@@ -2,6 +2,7 @@ package perldoop.generacion.sentencia;
 
 import java.util.Iterator;
 import java.util.List;
+import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.aritmetica.AritPostDecremento;
@@ -18,7 +19,9 @@ import perldoop.modelo.arbol.modificador.ModNada;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.generacion.Declaracion;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
 /**
@@ -40,24 +43,35 @@ public class GenSentencia {
     }
 
     /**
-     * Realiza las declaraciones de las expresiones dentro de la sentencia
+     * Genera las declaraciones generadas por hijos del simbolo s
      *
-     * @return StringBuilder con las declaraciones
+     * @param s Simbolo respomsable de la declaración
+     * @param tabla Tabla de generacion de codigo
+     * @return Declaraciones
      */
-    public StringBuilder declaraciones() {
-        StringBuilder codigo = new StringBuilder(200);
-        if (!tabla.getDeclaraciones().isEmpty()) {
-            for (StringBuilder d : tabla.getDeclaraciones()) {
-                codigo.append(d);
+    public static StringBuilder genDeclaraciones(Simbolo s, TablaGenerador tabla) {
+        StringBuilder codigo = new StringBuilder(100);
+        Iterator<Declaracion> it = tabla.getDeclaraciones().iterator();
+        while (it.hasNext()) {
+            Declaracion dec = it.next();
+            if (dec.getSimbolo() == null || Buscar.isHijo(dec.getSimbolo(), s)) {
+                if (dec.getTipo() != null) {
+                    codigo.append(Tipos.declaracion(dec.getTipo())).append(" ");
+                }
+                codigo.append(dec.getNombre());
+                if (dec.getValor() != null) {
+                    codigo.append("=").append(dec.getValor());
+                }
+                codigo.append(";");
+                it.remove();
             }
-            tabla.getDeclaraciones().clear();
         }
         return codigo;
     }
 
     public void visitar(StcLista s) {
         StringBuilder codigo = new StringBuilder(300);
-        codigo.append(declaraciones());
+        codigo.append(genDeclaraciones(s, tabla));
         boolean mod = !(s.getModificador() instanceof ModNada);
         if (mod) {
             codigo.append(s.getModificador()).append("{");
@@ -81,11 +95,11 @@ public class GenSentencia {
     }
 
     public void visitar(StcBloque s) {
-        s.setCodigoGenerado(declaraciones().append(s.getBloque()));
+        s.setCodigoGenerado(genDeclaraciones(s, tabla).append(s.getBloque()));
     }
 
     public void visitar(StcFlujo s) {
-        s.setCodigoGenerado(declaraciones().append(s.getFlujo()));
+        s.setCodigoGenerado(genDeclaraciones(s, tabla).append(s.getFlujo()));
     }
 
     public void visitar(StcComentario s) {
@@ -97,7 +111,7 @@ public class GenSentencia {
     }
 
     public void visitar(StcModulos s) {
-        s.setCodigoGenerado(declaraciones().append(s.getModulos().getCodigoGenerado()));
+        s.setCodigoGenerado(genDeclaraciones(s, tabla).append(s.getModulos().getCodigoGenerado()));
     }
 
     public void visitar(StcImport s) {
@@ -133,15 +147,15 @@ public class GenSentencia {
                     codigo.append("Pd.eval(").append(sentencia).append(");");
                 }
             } else if (exp instanceof ExpFuncion || exp instanceof ExpFuncion5) {
-                codigo.append(exp);
+                codigo.append(exp).append(";");
             } else if (exp instanceof ExpLectura) {
-                codigo.append(exp);
+                codigo.append(exp).append(";");;
             } else if (exp instanceof ExpStd) {
                 //Ignoramos std
             } else if (exp instanceof ExpRegulares) {
                 Regulares r = ((ExpRegulares) exp).getRegulares();
                 if (r instanceof RegularSubs || r instanceof RegularTrans) {
-                    codigo.append(exp);
+                    codigo.append(exp).append(";");
                 }
             } else if (exp instanceof ExpRango) {
                 //Ignoramos el rango

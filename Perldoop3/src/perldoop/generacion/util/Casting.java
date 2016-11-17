@@ -29,11 +29,11 @@ public final class Casting {
         if (escalar == null || !escalar.getTipo().isColeccion()) {
             if (col.getTipo().isArrayOrList() && col instanceof Expresion) {
                 Expresion exp = Buscar.getExpresion((Expresion) col);
-                if (exp.getValor() instanceof ColParentesis) {
+                if (Buscar.isVariable(exp)) {
                     StringBuilder codigo = new StringBuilder(100);
                     char contexto = '@';
                     if (escalar != null && escalar instanceof Expresion) {
-                        contexto=Buscar.getContexto(Buscar.getExpresion((Expresion) escalar).getValor());
+                        contexto = Buscar.getContexto(Buscar.getExpresion((Expresion) escalar).getValor());
                     }
                     if (contexto == '$') {
                         codigo.append("Pd.last(").append(col).append(")");
@@ -47,6 +47,7 @@ public final class Casting {
                     }
                     return new SimboloAux(t, codigo);
                 } else if (exp.getValor() instanceof Igual && ((Igual) exp.getValor()).getIzquierda() instanceof ExpColeccion) {
+                    //Cambiar valores multiasignacion por su numero
                     return new SimboloAux(new Tipo(Tipo.INTEGER), new StringBuilder("Pd.s").append(col.getCodigoGenerado().substring(3)));
                 }
             }
@@ -612,7 +613,7 @@ public final class Casting {
     public static StringBuilder toArray(Simbolo s) {
         StringBuilder cst = new StringBuilder(50);
         Tipo array = s.getTipo().getSubtipo(1).add(0, Tipo.ARRAY);
-        cst.append(s.getCodigoGenerado()).append(".toArray(").append(Tipos.inicializacion(array,"0")).append(")");
+        cst.append(s.getCodigoGenerado()).append(".toArray(").append(Tipos.inicializacion(array, "0")).append(")");
         return cst;
     }
 

@@ -1,14 +1,17 @@
 package perldoop.generacion.variable;
 
+import static java.lang.Math.exp;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.bloque.BloqueFor;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
 import perldoop.modelo.arbol.coleccion.ColDec;
+import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.generacion.Declaracion;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.util.Buscar;
@@ -108,65 +111,91 @@ public final class GenVariable {
         boolean publica = e.isPublica();
         e.setAlias(tabla.getGestorReservas().getAlias(e.getIdentificador(), e.isConflicto()));
         //Declarar
-        StringBuilder declaracion = Tipos.declaracion(v.getTipo());
-        declaracion.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
         if (publica || tabla.getTablaSimbolos().getBloques() == 1) {
-            if (publica) {
-                declaracion.insert(0, "public static ");
-            } else {
-                declaracion.insert(0, "private static ");
-            }
-            declaracion.append(";");
-            //Generar atributo
-            tabla.getClase().getAtributos().add(declaracion.toString());
+            StringBuilder atributo = new StringBuilder(100);
+            atributo.append(publica ? "public static " : "private static ").append(Tipos.declaracion(v.getTipo()));
+            atributo.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
+            atributo.append(";");
+            tabla.getClase().getAtributos().add(atributo.toString());
             if (!isAsignada(v)) {
-                StringBuilder inicializacion = new StringBuilder(100);
-                inicializacion.append(e.getAlias()).append('=').append(Tipos.valoreDefecto(v.getTipo()));
-                v.setCodigoGenerado(inicializacion);
-                Simbolo uso = Buscar.getPadre(v, 2);
-                if (!(uso instanceof StcLista) && !(uso instanceof ColDec)) {
-                    inicializacion.insert(0, '(').append(')');//Asegurar que permaneceran juntos
+                String def = Tipos.valoreDefecto(v.getTipo());
+                if (isSentencia(v)) {
+                    v.setCodigoGenerado(new StringBuilder(100).append(e.getAlias()).append("=").append(def));
+                } else {
+                    tabla.getDeclaraciones().add(new Declaracion(v, e.getAlias(), def));
+                    v.setCodigoGenerado(new StringBuilder(e.getAlias()));
                 }
             } else {
                 v.setCodigoGenerado(new StringBuilder(e.getAlias()));
             }
-        } else if (isAsignada(v)) {
-            Igual igual = (Igual) Buscar.getPadre(v, 1);
-            Simbolo uso = Buscar.getPadre(igual, 1);
-            if (uso.getPadre() instanceof StcLista) {
-                v.setCodigoGenerado(declaracion);
-            } else if (uso instanceof BloqueFor && ((BloqueFor) uso).getLista1().getExpresiones().size() == 1
-                    && ((BloqueFor) uso).getLista1().getExpresiones().get(0) == igual.getPadre()) {
-                v.setCodigoGenerado(declaracion);
+        } else if (!isAsignada(v)) {
+            String def = Tipos.valoreDefecto(v.getTipo());
+            if (isSentencia(v) || isFor(v) || isForEach(v)) {
+                StringBuilder codigo = Tipos.declaracion(v.getTipo());
+                codigo.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
+                if(isSentencia(v)){
+                    codigo.append("=").append(def);
+                }else{
+                    tabla.getDeclaraciones().add(new Declaracion(v, e.getAlias(), def));
+                }
+                v.setCodigoGenerado(codigo);
             } else {
-                v.setCodigoGenerado(new StringBuilder(e.getAlias()));
-                tabla.getDeclaraciones().add(declaracion.append(";"));
+                tabla.getDeclaraciones().add(new Declaracion(v, v.getTipo(), e.getAlias(), def));
+                v.setCodigoGenerado(new StringBuilder(100).append(cdec).append(e.getAlias()).append(v.getVar().getComentario()));
             }
         } else {
-            Simbolo uso = Buscar.getPadre(v, 1);
-            if (uso.getPadre() instanceof StcLista) {
-                declaracion.append("=").append(Tipos.valoreDefecto(v.getTipo()));
-                v.setCodigoGenerado(declaracion);
-            } else if (v.getPadre() instanceof BloqueForeachVar) {
-                v.setCodigoGenerado(declaracion);
-            } else if (uso instanceof BloqueFor && ((BloqueFor) uso).getLista1().getExpresiones().size() == 1
-                    && ((BloqueFor) uso).getLista1().getExpresiones().get(0) == v.getPadre()) {
-                v.setCodigoGenerado(declaracion);
-            } else {
-                tabla.getDeclaraciones().add(declaracion.append(";"));
-                v.getCodigoGenerado().append("=").append(Tipos.valoreDefecto(v.getTipo())).insert(0, '(').append(')');
-            }
+            tabla.getDeclaraciones().add(new Declaracion(v, v.getTipo(), e.getAlias()));
+            v.setCodigoGenerado(new StringBuilder(100).append(cdec).append(e.getAlias()).append(v.getVar().getComentario()));
         }
     }
 
     /**
-     * Comprueba si Varriable sera asignado
+     * Comprueba si Variable sera asignada
      *
      * @param v Simbolo variable
      * @return Asignada
      */
     private boolean isAsignada(Variable v) {
-        return Buscar.isHijo(v, Buscar.buscarPadre(v, Igual.class));
+        Igual igual = Buscar.buscarPadre(v, Igual.class);
+        return igual != null && Buscar.isHijo(v, igual.getIzquierda());
+    }
+
+    /**
+     * Comprueba si Variable esta contenida en el bloque de inicializacion for
+     *
+     * @param v Simbolo variable
+     * @return Sentencia
+     */
+    private boolean isFor(Variable v) {
+        BloqueFor bloque = Buscar.buscarPadre(v, BloqueFor.class);
+        return bloque != null && bloque.getLista1().getExpresiones().size() == 1 && Buscar.isHijo(v, bloque.getLista1());
+    }
+
+    /**
+     * Comprueba si Varriable esta contenida en el bloque de inicializacion for
+     *
+     * @param v Simbolo variable
+     * @return Sentencia
+     */
+    private boolean isForEach(Variable v) {
+        return v.getPadre() instanceof BloqueForeachVar;
+    }
+
+    /**
+     * Comprueba si Variable sera una sentencia
+     *
+     * @param v Simbolo variable
+     * @return Sentencia
+     */
+    private boolean isSentencia(Variable v) {
+        if (v.getPadre() instanceof Expresion) {
+            Simbolo uso = Buscar.getUso((Expresion) v.getPadre());
+            if (uso instanceof Igual) {
+                return Buscar.getUso((Expresion) uso.getPadre()) instanceof StcLista;//Inicializaciones
+            }
+            return uso.getPadre() instanceof StcLista;
+        }
+        return false;
     }
 
 }

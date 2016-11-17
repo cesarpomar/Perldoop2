@@ -16,6 +16,7 @@ import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.variable.VarExistente;
+import perldoop.modelo.generacion.Declaracion;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
@@ -182,9 +183,7 @@ public class GenAcceso {
             Tipo te = acceso.getExpresion().getTipo().getSubtipo(1);//Quitar el ref de acceso anidado
             //Declarar variable aux
             String aux = tabla.getGestorReservas().getAux();
-            StringBuilder declaracion = Tipos.declaracion(te);
-            declaracion.append(" ").append(aux).append(";");
-            tabla.getDeclaraciones().add(declaracion);
+            tabla.getDeclaraciones().add(new Declaracion(exp, te, aux));
             //Subtituir codigo original
             lectura.setCodigoGenerado(new StringBuilder(aux));
             escritura.setCodigoGenerado(new StringBuilder(100).append("(").append(aux).append("=").append(acceso.getExpresion()).append(")"));
@@ -227,9 +226,7 @@ public class GenAcceso {
         if (!Buscar.isRepetible(colL)) {
             //Declarar variable aux
             String aux = tabla.getGestorReservas().getAux();
-            StringBuilder declaracion = Tipos.declaracion(colL.getTipo());
-            declaracion.append(" ").append(aux).append(";");
-            tabla.getDeclaraciones().add(declaracion);
+            tabla.getDeclaraciones().add(new Declaracion(exp, colL.getTipo(), aux));
             //Subtituir codigo original
             colL = new SimboloAux(colL.getTipo(), new StringBuilder(aux));
             colE = new SimboloAux(colE.getTipo(), new StringBuilder(100).append(aux).append("=").append(colE));

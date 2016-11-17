@@ -15,6 +15,7 @@ import perldoop.modelo.arbol.logico.LogOrBajo;
 import perldoop.modelo.arbol.logico.LogTernario;
 import perldoop.modelo.arbol.logico.LogXorBajo;
 import perldoop.modelo.arbol.logico.Logico;
+import perldoop.modelo.generacion.Declaracion;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
@@ -73,7 +74,7 @@ public class GenLogico {
             codigo.append(operando(der, s.getTipo(), low));
         } else {
             String aux = tabla.getGestorReservas().getAux();
-            tabla.getDeclaraciones().add(Tipos.declaracion(izq.getTipo()).append(" ").append(aux).append(";"));
+            tabla.getDeclaraciones().add(new Declaracion(s, izq.getTipo(), aux));
             SimboloAux check = new SimboloAux(izq);
             check.getCodigoGenerado().insert(0, "(" + aux + "=").append(")");
             codigo.append("(").append(Casting.casting(check, new Tipo(Tipo.BOOLEAN), !tabla.getOpciones().isOptNulos())).append("?");
@@ -105,7 +106,7 @@ public class GenLogico {
             codigo.append(operando(der, s.getTipo(), low));
         } else {
             String aux = tabla.getGestorReservas().getAux();
-            tabla.getDeclaraciones().add(Tipos.declaracion(izq.getTipo()).append(" ").append(aux).append(";"));
+            tabla.getDeclaraciones().add(new Declaracion(s, izq.getTipo(), aux));
             SimboloAux check = new SimboloAux(izq);
             check.getCodigoGenerado().insert(0, "(" + aux + "=").append(")");
             codigo.append("(").append(Casting.casting(check, new Tipo(Tipo.BOOLEAN), !tabla.getOpciones().isOptNulos())).append("?");
@@ -169,7 +170,7 @@ public class GenLogico {
     public void visitar(DLogOr s) {
         StringBuilder codigo = new StringBuilder(100);
         String aux = tabla.getGestorReservas().getAux();
-        tabla.getDeclaraciones().add(Tipos.declaracion(s.getIzquierda().getTipo()).append(" ").append(aux).append(";"));
+        tabla.getDeclaraciones().add(new Declaracion(s, s.getIzquierda().getTipo(), aux));
         SimboloAux check = new SimboloAux(s.getIzquierda());
         check.getCodigoGenerado().insert(0, aux + "=");
         codigo.append("(defined(").append(aux).append("=").append(s.getIzquierda()).append(")?");

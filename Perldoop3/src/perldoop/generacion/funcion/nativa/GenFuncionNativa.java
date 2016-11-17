@@ -11,6 +11,7 @@ import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.funcion.FuncionHandle;
 import perldoop.modelo.arbol.sentencia.StcLista;
+import perldoop.modelo.generacion.Declaracion;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
@@ -80,7 +81,7 @@ public abstract class GenFuncionNativa {
         }
         String aux = tabla.getGestorReservas().getAux();
         Tipo t = f.getTipo().getSubtipo(0).add(0, Tipo.REF);
-        tabla.getDeclaraciones().add(Tipos.declaracion(t).append(" ").append(aux).append(";"));
+        tabla.getDeclaraciones().add(new Declaracion(f, t, aux));
         codigo.append(",").append(aux).append("=new Ref<>())");
         return aux;
     }

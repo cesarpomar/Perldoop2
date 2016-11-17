@@ -1,8 +1,10 @@
 package perldoop.generacion.bloque;
 
 import java.util.Iterator;
+import perldoop.generacion.sentencia.GenSentencia;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
+import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.bloque.*;
@@ -31,7 +33,7 @@ public class GenBloque {
 
     public void visitar(BloqueWhile s) {
         StringBuilder codigo = new StringBuilder(1000);
-        genDeclaraciones(codigo);
+        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append(s.getId());
         codigo.append(s.getParentesisI());
         codigo.append(genExpresion(s.getExpresion()));
@@ -44,7 +46,7 @@ public class GenBloque {
 
     public void visitar(BloqueUntil s) {
         StringBuilder codigo = new StringBuilder(1000);
-        genDeclaraciones(codigo);
+        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append("while").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
         codigo.append("!(");
@@ -59,7 +61,7 @@ public class GenBloque {
 
     public void visitar(BloqueDoWhile s) {
         StringBuilder codigo = new StringBuilder(1000);
-        genDeclaraciones(codigo);
+        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append(s.getId());
         codigo.append(s.getContexto().getLlaveI());
         codigo.append(s.getContexto().getCuerpo());
@@ -74,7 +76,7 @@ public class GenBloque {
 
     public void visitar(BloqueDoUntil s) {
         StringBuilder codigo = new StringBuilder(1000);
-        genDeclaraciones(codigo);
+        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append(s.getId());
         codigo.append(s.getContexto().getLlaveI());
         codigo.append(s.getContexto().getCuerpo());
@@ -91,7 +93,7 @@ public class GenBloque {
 
     public void visitar(BloqueFor s) {
         StringBuilder codigo = new StringBuilder(1000);
-        genDeclaraciones(codigo);
+        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append("for").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
         Iterator<Terminal> itt;
@@ -175,7 +177,7 @@ public class GenBloque {
 
     public void visitar(BloqueForeach s) {
         StringBuilder codigo = new StringBuilder(1000);
-        genDeclaraciones(codigo);
+        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         String aux = tabla.getGestorReservas().getAux();
         Tipo t = new Tipo(Tipo.INTEGER);
         codigo.append("for").append(s.getId().getComentario());
@@ -192,7 +194,7 @@ public class GenBloque {
 
     public void visitar(BloqueIf s) {
         StringBuilder codigo = new StringBuilder(1000);
-        genDeclaraciones(codigo);
+        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append(s.getId());
         codigo.append(s.getParentesisI());
         codigo.append(genExpresion(s.getExpresion()));
@@ -206,7 +208,7 @@ public class GenBloque {
 
     public void visitar(BloqueUnless s) {
         StringBuilder codigo = new StringBuilder(1000);
-        genDeclaraciones(codigo);
+        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append("if").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
         codigo.append("!(");
@@ -230,18 +232,6 @@ public class GenBloque {
     }
 
     /**
-     * Añade las declaraciones de la expresion si las hay
-     *
-     * @param codigo Codigo bloque
-     */
-    private void genDeclaraciones(StringBuilder codigo) {
-        for (StringBuilder dec : tabla.getDeclaraciones()) {
-            codigo.append(dec);
-        }
-        tabla.getDeclaraciones().clear();
-    }
-
-    /**
      * Genera la expresion que evalua el bloque de control para su ejecucion
      *
      * @param exp Expresion
@@ -259,7 +249,7 @@ public class GenBloque {
      * @return Codigo expresion
      */
     public static StringBuilder genExpresion(TablaGenerador tabla, Expresion exp) {
-        return Casting.casting(exp, new Tipo(Tipo.BOOLEAN),!tabla.getOpciones().isOptNulos());
+        return Casting.casting(exp, new Tipo(Tipo.BOOLEAN), !tabla.getOpciones().isOptNulos());
     }
 
 }

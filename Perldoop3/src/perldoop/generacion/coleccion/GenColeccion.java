@@ -117,9 +117,9 @@ public class GenColeccion {
             }
             if (!consecutivas.isEmpty() && (!it.hasNext() || exp.getTipo().isColeccion())) {
                 if (t.isArrayOrList()) {
-                    colecciones.add(genArrayListExps(t, colecciones, comentarios));
+                    colecciones.add(genArrayListExps(t, consecutivas, conComentarios));
                 } else {
-                    colecciones.add(genMapExps(t, colecciones, comentarios));
+                    colecciones.add(genMapExps(t, consecutivas, conComentarios));
                 }
                 consecutivas.clear();
                 conComentarios.clear();

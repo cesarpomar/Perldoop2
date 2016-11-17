@@ -18,7 +18,7 @@ public final class TablaGenerador {
     private Opciones opciones;
     private GestorErrores gestorErrores;
     private ClaseJava clase;
-    private List<StringBuilder> declaraciones;
+    private List<Declaracion> declaraciones;
 
     /**
      * Contruye la tabla del generador
@@ -122,7 +122,7 @@ public final class TablaGenerador {
      *
      * @return Declaraciones
      */
-    public List<StringBuilder> getDeclaraciones() {
+    public List<Declaracion> getDeclaraciones() {
         return declaraciones;
     }
 
@@ -131,7 +131,7 @@ public final class TablaGenerador {
      *
      * @param declaraciones Declaraciones
      */
-    public void setDeclaraciones(List<StringBuilder> declaraciones) {
+    public void setDeclaraciones(List<Declaracion> declaraciones) {
         this.declaraciones = declaraciones;
     }
 
