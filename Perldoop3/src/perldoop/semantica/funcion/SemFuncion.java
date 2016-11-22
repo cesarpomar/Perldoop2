@@ -134,6 +134,10 @@ public class SemFuncion {
                 return new SemFuncionExit(tabla);
             case "open":
                 return new SemFuncionOpen(tabla);
+            case "defined":
+                return new SemFuncionDefined(tabla);
+            case "undef":
+                return new SemFuncionUndef(tabla);
             default:
                 return null;
         }

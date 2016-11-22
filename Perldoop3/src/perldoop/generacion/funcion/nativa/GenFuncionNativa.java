@@ -2,7 +2,6 @@ package perldoop.generacion.funcion.nativa;
 
 import perldoop.generacion.acceso.GenAcceso;
 import perldoop.generacion.util.Casting;
-import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.Expresion;

@@ -21,7 +21,6 @@ import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.generacion.Declaracion;
 import perldoop.modelo.generacion.TablaGenerador;
-import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 
 /**

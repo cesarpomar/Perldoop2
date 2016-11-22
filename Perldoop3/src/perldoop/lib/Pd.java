@@ -16,6 +16,11 @@ import perldoop.lib.util.Union;
 public final class Pd {
 
     /**
+     * Argumentos pasados en la ejecución del programa
+     */
+    public static String[] ARGS = new String[0];
+
+    /**
      * Crea una union para concatenar
      *
      * @return Union
@@ -605,5 +610,5 @@ public final class Pd {
     public static <T> T rn(Object f, Ref<T> rn) {
         return rn.get();
     }
-
+    
 }

@@ -4,7 +4,6 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Igual;
-import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.regulares.RegularMatch;
@@ -72,6 +71,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toBoolean(Simbolo s) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
@@ -164,6 +166,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toInteger(Simbolo s) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
@@ -228,6 +233,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toLong(Simbolo s) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
@@ -296,6 +304,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toFloat(Simbolo s) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
@@ -364,6 +375,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toDouble(Simbolo s) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
@@ -428,6 +442,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toString(Simbolo s) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
@@ -480,6 +497,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toBox(Simbolo s) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
@@ -520,6 +540,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toNumber(Simbolo s) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(50);
         switch (s.getTipo().getTipo().get(0)) {
@@ -565,6 +588,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toRef(Simbolo s, Tipo destino) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(50);
         switch (s.getTipo().getTipo().get(0)) {
@@ -589,6 +615,9 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder toFile(Simbolo s) {
+        if (Buscar.isUndef(s)) {
+            return s.getCodigoGenerado();
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(50);
         switch (s.getTipo().getTipo().get(0)) {
@@ -657,6 +686,9 @@ public final class Casting {
      * @return Casting
      */
     private static StringBuilder toCol(Simbolo origen, Tipo destino) {
+        if (Buscar.isUndef(origen)) {
+            return origen.getCodigoGenerado();
+        }
         //Si las colecciones son numericas y el casting es a Number
         if (origen.getTipo().getSimple().isNumberType() && destino.getSimple().isNumber()) {
             Tipo t = origen.getTipo().getSubtipo(0);

@@ -9,12 +9,11 @@ import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
 import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.coleccion.ColDecOur;
-import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.preprocesador.EtiquetasTipo;
+import perldoop.modelo.preprocesador.TagsTipo;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
@@ -59,7 +58,7 @@ public class SemVariable {
             }
         } else if (Buscar.isDeclaracion(s)) {
             ColDec dec = Buscar.buscarPadre(s, ColDec.class);
-            declaracion(s, (EtiquetasTipo) dec.getOperador().getEtiquetas(), dec instanceof ColDecOur);
+            declaracion(s, (TagsTipo) dec.getOperador().getEtiquetas(), dec instanceof ColDecOur);
         } else {
             setTipo(null, s);
         }
@@ -80,11 +79,11 @@ public class SemVariable {
     }
 
     public void visitar(VarMy s) {
-        declaracion(s, (EtiquetasTipo) s.getMy().getEtiquetas(), false);
+        declaracion(s, (TagsTipo) s.getMy().getEtiquetas(), false);
     }
 
     public void visitar(VarOur s) {
-        declaracion(s, (EtiquetasTipo) s.getOur().getEtiquetas(), true);
+        declaracion(s, (TagsTipo) s.getOur().getEtiquetas(), true);
     }
 
     /**
@@ -94,11 +93,11 @@ public class SemVariable {
      * @param etiquetas Etiquets del tipo
      * @param publica Variable publica
      */
-    private void declaracion(Variable s, EtiquetasTipo etiquetas, boolean publica) {
+    private void declaracion(Variable s, TagsTipo etiquetas, boolean publica) {
         noAccederDeclaracion(s);
         if (obtenerTipo(s, etiquetas)) {
             validarTipo(s);
-            boolean conflicto = tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()) != null;
+            boolean conflicto = !tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()).isEmpty();
             EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), publica);
             entrada.setConflicto(conflicto);
             tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
@@ -170,8 +169,8 @@ public class SemVariable {
      * @param tipoLinea Tipo declarado en la linea
      * @return Tipo asignado
      */
-    private boolean obtenerTipo(Variable v, EtiquetasTipo tipoLinea) {
-        EtiquetasTipo predeclaracion = tabla.getTablaSimbolos().getDeclaracion(Buscar.getContexto(v) + v.getVar().getValor());
+    private boolean obtenerTipo(Variable v, TagsTipo tipoLinea) {
+        TagsTipo predeclaracion = tabla.getTablaSimbolos().getDeclaracion(Buscar.getContexto(v) + v.getVar().getValor());
         if (v.getPadre() instanceof BloqueForeachVar) {
             BloqueForeachVar foreach = (BloqueForeachVar) v.getPadre();
             if (foreach.getColeccion().getTipo() == null) {

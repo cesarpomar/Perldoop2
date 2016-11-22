@@ -39,7 +39,8 @@ public final class Tipos {
      * @param ge Sistema de errores
      */
     public static void casting(Simbolo s, Tipo to, Tipo td, GestorErrores ge) {
-        if (td.isColeccion()) {
+        if (Buscar.isUndef(s)) {
+        } else if (td.isColeccion()) {
             toColeccion(s, to, td, ge);
         } else {
             toScalar(s, to, td, ge);

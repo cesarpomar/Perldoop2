@@ -5,7 +5,6 @@ import perldoop.modelo.arbol.comparacion.*;
 import perldoop.modelo.arbol.comparacion.Comparacion;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.util.Buscar;
 
 /**
  * Clase generadora de comparacion

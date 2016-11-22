@@ -1,13 +1,8 @@
 package perldoop.generacion.condicional;
 
 import perldoop.generacion.bloque.GenBloque;
-import perldoop.generacion.sentencia.GenSentencia;
-import perldoop.generacion.util.Casting;
 import perldoop.modelo.arbol.condicional.*;
-import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.generacion.TablaGenerador;
-import perldoop.modelo.semantica.Tipo;
-import perldoop.util.Buscar;
 
 /**
  * Clase generadora de condicional

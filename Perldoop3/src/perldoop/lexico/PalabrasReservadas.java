@@ -1,5 +1,6 @@
 package perldoop.lexico;
 
+import perldoop.preprocesador.Preprocesador;
 import perldoop.sintactico.Parser;
 
 /**
@@ -156,14 +157,27 @@ public final class PalabrasReservadas {
                 case "<file>":
                 case "<box>":
                 case "<number>":
-                    return (int) Parser.PD_TIPO;
+                    return Preprocesador.PD_TIPO;
                 case "<array>":
                 case "<list>":
                 case "<hash>":
                 case "<map>":
-                    return (int) Parser.PD_COL;
+                    return Preprocesador.PD_COL;
                 case "<ref>":
-                    return (int) Parser.PD_REF;
+                    return Preprocesador.PD_REF;
+                //Etiquetas hadoop
+                case "<main>":
+                    return Preprocesador.PD_MAIN;
+                case "<hadoop>":
+                    return Preprocesador.PD_HADOOP;
+                case "<mapper>":
+                    return Preprocesador.PD_MAPPER;
+                case "<reduccer>":
+                    return Preprocesador.PD_REDUCCER;
+                case "<combine>":
+                    return Preprocesador.PD_COMBINE;
+                case "<reduction>":
+                    return Preprocesador.PD_REDUCTION;
             }
         }
         return null;

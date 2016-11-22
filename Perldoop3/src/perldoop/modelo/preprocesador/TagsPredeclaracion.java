@@ -5,21 +5,21 @@ import java.util.List;
 import perldoop.modelo.lexico.Token;
 
 /**
- * Etiques para predefinir el tipo de variables
+ * Etiquetas para predefinir el tipo de variables
  *
  * @author César Pomar
  */
-public final class EtiquetasPredeclaracion implements Etiquetas {
+public final class TagsPredeclaracion implements Tags {
 
     private List<Token> variables;
-    private EtiquetasTipo tipo;
+    private TagsTipo tipo;
 
     /**
      * Constructor por defecto
      */
-    public EtiquetasPredeclaracion() {
+    public TagsPredeclaracion() {
         variables = new ArrayList<>(5);
-        tipo = new EtiquetasTipo();
+        tipo = new TagsTipo();
     }
 
     /**
@@ -45,7 +45,7 @@ public final class EtiquetasPredeclaracion implements Etiquetas {
      *
      * @return Etiquetas de tipo
      */
-    public EtiquetasTipo getTipo() {
+    public TagsTipo getTipo() {
         return tipo;
     }
 

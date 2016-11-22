@@ -2,7 +2,7 @@ package perldoop.modelo.arbol;
 
 import java.util.List;
 import perldoop.modelo.lexico.Token;
-import perldoop.modelo.preprocesador.Etiquetas;
+import perldoop.modelo.preprocesador.Tags;
 
 /**
  * Clase que representa un nodo hoja del arbol de simbolos, esta clase contiene un token del analizador lexico.
@@ -12,7 +12,7 @@ import perldoop.modelo.preprocesador.Etiquetas;
 public final class Terminal extends Simbolo {
 
     private String comentario;
-    private Etiquetas etiquetas;
+    private Tags etiquetas;
     private Token token;
     private List<Token> tokensComentario;
 
@@ -81,7 +81,7 @@ public final class Terminal extends Simbolo {
      *
      * @return Etiquetas
      */
-    public Etiquetas getEtiquetas() {
+    public Tags getEtiquetas() {
         return etiquetas;
     }
 
@@ -90,7 +90,7 @@ public final class Terminal extends Simbolo {
      *
      * @param etiquetas Etiquetas
      */
-    public void setEtiquetas(Etiquetas etiquetas) {
+    public void setEtiquetas(Tags etiquetas) {
         this.etiquetas = etiquetas;
     }
 

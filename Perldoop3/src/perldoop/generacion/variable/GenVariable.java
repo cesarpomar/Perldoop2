@@ -1,12 +1,10 @@
 package perldoop.generacion.variable;
 
-import static java.lang.Math.exp;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.bloque.BloqueFor;
 import perldoop.modelo.arbol.bloque.BloqueForeachVar;
-import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.sentencia.StcLista;
@@ -133,9 +131,9 @@ public final class GenVariable {
             if (isSentencia(v) || isFor(v) || isForEach(v)) {
                 StringBuilder codigo = Tipos.declaracion(v.getTipo());
                 codigo.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
-                if(isSentencia(v)){
+                if (isSentencia(v)) {
                     codigo.append("=").append(def);
-                }else{
+                } else {
                     tabla.getDeclaraciones().add(new Declaracion(v, e.getAlias(), def));
                 }
                 v.setCodigoGenerado(codigo);
@@ -143,6 +141,10 @@ public final class GenVariable {
                 tabla.getDeclaraciones().add(new Declaracion(v, v.getTipo(), e.getAlias(), def));
                 v.setCodigoGenerado(new StringBuilder(100).append(cdec).append(e.getAlias()).append(v.getVar().getComentario()));
             }
+        } else if (isSentencia(v)) {
+                StringBuilder codigo = Tipos.declaracion(v.getTipo());
+                codigo.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
+                v.setCodigoGenerado(codigo);
         } else {
             tabla.getDeclaraciones().add(new Declaracion(v, v.getTipo(), e.getAlias()));
             v.setCodigoGenerado(new StringBuilder(100).append(cdec).append(e.getAlias()).append(v.getVar().getComentario()));
@@ -191,7 +193,10 @@ public final class GenVariable {
         if (v.getPadre() instanceof Expresion) {
             Simbolo uso = Buscar.getUso((Expresion) v.getPadre());
             if (uso instanceof Igual) {
-                return Buscar.getUso((Expresion) uso.getPadre()) instanceof StcLista;//Inicializaciones
+                return Buscar.getUso((Expresion) uso.getPadre()).getPadre() instanceof StcLista;//Inicializaciones
+            }
+            if (v instanceof VarExistente && Buscar.isDeclaracion(v)) {
+                return true;
             }
             return uso.getPadre() instanceof StcLista;
         }

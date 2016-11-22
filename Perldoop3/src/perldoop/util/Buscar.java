@@ -27,11 +27,11 @@ import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpCadena;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.ExpNumero;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.Funcion;
+import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.variable.VarMy;
@@ -298,7 +298,7 @@ public final class Buscar {
             Acceso acceso = ((ExpAcceso) aux).getAcceso();
             if (acceso instanceof AccesoDesRef && acceso.getExpresion().getValor() instanceof ColLlave) {
                 aux = ((ColLlave) acceso.getExpresion().getValor()).getLista().getExpresiones().get(0);
-            }else{
+            } else {
                 aux = acceso.getExpresion();
             }
         }
@@ -343,13 +343,7 @@ public final class Buscar {
         if (exp.getValor() instanceof Igual) {
             return isNotNull(((Igual) exp.getValor()).getDerecha());
         }
-        if (exp instanceof ExpFuncion) {
-            Funcion f = ((ExpFuncion) exp).getFuncion();
-            if (f.getIdentificador().getValor().equals("undef") && f.getPaquetes().isVacio()) {
-                return false;
-            }
-        }
-        return true;
+        return !isUndef(exp);
     }
 
     /**
@@ -470,13 +464,12 @@ public final class Buscar {
         if (var instanceof VarMy || var instanceof VarOur) {
             return true;
         }
-        Simbolo aux = var.getPadre();
+        Simbolo aux = var.getPadre().getPadre();
         while (aux instanceof Lista) {
             if (aux.getPadre() instanceof ColDec) {
                 return true;
             }
-            Lista lista = (Lista) aux;
-            if (aux.getPadre() instanceof ColParentesis && lista.getExpresiones().size() == 1) {
+            if (aux.getPadre() instanceof ColParentesis) {
                 aux = aux.getPadre().getPadre().getPadre();
                 continue;
             }
@@ -668,6 +661,30 @@ public final class Buscar {
     public static boolean isArrayOrVar(Expresion exp) {
         Expresion aux = Buscar.getExpresion(exp);
         return aux instanceof ExpVariable || (aux instanceof ExpAcceso && ((ExpAcceso) aux).getAcceso().getExpresion().getTipo().isArray());
+    }
+
+    /**
+     * Comprueba si el simbolo es un valor indefinido
+     *
+     * @param s Simbolo
+     * @return Es valor indefinido
+     */
+    public static boolean isUndef(Simbolo s) {
+        if (!(s instanceof Expresion)) {
+            s = s.getPadre();
+        }
+        if (!(s instanceof Expresion)) {
+            return false;
+        }
+        Expresion exp = Buscar.getExpresion((Expresion) s);
+        if (exp.getValor() instanceof FuncionBasica) {
+            Funcion f = (Funcion) exp.getValor();
+            if (f.getIdentificador().getValor().equals("undef") && f.getPaquetes().isVacio()) {
+                return true;
+            }
+
+        }
+        return false;
     }
 
 }

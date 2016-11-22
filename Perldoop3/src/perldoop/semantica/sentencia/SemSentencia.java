@@ -2,7 +2,7 @@ package perldoop.semantica.sentencia;
 
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.lexico.Token;
-import perldoop.modelo.preprocesador.EtiquetasPredeclaracion;
+import perldoop.modelo.preprocesador.TagsPredeclaracion;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
@@ -40,7 +40,7 @@ public class SemSentencia {
     }
 
     public void visitar(StcTipado s) {
-        EtiquetasPredeclaracion etiquetas = (EtiquetasPredeclaracion) s.getDeclaracion().getEtiquetas();
+        TagsPredeclaracion etiquetas = (TagsPredeclaracion) s.getDeclaracion().getEtiquetas();
         for (Token t : etiquetas.getVariables()) {
             tabla.getTablaSimbolos().addDeclaracion(t.getValor().substring(1, t.getValor().length() - 1), etiquetas.getTipo());
         }

@@ -3,7 +3,6 @@ package perldoop.semantica.funcion.nativa;
 import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
-import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.Funcion;
 import perldoop.modelo.arbol.funcion.FuncionBasica;

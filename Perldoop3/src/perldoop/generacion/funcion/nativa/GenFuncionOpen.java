@@ -1,6 +1,5 @@
 package perldoop.generacion.funcion.nativa;
 
-import perldoop.generacion.acceso.GenAcceso;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.ColIterator;
 import perldoop.modelo.arbol.Simbolo;

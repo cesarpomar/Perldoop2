@@ -128,6 +128,10 @@ public final class GenFuncion {
                 return new GenFuncionExit(tabla);
             case "open":
                 return new GenFuncionOpen(tabla);
+            case "defined":
+                return new GenFuncionDefined(tabla);
+            case "undef":
+                return new GenFuncionUndef(tabla);
             default:
                 return null;
         }

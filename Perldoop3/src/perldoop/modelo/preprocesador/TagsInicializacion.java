@@ -9,14 +9,14 @@ import perldoop.modelo.lexico.Token;
  *
  * @author César Pomar
  */
-public final class EtiquetasInicializacion implements Etiquetas {
+public final class TagsInicializacion implements Tags {
 
     private List<Token> sizes;
 
     /**
      * Constructor por defecto
      */
-    public EtiquetasInicializacion() {
+    public TagsInicializacion() {
         sizes = new ArrayList<>(5);
     }
 

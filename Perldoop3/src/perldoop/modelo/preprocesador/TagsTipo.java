@@ -9,7 +9,7 @@ import perldoop.modelo.lexico.Token;
  *
  * @author César Pomar
  */
-public final class EtiquetasTipo implements Etiquetas {
+public final class TagsTipo implements Tags {
 
     private List<Token> tipos;
     private List<Token> sizes;
@@ -17,7 +17,7 @@ public final class EtiquetasTipo implements Etiquetas {
     /**
      * Constructor por defecto
      */
-    public EtiquetasTipo() {
+    public TagsTipo() {
         tipos = new ArrayList<>(5);
         sizes = new ArrayList<>(5);
     }

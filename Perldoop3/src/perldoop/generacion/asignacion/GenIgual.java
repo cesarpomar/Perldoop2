@@ -22,9 +22,8 @@ import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.lexico.Token;
-import perldoop.modelo.preprocesador.Etiquetas;
-import perldoop.modelo.preprocesador.EtiquetasInicializacion;
-import perldoop.modelo.preprocesador.EtiquetasTipo;
+import perldoop.modelo.preprocesador.TagsInicializacion;
+import perldoop.modelo.preprocesador.TagsTipo;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.generacion.util.ColIterator;
@@ -32,6 +31,7 @@ import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.generacion.Declaracion;
 import perldoop.util.Buscar;
+import perldoop.modelo.preprocesador.Tags;
 
 /**
  * Clase para la semantica de igual
@@ -212,15 +212,15 @@ public class GenIgual {
      */
     private void inicializacion(Igual s) {
         List<Token> sizes = null;
-        Etiquetas etiquetas = s.getOperador().getEtiquetas();
+        Tags etiquetas = s.getOperador().getEtiquetas();
         int accesos = Buscar.accesos(s.getIzquierda());
         //Obtenemos las etiquetas de tamaño
         if (etiquetas == null) {
             sizes = new ArrayList<>();
-        } else if (etiquetas instanceof EtiquetasInicializacion) {
-            sizes = ((EtiquetasInicializacion) etiquetas).getSizes();
-        } else if (etiquetas instanceof EtiquetasTipo) {
-            sizes = ((EtiquetasTipo) etiquetas).getSizes();
+        } else if (etiquetas instanceof TagsInicializacion) {
+            sizes = ((TagsInicializacion) etiquetas).getSizes();
+        } else if (etiquetas instanceof TagsTipo) {
+            sizes = ((TagsTipo) etiquetas).getSizes();
             //Por cada acceso a la coleccion eliminamos un tamaño    
             if (accesos < sizes.size()) {
                 sizes = sizes.subList(accesos, sizes.size());

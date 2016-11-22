@@ -5,6 +5,6 @@ package perldoop.modelo.preprocesador;
  *
  * @author César Pomar
  */
-public interface Etiquetas {
+public interface Tags {
 
 }

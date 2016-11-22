@@ -39,9 +39,6 @@ import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.arbol.rango.Rango;
 %}
 
-/*Tokens etiquetas del preprocesador, nunca deben llegar al analizador*/
-%token PD_COL PD_REF PD_TIPO PD_NUM PD_VAR
-
 /*Tokens sintacticos*/
 %token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
 %token VAR FILE
@@ -87,7 +84,7 @@ fuente		:	masFuente cuerpo						{$$=set(Fuente.addCuerpo(s($1), s($2)), false);}
 masFuente	:											{$$=set(new Fuente(), false);}
 			|	fuente funcionDef						{$$=set(Fuente.addFuncion(s($1), s($2)), false);}
 
-funcionDef	:	funcionSub '{' cuerpo '}'				{$$=set(new FuncionDef(s($1), new Contexto(s($2), s($3), s($4))));}
+funcionDef	:	funcionSub '{' cuerpo '}'				{$$=set(new FuncionDef(s($1), add(new Contexto(s($2), s($3), s($4)))));}
 
 funcionSub	:	SUB ID_L								{$$=set(new FuncionSub(s($1), s($2)));}
 
@@ -317,20 +314,20 @@ abrirBloque :																					{$$=set(new AbrirBloque());}
 listaFor	:																					{$$=set(new Lista());}
 			|	lista																			{$$=$1;}
 			
-bloque		:	'{' cuerpoNV '}'																{$$=set(new BloqueVacio(new Contexto(s($1),s($2),s($3))));}
-			|	WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueWhile(s($1),s($2),s($3),s($4),s($5),new Contexto(s($6),s($7),s($8))));}
-			|	UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueUntil(s($1),s($2),s($3),s($4),s($5),new Contexto(s($6),s($7),s($8))));}
-			|	DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'						{$$=set(new BloqueDoWhile(s($1),s($2),new Contexto(s($3),s($4),s($5)),s($6),s($7),s($8),s($9),s($10)));}
-			|	DO abrirBloque '{' cuerpo '}' UNTIL '(' expresion ')' ';'						{$$=set(new BloqueDoUntil(s($1),s($2),new Contexto(s($3),s($4),s($5)),s($6),s($7),s($8),s($9),s($10)));}
-			|	FOR abrirBloque '(' listaFor ';' listaFor ';' listaFor ')' '{' cuerpo '}'		{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),new Contexto(s($10),s($11),s($12))));}
-			|	FOR abrirBloque variable colParen '{' cuerpo '}'								{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),new Contexto(s($5),s($6),s($7))));}
-			|	FOR abrirBloque colParen '{' cuerpo '}'											{$$=set(new BloqueForeach(s($1),s($2),s($3),new Contexto(s($4),s($5),s($6))));}
-			|	IF abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional						{$$=set(new BloqueIf(s($1),s($2),s($3),s($4),s($5),new Contexto(s($6),s($7),s($8)),s($9)));}
-			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional					{$$=set(new BloqueUnless(s($1),s($2),s($3),s($4),s($5),new Contexto(s($6),s($7),s($8)),s($9)));}
+bloque		:	'{' cuerpoNV '}'																{$$=set(new BloqueVacio(add(new Contexto(s($1),s($2),s($3)))));}
+			|	WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueWhile(s($1),s($2),s($3),s($4),s($5),add(new Contexto(s($6),s($7),s($8)))));}
+			|	UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueUntil(s($1),s($2),s($3),s($4),s($5),add(new Contexto(s($6),s($7),s($8)))));}
+			|	DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'						{$$=set(new BloqueDoWhile(s($1),s($2),add(new Contexto(s($3),s($4),s($5))),s($6),s($7),s($8),s($9),s($10)));}
+			|	DO abrirBloque '{' cuerpo '}' UNTIL '(' expresion ')' ';'						{$$=set(new BloqueDoUntil(s($1),s($2),add(new Contexto(s($3),s($4),s($5))),s($6),s($7),s($8),s($9),s($10)));}
+			|	FOR abrirBloque '(' listaFor ';' listaFor ';' listaFor ')' '{' cuerpo '}'		{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),add(new Contexto(s($10),s($11),s($12)))));}
+			|	FOR abrirBloque variable colParen '{' cuerpo '}'								{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),add(new Contexto(s($5),s($6),s($7)))));}
+			|	FOR abrirBloque colParen '{' cuerpo '}'											{$$=set(new BloqueForeach(s($1),s($2),s($3),add(new Contexto(s($4),s($5),s($6)))));}
+			|	IF abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional						{$$=set(new BloqueIf(s($1),s($2),s($3),s($4),s($5),add(new Contexto(s($6),s($7),s($8))),s($9)));}
+			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional					{$$=set(new BloqueUnless(s($1),s($2),s($3),s($4),s($5),add(new Contexto(s($6),s($7),s($8))),s($9)));}
 			
 condicional	:																					{$$=set(new CondicionalNada());}
-			|	ELSIF '(' expresion ')' '{' cuerpo '}' condicional								{$$=set(new CondicionalElsif(s($1),s($2),s($3),s($4),new Contexto(s($5),s($6),s($7)),s($8)));}
-			|	ELSE '{' cuerpo '}'																{$$=set(new CondicionalElse(s($1),new Contexto(s($2),s($3),s($4))));}			
+			|	ELSIF '(' expresion ')' '{' cuerpo '}' condicional								{$$=set(new CondicionalElsif(s($1),s($2),s($3),s($4),add(new Contexto(s($5),s($6),s($7))),s($8)));}
+			|	ELSE '{' cuerpo '}'																{$$=set(new CondicionalElse(s($1),add(new Contexto(s($2),s($3),s($4)))));}			
 			
 
 

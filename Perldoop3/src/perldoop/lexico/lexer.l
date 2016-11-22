@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import perldoop.modelo.lexico.Token;
 import perldoop.sintactico.Parser;
+import perldoop.preprocesador.Preprocesador;
 import perldoop.error.GestorErrores;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.Opciones;
@@ -17,7 +18,7 @@ import perldoop.modelo.Opciones;
 %line
 %column
 %char
-%state VAR FUN PD IGNORAR DELIMITADOR DELIMITADOR_DOBLE ANALISIS ANALISIS_VAR ANALISIS_ACCESO ANALISIS_ACCESO_INDEX REX_T REX_MOD
+%state VAR FUN PD IGNORAR DELIMITADOR DELIMITADOR_DOBLE ANALISIS ANALISIS_VAR ANALISIS_ACCESO ANALISIS_ACCESO_INDEX ANALISIS_ACCESO_INDEX_STR REX_T REX_MOD
 
 %{
 	private Token yyval;
@@ -35,6 +36,7 @@ import perldoop.modelo.Opciones;
 	private int estadoReturn;
 	private int analisisTipo;
 	private int flag;
+	private boolean isVar;
 
 	/**
 	 * Constructor del analizador léxico
@@ -89,7 +91,7 @@ import perldoop.modelo.Opciones;
 	 */
 	public List<Token> getTokens() throws IOException{
 		List<Token> tokens = new ArrayList<>(10000);
-		while(yylex() > 0){
+		while(yylex() != 0){
 			tokens.add(yyval);
 		}
 		//Añadimos final de fichero
@@ -358,24 +360,29 @@ PD_NUM			=	<{ENTERO}>
 }
 
 <ANALISIS>{
-	\\[^]				{
+	\\[^].?				{
+							if(yylength()==3) yypushback(1);
 							if(tokenAux==null){
 								token(Parser.TEXTO);
 								tokenAux=yyval;buffer.setLength(0);
 							}
-							buffer.append(yytext());}
-	[^].?		{
+							buffer.append(yytext());
+						}
+	[^].?.?		{
 							char c = yycharat(0);
 							boolean c2 = false;
 							if(yylength()>1){ 
 								char cc=yycharat(1);
+								if(cc=='{' && yylength()>2){
+									cc=yycharat(2);
+								}
 								if(interpola && (c == '$' || c == '@')){
-									if(PalabrasReservadas.isPerlSpecialVar(cc)){
+									if(PalabrasReservadas.isPerlSpecialVar(cc) && sep!=cc){
 										token(0);
 										gestorErrores.error(Errores.AVISO,Errores.VARIABLE_IGNORADA, yyval, yytext());
 									}
 								}
-								yypushback(1);	
+								yypushback(yylength()-1);	
 								c2 = (cc >= 'A' && cc <= 'Z') || (cc >= 'a' && cc <= 'z') || cc=='_';								
 							}	
 							if((c == sep && stack==0) || (interpola && c2 && (c == '$' || c == '@'))){
@@ -404,6 +411,7 @@ PD_NUM			=	<{ENTERO}>
 									}else{
 										flag=0;
 									}
+									isVar=false;
 									yybegin(ANALISIS_VAR);return token(c);
 								}
 							}else{
@@ -425,7 +433,7 @@ PD_NUM			=	<{ENTERO}>
 }
 
 <ANALISIS_VAR>{
-	{ID}				{return token(Parser.VAR);}
+	{ID}				{isVar=true;return token(Parser.VAR);}
 	"::"				{return token(Parser.AMBITO);}
 	"\#"				{return token('#');}
 	[\{\[]				{yypushback(1);yybegin(ANALISIS_ACCESO);}
@@ -433,7 +441,7 @@ PD_NUM			=	<{ENTERO}>
 }
 
 <ANALISIS_ACCESO>{
-	[\{\[]				{yybegin(ANALISIS_ACCESO_INDEX);return token(yycharat(0));}
+	[\{\[]				{yybegin(ANALISIS_ACCESO_INDEX);if(isVar)return token(yycharat(0));}
 	[^]					{yypushback(1);yybegin(ANALISIS);return token(Parser.EXP_SEP);}
 }
 
@@ -444,9 +452,14 @@ PD_NUM			=	<{ENTERO}>
 	"\#"				{return token('#');}
 	{ID}				{return token(Parser.VAR);}
 	{ENTERO}			{return token(Parser.ENTERO);}
-	[\}\]]				{yybegin(ANALISIS_ACCESO);return token(yycharat(0));}
+	"'"					{yybegin(ANALISIS_ACCESO_INDEX_STR);return token(yycharat(0));}
+	[\}\]]				{yybegin(ANALISIS_ACCESO);if(isVar)return token(yycharat(0));}
 	[\s]				{}
 	[^]					{yybegin(ANALISIS);yypushback(1);error();}
+}
+
+<ANALISIS_ACCESO_INDEX_STR>{
+	([^']|\\')*'		{if(yylength()>1){yypushback(1);return token(Parser.TEXTO);}yybegin(ANALISIS_ACCESO_INDEX);return token(yycharat(0));}
 }
 
 
@@ -464,8 +477,8 @@ PD_NUM			=	<{ENTERO}>
 								return token(t, tipo, true);
 							}
 						}
-	{PD_NUM}			{return token(yytext(), Parser.PD_NUM, true);}
-	{PD_VAR}			{return token(yytext(), Parser.PD_VAR, true);}
+	{PD_NUM}			{return token(yytext(), Preprocesador.PD_NUM, true);}
+	{PD_VAR}			{return token(yytext(), Preprocesador.PD_VAR, true);}
 	[^\n\r]				{buffer.append(yytext());}
 	"\r"				{}
 	"\n"				{

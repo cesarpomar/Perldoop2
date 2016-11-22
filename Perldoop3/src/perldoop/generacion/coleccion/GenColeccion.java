@@ -22,7 +22,6 @@ import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.Funcion;
-import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.Tipo;
@@ -256,7 +255,9 @@ public class GenColeccion {
     private void genDec(ColDec c) {
         if (!(Buscar.getUso((Expresion) c.getPadre()) instanceof StcLista)) {
             visitar(c);
-            c.getCodigoGenerado().insert(0, c.getOperador().getComentario());
+            if(c.getCodigoGenerado()!=null){
+                c.getCodigoGenerado().insert(0, c.getOperador().getComentario());
+            }
             return;
         }
         StringBuilder codigo = new StringBuilder(100);

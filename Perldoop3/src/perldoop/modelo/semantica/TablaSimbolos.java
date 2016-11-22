@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.lexico.Token;
-import perldoop.modelo.preprocesador.EtiquetasTipo;
+import perldoop.modelo.preprocesador.TagsTipo;
 
 /**
  * Paquete que almacena las bloques declaradas en el código.
@@ -16,7 +16,7 @@ import perldoop.modelo.preprocesador.EtiquetasTipo;
 public final class TablaSimbolos {
 
     private List<Map<String, ContextoVariable>> bloques;
-    private Map<String, EtiquetasTipo> predeclaraciones;
+    private Map<String, TagsTipo> predeclaraciones;
     private Map<String, EntradaFuncion> funciones;
     private Map<String, EntradaFuncionNoDeclarada> funcionesNoDeclaradas;
     private ArbolPaquetes paquetes;
@@ -42,6 +42,16 @@ public final class TablaSimbolos {
         this.opciones = opciones;
         jImporter = (opciones.isjImporter()) ? new Jimporter(paquetes) : null;
         imports = new HashMap<>(20);
+        inicializacion();
+    }
+
+    /**
+     * Inicializa la tabla de simbolos
+     */
+    private void inicializacion() {
+        EntradaVariable args = new EntradaVariable("ARGS", new Tipo(Tipo.ARRAY, Tipo.STRING), false);
+        args.setAlias("Pd.ARGS");
+        addVariable(args, '@');
         vacia = true;
     }
 
@@ -135,36 +145,44 @@ public final class TablaSimbolos {
      * @return Entrada
      */
     public EntradaVariable buscarVariable(String identificador, char contexto) {
-        ContextoVariable c = buscarVariable(identificador);
-        if (c == null) {
-            return null;
-        }
-        switch (contexto) {
-            case '$':
-                return c.getEscalar();
-            case '@':
-                return c.getArray();
-            case '%':
-                return c.getHash();
+        ContextoVariable c;
+        EntradaVariable variable = null;
+        for (int i = bloques.size() - 1; i >= 0; i--) {
+            c = bloques.get(i).get(identificador);
+            if (c != null) {
+                switch (contexto) {
+                    case '$':
+                        variable = c.getEscalar();
+                        break;
+                    case '@':
+                        variable = c.getArray();
+                        break;
+                    case '%':
+                        variable = c.getHash();
+                }
+                if (variable != null) {
+                    return variable;
+                }
+            }
         }
         return null;
     }
 
     /**
-     * Busca una variable
+     * Busca los contextos de una variable
      *
      * @param identificador Identificador
-     * @return Entrada
+     * @return Lista de entradas que contienen la variable
      */
-    public ContextoVariable buscarVariable(String identificador) {
-        ContextoVariable c;
+    public List<ContextoVariable> buscarVariable(String identificador) {
+        List<ContextoVariable> cs = new ArrayList<>(bloques.size());
         for (int i = bloques.size() - 1; i >= 0; i--) {
-            c = bloques.get(i).get(identificador);
+            ContextoVariable c = bloques.get(i).get(identificador);
             if (c != null) {
-                return c;
+                cs.add(c);
             }
         }
-        return null;
+        return cs;
     }
 
     /**
@@ -182,7 +200,7 @@ public final class TablaSimbolos {
      * @param identificador Identificador
      * @param tipo Tipo
      */
-    public void addDeclaracion(String identificador, EtiquetasTipo tipo) {
+    public void addDeclaracion(String identificador, TagsTipo tipo) {
         predeclaraciones.put(identificador, tipo);
     }
 
@@ -192,7 +210,7 @@ public final class TablaSimbolos {
      * @param identificador Identificador
      * @return Tipo
      */
-    public EtiquetasTipo getDeclaracion(String identificador) {
+    public TagsTipo getDeclaracion(String identificador) {
         return predeclaraciones.remove(identificador);
     }
 

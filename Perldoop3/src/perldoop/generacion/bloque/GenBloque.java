@@ -4,7 +4,6 @@ import java.util.Iterator;
 import perldoop.generacion.sentencia.GenSentencia;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
-import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.bloque.*;

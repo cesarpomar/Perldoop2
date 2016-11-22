@@ -1,7 +1,6 @@
 package perldoop.generacion.logico;
 
 import perldoop.generacion.util.Casting;
-import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
