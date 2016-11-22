@@ -129,7 +129,7 @@ public final class GestorErrores {
             avisos++;
         } else {
             errores++;
-            if (opciones.getMostrarErrores() == null || opciones.getMostrarErrores() < errores) {
+            if (opciones.getMostrarErrores() == null || opciones.getMostrarErrores() > errores) {
                 System.err.println(fichero + ":" + msg);
                 return true;
             }

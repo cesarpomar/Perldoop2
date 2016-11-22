@@ -126,27 +126,22 @@ public final class GenVariable {
             } else {
                 v.setCodigoGenerado(new StringBuilder(e.getAlias()));
             }
-        } else if (!isAsignada(v)) {
-            String def = Tipos.valoreDefecto(v.getTipo());
-            if (isSentencia(v) || isFor(v) || isForEach(v)) {
-                StringBuilder codigo = Tipos.declaracion(v.getTipo());
-                codigo.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
-                if (isSentencia(v)) {
+        } else if (isSentencia(v) || isFor(v) || isForEach(v)) {
+            StringBuilder codigo = Tipos.declaracion(v.getTipo());
+            codigo.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
+            if (!isAsignada(v)) {
+                String def = Tipos.valoreDefecto(v.getTipo());
+                if (!isForEach(v)) {
                     codigo.append("=").append(def);
-                } else {
-                    tabla.getDeclaraciones().add(new Declaracion(v, e.getAlias(), def));
-                }
-                v.setCodigoGenerado(codigo);
-            } else {
-                tabla.getDeclaraciones().add(new Declaracion(v, v.getTipo(), e.getAlias(), def));
-                v.setCodigoGenerado(new StringBuilder(100).append(cdec).append(e.getAlias()).append(v.getVar().getComentario()));
+                } 
             }
-        } else if (isSentencia(v)) {
-                StringBuilder codigo = Tipos.declaracion(v.getTipo());
-                codigo.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
-                v.setCodigoGenerado(codigo);
+            v.setCodigoGenerado(codigo);
         } else {
-            tabla.getDeclaraciones().add(new Declaracion(v, v.getTipo(), e.getAlias()));
+            String def = null;
+            if (!isAsignada(v)) {
+                def = Tipos.valoreDefecto(v.getTipo());
+            }
+            tabla.getDeclaraciones().add(new Declaracion(v, v.getTipo(), e.getAlias(), def));
             v.setCodigoGenerado(new StringBuilder(100).append(cdec).append(e.getAlias()).append(v.getVar().getComentario()));
         }
     }

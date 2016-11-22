@@ -112,4 +112,22 @@ public final class Fwrite implements Closeable {
         return 1;
     }
 
+    /**
+     * Escribe valores en el fichero
+     *
+     * @param format Formato
+     * @param values valores
+     * @return 1 si tiene exito, 0 en caso contrario
+     */
+    public int printf(String format, Object... values) {
+        try {
+            for (Object value : values) {
+                buffer.write(String.format(format, values));
+            }
+        } catch (IOException ex) {
+            return 0;
+        }
+        return 1;
+    }
+
 }

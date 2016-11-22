@@ -96,6 +96,8 @@ public final class GenFuncion {
         switch (id) {
             case "print":
                 return new GenFuncionPrint(tabla);
+            case "printf":
+                return new GenFuncionPrintf(tabla);
             case "chop":
                 return new GenFuncionChop(tabla);
             case "chomp":

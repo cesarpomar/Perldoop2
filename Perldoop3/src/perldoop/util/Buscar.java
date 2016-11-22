@@ -130,7 +130,7 @@ public final class Buscar {
         if (exp instanceof ExpColeccion) {
             return getExpresiones(((ExpColeccion) exp).getColeccion());
         }
-        return Arrays.asList(exp);
+        return new ArrayList<>(Arrays.asList(exp));
     }
 
     /**

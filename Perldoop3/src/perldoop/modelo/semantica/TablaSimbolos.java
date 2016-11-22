@@ -49,8 +49,8 @@ public final class TablaSimbolos {
      * Inicializa la tabla de simbolos
      */
     private void inicializacion() {
-        EntradaVariable args = new EntradaVariable("ARGS", new Tipo(Tipo.ARRAY, Tipo.STRING), false);
-        args.setAlias("Pd.ARGS");
+        EntradaVariable args = new EntradaVariable("ARGV", new Tipo(Tipo.ARRAY, Tipo.STRING), false);
+        args.setAlias("Pd.ARGV");
         addVariable(args, '@');
         vacia = true;
     }

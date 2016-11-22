@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.StringJoiner;
 
 /**
- * TEMPORAL hasta definir clases de funciones auxiliares
+ * Implementación de las funciones nativa Perl
  *
  * @author César Pomar
  */
@@ -35,6 +35,32 @@ public final class Perl {
             return 0;
         }
         return f.print(args);
+    }
+
+    /**
+     * Imprime por pantalla
+     *
+     * @param format Formato
+     * @param args Argumentos
+     * @return Retorna 1 si tiene exito
+     */
+    public static int printf(String format, Object... args) {
+        return printf(PerlFile.STDOUT, format, args);
+    }
+
+    /**
+     * Imprime en un fichero
+     *
+     * @param f Fichero
+     * @param format Formato
+     * @param args Argumentos
+     * @return Retorna 1 si tiene exito
+     */
+    public static int printf(PerlFile f, String format, Object... args) {
+        if (f == null) {
+            return 0;
+        }
+        return f.print(format, args);
     }
 
     /**
@@ -253,7 +279,10 @@ public final class Perl {
      * @param rn Retorno de la funcion, ultimo elemento
      * @return Actualizacion de variable
      */
-    public static <T> T[] pop(T[] array, Ref<Integer>... rn) {
+    public static <T> T[] pop(T[] array, Ref<T>... rn) {
+        if (rn.length > 0) {
+            rn[0].set(array[array.length - 1]);
+        }
         if (array.length == 0) {
             return array;
         }
@@ -346,7 +375,10 @@ public final class Perl {
      * @param rn Retorno de la funcion, primer elemento
      * @return Actualizacion de variable
      */
-    public static <T> T[] shift(T[] array, Ref<Integer>... rn) {
+    public static <T> T[] shift(T[] array, Ref<T>... rn) {
+        if (rn.length > 0) {
+            rn[0].set(array[array.length - 1]);
+        }
         if (array.length == 0) {
             return array;
         }
@@ -515,7 +547,7 @@ public final class Perl {
      * Muestra un mensaje de error por pantalla
      *
      * @param args Mensaje
-     * @return  True si tuvo existo, False en otro caso
+     * @return True si tuvo existo, False en otro caso
      */
     public static Boolean warn(Object... args) {
         return PerlFile.STDERR.println(args) == 1;
@@ -531,6 +563,16 @@ public final class Perl {
         PerlFile.STDERR.println(args);
         System.exit(-1);
         return null;
+    }
+
+    /**
+     * Comprueba si la expresion esta definida
+     *
+     * @param exp Expresion
+     * @return Expresion no es nula
+     */
+    public static Boolean defined(Object exp) {
+        return exp != null;
     }
 
 }

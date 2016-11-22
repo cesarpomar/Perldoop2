@@ -102,6 +102,8 @@ public class SemFuncion {
         switch (id) {
             case "print":
                 return new SemFuncionPrint(tabla);
+            case "printf":
+                return new SemFuncionPrintf(tabla);
             case "chop":
                 return new SemFuncionChop(tabla);
             case "chomp":

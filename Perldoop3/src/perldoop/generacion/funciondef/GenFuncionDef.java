@@ -34,11 +34,7 @@ public class GenFuncionDef {
         if (sentencias.isEmpty()) {
             codigo.append(new StringBuilder("return new Box[0];"));
         } else {
-            //TODO solucion temporal
-            Sentencia sen = sentencias.get(sentencias.size() - 1);
-            if (!(sen instanceof StcFlujo && ((StcFlujo) sen).getFlujo() instanceof Return)) {
-                codigo.append(new StringBuilder("return new Box[0];"));
-            }
+            //TODO comprobar si necesita return
         }
         codigo.append(s.getContexto().getLlaveD());
         s.setCodigoGenerado(codigo);

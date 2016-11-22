@@ -134,6 +134,20 @@ public final class PerlFile {
     }
 
     /**
+     * Escribe valores en el fichero
+     *
+     * @param format Formato
+     * @param values valores
+     * @return 1 si tiene exito, 0 en caso contrario
+     */
+    public int printf(String format, Object... values) {
+        if (write != null) {
+            return write.printf(format, values);
+        }
+        return 0;
+    }
+
+    /**
      * lee una linea del fichero
      *
      * @return linea

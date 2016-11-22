@@ -48,7 +48,7 @@ public final class BloqueFor extends Bloque {
         setLista2(lista2);
         setPuntoComa2(puntoComa2);
         setLista3(lista3);
-        setParentesisI(parentesisI);
+        setParentesisD(parentesisD);
     }
 
     /**

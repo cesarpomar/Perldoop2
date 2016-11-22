@@ -169,7 +169,7 @@ public class GenColeccion {
      * @param comentarios Comentarios
      * @return Simbolo coleccion
      */
-    public static Simbolo genArrayListExps(Tipo t, List<Simbolo> exps, List<String> comentarios) {
+    private static Simbolo genArrayListExps(Tipo t, List<Simbolo> exps, List<String> comentarios) {
         StringBuilder codigo = new StringBuilder(100);
         String cierre;
         if (t.isArray()) {

@@ -18,7 +18,7 @@ public final class Pd {
     /**
      * Argumentos pasados en la ejecución del programa
      */
-    public static String[] ARGS = new String[0];
+    public static String[] ARGV = new String[0];
 
     /**
      * Crea una union para concatenar

@@ -1324,7 +1324,7 @@ public class Lexer {
 								if(interpola && (c == '$' || c == '@')){
 									if(PalabrasReservadas.isPerlSpecialVar(cc) && sep!=cc){
 										token(0);
-										gestorErrores.error(Errores.AVISO,Errores.VARIABLE_IGNORADA, yyval, yytext());
+										gestorErrores.error(Errores.AVISO,Errores.VARIABLE_IGNORADA, yyval, yytext().substring(0, 2));
 									}
 								}
 								yypushback(yylength()-1);	
