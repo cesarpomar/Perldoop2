@@ -1,8 +1,9 @@
 package perldoop.modelo.arbol.bloque;
 
 import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.contexto.Contexto;
+import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**
  * Clase que representa la reduccion -&gt;<br> bloque : '{' cuerpo '}'
@@ -14,10 +15,12 @@ public final class BloqueVacio extends Bloque {
     /**
      * Único contructor de la clase
      *
-     * @param contexto Contexto del bloque
+     * @param llaveI Llave izquierda
+     * @param cuerpo Cuerpo
+     * @param llaveD Llave derecha
      */
-    public BloqueVacio(Contexto contexto) {
-        super(contexto);
+    public BloqueVacio(Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super( llaveI, cuerpo, llaveD);
     }
 
     @Override
@@ -27,6 +30,6 @@ public final class BloqueVacio extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{contexto};
+        return new Simbolo[]{ llaveI, cuerpo, llaveD};
     }
 }

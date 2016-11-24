@@ -94,6 +94,16 @@ public final class Tipo {
     }
 
     /**
+     * Obtiene el tipo de una posicion
+     *
+     * @param i Posicion
+     * @return Tipo de la posicion i
+     */
+    public Byte getTipo(int i) {
+        return tipo.get(i);
+    }
+
+    /**
      * Obtiene los subtipos
      *
      * @return Lista de subtipos

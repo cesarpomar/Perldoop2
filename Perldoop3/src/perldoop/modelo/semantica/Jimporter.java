@@ -60,7 +60,7 @@ public final class Jimporter {
             if (Modifier.isStatic(mods) && Modifier.isPublic(mods)) {
                 Tipo t = getTipo(f);
                 if (t != null) {
-                    paquete.addVariable(new EntradaVariable(f.getName(), t, true), '$');
+                    paquete.addVariable(new EntradaVariable(f.getName(), t, true));
                 }
             }
         }

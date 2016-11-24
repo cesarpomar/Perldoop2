@@ -121,30 +121,17 @@ public final class Paquete {
     }
 
     /**
-     * Añade una entrada al contexto de una variable
+     * Añade una variable al paquete
      *
      * @param entrada Entrada
-     * @param contexto ContextoVariable
      */
-    public void addVariable(EntradaVariable entrada, char contexto) {
+    public void addVariable(EntradaVariable entrada) {
         ContextoVariable c = atributos.get(entrada.getIdentificador());
         if (c == null) {
             c = new ContextoVariable();
             atributos.put(entrada.getIdentificador(), c);
-        } else {
-            entrada.setConflicto(true);
         }
-        switch (contexto) {
-            case '$':
-                c.setEscalar(entrada);
-                break;
-            case '@':
-                c.setArray(entrada);
-                break;
-            case '%':
-                c.setHash(entrada);
-                break;
-        }
+        c.setVar(entrada);
     }
 
     /**
@@ -159,15 +146,7 @@ public final class Paquete {
         if (c == null) {
             return null;
         }
-        switch (contexto) {
-            case '$':
-                return c.getEscalar();
-            case '@':
-                return c.getArray();
-            case '%':
-                return c.getHash();
-        }
-        return null;
+        return c.getVar(contexto);
     }
 
     /**

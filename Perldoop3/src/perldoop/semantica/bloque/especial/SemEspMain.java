@@ -1,6 +1,6 @@
-package perldoop.semantica.contexto.comportamiento;
+package perldoop.semantica.bloque.especial;
 
-import perldoop.modelo.arbol.contexto.Contexto;
+import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
@@ -8,19 +8,19 @@ import perldoop.modelo.semantica.TablaSemantica;
  *
  * @author César Pomar
  */
-public final class SemCompMain extends SemComportamiento {
+public final class SemEspMain extends SemEspecial {
 
     /**
      * Contruye la semantica
      *
      * @param tabla Tabla de simbolos
      */
-    public SemCompMain(TablaSemantica tabla) {
+    public SemEspMain(TablaSemantica tabla) {
         super(tabla);
     }
 
     @Override
-    public void visitar(Contexto s) {
+    public void visitar(Bloque s) {
         throw new UnsupportedOperationException("Main, Not supported yet.");
     }
 

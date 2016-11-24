@@ -11,8 +11,6 @@ import perldoop.modelo.arbol.cadena.*;
 import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
-import perldoop.modelo.arbol.condicional.*;
-import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.cuerpo.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
@@ -54,9 +52,6 @@ public interface Visitante {
 
     //Cuerpo
     void visitar(Cuerpo s);
-
-    //Contexto
-    void visitar(Contexto s);
 
     //Sentencia
     void visitar(StcLista s);
@@ -388,12 +383,11 @@ public interface Visitante {
 
     void visitar(BloqueVacio s);
 
-    //Condicional
-    void visitar(CondicionalElse s);
+    void visitar(SubBloqueElse s);
 
-    void visitar(CondicionalElsif s);
+    void visitar(SubBloqueElsif s);
 
-    void visitar(CondicionalNada s);
+    void visitar(SubBloqueVacio s);
 
     //Terminal
     void visitar(Terminal s);

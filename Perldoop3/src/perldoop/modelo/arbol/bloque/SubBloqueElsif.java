@@ -1,42 +1,43 @@
-package perldoop.modelo.arbol.condicional;
+package perldoop.modelo.arbol.bloque;
 
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.contexto.Contexto;
+import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -&gt;<br> condicional : Elsif '(' expresion ')' '{' cuerpo '}' condicional
+ * Clase que representa la reduccion -&gt;<br> bloque : ELSIF '(' expresion ')' '{' cuerpo '}' subBloque
  *
  * @author César Pomar
  */
-public final class CondicionalElsif extends Condicional {
+public final class SubBloqueElsif extends SubBloque {
 
     private Terminal id;
     private Terminal parentesisI;
     private Expresion expresion;
     private Terminal parentesisD;
-    private Contexto contexto;
-    private Condicional bloqueElse;
+    private SubBloque subBloque;
 
     /**
      * Único contructor de la clase
      *
-     * @param id elsIf
+     * @param id Id
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
      * @param parentesisD Parentesis derecho
-     * @param contexto Contexto
-     * @param bloqueElse BloqueElse
+     * @param llaveI Llave izquierda
+     * @param cuerpo Cuerpo
+     * @param llaveD Llave derecha
+     * @param subBloque SubBloque
      */
-    public CondicionalElsif(Terminal id, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Contexto contexto, Condicional bloqueElse) {
+    public SubBloqueElsif(Terminal id, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, SubBloque subBloque) {
+        super(llaveI, cuerpo, llaveD);
         setId(id);
         setParentesisI(parentesisI);
         setExpresion(expresion);
         setParentesisD(parentesisD);
-        setContexto(contexto);
-        setBloqueElse(bloqueElse);
+        setSubBloque(subBloque);
     }
 
     /**
@@ -116,41 +117,22 @@ public final class CondicionalElsif extends Condicional {
     }
 
     /**
-     * Obtiene el contexto del bloque
+     * Obtiene el subBloque
      *
-     * @return Contexto del bloque
+     * @return SubBloque
      */
-    public final Contexto getContexto() {
-        return contexto;
+    public SubBloque getSubBloque() {
+        return subBloque;
     }
 
     /**
-     * Establece el contexto del bloque
+     * Establece el subBloque
      *
-     * @param contexto Contexto del bloque
+     * @param subBloque SubBloque
      */
-    public final void setContexto(Contexto contexto) {
-        contexto.setPadre(this);
-        this.contexto = contexto;
-    }
-
-    /**
-     * Obtiene el bloque Else
-     *
-     * @return Bloque Else
-     */
-    public Condicional getBloqueElse() {
-        return bloqueElse;
-    }
-
-    /**
-     * Establece el bloque Else
-     *
-     * @param bloqueElse Bloque Else
-     */
-    public void setBloqueElse(Condicional bloqueElse) {
-        bloqueElse.setPadre(this);
-        this.bloqueElse = bloqueElse;
+    public void setSubBloque(SubBloque subBloque) {
+        subBloque.setPadre(this);
+        this.subBloque = subBloque;
     }
 
     @Override
@@ -160,6 +142,6 @@ public final class CondicionalElsif extends Condicional {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, expresion, parentesisD, contexto, bloqueElse};
+        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD, subBloque};
     }
 }

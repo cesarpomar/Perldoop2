@@ -1,7 +1,6 @@
 package perldoop.generacion.regulares;
 
 import perldoop.generacion.acceso.GenAcceso;
-import perldoop.generacion.asignacion.GenIgual;
 import perldoop.generacion.util.Casting;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;

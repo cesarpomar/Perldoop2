@@ -15,8 +15,6 @@ import perldoop.modelo.arbol.cadena.*;
 import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
 import perldoop.modelo.arbol.coleccion.*;
 import perldoop.modelo.arbol.comparacion.*;
-import perldoop.modelo.arbol.condicional.*;
-import perldoop.modelo.arbol.contexto.Contexto;
 import perldoop.modelo.arbol.cuerpo.*;
 import perldoop.modelo.arbol.expresion.*;
 import perldoop.modelo.arbol.flujo.*;
@@ -105,10 +103,6 @@ public class Semantica implements Visitante {
         fachada.getSemCuerpo().visitar(s);
     }
     
-    @Override
-    public void visitar(Contexto s) {
-        fachada.getSemContexto().visitar(s);
-    }
     @Override
     public void visitar(StcLista s) {
         fachada.getSemSentencia().visitar(s);
@@ -875,19 +869,19 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(CondicionalElse s) {
-        fachada.getSemCondicional().visitar(s);
+    public void visitar(SubBloqueElse s) {
+        fachada.getSemBloque().visitar(s);
 
     }
 
     @Override
-    public void visitar(CondicionalElsif s) {
-        fachada.getSemCondicional().visitar(s);
+    public void visitar(SubBloqueElsif s) {
+        fachada.getSemBloque().visitar(s);
     }
 
     @Override
-    public void visitar(CondicionalNada s) {
-        fachada.getSemCondicional().visitar(s);
+    public void visitar(SubBloqueVacio s) {
+        fachada.getSemBloque().visitar(s);
 
     }
 

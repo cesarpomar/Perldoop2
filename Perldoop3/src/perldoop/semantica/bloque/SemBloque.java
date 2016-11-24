@@ -60,4 +60,16 @@ public class SemBloque {
     public void visitar(BloqueVacio s) {
         //No tiene cabecera
     }
+
+    public void visitar(SubBloqueElse s) {
+        //No tiene cabecera propia
+    }
+
+    public void visitar(SubBloqueElsif s) {
+        //No tiene cabecera propia
+    }
+
+    public void visitar(SubBloqueVacio s) {
+        //No tiene cabecera propia
+    }
 }

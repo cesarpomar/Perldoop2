@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.coleccion.Coleccion;
-import perldoop.modelo.arbol.contexto.Contexto;
+import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.variable.Variable;
 
 /**
@@ -27,10 +27,12 @@ public final class BloqueForeachVar extends Bloque {
      * @param abrirBloque Abertura de bloque para la cabecera
      * @param variable Variable
      * @param coleccion Coleccion
-     * @param contexto Contexto del bloque
+     * @param llaveI Llave izquierda
+     * @param cuerpo Cuerpo
+     * @param llaveD Llave derecha
      */
-    public BloqueForeachVar(Terminal id, AbrirBloque abrirBloque, Variable variable, Coleccion coleccion, Contexto contexto) {
-        super(contexto);
+    public BloqueForeachVar(Terminal id, AbrirBloque abrirBloque, Variable variable, Coleccion coleccion, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super( llaveI, cuerpo, llaveD);
         setId(id);
         setAbrirBloque(abrirBloque);
         setVariable(variable);
@@ -120,6 +122,6 @@ public final class BloqueForeachVar extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, variable, coleccion, contexto};
+        return new Simbolo[]{id, variable, coleccion,  llaveI, cuerpo, llaveD};
     }
 }

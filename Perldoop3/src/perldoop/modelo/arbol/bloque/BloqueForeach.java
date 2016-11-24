@@ -5,7 +5,7 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.coleccion.Coleccion;
-import perldoop.modelo.arbol.contexto.Contexto;
+import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**
  * Clase que representa la reduccion -&gt;<br> bloque : FOR coleccion '{' cuerpo '}'
@@ -24,10 +24,12 @@ public final class BloqueForeach extends Bloque {
      * @param id Id
      * @param abrirBloque Abertura de bloque para la cabecera
      * @param coleccion Coleccion
-     * @param contexto Contexto del bloque
+     * @param llaveI Llave izquierda
+     * @param cuerpo Cuerpo
+     * @param llaveD Llave derecha
      */
-    public BloqueForeach(Terminal id, AbrirBloque abrirBloque, Coleccion coleccion, Contexto contexto) {
-        super(contexto);
+    public BloqueForeach(Terminal id, AbrirBloque abrirBloque, Coleccion coleccion, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super( llaveI, cuerpo, llaveD);
         setId(id);
         setAbrirBloque(abrirBloque);
         setColeccion(coleccion);
@@ -97,6 +99,6 @@ public final class BloqueForeach extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, coleccion, contexto};
+        return new Simbolo[]{id, coleccion,  llaveI, cuerpo, llaveD};
     }
 }

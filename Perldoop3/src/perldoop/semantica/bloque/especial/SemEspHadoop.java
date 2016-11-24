@@ -1,6 +1,6 @@
-package perldoop.semantica.contexto.comportamiento;
+package perldoop.semantica.bloque.especial;
 
-import perldoop.modelo.arbol.contexto.Contexto;
+import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
@@ -8,19 +8,19 @@ import perldoop.modelo.semantica.TablaSemantica;
  *
  * @author César Pomar
  */
-public final class SemCompHadoop extends SemComportamiento {
+public final class SemEspHadoop extends SemEspecial {
 
     /**
      * Contruye la semantica
      *
      * @param tabla Tabla de simbolos
      */
-    public SemCompHadoop(TablaSemantica tabla) {
+    public SemEspHadoop(TablaSemantica tabla) {
         super(tabla);
     }
 
     @Override
-    public void visitar(Contexto s) {
+    public void visitar(Bloque s) {
         throw new UnsupportedOperationException("Hadoop, Not supported yet.");
     }
 

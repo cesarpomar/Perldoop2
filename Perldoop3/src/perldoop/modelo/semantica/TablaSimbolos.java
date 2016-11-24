@@ -49,9 +49,7 @@ public final class TablaSimbolos {
      * Inicializa la tabla de simbolos
      */
     private void inicializacion() {
-        EntradaVariable args = new EntradaVariable("ARGV", new Tipo(Tipo.ARRAY, Tipo.STRING), false);
-        args.setAlias("Pd.ARGV");
-        addVariable(args, '@');
+        addVariable(new EntradaVariable("ARGV", new Tipo(Tipo.ARRAY, Tipo.STRING), "Pd.ARGV", false));
         vacia = true;
     }
 
@@ -79,35 +77,26 @@ public final class TablaSimbolos {
     }
 
     /**
-     * Añade una entrada al contexto de una variable
+     * Añade una variable a la tabla de simbolos y retorna la anterior en el caso de que substituya una existente
      *
      * @param entrada Entrada
-     * @param contexto ContextoVariable
+     * @return Variable subtituida
      */
-    public void addVariable(EntradaVariable entrada, char contexto) {
+    public EntradaVariable addVariable(EntradaVariable entrada) {
         vacia = false;
-        if (entrada.isPublica() && paquete != null) {
-            paquete.addVariable(entrada, contexto);
-        }
         entrada.setNivel(bloques.size() - 1);
+        if (entrada.isPublica() && paquete != null) {
+            paquete.addVariable(entrada);
+        }
         ContextoVariable c = bloques.get(entrada.getNivel()).get(entrada.getIdentificador());
         if (c == null) {
             c = new ContextoVariable();
             bloques.get(entrada.getNivel()).put(entrada.getIdentificador(), c);
+            entrada.setConflicto(!buscarVariable(entrada.getIdentificador()).isEmpty());
         } else {
             entrada.setConflicto(true);
         }
-        switch (contexto) {
-            case '$':
-                c.setEscalar(entrada);
-                break;
-            case '@':
-                c.setArray(entrada);
-                break;
-            case '%':
-                c.setHash(entrada);
-                break;
-        }
+        return c.setVar(entrada);
     }
 
     /**
@@ -119,22 +108,11 @@ public final class TablaSimbolos {
      * @return Entrada
      */
     public EntradaVariable buscarVariable(String identificador, char contexto, int nivel) {
-        ContextoVariable c = null;
-        if (nivel > -1 && nivel < bloques.size()) {
-            c = bloques.get(nivel).get(identificador);
-        }
+        ContextoVariable c = bloques.get(nivel).get(identificador);
         if (c == null) {
             return null;
         }
-        switch (contexto) {
-            case '$':
-                return c.getEscalar();
-            case '@':
-                return c.getArray();
-            case '%':
-                return c.getHash();
-        }
-        return null;
+        return c.getVar(contexto);
     }
 
     /**
@@ -146,23 +124,11 @@ public final class TablaSimbolos {
      */
     public EntradaVariable buscarVariable(String identificador, char contexto) {
         ContextoVariable c;
-        EntradaVariable variable = null;
+        EntradaVariable variable;
         for (int i = bloques.size() - 1; i >= 0; i--) {
             c = bloques.get(i).get(identificador);
-            if (c != null) {
-                switch (contexto) {
-                    case '$':
-                        variable = c.getEscalar();
-                        break;
-                    case '@':
-                        variable = c.getArray();
-                        break;
-                    case '%':
-                        variable = c.getHash();
-                }
-                if (variable != null) {
-                    return variable;
-                }
+            if (c != null && (variable = c.getVar(contexto)) != null) {
+                return variable;
             }
         }
         return null;
@@ -219,9 +185,10 @@ public final class TablaSimbolos {
      *
      * @param entrada Entrada
      */
-    public void addFuncion(EntradaFuncion entrada) {
-        EntradaFuncionNoDeclarada noDeclarada = funcionesNoDeclaradas.remove(entrada.getIdentificador());
+    public void addFuncion(EntradaFuncion entrada) {  
+        entrada.setConflicto(buscarFuncion(entrada.getIdentificador()) != null);
         funciones.put(entrada.getIdentificador(), entrada);
+        EntradaFuncionNoDeclarada noDeclarada = funcionesNoDeclaradas.remove(entrada.getIdentificador());
         if (noDeclarada != null) {
             entrada.setAlias(noDeclarada.getAlias());
         }

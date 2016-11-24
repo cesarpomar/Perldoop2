@@ -4,7 +4,7 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
-import perldoop.modelo.arbol.contexto.Contexto;
+import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.lista.Lista;
 
 /**
@@ -36,10 +36,12 @@ public final class BloqueFor extends Bloque {
      * @param puntoComa2 Punto y coma 2
      * @param lista3 Lista 3
      * @param parentesisD Parentesis derecho
-     * @param contexto Contexto del bloque
+     * @param llaveI Llave izquierda
+     * @param cuerpo Cuerpo
+     * @param llaveD Llave derecha
      */
-    public BloqueFor(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Lista lista1, Terminal puntoComa1, Lista lista2, Terminal puntoComa2, Lista lista3, Terminal parentesisD, Contexto contexto) {
-        super(contexto);
+    public BloqueFor(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Lista lista1, Terminal puntoComa1, Lista lista2, Terminal puntoComa2, Lista lista3, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super(llaveI, cuerpo, llaveD);
         setId(id);
         setAbrirBloque(abrirBloque);
         setParentesisI(parentesisI);
@@ -227,7 +229,7 @@ public final class BloqueFor extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, lista1, puntoComa1, lista2, puntoComa2, lista3, parentesisD, contexto};
+        return new Simbolo[]{id, parentesisI, lista1, puntoComa1, lista2, puntoComa2, lista3, parentesisD,  llaveI, cuerpo, llaveD};
     }
 
 }

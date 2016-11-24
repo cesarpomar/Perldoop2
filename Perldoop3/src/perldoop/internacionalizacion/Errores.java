@@ -42,6 +42,9 @@ public class Errores extends Internacionalizacion {
     public static final String MODIFICAR_CONSTANTE = "MODIFICAR_CONSTANTE";
     public static final String MODIFICAR_DEFERENCIACION = "MODIFICAR_DEFERENCIACION";
     public static final String OUR_SIN_PAQUETE = "OUR_SIN_PAQUETE";
+    public static final String VARIABLE_YA_DECLARADA = "VARIABLE_YA_DECLARADA";
+    public static final String VARIABLE_SOBREESCRITA = "VARIABLE_SOBREESCRITA";
+    public static final String FUNCION_SOBREESCRITA = "FUNCION_SOBREESCRITA";
     public static final String DECLACION_CONSTANTE = "DECLACION_CONSTANTE";
     public static final String TIPO_FOREACH = "TIPO_FOREACH";
     public static final String ACCESO_DECLARACION = "ACCESO_DECLARACION";
@@ -72,7 +75,7 @@ public class Errores extends Internacionalizacion {
     public static final String REGEX_MODIFICADOR_DESCONOCIDO = "REGEX_MODIFICADOR_DESCONOCIDO";
     public static final String RETURN_SIN_FUNCION = "RETURN_SIN_FUNCION";
     public static final String NEXT_LAST_SIN_BUCLE = "NEXT_LAST_SIN_BUCLE";
-    public static final String SENTENCIA_MUERTA = "SENTENCIA_MUERTA";
+    public static final String SENTENCIA_INALCANZABLE = "SENTENCIA_INALCANZABLE";
     public static final String OPERADOR_SMART = "OPERADOR_SMART";
     public static final String MODULO_NO_VACIO = "MODULO_NO_VACIO";
     public static final String MODULO_YA_CREADO = "MODULO_YA_CREADO";
@@ -85,8 +88,7 @@ public class Errores extends Internacionalizacion {
     public static final String FUNCION_VARIABLE_TIPO = "FUNCION_VARIABLE_TIPO";
     public static final String FUNCION_NUM_ARGS = "FUNCION_NUM_ARGS";
     public static final String SORT_MULTI_COLECCION = "SORT_MULTI_COLECCION";
-    public static final String DELETE_NO_ACCESO = "DELETE_NO_ACCESO";
-    
+    public static final String DELETE_NO_ACCESO = "DELETE_NO_ACCESO"; 
 
     public Errores() {
         super("errores");

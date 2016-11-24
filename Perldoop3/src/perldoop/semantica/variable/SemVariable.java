@@ -14,6 +14,7 @@ import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.preprocesador.TagsTipo;
+import perldoop.modelo.semantica.ContextoVariable;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
@@ -97,10 +98,14 @@ public class SemVariable {
         noAccederDeclaracion(s);
         if (obtenerTipo(s, etiquetas)) {
             validarTipo(s);
-            boolean conflicto = !tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor()).isEmpty();
+            if (tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), Buscar.getContexto(s)) != null) {
+                tabla.getGestorErrores().error(Errores.AVISO, Errores.VARIABLE_YA_DECLARADA, s.getVar().getToken(), s.getVar().getValor());
+            }
             EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), publica);
-            entrada.setConflicto(conflicto);
-            tabla.getTablaSimbolos().addVariable(entrada, Buscar.getContexto(s));
+            if (tabla.getTablaSimbolos().addVariable(entrada) != null) {
+                tabla.getGestorErrores().error(Errores.AVISO, Errores.VARIABLE_SOBREESCRITA, s.getVar().getToken(), s.getVar().getValor());
+            }
+
         }
     }
 

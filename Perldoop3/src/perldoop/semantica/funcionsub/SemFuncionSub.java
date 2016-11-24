@@ -1,5 +1,6 @@
 package perldoop.semantica.funcionsub;
 
+import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.funcionsub.FuncionSub;
 import perldoop.modelo.semantica.EntradaFuncion;
 import perldoop.modelo.semantica.EntradaVariable;
@@ -27,9 +28,11 @@ public class SemFuncionSub {
     public void visitar(FuncionSub s) {
         String id = s.getId().getToken().toString();
         EntradaFuncion f = new EntradaFuncion(id);
-        f.setConflicto(tabla.getTablaSimbolos().buscarFuncion(id)!=null);
         tabla.getTablaSimbolos().addFuncion(f);
+        if (f.isConflicto()) {
+            tabla.getGestorErrores().error(Errores.AVISO, Errores.FUNCION_SOBREESCRITA, s.getId().getToken(), s.getId().getValor());
+        }
         tabla.getTablaSimbolos().abrirBloque();
-        tabla.getTablaSimbolos().addVariable(new EntradaVariable("_", new Tipo(Tipo.ARRAY,Tipo.BOX), false), '@');
+        tabla.getTablaSimbolos().addVariable(new EntradaVariable("_", new Tipo(Tipo.ARRAY, Tipo.BOX), "__", false));
     }
 }

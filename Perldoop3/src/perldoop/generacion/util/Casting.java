@@ -863,7 +863,7 @@ public final class Casting {
      * @return Casting
      */
     public static StringBuilder casting(Simbolo origen, Tipo destino) {
-        switch (destino.getTipo().get(0)) {
+        switch (destino.getTipo(0)) {
             case Tipo.BOOLEAN:
                 return toBoolean(origen);
             case Tipo.INTEGER:

@@ -4,18 +4,17 @@ import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
-import perldoop.modelo.arbol.condicional.Condicional;
-import perldoop.modelo.arbol.contexto.Contexto;
+import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
 /**
- * Clase que representa la reduccion -&gt;<br> bloque : UNLESS '(' expresion ')' '{' cuerpo '}' condicional
+ * Clase que representa la reduccion -&gt;<br> bloque : UNLESS '(' expresion ')' '{' cuerpo '}' subBloque
  *
  * @author César Pomar
  */
 public final class BloqueUnless extends BloqueControlBasico {
 
-    private Condicional bloqueElse;
+    private SubBloque subBloque;
 
     /**
      * Único contructor de la clase
@@ -25,31 +24,33 @@ public final class BloqueUnless extends BloqueControlBasico {
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
      * @param parentesisD Parentesis derecho
-     * @param contexto Contexto del bloque
-     * @param bloqueElse BloqueElse
+     * @param llaveI Llave izquierda
+     * @param cuerpo Cuerpo
+     * @param llaveD Llave derecha
+     * @param subBloque SubBloque
      */
-    public BloqueUnless(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Contexto contexto, Condicional bloqueElse) {
-        super(id, abrirBloque, parentesisI, expresion, parentesisD, contexto);
-        setBloqueElse(bloqueElse);
+    public BloqueUnless(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, SubBloque subBloque) {
+        super(id, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD);
+        setSubBloque(subBloque);
     }
 
     /**
-     * Obtiene el bloque Else
+     * Obtiene el subBloque
      *
-     * @return Bloque Else
+     * @return SubBloque
      */
-    public Condicional getBloqueElse() {
-        return bloqueElse;
+    public SubBloque getSubBloque() {
+        return subBloque;
     }
 
     /**
-     * Establece el bloque Else
+     * Establece el subBloque
      *
-     * @param bloqueElse Bloque Else
+     * @param subBloque SubBloque
      */
-    public void setBloqueElse(Condicional bloqueElse) {
-        bloqueElse.setPadre(this);
-        this.bloqueElse = bloqueElse;
+    public void setSubBloque(SubBloque subBloque) {
+        subBloque.setPadre(this);
+        this.subBloque = subBloque;
     }
 
     @Override
@@ -59,6 +60,6 @@ public final class BloqueUnless extends BloqueControlBasico {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, expresion, parentesisD, contexto, bloqueElse};
+        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD, subBloque};
     }
 }

@@ -10,8 +10,6 @@ import perldoop.generacion.cadena.*;
 import perldoop.generacion.cadenatexto.GenCadenaTexto;
 import perldoop.generacion.coleccion.*;
 import perldoop.generacion.comparacion.*;
-import perldoop.generacion.condicional.*;
-import perldoop.generacion.contexto.GenContexto;
 import perldoop.generacion.cuerpo.*;
 import perldoop.generacion.std.GenStd;
 import perldoop.generacion.expresion.*;
@@ -54,11 +52,9 @@ public final class FachadaGeneradores {
     private GenBloque genBloque;
     private GenColeccion genColeccion;
     private GenComparacion genComparacion;
-    private GenCondicional genCondicional;
     private GenNumero genNumero;
     private GenCadena genCadena;
     private GenCuerpo genCuerpo;
-    private GenContexto genContexto;
     private GenExpresion genExpresion;
     private GenFlujo genFlujo;
     private GenFuente genFuente;
@@ -259,27 +255,6 @@ public final class FachadaGeneradores {
     }
 
     /**
-     * Obtiene el generador de condicional
-     *
-     * @return Generador de condicional
-     */
-    public GenCondicional getGenCondicional() {
-        if (genCondicional == null) {
-            genCondicional = new GenCondicional(tabla);
-        }
-        return genCondicional;
-    }
-
-    /**
-     * Establece el generador de condicional
-     *
-     * @param genCondicional Generador de condicional
-     */
-    public void setGenCondicional(GenCondicional genCondicional) {
-        this.genCondicional = genCondicional;
-    }
-
-    /**
      * Obtiene el generador de numero
      *
      * @return Generador de numero
@@ -361,27 +336,6 @@ public final class FachadaGeneradores {
      */
     public void setGenCuerpo(GenCuerpo genCuerpo) {
         this.genCuerpo = genCuerpo;
-    }
-
-    /**
-     * Obtiene el generador de contexto
-     *
-     * @return Generador de contexto
-     */
-    public GenContexto getGenContexto() {
-        if (genContexto == null) {
-            genContexto = new GenContexto(tabla);
-        }
-        return genContexto;
-    }
-
-    /**
-     * Establece el generador de contexto
-     *
-     * @param genContexto Generador de contexto
-     */
-    public void setGenContexto(GenContexto genContexto) {
-        this.genContexto = genContexto;
     }
 
     /**

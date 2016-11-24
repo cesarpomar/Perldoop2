@@ -71,7 +71,7 @@ public class SemRegulares {
     public void visitar(RegularMatch s) {
         Bloque bloque = Buscar.buscarPadre(s, Bloque.class);
         Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
-        if (bloque != null && !Buscar.isHijo(s, bloque.getContexto()) && uso instanceof Logico && !(uso instanceof LogTernario)) {
+        if (bloque != null && !Buscar.isHijo(s, bloque.getCuerpo()) && uso instanceof Logico && !(uso instanceof LogTernario)) {
             s.setTipo(new Tipo(Tipo.BOOLEAN));
         } else {
             s.setTipo(new Tipo(Tipo.ARRAY, Tipo.STRING));

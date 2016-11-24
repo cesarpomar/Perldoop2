@@ -11,8 +11,6 @@ import perldoop.semantica.cadena.SemCadena;
 import perldoop.semantica.cadenatexto.SemCadenaTexto;
 import perldoop.semantica.coleccion.*;
 import perldoop.semantica.comparacion.*;
-import perldoop.semantica.condicional.*;
-import perldoop.semantica.contexto.SemContexto;
 import perldoop.semantica.cuerpo.*;
 import perldoop.semantica.std.SemStd;
 import perldoop.semantica.expresion.*;
@@ -52,11 +50,9 @@ public final class FachadaSemanticas {
     private SemBloque semBloque;
     private SemColeccion semColeccion;
     private SemComparacion semComparacion;
-    private SemCondicional semCondicional;
     private SemNumero semNumero;
     private SemCadena semCadena;
     private SemCuerpo semCuerpo;
-    private SemContexto semContexto;
     private SemExpresion semExpresion;
     private SemFlujo semFlujo;
     private SemFuncion semFuncion;
@@ -255,27 +251,6 @@ public final class FachadaSemanticas {
     }
 
     /**
-     * Obtiene la semantica de condicional
-     *
-     * @return Semantica de condicional
-     */
-    public SemCondicional getSemCondicional() {
-        if (semCondicional == null) {
-            semCondicional = new SemCondicional(tabla);
-        }
-        return semCondicional;
-    }
-
-    /**
-     * Establece la semantica de condicional
-     *
-     * @param semCondicional Semantica de condicional
-     */
-    public void setSemCondicional(SemCondicional semCondicional) {
-        this.semCondicional = semCondicional;
-    }
-
-    /**
      * Obtiene la semantica de numero
      *
      * @return Semantica de numero
@@ -336,27 +311,6 @@ public final class FachadaSemanticas {
      */
     public void setSemCuerpo(SemCuerpo semCuerpo) {
         this.semCuerpo = semCuerpo;
-    }
-
-    /**
-     * Obtiene la semantica de contexto
-     *
-     * @return Semantica de contexto
-     */
-    public SemContexto getSemContexto() {
-        if (semContexto == null) {
-            semContexto = new SemContexto(tabla);
-        }
-        return semContexto;
-    }
-
-    /**
-     * Establece la semantica de contexto
-     *
-     * @param semContexto Semantica de contexto
-     */
-    public void setSemContexto(SemContexto semContexto) {
-        this.semContexto = semContexto;
     }
 
     /**

@@ -25,12 +25,10 @@ public class GenFuncionSub {
 
     public void visitar(FuncionSub s) {
         StringBuilder codigo = new StringBuilder(50);
-        EntradaFuncion fun = tabla.getTablaSimbolos().buscarFuncion(s.getId().getToken().toString());
+        EntradaFuncion fun = tabla.getTablaSimbolos().buscarFuncion(s.getId().getValor());
         if (fun.getAlias() == null) {
             fun.setAlias(tabla.getGestorReservas().getAlias(fun.getIdentificador(), fun.isConflicto()));
         }
-        EntradaVariable var = tabla.getTablaSimbolos().buscarVariable("_", '@');
-        var.setAlias("__");
         codigo.append("public static Box[] ").append(fun.getAlias()).append(" (Box[] __)");
         s.setCodigoGenerado(codigo);
     }

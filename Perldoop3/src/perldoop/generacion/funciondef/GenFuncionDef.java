@@ -1,11 +1,17 @@
 package perldoop.generacion.funciondef;
 
+import java.util.ArrayList;
 import java.util.List;
+import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.bloque.Bloque;
+import perldoop.modelo.arbol.bloque.BloqueDoUntil;
+import perldoop.modelo.arbol.bloque.BloqueDoWhile;
+import perldoop.modelo.arbol.bloque.BloqueVacio;
 import perldoop.modelo.arbol.flujo.Return;
 import perldoop.modelo.arbol.funciondef.FuncionDef;
 import perldoop.modelo.arbol.sentencia.Sentencia;
-import perldoop.modelo.arbol.sentencia.StcFlujo;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.util.Buscar;
 
 /**
  * Clase generadora de funcionDef
@@ -26,18 +32,41 @@ public class GenFuncionDef {
     }
 
     public void visitar(FuncionDef s) {
-        StringBuilder codigo = new StringBuilder(s.getContexto().getCuerpo().getCodigoGenerado().length() + 50);
+        StringBuilder codigo = new StringBuilder(s.getCuerpo().getCodigoGenerado().length() + 50);
         codigo.append(s.getFuncionSub().getCodigoGenerado());
-        codigo.append(s.getContexto().getLlaveI().getCodigoGenerado());
-        codigo.append(s.getContexto().getCuerpo().getCodigoGenerado());
-        List<Sentencia> sentencias = s.getContexto().getCuerpo().getSentencias();
-        if (sentencias.isEmpty()) {
-            codigo.append(new StringBuilder("return new Box[0];"));
-        } else {
-            //TODO comprobar si necesita return
-        }
-        codigo.append(s.getContexto().getLlaveD());
+        codigo.append(s.getLlaveI().getCodigoGenerado());
+        codigo.append(s.getCuerpo().getCodigoGenerado());
+        codigo.append(genReturn(s));
+        codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
+    }
+
+    /**
+     * Comprueba que la funcion siempre genere un return
+     *
+     * @param f Funcion
+     * @return Codigo return
+     */
+    private String genReturn(FuncionDef f) {
+        List<Sentencia> sentencias = f.getCuerpo().getSentencias();
+        if (!sentencias.isEmpty()) {
+            //Asumiendo que el codigo inalcanzable ya ha sido comprobado, buscamos retorno en la ultima sentencia
+            List<Return> retornos = Buscar.buscarClases(sentencias.get(sentencias.size() - 1), Return.class);
+            FOR:
+            for (Return r : retornos) {
+                Simbolo padre = r.getPadre();
+                while (padre != f) {
+                    //Si el bloque depende de una condicion, se asume que no se ejecutara
+                    if (padre instanceof Bloque && !(padre instanceof BloqueVacio) && !(padre instanceof BloqueDoUntil) && !(padre instanceof BloqueDoWhile)) {
+                        continue FOR;
+                    }
+                    padre = padre.getPadre();
+                }
+                //Si el return se propago hasta la funcion, el retorno esta asegurado.
+                return "";
+            }
+        }
+        return "return new Box[0];";
     }
 
 }

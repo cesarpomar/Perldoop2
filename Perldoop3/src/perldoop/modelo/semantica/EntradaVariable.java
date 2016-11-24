@@ -15,7 +15,7 @@ public final class EntradaVariable {
     private boolean conflicto;
 
     /**
-     * Contruye una entrada de la tabla pra una variable
+     * Contruye una entrada de la tabla para una variable
      *
      * @param identificador Identificador
      * @param tipo Tipo
@@ -25,6 +25,19 @@ public final class EntradaVariable {
         this.identificador = identificador;
         this.tipo = tipo;
         this.publica = publica;
+    }
+
+    /**
+     * Contruye una entrada de la tabla para una variable con un alias
+     *
+     * @param identificador Identificador
+     * @param tipo Tipo
+     * @param alias Alias
+     * @param publica Publica
+     */
+    public EntradaVariable(String identificador, Tipo tipo, String alias, boolean publica) {
+        this(identificador, tipo, publica);
+        this.alias = alias;
     }
 
     /**
@@ -128,6 +141,7 @@ public final class EntradaVariable {
 
     /**
      * Obtiene si la variable entra en conflicto con otra
+     *
      * @return Existe conflicto
      */
     public boolean isConflicto() {
@@ -136,12 +150,11 @@ public final class EntradaVariable {
 
     /**
      * Estable si la variable entra en conflicto con otra
+     *
      * @param conflicto Existe conflicto
      */
     public void setConflicto(boolean conflicto) {
         this.conflicto = conflicto;
     }
-    
-    
 
 }

@@ -125,7 +125,7 @@ public final class Preprocesador {
                         case PD_TIPO:
                             tipo = new TagsTipo();
                             tipo.addTipo(token);
-                            aceptar(tipo, terminales);
+                            tipo = aceptar(tipo, terminales);
                             break;
                         case PD_COL:
                             tipo = new TagsTipo();
@@ -150,19 +150,17 @@ public final class Preprocesador {
                             estado = ESTADO_VARIABLES;
                             break;
                         case PD_MAIN:
-                            aceptar(tcomp = new TagsComportamiento(token), terminales);
+                            tcomp = aceptar(tcomp = new TagsComportamiento(token), terminales);
                             break;
                         case PD_HADOOP:
-                            aceptar(tcomp = new TagsHadoop(token), terminales);
+                            tcomp = aceptar(tcomp = new TagsHadoop(token), terminales);
                             procesarHadoop((TagsHadoop) tcomp, terminales);
                             index--;
                             estado = ESTADO_INICIAL;
                             break;
                         case '=':
-                            if (inicializacion != null) {
-                                terminales.add(terminal(token, inicializacion));
-                                break;
-                            }
+                            terminales.add(terminal(token, inicializacion));
+                            break;
                         case Parser.MY:
                         case Parser.OUR:
                             terminales.add(terminal(token, tipo));
@@ -187,7 +185,7 @@ public final class Preprocesador {
                         case PD_TIPO:
                             tipo.addTipo(token);
                             if (predeclaracion == null) {
-                                aceptar(tipo, terminales);
+                                tipo = aceptar(tipo, terminales);
                             } else {
                                 aceptar(predeclaracion, terminales);
                             }
@@ -219,7 +217,7 @@ public final class Preprocesador {
                         case PD_TIPO:
                             tipo.addTipo(token);
                             if (predeclaracion == null) {
-                                aceptar(tipo, terminales);
+                                tipo = aceptar(tipo, terminales);
                             } else {
                                 aceptar(predeclaracion, terminales);
                             }
@@ -252,7 +250,7 @@ public final class Preprocesador {
                         case PD_TIPO:
                             tipo = predeclaracion.getTipo();
                             tipo.addTipo(token);
-                            aceptar(tipo, terminales);
+                            tipo = aceptar(tipo, terminales);
                             estado = ESTADO_INICIAL;
                             break;
                         case PD_COL:
@@ -273,7 +271,7 @@ public final class Preprocesador {
                             predeclaracion.addVariable(token);
                             break;
                         default:
-                            aceptar(inicializacion, terminales);
+                            inicializacion=aceptar(inicializacion, terminales);
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -294,7 +292,7 @@ public final class Preprocesador {
                             inicializacion.addSize(token);
                             break;
                         default:
-                            aceptar(inicializacion, terminales);
+                            inicializacion=aceptar(inicializacion, terminales);
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -401,8 +399,9 @@ public final class Preprocesador {
      *
      * @param etiqueta Etiqueta de inicialización
      * @param terminales Lista de terminales
+     * @return Etiqueta de inicialización
      */
-    private void aceptar(TagsInicializacion etiqueta, List<Terminal> terminales) {
+    private TagsInicializacion aceptar(TagsInicializacion etiqueta, List<Terminal> terminales) {
         int linea = etiqueta.getSizes().get(0).getLinea();
         if (!terminales.isEmpty() && linea == terminales.get(terminales.size() - 1).getToken().getLinea()) {
             for (int i = terminales.size() - 1; i > -1; i--) {
@@ -414,7 +413,9 @@ public final class Preprocesador {
                     break;
                 }
             }
+            return null;
         }
+        return etiqueta;
     }
 
     /**
@@ -442,8 +443,9 @@ public final class Preprocesador {
      *
      * @param etiqueta Etiqueta de tipo
      * @param terminales Lista de terminales
+     * @return Etiquetas tipo
      */
-    private void aceptar(TagsTipo etiqueta, List<Terminal> terminales) {
+    private TagsTipo aceptar(TagsTipo etiqueta, List<Terminal> terminales) {
         int linea = etiqueta.getTipos().get(0).getLinea();
         if (!terminales.isEmpty() && linea == terminales.get(terminales.size() - 1).getToken().getLinea()) {
             for (int i = terminales.size() - 1; i > -1; i--) {
@@ -458,22 +460,27 @@ public final class Preprocesador {
                     break;
                 }
             }
+            return null;
         }
+        return etiqueta;
     }
 
     /**
      * Acepta y almacena las etiquetas de comportamiento en el bloque que estea en su misma linea
      *
-     * @param etiqueta Etiqueta de tipo
+     * @param etiqueta Etiqueta de comportamiento
      * @param terminales Lista de terminales
+     * @return Etiqueta de comportamiento
      */
-    private void aceptar(TagsComportamiento etiqueta, List<Terminal> terminales) {
+    private TagsComportamiento aceptar(TagsComportamiento etiqueta, List<Terminal> terminales) {
         int linea = etiqueta.getEtiqueta().getLinea();
         if (!terminales.isEmpty()) {
             Terminal t = terminales.get(terminales.size() - 1);
             if (linea == t.getToken().getLinea() && t.getToken().getTipo() == '{') {
                 t.setEtiquetas(etiqueta);
+                return null;
             }
         }
+        return etiqueta;
     }
 }
