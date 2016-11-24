@@ -28,7 +28,7 @@ public final class Casting {
         if (escalar == null || !escalar.getTipo().isColeccion()) {
             if (col.getTipo().isArrayOrList() && col instanceof Expresion) {
                 Expresion exp = Buscar.getExpresion((Expresion) col);
-                if (Buscar.isVariable(exp)) {
+                if (!Buscar.isVariable(exp)) {
                     StringBuilder codigo = new StringBuilder(100);
                     char contexto = '@';
                     if (escalar != null && escalar instanceof Expresion) {

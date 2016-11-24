@@ -91,8 +91,8 @@ public final class TablaSimbolos {
         ContextoVariable c = bloques.get(entrada.getNivel()).get(entrada.getIdentificador());
         if (c == null) {
             c = new ContextoVariable();
-            bloques.get(entrada.getNivel()).put(entrada.getIdentificador(), c);
             entrada.setConflicto(!buscarVariable(entrada.getIdentificador()).isEmpty());
+            bloques.get(entrada.getNivel()).put(entrada.getIdentificador(), c);
         } else {
             entrada.setConflicto(true);
         }

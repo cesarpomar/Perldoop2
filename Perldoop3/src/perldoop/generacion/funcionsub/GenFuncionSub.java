@@ -3,7 +3,6 @@ package perldoop.generacion.funcionsub;
 import perldoop.modelo.arbol.funcionsub.FuncionSub;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.EntradaFuncion;
-import perldoop.modelo.semantica.EntradaVariable;
 
 /**
  * Clase generadora de funcionSub

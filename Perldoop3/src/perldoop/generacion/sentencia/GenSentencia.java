@@ -102,7 +102,9 @@ public class GenSentencia {
     }
 
     public void visitar(StcComentario s) {
-        s.setCodigoGenerado(new StringBuilder(s.getComentario().getCodigoGenerado()).insert(0, '\n').append('\n'));
+        StringBuilder codigo = new StringBuilder(100);
+        codigo.append("/*").append(s.getComentario()).append("*/");
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(StcTipado s) {

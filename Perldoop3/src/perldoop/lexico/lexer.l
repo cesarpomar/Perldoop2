@@ -303,7 +303,7 @@ PD_NUM			=	<{ENTERO}>
 
 	"\#!".*					{}
 	^.*\#{IGNORAR_LINEA}.*	{}
-	\#{IGNORAR_BLOQUE}		{yybegin(IGNORAR);}
+	\#{IGNORAR_BLOQUE}.*		{yybegin(IGNORAR);}
 	{IMPORT_JAVA}			{return token(Parser.IMPORT_JAVA);}
 	{LINEA_JAVA}			{return token(Parser.LINEA_JAVA);}
 	"\#"					{yybegin(PD);token("", Parser.COMENTARIO, true);

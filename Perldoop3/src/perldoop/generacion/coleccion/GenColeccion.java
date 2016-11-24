@@ -127,7 +127,7 @@ public class GenColeccion {
             if (!iscoleccion) {
                 continue;
             }
-            if (exp.getTipo().getSubtipo(1).equals(st) && exp.getTipo().isArrayOrList()) {
+            if (exp.getTipo().getSubtipo(1).equals(st) && exp.getTipo().isArrayOrList() && t.isArrayOrList()) {
                 colecciones.add(exp);
             } else {
                 colecciones.add(new SimboloAux(t, Casting.casting(exp, t)));
@@ -178,6 +178,11 @@ public class GenColeccion {
         } else {
             codigo.append(Tipos.inicializacion(t)).setLength(codigo.length() - 1);
             cierre = ")";
+            //Caso especial, un elemento de tipo integer se confunde con tamaño
+            if(exps.size()==1 && exps.get(0).getTipo().isInteger()){
+                codigo.append(Tipos.inicializacion(t.getSubtipo(1).add(0, Tipo.ARRAY))).append("{");
+                cierre = "})";
+            }
         }
         //Subtipo expresiones
         Tipo st = t.getSubtipo(1);

@@ -566,14 +566,22 @@ public final class Buscar {
      * @return Simbolo
      */
     public static <T> T buscarClase(Simbolo s, Class<T> clase) {
-        List<Simbolo> lista = new ArrayList<>(100);
-        lista.add(s);
-        while (!lista.isEmpty()) {
-            Simbolo actual = lista.remove(lista.size() - 1);
-            if (clase.isInstance(actual)) {
-                return (T) actual;
+        List<List<Simbolo>> simbolos = new ArrayList<>(100);
+        List<Simbolo> nivel = new ArrayList<>(10);
+        nivel.add(s);
+        simbolos.add(nivel);
+        while (!simbolos.isEmpty()) {
+            nivel = simbolos.get(simbolos.size() - 1);
+            if (nivel.isEmpty()) {
+                simbolos.remove(simbolos.size() - 1);
+                continue;
             }
-            lista.addAll(Arrays.asList(actual.getHijos()));
+            s = nivel.remove(0);
+            if (clase.isInstance(s)) {
+                return (T) s;
+            }
+            nivel = new ArrayList<>(Arrays.asList(s.getHijos()));
+            simbolos.add(nivel);
         }
         return null;
     }
@@ -587,15 +595,23 @@ public final class Buscar {
      * @return Lista de simbolos
      */
     public static <T> List<T> buscarClases(Simbolo s, Class<T> clase) {
-        List<Simbolo> lista = new ArrayList<>(100);
         List<T> resultado = new ArrayList<>(10);
-        lista.add(s);
-        while (!lista.isEmpty()) {
-            Simbolo actual = lista.remove(lista.size() - 1);
-            if (clase.isInstance(actual)) {
-                resultado.add((T) actual);
+        List<List<Simbolo>> simbolos = new ArrayList<>(100);
+        List<Simbolo> nivel = new ArrayList<>(10);
+        nivel.add(s);
+        simbolos.add(nivel);
+        while (!simbolos.isEmpty()) {
+            nivel = simbolos.get(simbolos.size() - 1);
+            if (nivel.isEmpty()) {
+                simbolos.remove(simbolos.size() - 1);
+                continue;
             }
-            lista.addAll(Arrays.asList(actual.getHijos()));
+            s = nivel.remove(0);
+            if (clase.isInstance(s)) {
+                resultado.add((T) s);
+            }
+            nivel = new ArrayList<>(Arrays.asList(s.getHijos()));
+            simbolos.add(nivel);
         }
         return resultado;
     }
@@ -609,21 +625,31 @@ public final class Buscar {
      * @return Lista de simbolos
      */
     public static List<Simbolo> buscarClases(Simbolo s, Class<? extends Simbolo>... clases) {
-        List<Simbolo> lista = new ArrayList<>(100);
         List<Simbolo> resultado = new ArrayList<>(10);
-        lista.add(s);
-        while (!lista.isEmpty()) {
-            Simbolo actual = lista.remove(lista.size() - 1);
+        List<List<Simbolo>> simbolos = new ArrayList<>(100);
+        List<Simbolo> nivel = new ArrayList<>(10);
+        nivel.add(s);
+        simbolos.add(nivel);
+        while (!simbolos.isEmpty()) {
+            nivel = simbolos.get(simbolos.size() - 1);
+            if (nivel.isEmpty()) {
+                simbolos.remove(simbolos.size() - 1);
+                continue;
+            }
+            s = nivel.remove(0);
             boolean add = false;
             for (Class clase : clases) {
-                if (clase.isInstance(actual)) {
-                    resultado.add(actual);
+                if (clase.isInstance(s)) {
+                    resultado.add(s);
                     add = true;
                     break;
                 }
             }
             if (!add) {
-                lista.addAll(Arrays.asList(actual.getHijos()));
+                resultado.addAll(Arrays.asList(s.getHijos()));
+            } else {
+                nivel = new ArrayList<>(Arrays.asList(s.getHijos()));
+                simbolos.add(nivel);
             }
         }
         return resultado;

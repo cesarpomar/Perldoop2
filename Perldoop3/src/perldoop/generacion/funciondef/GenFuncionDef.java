@@ -1,12 +1,16 @@
 package perldoop.generacion.funciondef;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.arbol.bloque.BloqueDoUntil;
 import perldoop.modelo.arbol.bloque.BloqueDoWhile;
+import perldoop.modelo.arbol.bloque.BloqueIf;
+import perldoop.modelo.arbol.bloque.BloqueUnless;
 import perldoop.modelo.arbol.bloque.BloqueVacio;
+import perldoop.modelo.arbol.bloque.SubBloqueElse;
+import perldoop.modelo.arbol.bloque.SubBloqueElsif;
 import perldoop.modelo.arbol.flujo.Return;
 import perldoop.modelo.arbol.funciondef.FuncionDef;
 import perldoop.modelo.arbol.sentencia.Sentencia;
@@ -52,17 +56,28 @@ public class GenFuncionDef {
         if (!sentencias.isEmpty()) {
             //Asumiendo que el codigo inalcanzable ya ha sido comprobado, buscamos retorno en la ultima sentencia
             List<Return> retornos = Buscar.buscarClases(sentencias.get(sentencias.size() - 1), Return.class);
-            FOR:
-            for (Return r : retornos) {
+            ListIterator<Return> it = retornos.listIterator(retornos.size());
+            Simbolo condicion = null;
+            WHILE:
+            while (it.hasPrevious()) {
+                Return r = it.previous();
                 Simbolo padre = r.getPadre();
                 while (padre != f) {
+                    //Si el padre es el bloque condicional, podemos ascender
+                    if (padre.getPadre() == condicion) {
+                        padre = condicion.getPadre();
+                        continue;
+                    }
+                    //Si es un bloque condicional lo almacenamos en espera del superbloque
+                    if (padre instanceof BloqueIf || padre instanceof BloqueUnless || padre instanceof SubBloqueElsif || padre instanceof SubBloqueElse) {
+                        condicion = padre.getPadre();
+                    }
                     //Si el bloque depende de una condicion, se asume que no se ejecutara
                     if (padre instanceof Bloque && !(padre instanceof BloqueVacio) && !(padre instanceof BloqueDoUntil) && !(padre instanceof BloqueDoWhile)) {
-                        continue FOR;
+                        continue WHILE;
                     }
                     padre = padre.getPadre();
                 }
-                //Si el return se propago hasta la funcion, el retorno esta asegurado.
                 return "";
             }
         }

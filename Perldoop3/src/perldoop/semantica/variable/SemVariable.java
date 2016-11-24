@@ -14,7 +14,6 @@ import perldoop.modelo.arbol.funcion.FuncionBloque;
 import perldoop.modelo.arbol.paquete.Paquetes;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.preprocesador.TagsTipo;
-import perldoop.modelo.semantica.ContextoVariable;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
