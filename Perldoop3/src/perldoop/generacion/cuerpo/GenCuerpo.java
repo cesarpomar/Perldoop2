@@ -23,11 +23,11 @@ public class GenCuerpo {
     }
 
     public void visitar(Cuerpo s) {
-        StringBuilder cuerpo = new StringBuilder(5000);
+        StringBuilder codigo = new StringBuilder(5000);
         for (Sentencia stc : s.getSentencias()) {
-            cuerpo.append(stc.getCodigoGenerado());
+            codigo.append(stc.getCodigoGenerado());
         }
-        s.setCodigoGenerado(cuerpo);
+        s.setCodigoGenerado(codigo);
     }
 
 }

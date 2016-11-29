@@ -1,6 +1,7 @@
 package perldoop.generacion.bloque;
 
 import java.util.Iterator;
+import perldoop.generacion.bloque.especial.*;
 import perldoop.generacion.sentencia.GenSentencia;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
@@ -10,6 +11,8 @@ import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.variable.VarMy;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.modelo.preprocesador.Tags;
+import perldoop.modelo.preprocesador.TagsComportamiento;
 import perldoop.modelo.semantica.Tipo;
 
 /**
@@ -41,6 +44,8 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
+        genDeclaracion(s);
+        checkSpecial(s);
     }
 
     public void visitar(BloqueUntil s) {
@@ -56,6 +61,8 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
+        genDeclaracion(s);
+        checkSpecial(s);
     }
 
     public void visitar(BloqueDoWhile s) {
@@ -71,6 +78,8 @@ public class GenBloque {
         codigo.append(s.getParentesisD());
         codigo.append(s.getPuntoComa());
         s.setCodigoGenerado(codigo);
+        genDeclaracion(s);
+        checkSpecial(s);
     }
 
     public void visitar(BloqueDoUntil s) {
@@ -88,6 +97,8 @@ public class GenBloque {
         codigo.append(s.getParentesisD());
         codigo.append(s.getPuntoComa());
         s.setCodigoGenerado(codigo);
+        genDeclaracion(s);
+        checkSpecial(s);
     }
 
     public void visitar(BloqueFor s) {
@@ -140,6 +151,8 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
+        genDeclaracion(s);
+        checkSpecial(s);
     }
 
     public void visitar(BloqueForeachVar s) {
@@ -171,7 +184,8 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
-        s.setCodigoGenerado(codigo);
+        genDeclaracion(s);
+        checkSpecial(s);
     }
 
     public void visitar(BloqueForeach s) {
@@ -189,6 +203,8 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
+        genDeclaracion(s);
+        checkSpecial(s);
     }
 
     public void visitar(BloqueIf s) {
@@ -203,6 +219,8 @@ public class GenBloque {
         codigo.append(s.getLlaveD());
         codigo.append(s.getSubBloque());
         s.setCodigoGenerado(codigo);
+        genDeclaracion(s);
+        checkSpecial(s);
     }
 
     public void visitar(BloqueUnless s) {
@@ -219,6 +237,8 @@ public class GenBloque {
         codigo.append(s.getLlaveD());
         codigo.append(s.getSubBloque());
         s.setCodigoGenerado(codigo);
+        genDeclaracion(s);
+        checkSpecial(s);
     }
 
     public void visitar(BloqueVacio s) {
@@ -228,6 +248,7 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
+        checkSpecial(s);
     }
 
     public void visitar(SubBloqueElse s) {
@@ -237,23 +258,47 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
+        checkSpecial(s);
     }
 
     public void visitar(SubBloqueElsif s) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append("else if").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
-        codigo.append(GenBloque.genExpresion(tabla, s.getExpresion()));
+        codigo.append(genExpresion(s.getExpresion()));
         codigo.append(s.getParentesisD());
         codigo.append(s.getLlaveI());
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         codigo.append(s.getSubBloque());
         s.setCodigoGenerado(codigo);
+        checkSpecial(s);
     }
 
     public void visitar(SubBloqueVacio s) {
         s.setCodigoGenerado(new StringBuilder());
+    }
+
+    /**
+     * Comprueba la semantica de bloques especiales
+     *
+     * @param s Bloque
+     */
+    private void checkSpecial(Bloque s) {
+        Tags tags = s.getLlaveI().getEtiquetas();
+        if (tags != null) {
+            switch (((TagsComportamiento) tags).getEtiqueta().getValor()) {
+                case "<main>":
+                    new GenEspMain(tabla).visitar(s);
+                    break;
+                case "<hadoop>":
+                    //Bloqueado en sematica por ahora
+                    break;
+                case "<function>":
+                    new GenEspFuncion(tabla).visitar(s);
+                    break;
+            }
+        }
     }
 
     /**
@@ -263,18 +308,20 @@ public class GenBloque {
      * @return Codigo expresion
      */
     private StringBuilder genExpresion(Expresion exp) {
-        return genExpresion(tabla, exp);
+        return Casting.casting(exp, new Tipo(Tipo.BOOLEAN), !tabla.getOpciones().isOptNulos());
     }
 
     /**
-     * Genera la expresion que evalua el bloque de control para su ejecucion
+     * Genera las declaraciones de la cabecera del bloque
      *
-     * @param tabla Tabla
-     * @param exp Expresion
-     * @return Codigo expresion
+     * @param b Bloque
      */
-    public static StringBuilder genExpresion(TablaGenerador tabla, Expresion exp) {
-        return Casting.casting(exp, new Tipo(Tipo.BOOLEAN), !tabla.getOpciones().isOptNulos());
+    private void genDeclaracion(Bloque b) {
+        StringBuilder decs = GenSentencia.genDeclaraciones(b, tabla);
+        if (decs.length() == 0) {
+            return;
+        }
+        b.setCodigoGenerado(new StringBuilder(300).append('{').append(decs).append(b.getCodigoGenerado()).append('}'));
     }
 
 }

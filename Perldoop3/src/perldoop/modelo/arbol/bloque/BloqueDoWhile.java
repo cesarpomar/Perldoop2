@@ -21,18 +21,19 @@ public final class BloqueDoWhile extends BloqueControlBasico {
      * Único contructor de la clase
      *
      * @param id Do
-     * @param abrirBloque Abertura de bloque para la cabecera
+     * @param contextoBloque Contexto bloque
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      * @param parentesisI Parentesis izquierdo
+     * @param contextoHead Contexto cabecera
      * @param expresion Expresiom
      * @param parentesisD Parentesis derecho
      * @param idWhile While
      * @param puntoComa Punto y coma
      */
-    public BloqueDoWhile(Terminal id, AbrirBloque abrirBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Terminal idWhile, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal puntoComa) {
-        super(id, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD);
+    public BloqueDoWhile(Terminal id, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Terminal idWhile, AbrirBloque contextoHead, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal puntoComa) {
+        super(id, contextoHead, parentesisI, expresion, parentesisD, contextoBloque, llaveI, cuerpo, llaveD);
         setIdWhile(idWhile);
         setPuntoComa(puntoComa);
     }
@@ -82,6 +83,6 @@ public final class BloqueDoWhile extends BloqueControlBasico {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, llaveI, cuerpo, llaveD, idWhile, parentesisI, expresion, parentesisD, puntoComa};
+        return new Simbolo[]{id, contextoBloque, llaveI, cuerpo, llaveD, idWhile, contextoHead, parentesisI, expresion, parentesisD, puntoComa};
     }
 }

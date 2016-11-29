@@ -15,23 +15,24 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 public final class BloqueForeach extends Bloque {
 
     private Terminal id;
-    protected AbrirBloque abrirBloque;
+    private AbrirBloque contextoHead;
     private Coleccion coleccion;
 
     /**
      * Único contructor de la clase
      *
      * @param id Id
-     * @param abrirBloque Abertura de bloque para la cabecera
+     * @param contextoHead Contexto cabecera
      * @param coleccion Coleccion
+     * @param contextoBloque Contexto bloque
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueForeach(Terminal id, AbrirBloque abrirBloque, Coleccion coleccion, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        super( llaveI, cuerpo, llaveD);
+    public BloqueForeach(Terminal id, AbrirBloque contextoHead, Coleccion coleccion, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super(contextoBloque, llaveI, cuerpo, llaveD);
         setId(id);
-        setAbrirBloque(abrirBloque);
+        setContextoHead(contextoHead);
         setColeccion(coleccion);
     }
 
@@ -55,22 +56,22 @@ public final class BloqueForeach extends Bloque {
     }
 
     /**
-     * Obtiene la abertura de bloque
+     * Obtiene el contexto de la cabecera
      *
-     * @return Abertura de bloque
+     * @return Contexto de la cabecera
      */
-    public AbrirBloque getAbrirBloque() {
-        return abrirBloque;
+    public AbrirBloque getContextoHead() {
+        return contextoHead;
     }
 
     /**
-     * Establece la abertura de bloque
+     * Establece el contexto de la cabecera
      *
-     * @param abrirBloque Abertura de bloque
+     * @param contextoHead Contexto de la cabecera
      */
-    public void setAbrirBloque(AbrirBloque abrirBloque) {
-        abrirBloque.setPadre(this);
-        this.abrirBloque = abrirBloque;
+    public void setContextoHead(AbrirBloque contextoHead) {
+        contextoHead.setPadre(this);
+        this.contextoHead = contextoHead;
     }
 
     /**
@@ -99,6 +100,6 @@ public final class BloqueForeach extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, coleccion,  llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, contextoHead, coleccion, contextoBloque, llaveI, cuerpo, llaveD};
     }
 }

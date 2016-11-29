@@ -37,28 +37,24 @@ public class GenModificador {
     public void visitar(ModUnless s) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append("if").append(s.getId().getComentario());
-        codigo.append("(!(").append(GenBloque.genExpresion(tabla, s.getExpresion())).append("))");
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(ModIf s) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append("if").append(s.getId().getComentario());
-        codigo.append("(").append(GenBloque.genExpresion(tabla, s.getExpresion())).append(")");
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(ModWhile s) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append("while").append(s.getId().getComentario());
-        codigo.append("(").append(GenBloque.genExpresion(tabla, s.getExpresion())).append(")");
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(ModUntil s) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append("while").append(s.getId().getComentario());
-        codigo.append("(!(").append(GenBloque.genExpresion(tabla, s.getExpresion())).append("))");
         s.setCodigoGenerado(codigo);
     }
 

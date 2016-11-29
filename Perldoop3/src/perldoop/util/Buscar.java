@@ -2,10 +2,13 @@ package perldoop.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.acceso.Acceso;
 import perldoop.modelo.arbol.acceso.AccesoCol;
 import perldoop.modelo.arbol.acceso.AccesoColRef;
@@ -16,6 +19,9 @@ import perldoop.modelo.arbol.aritmetica.AritPreDecremento;
 import perldoop.modelo.arbol.aritmetica.AritPreIncremento;
 import perldoop.modelo.arbol.asignacion.Asignacion;
 import perldoop.modelo.arbol.asignacion.Igual;
+import perldoop.modelo.arbol.bloque.Bloque;
+import perldoop.modelo.arbol.bloque.BloqueVacio;
+import perldoop.modelo.arbol.bloque.SubBloque;
 import perldoop.modelo.arbol.cadena.Cadena;
 import perldoop.modelo.arbol.cadena.CadenaDoble;
 import perldoop.modelo.arbol.cadena.CadenaSimple;
@@ -24,6 +30,7 @@ import perldoop.modelo.arbol.coleccion.ColDec;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.coleccion.Coleccion;
+import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
 import perldoop.modelo.arbol.expresion.ExpCadena;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
@@ -630,6 +637,7 @@ public final class Buscar {
         List<Simbolo> nivel = new ArrayList<>(10);
         nivel.add(s);
         simbolos.add(nivel);
+        WHILE:
         while (!simbolos.isEmpty()) {
             nivel = simbolos.get(simbolos.size() - 1);
             if (nivel.isEmpty()) {
@@ -637,20 +645,16 @@ public final class Buscar {
                 continue;
             }
             s = nivel.remove(0);
-            boolean add = false;
             for (Class clase : clases) {
                 if (clase.isInstance(s)) {
                     resultado.add(s);
-                    add = true;
-                    break;
+
+                    continue WHILE;
                 }
             }
-            if (!add) {
-                resultado.addAll(Arrays.asList(s.getHijos()));
-            } else {
-                nivel = new ArrayList<>(Arrays.asList(s.getHijos()));
-                simbolos.add(nivel);
-            }
+            nivel = new ArrayList<>(Arrays.asList(s.getHijos()));
+            simbolos.add(nivel);
+
         }
         return resultado;
     }
@@ -711,6 +715,61 @@ public final class Buscar {
 
         }
         return false;
+    }
+
+    /**
+     * Busca las dependencias externas de variables de un bloque
+     *
+     * @param b Bloque
+     * @return Lista de varaibles externas
+     */
+    public static List<Variable> buscarDependencias(Bloque b) {
+        List<Variable> vars = new ArrayList<>();
+        List<Set<String>> decs = new ArrayList<>();
+        decs.add(new HashSet<>());
+        Simbolo s = b;
+        List<List<Simbolo>> simbolos = new ArrayList<>(100);
+        List<Simbolo> nivel = new ArrayList<>(Arrays.asList(s.getHijos()));
+        nivel.add(s);
+        simbolos.add(nivel);
+        NEXT:
+        while (!simbolos.isEmpty()) {
+            nivel = simbolos.get(simbolos.size() - 1);
+            if (nivel.isEmpty()) {
+                simbolos.remove(simbolos.size() - 1);
+                continue;
+            }
+            s = nivel.remove(0);
+            if (!nivel.isEmpty()) {
+                nivel = new ArrayList<>(Arrays.asList(s.getHijos()));
+                if (!nivel.isEmpty()) {
+                    nivel.add(s);
+                    simbolos.add(nivel);
+                    continue;
+                }
+            }
+            if (s instanceof AbrirBloque) {
+                decs.add(new HashSet<>());
+            } else if (s instanceof Cuerpo) {
+                decs.remove(decs.size() - 1);
+            } else if (s instanceof Bloque && !(s instanceof BloqueVacio) && !(s instanceof SubBloque)) {
+                decs.remove(decs.size() - 1);
+            } else if (s instanceof Variable) {
+                String id = Buscar.getContexto((Variable) s) + ((Variable) s).getVar().getValor();
+                if (isDeclaracion((Variable) s) || isVariableSort((Variable) s)) {
+                    decs.get((decs.size() - 1)).add(id);
+                } else {
+                    ListIterator<Set<String>> it = decs.listIterator(decs.size());
+                    while (it.hasPrevious()) {
+                        if (it.previous().contains(id)) {
+                            continue NEXT;
+                        }
+                    }
+                    vars.add((Variable) s);
+                }
+            }
+        }
+        return vars;
     }
 
 }

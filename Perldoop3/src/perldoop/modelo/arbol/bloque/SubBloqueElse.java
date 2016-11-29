@@ -3,6 +3,7 @@ package perldoop.modelo.arbol.bloque;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 
 /**
@@ -18,12 +19,13 @@ public final class SubBloqueElse extends SubBloque {
      * Único contructor de la clase
      *
      * @param id Else
+     * @param contextoBloque Contexto Bloque
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public SubBloqueElse(Terminal id, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        super(llaveI, cuerpo, llaveD);
+    public SubBloqueElse(Terminal id, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super(contextoBloque, llaveI, cuerpo, llaveD);
         setId(id);
     }
 
@@ -53,7 +55,7 @@ public final class SubBloqueElse extends SubBloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, contextoBloque, llaveI, cuerpo, llaveD};
     }
 
 }

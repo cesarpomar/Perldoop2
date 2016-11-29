@@ -1,6 +1,11 @@
 package perldoop.semantica.bloque.especial;
 
+import perldoop.excepciones.ExcepcionSemantica;
+import perldoop.internacionalizacion.Errores;
+import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.bloque.Bloque;
+import perldoop.modelo.arbol.bloque.BloqueVacio;
+import perldoop.modelo.arbol.fuente.Fuente;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
@@ -21,7 +26,13 @@ public final class SemEspMain extends SemEspecial {
 
     @Override
     public void visitar(Bloque s) {
-        throw new UnsupportedOperationException("Main, Not supported yet.");
+        //StcBLoque, Cuerpo, Fuente
+        Simbolo fuente = s.getPadre().getPadre().getPadre();
+        if(!(fuente instanceof Fuente && s instanceof BloqueVacio)){
+            tabla.getGestorErrores().error(Errores.MAIN_LOCAL, s.getLlaveI().getToken());
+            throw new ExcepcionSemantica(Errores.MAIN_LOCAL);
+        }
+        //Todo comprobar que no hay mas de un main
     }
 
 

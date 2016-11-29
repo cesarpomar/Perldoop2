@@ -11,6 +11,7 @@ import perldoop.modelo.arbol.bloque.BloqueDoWhile;
 import perldoop.modelo.arbol.bloque.BloqueIf;
 import perldoop.modelo.arbol.bloque.BloqueUnless;
 import perldoop.modelo.arbol.bloque.BloqueVacio;
+import perldoop.modelo.arbol.bloque.SubBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.Fuente;
@@ -48,7 +49,7 @@ public class SemFlujo {
         Bloque bloque = Buscar.buscarPadre(s, Bloque.class);
         while (bloque != null) {
             //Ignoramos los bloques condicionales
-            if ((bloque instanceof BloqueIf || bloque instanceof BloqueUnless || bloque instanceof BloqueVacio)) {
+            if (bloque instanceof BloqueIf || bloque instanceof BloqueUnless || bloque instanceof BloqueVacio || bloque instanceof SubBloque) {
                 bloque = Buscar.buscarPadre(bloque, Bloque.class);
             } else {
                 //Si encontramos un bucle retornamos

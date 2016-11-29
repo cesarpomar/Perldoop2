@@ -19,18 +19,19 @@ public final class BloqueUnless extends BloqueControlBasico {
     /**
      * Único contructor de la clase
      *
-     * @param id unless
-     * @param abrirBloque Abertura de bloque para la cabecera
+     * @param id Unless
+     * @param contextoHead Contexto cabecera
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
      * @param parentesisD Parentesis derecho
+     * @param contextoBloque Contexto bloque
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      * @param subBloque SubBloque
      */
-    public BloqueUnless(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, SubBloque subBloque) {
-        super(id, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD);
+    public BloqueUnless(Terminal id, AbrirBloque contextoHead, Terminal parentesisI, Expresion expresion, Terminal parentesisD, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, SubBloque subBloque) {
+        super(id, contextoHead, parentesisI, expresion, parentesisD, contextoBloque, llaveI, cuerpo, llaveD);
         setSubBloque(subBloque);
     }
 
@@ -60,6 +61,6 @@ public final class BloqueUnless extends BloqueControlBasico {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD, subBloque};
+        return new Simbolo[]{id, contextoHead, parentesisI, expresion, parentesisD, contextoBloque, llaveI, cuerpo, llaveD, subBloque};
     }
 }

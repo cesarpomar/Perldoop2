@@ -17,17 +17,18 @@ public final class BloqueUntil extends BloqueControlBasico {
     /**
      * Único contructor de la clase
      *
-     * @param id While
-     * @param abrirBloque Abertura de bloque para la cabecera
+     * @param id Until
+     * @param contextoHead Contexto cabecera
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
      * @param parentesisD Parentesis derecho
+     * @param contextoBloque Contexto bloque
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueUntil(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        super(id, abrirBloque, parentesisI, expresion, parentesisD,  llaveI, cuerpo, llaveD);
+    public BloqueUntil(Terminal id, AbrirBloque contextoHead, Terminal parentesisI, Expresion expresion, Terminal parentesisD, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super(id, contextoHead, parentesisI, expresion, parentesisD, contextoBloque, llaveI, cuerpo, llaveD);
     }
 
     @Override
@@ -37,6 +38,6 @@ public final class BloqueUntil extends BloqueControlBasico {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, expresion, parentesisD,  llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, contextoHead, parentesisI, expresion, parentesisD, contextoBloque, llaveI, cuerpo, llaveD};
     }
 }

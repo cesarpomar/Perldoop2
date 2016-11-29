@@ -1,7 +1,7 @@
 package perldoop.internacionalizacion;
 
 /**
- * Clase para gestionar los mensajes de errores de la apliación
+ * Clase para gestionar los mensajes de errores de la aplicación
  *
  * @author César Pomar
  */
@@ -88,7 +88,11 @@ public class Errores extends Internacionalizacion {
     public static final String FUNCION_VARIABLE_TIPO = "FUNCION_VARIABLE_TIPO";
     public static final String FUNCION_NUM_ARGS = "FUNCION_NUM_ARGS";
     public static final String SORT_MULTI_COLECCION = "SORT_MULTI_COLECCION";
-    public static final String DELETE_NO_ACCESO = "DELETE_NO_ACCESO"; 
+    public static final String DELETE_NO_ACCESO = "DELETE_NO_ACCESO";
+    public static final String DECLARACION_CONDICIONAL = "DECLARACION_CONDICIONAL";
+    public static final String FLUJO_FUERA_COMPORTAMIENTO = "FLUJO_FUERA_COMPORTAMIENTO";
+    public static final String MAIN_LOCAL = "MAIN_LOCAL";
+    public static final String MAIN_EXISTENTE = "MAIN_EXISTENTE";
 
     public Errores() {
         super("errores");

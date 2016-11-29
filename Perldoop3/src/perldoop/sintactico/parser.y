@@ -85,13 +85,14 @@ masFuente	:											{$$=set(new Fuente(), false);}
 funcionDef	:	funcionSub '{' cuerpo '}'				{$$=set(new FuncionDef(s($1), s($2), s($3), s($4)));}
 
 funcionSub	:	SUB ID_L								{$$=set(new FuncionSub(s($1), s($2)));}
+			|	SUB ID									{$$=set(new FuncionSub(s($1), s($2)));}
 
-cuerpoR		:	sentencia								{$$=set(new Cuerpo(add(new AbrirBloque()), s($1)), false);}
+cuerpoR		:	sentencia								{$$=set(new Cuerpo(s($1)),false);}
 			|	cuerpoR	sentencia				        {$$=set(Cuerpo.add(s($1), s($2)), false);}
 			
 cuerpoNV	:	cuerpoR									{$$=set(s($1));}
 
-cuerpo		:											{$$=set(new Cuerpo(add(new AbrirBloque())));}
+cuerpo		:											{$$=set(new Cuerpo());}
 			|	cuerpoNV								{$$=$1;}
 
 sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)));}
@@ -170,11 +171,11 @@ asignacion	:   expresion '=' expresion					{$$=set(new Igual(s($1),s($2),s($3)))
 numero		:	ENTERO									{$$=set(new Entero(s($1)));}
 			|	DECIMAL									{$$=set(new Decimal(s($1)));}
 			
-cadena		:	'\'' cadenaTexto '\''							{$$=set(new CadenaSimple(s($1),s($2),s($3)));}
+cadena		:	'\'' cadenaTexto '\''					{$$=set(new CadenaSimple(s($1),s($2),s($3)));}
 			|	'"' cadenaTexto '"'						{$$=set(new CadenaDoble(s($1),s($2),s($3)));}
 			|	'`' cadenaTexto '`'						{$$=set(new CadenaComando(s($1),s($2),s($3)));}	
-			|	Q SEP cadenaTexto SEP							{$$=set(new CadenaQ(s($1),s($2),s($3),s($4)));}	 
-			|	QW SEP cadenaTexto SEP						{$$=set(new CadenaQW(s($1),s($2),s($3),s($4)));}	  
+			|	Q SEP cadenaTexto SEP					{$$=set(new CadenaQ(s($1),s($2),s($3),s($4)));}	 
+			|	QW SEP cadenaTexto SEP					{$$=set(new CadenaQW(s($1),s($2),s($3),s($4)));}	  
 			|	QQ SEP cadenaTexto SEP					{$$=set(new CadenaQQ(s($1),s($2),s($3),s($4)));}	  
 			|	QR SEP cadenaTexto SEP					{$$=set(new CadenaQR(s($1),s($2),s($3),s($4)));}	  
 			|	QX SEP cadenaTexto SEP					{$$=set(new CadenaQX(s($1),s($2),s($3),s($4)));}	  
@@ -312,20 +313,20 @@ abrirBloque :																					{$$=set(new AbrirBloque());}
 listaFor	:																					{$$=set(new Lista());}
 			|	lista																			{$$=$1;}
 			
-bloque		:	'{' cuerpoNV '}'																{$$=set(new BloqueVacio(s($1),s($2),s($3)));}
-			|	WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
-			|	UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'								{$$=set(new BloqueUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
-			|	DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'						{$$=set(new BloqueDoWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
-			|	DO abrirBloque '{' cuerpo '}' UNTIL '(' expresion ')' ';'						{$$=set(new BloqueDoUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
-			|	FOR abrirBloque '(' listaFor ';' listaFor ';' listaFor ')' '{' cuerpo '}'		{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11),s($12)));}
-			|	FOR abrirBloque variable colParen '{' cuerpo '}'								{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
-			|	FOR abrirBloque colParen '{' cuerpo '}'											{$$=set(new BloqueForeach(s($1),s($2),s($3),s($4),s($5),s($6)));}
-			|	IF abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional						{$$=set(new BloqueIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
-			|	UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'	condicional					{$$=set(new BloqueUnless(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+bloque		:	'{' cuerpoNV '}'																		{$$=set(new BloqueVacio(addBefore(new AbrirBloque(),s($1)),s($1),s($2),s($3)));}
+			|	WHILE abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'							{$$=set(new BloqueWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			|	UNTIL abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'							{$$=set(new BloqueUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			|	DO abrirBloque '{' cuerpo '}' WHILE abrirBloque '(' expresion ')' ';'					{$$=set(new BloqueDoWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11)));}
+			|	DO abrirBloque '{' cuerpo '}' UNTIL abrirBloque '(' expresion ')' ';'					{$$=set(new BloqueDoUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11)));}
+			|	FOR abrirBloque '(' listaFor ';' listaFor ';' listaFor ')' abrirBloque '{' cuerpo '}'	{$$=set(new BloqueFor(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11),s($12),s($13)));}
+			|	FOR abrirBloque variable colParen abrirBloque '{' cuerpo '}'							{$$=set(new BloqueForeachVar(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
+			|	FOR abrirBloque colParen abrirBloque '{' cuerpo '}'										{$$=set(new BloqueForeach(s($1),s($2),s($3),s($4),s($5),s($6),s($7)));}
+			|	IF abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'	condicional					{$$=set(new BloqueIf(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
+			|	UNLESS abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'	condicional				{$$=set(new BloqueUnless(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10)));}
 			
-condicional	:																					{$$=set(new SubBloqueVacio());}
-			|	ELSIF '(' expresion ')' '{' cuerpo '}' condicional								{$$=set(new SubBloqueElsif(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8)));}
-			|	ELSE '{' cuerpo '}'																{$$=set(new SubBloqueElse(s($1), s($2),s($3),s($4)));}			
+condicional	:																							{$$=set(new SubBloqueVacio());}
+			|	ELSIF '(' expresion ')' abrirBloque '{' cuerpo '}' condicional							{$$=set(new SubBloqueElsif(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
+			|	ELSE abrirBloque '{' cuerpo '}'															{$$=set(new SubBloqueElse(s($1), s($2),s($3),s($4),s($5)));}			
 			
 
 
@@ -447,6 +448,18 @@ condicional	:																					{$$=set(new SubBloqueVacio());}
 	 */
 	private <T extends Simbolo>  T add(T s){
 		simbolos.add(s);
+		return s;
+	}
+	
+	/**
+	 * Función interna auxiliar que añade el simbolo a la lista de analizador
+	 * justo antes que otro simbolo y luego lo retorna.
+	 * @param next Simbolo que siguiente
+	 * @param s Simbolo
+	 * @return Simbolo s
+	 */
+	private <T extends Simbolo>  T addBefore(T s, Simbolo next){
+		simbolos.add(simbolos.lastIndexOf(next),s);
 		return s;
 	}
 

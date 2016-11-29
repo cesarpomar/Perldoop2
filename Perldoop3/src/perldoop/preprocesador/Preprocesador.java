@@ -29,11 +29,12 @@ public final class Preprocesador {
     public final static int PD_NUM = -13;
     public final static int PD_VAR = -14;
     public final static int PD_MAIN = -15;
-    public final static int PD_HADOOP = -16;
-    public final static int PD_MAPPER = -17;
-    public final static int PD_REDUCCER = -18;
-    public final static int PD_COMBINE = -19;
-    public final static int PD_REDUCTION = -20;
+    public final static int PD_FUNCTION = -16;
+    public final static int PD_HADOOP = -17;
+    public final static int PD_MAPPER = -18;
+    public final static int PD_REDUCCER = -19;
+    public final static int PD_COMBINE = -20;
+    public final static int PD_REDUCTION = -21;
 
     //Estados
     private final static int ESTADO_INICIAL = 0;
@@ -150,6 +151,7 @@ public final class Preprocesador {
                             estado = ESTADO_VARIABLES;
                             break;
                         case PD_MAIN:
+                        case PD_FUNCTION:
                             tcomp = aceptar(tcomp = new TagsComportamiento(token), terminales);
                             break;
                         case PD_HADOOP:
@@ -271,7 +273,7 @@ public final class Preprocesador {
                             predeclaracion.addVariable(token);
                             break;
                         default:
-                            inicializacion=aceptar(inicializacion, terminales);
+                            inicializacion = aceptar(inicializacion, terminales);
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -292,7 +294,7 @@ public final class Preprocesador {
                             inicializacion.addSize(token);
                             break;
                         default:
-                            inicializacion=aceptar(inicializacion, terminales);
+                            inicializacion = aceptar(inicializacion, terminales);
                             estado = ESTADO_INICIAL;
                             index--;
                     }

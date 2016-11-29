@@ -15,7 +15,7 @@ import perldoop.modelo.arbol.lista.Lista;
 public final class BloqueFor extends Bloque {
 
     private Terminal id;
-    protected AbrirBloque abrirBloque;
+    private AbrirBloque contextoHead;
     private Terminal parentesisI;
     private Lista lista1;
     private Terminal puntoComa1;
@@ -28,7 +28,7 @@ public final class BloqueFor extends Bloque {
      * Único contructor de la clase
      *
      * @param id Id
-     * @param abrirBloque Abertura de bloque para la cabecera
+     * @param contextoHead Contexto cabecera
      * @param parentesisI Parentesis izquierdo
      * @param lista1 Lista 1
      * @param puntoComa1 Punto y coma 1
@@ -36,14 +36,15 @@ public final class BloqueFor extends Bloque {
      * @param puntoComa2 Punto y coma 2
      * @param lista3 Lista 3
      * @param parentesisD Parentesis derecho
+     * @param contextoBloque Contexto cabecera
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueFor(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Lista lista1, Terminal puntoComa1, Lista lista2, Terminal puntoComa2, Lista lista3, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        super(llaveI, cuerpo, llaveD);
+    public BloqueFor(Terminal id, AbrirBloque contextoHead, Terminal parentesisI, Lista lista1, Terminal puntoComa1, Lista lista2, Terminal puntoComa2, Lista lista3, Terminal parentesisD, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super(contextoBloque, llaveI, cuerpo, llaveD);
         setId(id);
-        setAbrirBloque(abrirBloque);
+        setContextoHead(contextoHead);
         setParentesisI(parentesisI);
         setLista1(lista1);
         setPuntoComa1(puntoComa1);
@@ -71,24 +72,26 @@ public final class BloqueFor extends Bloque {
         id.setPadre(this);
         this.id = id;
     }
+
     /**
-     * Obtiene la abertura de bloque
+     * Obtiene el contexto de la cabecera
      *
-     * @return Abertura de bloque
+     * @return Contexto de la cabecera
      */
-    public AbrirBloque getAbrirBloque() {
-        return abrirBloque;
+    public AbrirBloque getContextoHead() {
+        return contextoHead;
     }
 
     /**
-     * Establece la abertura de bloque
+     * Establece el contexto de la cabecera
      *
-     * @param abrirBloque Abertura de bloque
+     * @param contextoHead Contexto de la cabecera
      */
-    public void setAbrirBloque(AbrirBloque abrirBloque) {
-        abrirBloque.setPadre(this);
-        this.abrirBloque = abrirBloque;
+    public void setContextoHead(AbrirBloque contextoHead) {
+        contextoHead.setPadre(this);
+        this.contextoHead = contextoHead;
     }
+
     /**
      * Obtiene el parenteis izquierdo
      *
@@ -229,7 +232,7 @@ public final class BloqueFor extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, lista1, puntoComa1, lista2, puntoComa2, lista3, parentesisD,  llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id, contextoHead, parentesisI, lista1, puntoComa1, lista2, puntoComa2, lista3, parentesisD, contextoBloque, llaveI, cuerpo, llaveD};
     }
 
 }

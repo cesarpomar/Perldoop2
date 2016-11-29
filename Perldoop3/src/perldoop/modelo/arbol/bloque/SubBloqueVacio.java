@@ -14,7 +14,7 @@ public final class SubBloqueVacio extends SubBloque {
      * Único contructor de la clase
      */
     public SubBloqueVacio() {
-        super(null, null, null);
+        super();
     }
 
     @Override

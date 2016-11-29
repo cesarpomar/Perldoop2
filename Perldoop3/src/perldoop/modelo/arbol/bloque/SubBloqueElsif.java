@@ -3,6 +3,7 @@ package perldoop.modelo.arbol.bloque;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.Visitante;
+import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.expresion.Expresion;
 
@@ -22,17 +23,18 @@ public final class SubBloqueElsif extends SubBloque {
     /**
      * Único contructor de la clase
      *
-     * @param id Id
+     * @param id Elsif
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
      * @param parentesisD Parentesis derecho
+     * @param contextoBloque Contexto bloque
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      * @param subBloque SubBloque
      */
-    public SubBloqueElsif(Terminal id, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, SubBloque subBloque) {
-        super(llaveI, cuerpo, llaveD);
+    public SubBloqueElsif(Terminal id, Terminal parentesisI, Expresion expresion, Terminal parentesisD, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, SubBloque subBloque) {
+        super(contextoBloque, llaveI, cuerpo, llaveD);
         setId(id);
         setParentesisI(parentesisI);
         setExpresion(expresion);
@@ -142,6 +144,6 @@ public final class SubBloqueElsif extends SubBloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD, subBloque};
+        return new Simbolo[]{id, parentesisI, expresion, parentesisD, contextoBloque, llaveI, cuerpo, llaveD, subBloque};
     }
 }

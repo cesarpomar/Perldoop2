@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Visitante;
-import perldoop.modelo.arbol.abrirbloque.AbrirBloque;
 import perldoop.modelo.arbol.sentencia.Sentencia;
 
 /**
@@ -16,47 +15,24 @@ import perldoop.modelo.arbol.sentencia.Sentencia;
  */
 public final class Cuerpo extends Simbolo {
 
-    private AbrirBloque abrirBloque;
     private List<Sentencia> sentencias;
 
     /**
      * Construye un cuerpo vacio
      *
-     * @param abrirBloque Abertura de bloque para el cuerpo
      */
-    public Cuerpo(AbrirBloque abrirBloque) {
-        setAbrirBloque(abrirBloque);
+    public Cuerpo() {
         sentencias = new ArrayList<>(100);
     }
 
     /**
      * Construye un cuerpo con una sentencia
      *
-     * @param abrirBloque Abertura de bloque para el cuerpo
      * @param sentencia Sentecia
      */
-    public Cuerpo(AbrirBloque abrirBloque, Sentencia sentencia) {
-        this(abrirBloque);
+    public Cuerpo(Sentencia sentencia) {
+        this();
         add(sentencia);
-    }
-
-    /**
-     * Obtiene la abertura de bloque
-     *
-     * @return Abertura de bloque
-     */
-    public AbrirBloque getAbrirBloque() {
-        return abrirBloque;
-    }
-
-    /**
-     * Establece la abertura de bloque
-     *
-     * @param abrirBloque Abertura de bloque
-     */
-    public void setAbrirBloque(AbrirBloque abrirBloque) {
-        abrirBloque.setPadre(this);
-        this.abrirBloque = abrirBloque;
     }
 
     /**
@@ -98,11 +74,6 @@ public final class Cuerpo extends Simbolo {
 
     @Override
     public Simbolo[] getHijos() {
-        Simbolo[] hijos = new Simbolo[sentencias.size() + 1];
-        hijos[0] = abrirBloque;
-        for (int i = 1; i <= sentencias.size(); i++) {
-            hijos[i] = sentencias.get(i - 1);
-        }
-        return hijos;
+        return sentencias.toArray(new Simbolo[sentencias.size()]);
     }
 }

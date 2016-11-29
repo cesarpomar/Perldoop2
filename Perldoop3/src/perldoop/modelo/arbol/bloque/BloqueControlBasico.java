@@ -13,7 +13,7 @@ import perldoop.modelo.arbol.expresion.Expresion;
 public abstract class BloqueControlBasico extends Bloque {
 
     protected Terminal id;
-    protected AbrirBloque abrirBloque;
+    protected AbrirBloque contextoHead;
     protected Terminal parentesisI;
     protected Expresion expresion;
     protected Terminal parentesisD;
@@ -22,18 +22,19 @@ public abstract class BloqueControlBasico extends Bloque {
      * Único contructor de la clase
      *
      * @param id Id
-     * @param abrirBloque Abertura de bloque para la cabecera
+     * @param contextoHead Contexto cabecera
      * @param parentesisI Parentesis izquierdo
      * @param expresion Expresión
      * @param parentesisD Parentesis derecho
+     * @param contextoBloque Contexto bloque
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueControlBasico(Terminal id, AbrirBloque abrirBloque, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        super(llaveI, cuerpo, llaveD);
+    public BloqueControlBasico(Terminal id, AbrirBloque contextoHead, Terminal parentesisI, Expresion expresion, Terminal parentesisD, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super(contextoBloque, llaveI, cuerpo, llaveD);
         setId(id);
-        setAbrirBloque(abrirBloque);
+        setContextoHead(contextoHead);
         setParentesisI(parentesisI);
         setExpresion(expresion);
         setParentesisD(parentesisD);
@@ -59,22 +60,22 @@ public abstract class BloqueControlBasico extends Bloque {
     }
 
     /**
-     * Obtiene la abertura de bloque
+     * Obtiene el contexto de la cabecera
      *
-     * @return Abertura de bloque
+     * @return Contexto de la cabecera
      */
-    public final AbrirBloque getAbrirBloque() {
-        return abrirBloque;
+    public final AbrirBloque getContextoHead() {
+        return contextoHead;
     }
 
     /**
-     * Establece la abertura de bloque
+     * Establece el contexto de la cabecera
      *
-     * @param abrirBloque Abertura de bloque
+     * @param contextoHead Contexto de la cabecera
      */
-    public final void setAbrirBloque(AbrirBloque abrirBloque) {
-        abrirBloque.setPadre(this);
-        this.abrirBloque = abrirBloque;
+    public final void setContextoHead(AbrirBloque contextoHead) {
+        contextoHead.setPadre(this);
+        this.contextoHead = contextoHead;
     }
 
     /**

@@ -16,7 +16,7 @@ import perldoop.modelo.arbol.variable.Variable;
 public final class BloqueForeachVar extends Bloque {
 
     private Terminal id;
-    protected AbrirBloque abrirBloque;
+    private AbrirBloque contextoHead;
     private Variable variable;
     private Coleccion coleccion;
 
@@ -24,17 +24,18 @@ public final class BloqueForeachVar extends Bloque {
      * Único contructor de la clase
      *
      * @param id Id
-     * @param abrirBloque Abertura de bloque para la cabecera
+     * @param contextoHead Contexto cabecera
      * @param variable Variable
      * @param coleccion Coleccion
+     * @param contextoBloque Contexto bloque
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueForeachVar(Terminal id, AbrirBloque abrirBloque, Variable variable, Coleccion coleccion, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
-        super( llaveI, cuerpo, llaveD);
+    public BloqueForeachVar(Terminal id, AbrirBloque contextoHead, Variable variable, Coleccion coleccion, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+        super(contextoBloque,llaveI, cuerpo, llaveD);
         setId(id);
-        setAbrirBloque(abrirBloque);
+        setContextoHead(contextoHead);
         setVariable(variable);
         setColeccion(coleccion);
     }
@@ -59,22 +60,22 @@ public final class BloqueForeachVar extends Bloque {
     }
 
     /**
-     * Obtiene la abertura de bloque
+     * Obtiene el contexto de la cabecera
      *
-     * @return Abertura de bloque
+     * @return Contexto de la cabecera
      */
-    public AbrirBloque getAbrirBloque() {
-        return abrirBloque;
+    public AbrirBloque getContextoHead() {
+        return contextoHead;
     }
 
     /**
-     * Establece la abertura de bloque
+     * Establece el contexto de la cabecera
      *
-     * @param abrirBloque Abertura de bloque
+     * @param contextoHead Contexto de la cabecera
      */
-    public void setAbrirBloque(AbrirBloque abrirBloque) {
-        abrirBloque.setPadre(this);
-        this.abrirBloque = abrirBloque;
+    public void setContextoHead(AbrirBloque contextoHead) {
+        contextoHead.setPadre(this);
+        this.contextoHead = contextoHead;
     }
 
     /**
@@ -122,6 +123,6 @@ public final class BloqueForeachVar extends Bloque {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, variable, coleccion,  llaveI, cuerpo, llaveD};
+        return new Simbolo[]{id,contextoHead, variable, coleccion, contextoBloque,llaveI, cuerpo, llaveD};
     }
 }

@@ -21,18 +21,19 @@ public final class BloqueDoUntil extends BloqueControlBasico {
      * Único contructor de la clase
      *
      * @param id Do
-     * @param abrirBloque Abertura de bloque para la cabecera
+     * @param contextoBloque Contexto bloque
      * @param llaveI Llave izquierda
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
+     * @param contextoHead Contexto de la cabecera
      * @param parentesisI Parentesis izquierdo
-     * @param expresion Expresiom
+     * @param expresion Expresion
      * @param parentesisD Parentesis derecho
      * @param idUntil Until
      * @param puntoComa Punto y coma
      */
-    public BloqueDoUntil(Terminal id, AbrirBloque abrirBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Terminal idUntil, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal puntoComa) {
-        super(id, abrirBloque, parentesisI, expresion, parentesisD, llaveI, cuerpo, llaveD);
+    public BloqueDoUntil(Terminal id, AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD, Terminal idUntil, AbrirBloque contextoHead, Terminal parentesisI, Expresion expresion, Terminal parentesisD, Terminal puntoComa) {
+        super(id, contextoHead, parentesisI, expresion, parentesisD, contextoBloque, llaveI, cuerpo, llaveD);
         setIdUntil(idUntil);
         setPuntoComa(puntoComa);
     }
@@ -82,6 +83,6 @@ public final class BloqueDoUntil extends BloqueControlBasico {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{id, llaveI, cuerpo, llaveD, idUntil, parentesisI, expresion, parentesisD, puntoComa};
+        return new Simbolo[]{id, contextoBloque, llaveI, cuerpo, llaveD, idUntil, contextoHead, parentesisI, expresion, parentesisD, puntoComa};
     }
 }
