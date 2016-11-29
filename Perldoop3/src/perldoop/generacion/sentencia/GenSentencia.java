@@ -103,7 +103,9 @@ public class GenSentencia {
 
     public void visitar(StcComentario s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("/*").append(s.getComentario()).append("*/");
+        if (tabla.getOpciones().isCopiarComentarios()) {
+            codigo.append("/*").append(s.getComentario()).append("*/");
+        }
         s.setCodigoGenerado(codigo);
     }
 

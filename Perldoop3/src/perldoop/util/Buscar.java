@@ -2,9 +2,11 @@ package perldoop.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
@@ -724,7 +726,7 @@ public final class Buscar {
      * @return Lista de varaibles externas
      */
     public static List<Variable> buscarDependencias(Bloque b) {
-        List<Variable> vars = new ArrayList<>();
+        Map<String, Variable> vars = new HashMap<>();
         List<Set<String>> decs = new ArrayList<>();
         decs.add(new HashSet<>());
         Simbolo s = b;
@@ -765,11 +767,11 @@ public final class Buscar {
                             continue NEXT;
                         }
                     }
-                    vars.add((Variable) s);
+                    vars.put(id, (Variable) s);
                 }
             }
         }
-        return vars;
+        return new ArrayList<>(vars.values());
     }
 
 }

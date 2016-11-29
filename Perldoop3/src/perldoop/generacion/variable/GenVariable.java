@@ -116,11 +116,10 @@ public final class GenVariable {
             atributo.append(";");
             tabla.getClase().getAtributos().add(atributo.toString());
             if (!isAsignada(v)) {
-                String def = Tipos.valoreDefecto(v.getTipo());
                 if (isSentencia(v)) {
-                    v.setCodigoGenerado(new StringBuilder(100).append(e.getAlias()).append("=").append(def));
+                    v.setCodigoGenerado(new StringBuilder(100).append(e.getAlias()).append("=").append("null"));
                 } else {
-                    tabla.getDeclaraciones().add(new Declaracion(v, e.getAlias(), def));
+                    tabla.getDeclaraciones().add(new Declaracion(v, e.getAlias(), "null"));
                     v.setCodigoGenerado(new StringBuilder(e.getAlias()));
                 }
             } else {
@@ -130,16 +129,15 @@ public final class GenVariable {
             StringBuilder codigo = Tipos.declaracion(v.getTipo());
             codigo.append(cdec).append(" ").append(e.getAlias()).append(v.getVar().getComentario());
             if (!isAsignada(v)) {
-                String def = Tipos.valoreDefecto(v.getTipo());
                 if (!isForEach(v)) {
-                    codigo.append("=").append(def);
-                } 
+                    codigo.append("=").append("null");
+                }
             }
             v.setCodigoGenerado(codigo);
         } else {
             String def = null;
             if (!isAsignada(v)) {
-                def = Tipos.valoreDefecto(v.getTipo());
+                def = "null";
             }
             tabla.getDeclaraciones().add(new Declaracion(v, v.getTipo(), e.getAlias(), def));
             v.setCodigoGenerado(new StringBuilder(100).append(cdec).append(e.getAlias()).append(v.getVar().getComentario()));

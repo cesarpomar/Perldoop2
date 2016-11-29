@@ -361,7 +361,7 @@ public class GenIgual {
         if (variables.size() > valores.size()) {
             for (int i = valores.size(); i < variables.size(); i++) {
                 Expresion exp = variables.get(i);
-                valores.add(new SimboloAux(exp.getTipo(), new StringBuilder(Tipos.valoreDefecto(exp.getTipo()))));
+                valores.add(new SimboloAux(exp.getTipo(), new StringBuilder("null")));
 
             }
         }

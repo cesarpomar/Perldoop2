@@ -9,7 +9,7 @@ import perldoop.modelo.arbol.fuente.Fuente;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
- * Clase para la semantica de main
+ * Clase para la semantica de bloque main
  *
  * @author César Pomar
  */

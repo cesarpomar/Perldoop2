@@ -5,6 +5,7 @@ import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
+import perldoop.modelo.arbol.expresion.ExpRegulares;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.regulares.RegularMatch;
 import perldoop.modelo.semantica.Tipo;
@@ -28,7 +29,7 @@ public final class Casting {
         if (escalar == null || !escalar.getTipo().isColeccion()) {
             if (col.getTipo().isArrayOrList() && col instanceof Expresion) {
                 Expresion exp = Buscar.getExpresion((Expresion) col);
-                if (!Buscar.isVariable(exp)) {
+                if (!Buscar.isVariable(exp) && !(Buscar.getExpresion(exp) instanceof ExpRegulares)) {
                     StringBuilder codigo = new StringBuilder(100);
                     char contexto = '@';
                     if (escalar != null && escalar instanceof Expresion) {

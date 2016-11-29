@@ -13,7 +13,7 @@ import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.util.Buscar;
 
 /**
- * Clase generadora de bloque
+ * Clase generadora de bloque funcion
  *
  * @author César Pomar
  */

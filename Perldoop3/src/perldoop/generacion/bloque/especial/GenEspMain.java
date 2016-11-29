@@ -4,7 +4,7 @@ import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.generacion.TablaGenerador;
 
 /**
- * Clase generadora de bloque
+ * Clase generadora de bloque main
  *
  * @author César Pomar
  */

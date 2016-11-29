@@ -29,60 +29,72 @@ public class SemBloque {
     public void visitar(BloqueWhile s) {
         checkSpecial(s);
         tabla.getTablaSimbolos().cerrarBloque();
+        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueUntil s) {
         checkSpecial(s);
+        tabla.getTablaSimbolos().cerrarBloque();
         tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueDoWhile s) {
         checkSpecial(s);
         tabla.getTablaSimbolos().cerrarBloque();
+        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueDoUntil s) {
         checkSpecial(s);
+        tabla.getTablaSimbolos().cerrarBloque();
         tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueFor s) {
         checkSpecial(s);
         tabla.getTablaSimbolos().cerrarBloque();
+        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueForeachVar s) {
         checkSpecial(s);
+        tabla.getTablaSimbolos().cerrarBloque();
         tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueForeach s) {
         checkSpecial(s);
         tabla.getTablaSimbolos().cerrarBloque();
+        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueIf s) {
         checkSpecial(s);
+        tabla.getTablaSimbolos().cerrarBloque();
         tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueUnless s) {
         checkSpecial(s);
         tabla.getTablaSimbolos().cerrarBloque();
+        tabla.getTablaSimbolos().cerrarBloque();
     }
 
     public void visitar(BloqueVacio s) {
         checkSpecial(s);
+        tabla.getTablaSimbolos().cerrarBloque();
         //No tiene cabecera
     }
 
     public void visitar(SubBloqueElse s) {
         checkSpecial(s);
+        tabla.getTablaSimbolos().cerrarBloque();
         //No tiene cabecera propia
     }
 
     public void visitar(SubBloqueElsif s) {
         checkSpecial(s);
+        tabla.getTablaSimbolos().cerrarBloque();
         //No tiene cabecera propia
     }
 

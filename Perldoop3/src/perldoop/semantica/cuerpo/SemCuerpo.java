@@ -1,7 +1,6 @@
 package perldoop.semantica.cuerpo;
 
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
-import perldoop.modelo.arbol.fuente.Fuente;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
@@ -23,8 +22,5 @@ public class SemCuerpo {
     }
 
     public void visitar(Cuerpo s) {
-        if (!(s.getPadre() instanceof Fuente)) {
-            tabla.getTablaSimbolos().cerrarBloque();
-        }
     }
 }

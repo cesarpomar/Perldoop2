@@ -4,7 +4,7 @@ import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.semantica.TablaSemantica;
 
 /**
- * Clase para la semantica de funciones especiales
+ * Clase para la semantica de bloque funcion
  *
  * @author César Pomar
  */
