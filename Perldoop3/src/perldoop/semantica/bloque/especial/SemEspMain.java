@@ -28,13 +28,15 @@ public final class SemEspMain extends SemEspecial {
     public void visitar(Bloque s) {
         //StcBLoque, Cuerpo, Fuente
         Simbolo fuente = s.getPadre().getPadre().getPadre();
-        if(!(fuente instanceof Fuente && s instanceof BloqueVacio)){
+        if (!(fuente instanceof Fuente && s instanceof BloqueVacio)) {
             tabla.getGestorErrores().error(Errores.MAIN_LOCAL, s.getLlaveI().getToken());
             throw new ExcepcionSemantica(Errores.MAIN_LOCAL);
         }
-        //Todo comprobar que no hay mas de un main
+        if (tabla.getClaseAttr().isMain()) {
+            tabla.getGestorErrores().error(Errores.MAIN_EXISTENTE, s.getLlaveI().getToken());
+            throw new ExcepcionSemantica(Errores.MAIN_EXISTENTE);
+        }
+        tabla.getClaseAttr().setMain(true);
     }
-
-
 
 }

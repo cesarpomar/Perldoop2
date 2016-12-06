@@ -1,6 +1,7 @@
 package perldoop.modelo.semantica;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -185,7 +186,7 @@ public final class TablaSimbolos {
      *
      * @param entrada Entrada
      */
-    public void addFuncion(EntradaFuncion entrada) {  
+    public void addFuncion(EntradaFuncion entrada) {
         entrada.setConflicto(buscarFuncion(entrada.getIdentificador()) != null);
         funciones.put(entrada.getIdentificador(), entrada);
         EntradaFuncionNoDeclarada noDeclarada = funcionesNoDeclaradas.remove(entrada.getIdentificador());
@@ -271,7 +272,7 @@ public final class TablaSimbolos {
      */
     public void crearPaquete(String fichero) {
         String ruta = String.join(".", paquetes.getDirectorios(fichero)) + "." + paquetes.getClases().get(fichero);
-        paquete = new Paquete(ruta, paquetes.getClases().get(fichero), funciones);
+        paquete = new Paquete(fichero, paquetes.getClases().get(fichero), funciones);
         paquetes.getPaquetes().put(ruta, paquete);
     }
 
@@ -280,11 +281,17 @@ public final class TablaSimbolos {
      *
      * @param fichero Fichero actual
      * @param paquete Paquete a importar
+     * @param superDiretorios Numero de directorios a subir en la ruta actual
      * @return Paquete
      */
-    public Paquete getPaquete(String fichero, String[] paquete) {
+    public Paquete getPaquete(String fichero, String[] paquete, int superDiretorios) {
+        List<String> directorios = Arrays.asList(paquetes.getDirectorios(fichero));
+        if (directorios.size() <= superDiretorios) {
+            return null;
+        }
+        directorios = directorios.subList(superDiretorios, directorios.size());
         //Busqueda relativa, libreria de usuario
-        String ruta = String.join(".", paquetes.getDirectorios(fichero)) + "." + String.join(".", paquete);
+        String ruta = String.join(".", directorios) + "." + String.join(".", paquete);
         Paquete p = paquetes.getPaquetes().get(ruta);
         if (p != null) {
             return p;

@@ -27,8 +27,7 @@ import perldoop.modelo.arbol.lectura.*;
 import perldoop.modelo.arbol.lista.*;
 import perldoop.modelo.arbol.logico.*;
 import perldoop.modelo.arbol.modificador.*;
-import perldoop.modelo.arbol.modulos.ModuloPackage;
-import perldoop.modelo.arbol.modulos.ModuloUse;
+import perldoop.modelo.arbol.modulos.*;
 import perldoop.modelo.arbol.numero.*;
 import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.regulares.*;
@@ -102,7 +101,7 @@ public class Semantica implements Visitante {
     public void visitar(Cuerpo s) {
         fachada.getSemCuerpo().visitar(s);
     }
-    
+
     @Override
     public void visitar(StcLista s) {
         fachada.getSemSentencia().visitar(s);
@@ -227,11 +226,11 @@ public class Semantica implements Visitante {
     public void visitar(ExpRango s) {
         fachada.getSemExpresion().visitar(s);
     }
-    
-     @Override
+
+    @Override
     public void visitar(Rango s) {
         fachada.getSemRango().visitar(s);
-    }   
+    }
 
     @Override
     public void visitar(Lista s) {
@@ -275,6 +274,11 @@ public class Semantica implements Visitante {
 
     @Override
     public void visitar(ModuloUse s) {
+        fachada.getSemModulo().visitar(s);
+    }
+
+    @Override
+    public void visitar(ModuloDo s) {
         fachada.getSemModulo().visitar(s);
     }
 

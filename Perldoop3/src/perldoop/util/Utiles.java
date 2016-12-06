@@ -38,4 +38,22 @@ public final class Utiles {
         }
     }
 
+    /**
+     * Extrae una subcadena, donde los indices pueden ser negativos
+     *
+     * @param string Cadena
+     * @param init Inicio
+     * @param end Fin
+     * @return Subcadena
+     */
+    public static String substring(String string, int init, int end) {
+        if (init < 0) {
+            init += string.length();
+        }
+        if (end < 0) {
+            end += string.length();
+        }
+        return string.substring(init, end);
+    }
+
 }

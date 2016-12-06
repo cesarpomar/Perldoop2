@@ -258,7 +258,7 @@ public class GenColeccion {
      * @param c Coleccion de variables
      */
     private void genDec(ColDec c) {
-        if (!(Buscar.getUso((Expresion) c.getPadre()) instanceof StcLista)) {
+        if (!(Buscar.getUso((Expresion) c.getPadre()).getPadre() instanceof StcLista)) {
             visitar(c);
             if(c.getCodigoGenerado()!=null){
                 c.getCodigoGenerado().insert(0, c.getOperador().getComentario());

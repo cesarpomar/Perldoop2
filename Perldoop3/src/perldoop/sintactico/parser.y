@@ -110,6 +110,7 @@ sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)
 			
 modulos		:	USE paqueteID ID ';'					{$$=set(new ModuloUse(s($1),Paquetes.addId(s($2),s($3)),s($4)));}
 			|	USE ID ';'								{$$=set(new ModuloUse(s($1),add(new Paquetes().addId(s($2))),s($3)));}
+			|	DO cadena ';'							{$$=set(new ModuloDo(s($1),s($2),s($3)));}
 			|	PACKAGE paqueteID ID ';'				{$$=set(new ModuloPackage(s($1),Paquetes.addId(s($2),s($3)),s($4)));}
 			|	PACKAGE ID ';'							{$$=set(new ModuloPackage(s($1),add(new Paquetes().addId(s($2))),s($3)));}
 

@@ -12,7 +12,7 @@ import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.variable.VarMy;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.preprocesador.Tags;
-import perldoop.modelo.preprocesador.TagsComportamiento;
+import perldoop.modelo.preprocesador.TagsBloque;
 import perldoop.modelo.semantica.Tipo;
 
 /**
@@ -287,7 +287,7 @@ public class GenBloque {
     private void checkSpecial(Bloque s) {
         Tags tags = s.getLlaveI().getEtiquetas();
         if (tags != null) {
-            switch (((TagsComportamiento) tags).getEtiqueta().getValor()) {
+            switch (((TagsBloque) tags).getEtiqueta().getValor()) {
                 case "<main>":
                     new GenEspMain(tabla).visitar(s);
                     break;

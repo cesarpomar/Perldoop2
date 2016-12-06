@@ -156,20 +156,15 @@ public final class PalabrasReservadas {
                 case "<ref>":
                     return Preprocesador.PD_REF;
                 case "<main>":
-                    return Preprocesador.PD_MAIN;
                 case "<function>":
-                    return Preprocesador.PD_FUNCTION;
-                //Etiquetas hadoop
                 case "<hadoop>":
-                    return Preprocesador.PD_HADOOP;
+                case "<combine>":
+                case "<reduction>":
+                    return Preprocesador.PD_BLOQUE;
                 case "<mapper>":
                     return Preprocesador.PD_MAPPER;
                 case "<reduccer>":
                     return Preprocesador.PD_REDUCCER;
-                case "<combine>":
-                    return Preprocesador.PD_COMBINE;
-                case "<reduction>":
-                    return Preprocesador.PD_REDUCTION;
             }
         }
         return null;

@@ -1,9 +1,14 @@
 package perldoop.semantica.modulos;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
+import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.Terminal;
+import perldoop.modelo.arbol.modulos.ModuloDo;
 import perldoop.modelo.arbol.modulos.ModuloPackage;
 import perldoop.modelo.arbol.modulos.ModuloUse;
 import perldoop.modelo.semantica.Paquete;
@@ -28,11 +33,11 @@ public class SemModulo {
     }
 
     public void visitar(ModuloPackage s) {
-        if(!tabla.getTablaSimbolos().isVacia()){
+        if (!tabla.getTablaSimbolos().isVacia()) {
             tabla.getGestorErrores().error(Errores.MODULO_NO_VACIO, s.getIdPackage().getToken());
             throw new ExcepcionSemantica(Errores.MODULO_NO_VACIO);
         }
-        if (tabla.getTablaSimbolos().getPaquete()!=null) {
+        if (tabla.getTablaSimbolos().getPaquete() != null) {
             tabla.getGestorErrores().error(Errores.MODULO_YA_CREADO, s.getIdPackage().getToken());
             throw new ExcepcionSemantica(Errores.MODULO_YA_CREADO);
         }
@@ -41,12 +46,47 @@ public class SemModulo {
 
     public void visitar(ModuloUse s) {
         List<Terminal> ids = s.getPaquetes().getIdentificadores();
-        String clase = ids.get(ids.size()-1).getValor();
+        String clase = ids.get(ids.size() - 1).getValor();
         String fichero = tabla.getGestorErrores().getFichero();
         String[] paquetes = s.getPaquetes().getArrayString();
-        Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, paquetes);
-        if(paquete==null){
-            tabla.getGestorErrores().error(Errores.MODULO_NO_EXISTE,s.getPuntoComa().getToken());
+        Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, paquetes, 0);
+        if (paquete == null) {
+            tabla.getGestorErrores().error(Errores.MODULO_NO_EXISTE, s.getPuntoComa().getToken());
+            throw new ExcepcionSemantica(Errores.MODULO_NO_EXISTE);
+        }
+        tabla.getTablaSimbolos().getImports().put(clase, paquete);
+    }
+
+    public void visitar(ModuloDo s) {
+        List<Simbolo> elems = s.getCadena().getTexto().getElementos();
+        if (elems.size() != 1 || !(elems.get(0) instanceof Terminal)) {
+            //Error path dinamico
+            throw new ExcepcionSemantica(null);
+        }
+        File file = new File(((Terminal) elems.get(0)).getValor());
+        if (file.isAbsolute()) {
+            //Error path absoluto
+            throw new ExcepcionSemantica(null);
+        }
+        List<String> ruta = new ArrayList<>();
+        int subirDirectorio = 0;
+        String fichero = tabla.getGestorErrores().getFichero();
+        String clase = file.getName().substring(0, file.getName().lastIndexOf("."));
+        ruta.add(clase);
+        while ((file = file.getParentFile()) != null) {
+            String name = file.getName();
+            if (name.equals("..")) {
+                subirDirectorio++;
+            } else if (name.contains(".")) {
+                break;
+            } else {
+                ruta.add(file.getName());
+            }
+        }
+        Collections.reverse(ruta);
+        Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, ruta.toArray(new String[ruta.size()]), subirDirectorio);
+        if (paquete == null) {
+            tabla.getGestorErrores().error(Errores.MODULO_NO_EXISTE, s.getPuntoComa().getToken());
             throw new ExcepcionSemantica(Errores.MODULO_NO_EXISTE);
         }
         tabla.getTablaSimbolos().getImports().put(clase, paquete);

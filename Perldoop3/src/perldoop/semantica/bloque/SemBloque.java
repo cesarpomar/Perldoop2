@@ -2,7 +2,7 @@ package perldoop.semantica.bloque;
 
 import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.preprocesador.Tags;
-import perldoop.modelo.preprocesador.TagsComportamiento;
+import perldoop.modelo.preprocesador.TagsBloque;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.semantica.bloque.especial.SemEspFuncion;
 import perldoop.semantica.bloque.especial.SemEspHadoop;
@@ -99,7 +99,7 @@ public class SemBloque {
     }
 
     public void visitar(SubBloqueVacio s) {
-        //No tiene cabecera propia
+        //No reprenta a un bloque real
     }
 
     /**
@@ -110,7 +110,7 @@ public class SemBloque {
     private void checkSpecial(Bloque s) {
         Tags tags = s.getLlaveI().getEtiquetas();
         if (tags != null) {
-            switch (((TagsComportamiento) tags).getEtiqueta().getValor()) {
+            switch (((TagsBloque) tags).getEtiqueta().getValor()) {
                 case "<main>":
                     new SemEspMain(tabla).visitar(s);
                     break;

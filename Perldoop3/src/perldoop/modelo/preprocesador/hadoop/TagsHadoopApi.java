@@ -1,43 +1,25 @@
 package perldoop.modelo.preprocesador.hadoop;
 
 import perldoop.modelo.lexico.Token;
+import perldoop.modelo.preprocesador.TagsBloque;
 
 /**
  * Etiquetas para definir el tipo de un bloque hadoop
  *
  * @author César Pomar
  */
-public abstract class TagsHadoopApi {
+public abstract class TagsHadoopApi extends TagsBloque {
 
-    protected Token tipo;
     protected Token keyOut;
     protected Token valueOut;
 
     /**
      * Constructor por defecto
      *
-     * @param tipo Tipo de API hadoop
+     * @param etiqueta Etiqueta de bloque
      */
-    public TagsHadoopApi(Token tipo) {
-        this.tipo = tipo;
-    }
-
-    /**
-     * Obtiene la etiqueta que define el tipo de API de hadoop
-     *
-     * @return Etiqueta del API
-     */
-    public Token getTipo() {
-        return tipo;
-    }
-
-    /**
-     * Establece la etiqueta que define el tipo de API de hadoop
-     *
-     * @param tipo Etiqueta del API
-     */
-    public void setTipo(Token tipo) {
-        this.tipo = tipo;
+    public TagsHadoopApi(Token etiqueta) {
+        super(etiqueta);
     }
 
     /**

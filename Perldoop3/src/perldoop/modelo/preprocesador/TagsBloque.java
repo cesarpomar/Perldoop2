@@ -3,20 +3,20 @@ package perldoop.modelo.preprocesador;
 import perldoop.modelo.lexico.Token;
 
 /**
- * Etiques para definir el comportamiento de un bloque
+ * Etiques para modificar el comportamiento de un bloque
  *
  * @author César Pomar
  */
-public class TagsComportamiento implements Tags {
+public class TagsBloque implements Tags {
 
     protected Token etiqueta;
 
     /**
      * Constructor por defecto
      *
-     * @param etiqueta Etiqueta de comportamiento
+     * @param etiqueta Etiqueta de bloque
      */
-    public TagsComportamiento(Token etiqueta) {
+    public TagsBloque(Token etiqueta) {
         this.etiqueta = etiqueta;
     }
 

@@ -34,6 +34,9 @@ public class Errores extends Internacionalizacion {
     public static final String REF_ANIDADA = "REF_ANIDADA";
     public static final String REF_SIZE = "REF_SIZE";
     public static final String REF_INCOMPLETA = "REF_INCOMPLETA";
+    public static final String MAPPER_INCOMPLETO = "MAPPER_INCOMPLETO";
+    public static final String REDUCCER_INCOMPLETO = "REDUCCER_INCOMPLETO";
+    public static final String REDUCCER_VARS = "REDUCCER_VARS";
     //Sintacticos
     public static final String FALLOS_SINTACTICOS = "FALLOS_SINTACTICOS";
     public static final String ERROR_SINTACTICO = "ERROR_SINTACTICO";

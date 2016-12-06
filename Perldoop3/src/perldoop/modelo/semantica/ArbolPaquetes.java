@@ -98,11 +98,11 @@ public final class ArbolPaquetes {
     /**
      * Obtiene la ruta de directorios para un paquete
      *
-     * @param fichero Fichero
+     * @param ruta Ruta del fichero
      * @return Ruta
      */
-    public String[] getDirectorios(String fichero) {
-        return directorios.get(fichero);
+    public String[] getDirectorios(String ruta) {
+        return directorios.get(ruta);
     }
 
     /**

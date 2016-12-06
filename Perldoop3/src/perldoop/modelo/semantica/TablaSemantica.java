@@ -15,6 +15,7 @@ public class TablaSemantica {
     private GestorErrores gestorErrores;
     private Opciones opciones;
     private Acciones acciones;
+    private ClaseAttr claseAttr;
 
     /**
      * Contruye la tabla del generador
@@ -27,6 +28,7 @@ public class TablaSemantica {
         this.tablaSimbolos = tablaSimbolos;
         this.opciones = opciones;
         this.gestorErrores = gestionErrores;
+        claseAttr = new ClaseAttr();
     }
 
     /**
@@ -85,6 +87,7 @@ public class TablaSemantica {
 
     /**
      * Obtiene las acciones
+     *
      * @return Acciones
      */
     public Acciones getAcciones() {
@@ -93,10 +96,20 @@ public class TablaSemantica {
 
     /**
      * Establece las acciones
+     *
      * @param acciones Acciones
      */
     public void setAcciones(Acciones acciones) {
         this.acciones = acciones;
+    }
+
+    /**
+     * Obtiene los atributos de la clase
+     *
+     * @return Atributos de la clase
+     */
+    public ClaseAttr getClaseAttr() {
+        return claseAttr;
     }
 
 }

@@ -323,6 +323,11 @@ public class Generador implements Visitante {
     }
 
     @Override
+    public void visitar(ModuloDo s) {
+        fachada.getGenModulo().visitar(s);
+    }
+
+    @Override
     public void visitar(Next s) {
         fachada.getGenFlujo().visitar(s);
     }

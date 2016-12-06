@@ -76,6 +76,8 @@ public interface Visitante {
     void visitar(ModuloPackage s);
 
     void visitar(ModuloUse s);
+    
+    void visitar(ModuloDo s);
 
     //Expresion
     void visitar(ExpNumero s);

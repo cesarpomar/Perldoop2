@@ -12,8 +12,9 @@ import perldoop.modelo.preprocesador.TagsPredeclaracion;
 import perldoop.modelo.preprocesador.TagsTipo;
 import perldoop.sintactico.Parser;
 import perldoop.modelo.preprocesador.Tags;
-import perldoop.modelo.preprocesador.TagsComportamiento;
-import perldoop.modelo.preprocesador.hadoop.TagsHadoop;
+import perldoop.modelo.preprocesador.TagsBloque;
+import perldoop.modelo.preprocesador.hadoop.TagsMapper;
+import perldoop.modelo.preprocesador.hadoop.TagsReduccer;
 
 /**
  * Clase para preprocesar y eliminar los tokens referentes a etiquetas del codigo fuente
@@ -28,13 +29,9 @@ public final class Preprocesador {
     public final static int PD_TIPO = -12;
     public final static int PD_NUM = -13;
     public final static int PD_VAR = -14;
-    public final static int PD_MAIN = -15;
-    public final static int PD_FUNCTION = -16;
-    public final static int PD_HADOOP = -17;
+    public final static int PD_BLOQUE = -15;
     public final static int PD_MAPPER = -18;
     public final static int PD_REDUCCER = -19;
-    public final static int PD_COMBINE = -20;
-    public final static int PD_REDUCTION = -21;
 
     //Estados
     private final static int ESTADO_INICIAL = 0;
@@ -44,9 +41,14 @@ public final class Preprocesador {
     private final static int ESTADO_VARIABLES = 4;
     private final static int ESTADO_REF = 5;
     //Estados hadoop
-    private final static int ESTADO_HADOOP_INICIAL = 100;
-    private final static int ESTADO_HADOOP_MAPPER = 101;
-    private final static int ESTADO_HADOOP_REDUCCER = 102;
+    private final static int ESTADO_MAPPER_KEY = 100;
+    private final static int ESTADO_MAPPER_VALUE = 101;
+    private final static int ESTADO_REDUCCER_VAR_KEY = 102;
+    private final static int ESTADO_REDUCCER_VAR_VALUE = 103;
+    private final static int ESTADO_REDUCCER_KEY_IN = 104;
+    private final static int ESTADO_REDUCCER_VALUE_IN = 105;
+    private final static int ESTADO_REDUCCER_KEY_OUT = 106;
+    private final static int ESTADO_REDUCCER_VALUE_OUT = 107;
 
     private List<Token> tokens;
     private Opciones opciones;
@@ -113,7 +115,9 @@ public final class Preprocesador {
         TagsInicializacion inicializacion = null;
         TagsPredeclaracion predeclaracion = null;
         TagsTipo tipo = null;
-        TagsComportamiento tcomp = null;
+        TagsBloque bloque = null;
+        TagsMapper mapper = null;
+        TagsReduccer reduccer = null;
         int estado = 0;
         for (index = 0; index < tokens.size(); index++) {
             Token token = tokens.get(index);
@@ -150,15 +154,16 @@ public final class Preprocesador {
                             predeclaracion.addVariable(token);
                             estado = ESTADO_VARIABLES;
                             break;
-                        case PD_MAIN:
-                        case PD_FUNCTION:
-                            tcomp = aceptar(tcomp = new TagsComportamiento(token), terminales);
+                        case PD_BLOQUE:
+                            bloque = aceptar(bloque = new TagsBloque(token), terminales);
                             break;
-                        case PD_HADOOP:
-                            tcomp = aceptar(tcomp = new TagsHadoop(token), terminales);
-                            procesarHadoop((TagsHadoop) tcomp, terminales);
-                            index--;
-                            estado = ESTADO_INICIAL;
+                        case PD_MAPPER:
+                            mapper = new TagsMapper(token);
+                            estado = ESTADO_MAPPER_KEY;
+                            break;
+                        case PD_REDUCCER:
+                            reduccer = new TagsReduccer(token);
+                            estado = ESTADO_REDUCCER_VAR_KEY;
                             break;
                         case '=':
                             terminales.add(terminal(token, inicializacion));
@@ -170,10 +175,10 @@ public final class Preprocesador {
                         case ';':
                             tipo = null;
                         case '{':
-                            if (tcomp != null && tcomp.getEtiqueta().getLinea() + 1 != token.getLinea()) {
-                                tcomp = null;
+                            if (bloque != null && bloque.getEtiqueta().getLinea() + 1 != token.getLinea()) {
+                                bloque = null;
                             }
-                            terminales.add(terminal(token, tcomp));
+                            terminales.add(terminal(token, bloque));
                             break;
                         default:
                             terminales.add(terminal(token));
@@ -327,32 +332,108 @@ public final class Preprocesador {
                             index--;
                     }
                     break;
+                //----------------------------------------------Estados Hadoop-------------------------------------
+                case ESTADO_MAPPER_KEY:
+                    switch (token.getTipo()) {
+                        case PD_TIPO:
+                            mapper.setKeyOut(token);
+                            estado = ESTADO_MAPPER_VALUE;
+                            break;
+                        default:
+                            mapper = aceptar(mapper, terminales);
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
+                case ESTADO_MAPPER_VALUE:
+                    switch (token.getTipo()) {
+                        case PD_TIPO:
+                            mapper.setValueOut(token);
+                            mapper = aceptar(mapper, terminales);
+                            estado = ESTADO_INICIAL;
+                            break;
+                        default:
+                            gestorErrores.error(Errores.MAPPER_INCOMPLETO, token);
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
+                case ESTADO_REDUCCER_VAR_KEY:
+                    switch (token.getTipo()) {
+                        case PD_VAR:
+                            reduccer.setVarKey(token);
+                            estado = ESTADO_REDUCCER_VAR_VALUE;
+                            break;
+                        default:
+                            gestorErrores.error(Errores.REDUCCER_VARS, token);
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
+                case ESTADO_REDUCCER_VAR_VALUE:
+                    switch (token.getTipo()) {
+                        case PD_VAR:
+                            reduccer.setVarValue(token);
+                            estado = ESTADO_REDUCCER_KEY_IN;
+                            break;
+                        default:
+                            gestorErrores.error(Errores.REDUCCER_VARS, token);
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
+                case ESTADO_REDUCCER_KEY_IN:
+                    switch (token.getTipo()) {
+                        case PD_VAR:
+                            reduccer.setKeyIn(token);
+                            estado = ESTADO_REDUCCER_VALUE_IN;
+                            break;
+                        default:
+                            reduccer = aceptar(reduccer, terminales);
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
+                case ESTADO_REDUCCER_VALUE_IN:
+                    switch (token.getTipo()) {
+                        case PD_VAR:
+                            reduccer.setValueIn(token);
+                            estado = ESTADO_REDUCCER_KEY_OUT;
+                            break;
+                        default:
+                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, token);
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
+                case ESTADO_REDUCCER_KEY_OUT:
+                    switch (token.getTipo()) {
+                        case PD_VAR:
+                            reduccer.setKeyOut(token);
+                            estado = ESTADO_REDUCCER_VALUE_OUT;
+                            break;
+                        default:
+                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, token);
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
+                case ESTADO_REDUCCER_VALUE_OUT:
+                    switch (token.getTipo()) {
+                        case PD_VAR:
+                            reduccer.setValueOut(token);
+                            reduccer = aceptar(reduccer, terminales);
+                            estado = ESTADO_INICIAL;
+                            break;
+                        default:
+                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, token);
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
             }
         }
         return terminales;
-    }
-
-    /**
-     * Procesa las etiquetas de hadoop
-     *
-     * @param hadoop Etiqueta hadoop
-     * @param terminales Terminales
-     */
-    private void procesarHadoop(TagsHadoop hadoop, List<Terminal> terminales) {
-        int estado = ESTADO_HADOOP_INICIAL;
-        index++;
-        for (; index < tokens.size(); index++) {
-            Token token = tokens.get(index);
-            switch (estado) {
-                case ESTADO_HADOOP_INICIAL:
-                    switch (token.getTipo()) {
-                        case PD_MAPPER:
-                        case PD_REDUCCER:
-                        default:
-                            return;
-                    }
-            }
-        }
     }
 
     /**
@@ -468,13 +549,14 @@ public final class Preprocesador {
     }
 
     /**
-     * Acepta y almacena las etiquetas de comportamiento en el bloque que estea en su misma linea
+     * Acepta y almacena las etiquetas de bloque en la llave de inicio de bloque que se encuentre en la misma linea
      *
+     * @param <T> Tipo compatible con TagBloque
      * @param etiqueta Etiqueta de comportamiento
      * @param terminales Lista de terminales
      * @return Etiqueta de comportamiento
      */
-    private TagsComportamiento aceptar(TagsComportamiento etiqueta, List<Terminal> terminales) {
+    private <T extends TagsBloque> T aceptar(T etiqueta, List<Terminal> terminales) {
         int linea = etiqueta.getEtiqueta().getLinea();
         if (!terminales.isEmpty()) {
             Terminal t = terminales.get(terminales.size() - 1);
