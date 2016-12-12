@@ -4,9 +4,7 @@ import perldoop.modelo.arbol.bloque.*;
 import perldoop.modelo.preprocesador.Tags;
 import perldoop.modelo.preprocesador.TagsBloque;
 import perldoop.modelo.semantica.TablaSemantica;
-import perldoop.semantica.bloque.especial.SemEspFuncion;
-import perldoop.semantica.bloque.especial.SemEspHadoop;
-import perldoop.semantica.bloque.especial.SemEspMain;
+import perldoop.semantica.bloque.especial.*;
 
 /**
  * Clase para la semantica de bloque
@@ -80,7 +78,7 @@ public class SemBloque {
         tabla.getTablaSimbolos().cerrarBloque();
     }
 
-    public void visitar(BloqueVacio s) {
+    public void visitar(BloqueSimple s) {
         checkSpecial(s);
         tabla.getTablaSimbolos().cerrarBloque();
         //No tiene cabecera
@@ -114,12 +112,16 @@ public class SemBloque {
                 case "<main>":
                     new SemEspMain(tabla).visitar(s);
                     break;
-                case "<hadoop>":
-                    new SemEspHadoop(tabla).visitar(s);
-                    break;
                 case "<function>":
                     new SemEspFuncion(tabla).visitar(s);
                     break;
+                case "<mapper>":
+                    new SemEspMapper(tabla).visitar(s);
+                    break;
+                case "<reduccer>":
+                    new SemEspReduccer(tabla).visitar(s);
+                    break;
+
             }
         }
     }

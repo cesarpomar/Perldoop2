@@ -22,7 +22,7 @@ import perldoop.modelo.arbol.aritmetica.AritPreIncremento;
 import perldoop.modelo.arbol.asignacion.Asignacion;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.bloque.Bloque;
-import perldoop.modelo.arbol.bloque.BloqueVacio;
+import perldoop.modelo.arbol.bloque.BloqueSimple;
 import perldoop.modelo.arbol.bloque.SubBloque;
 import perldoop.modelo.arbol.cadena.Cadena;
 import perldoop.modelo.arbol.cadena.CadenaDoble;
@@ -49,6 +49,7 @@ import perldoop.modelo.arbol.variable.VarPaqueteSigil;
 import perldoop.modelo.arbol.variable.VarSigil;
 import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.lexico.Token;
+import perldoop.modelo.preprocesador.TagsBloque;
 
 /**
  * Clase para hacer busquedas en el arbol
@@ -754,7 +755,7 @@ public final class Buscar {
                 decs.add(new HashSet<>());
             } else if (s instanceof Cuerpo) {
                 decs.remove(decs.size() - 1);
-            } else if (s instanceof Bloque && !(s instanceof BloqueVacio) && !(s instanceof SubBloque)) {
+            } else if (s instanceof Bloque && !(s instanceof BloqueSimple) && !(s instanceof SubBloque)) {
                 decs.remove(decs.size() - 1);
             } else if (s instanceof Variable) {
                 String id = Buscar.getContexto((Variable) s) + ((Variable) s).getVar().getValor();
@@ -772,6 +773,22 @@ public final class Buscar {
             }
         }
         return new ArrayList<>(vars.values());
+    }
+
+    /**
+     * Obtiene el bloque especial
+     *
+     * @param s Simbolo
+     * @param clase Clase del bloque especial
+     * @return Bloque especial
+     */
+    public static Bloque getSpecial(Simbolo s, Class<? extends TagsBloque> clase) {
+        while ((s = s.getPadre()) != null) {
+            if (s instanceof Bloque && clase.isInstance(((Bloque) s).getLlaveI().getEtiquetas())) {
+                return (Bloque) s;
+            }
+        }
+        return null;
     }
 
 }

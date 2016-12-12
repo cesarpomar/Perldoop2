@@ -575,4 +575,50 @@ public final class Perl {
         return exp != null;
     }
 
+    /**
+     * Convierte la cadena a minusculas
+     *
+     * @param str Cadena
+     * @return Cadena en minusculas
+     */
+    public static String lc(String str) {
+        return str.toLowerCase();
+    }
+
+    /**
+     * Convierte la primera letra de la cadena a minusculas
+     *
+     * @param str Cadena
+     * @return Cadena con la primera letra en minusculas
+     */
+    public static String lcfirst(String str) {
+        if (str.isEmpty()) {
+            return str;
+        }
+        return str.substring(0, 1).toLowerCase() + str.substring(1);
+    }
+
+    /**
+     * Convierte la cadena a mayusculas
+     *
+     * @param str Cadena
+     * @return Cadena en mayusculas
+     */
+    public static String uc(String str) {
+        return str.toUpperCase();
+    }
+
+    /**
+     * Convierte la primera letra de la cadena a mayusculas
+     *
+     * @param str Cadena
+     * @return Cadena con la primera letra en mayusculas
+     */
+    public static String ucfirst(String str) {
+        if (str.isEmpty()) {
+            return str;
+        }
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
 }

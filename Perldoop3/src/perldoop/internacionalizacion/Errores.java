@@ -94,8 +94,14 @@ public class Errores extends Internacionalizacion {
     public static final String DELETE_NO_ACCESO = "DELETE_NO_ACCESO";
     public static final String DECLARACION_CONDICIONAL = "DECLARACION_CONDICIONAL";
     public static final String FLUJO_FUERA_COMPORTAMIENTO = "FLUJO_FUERA_COMPORTAMIENTO";
-    public static final String MAIN_LOCAL = "MAIN_LOCAL";
     public static final String MAIN_EXISTENTE = "MAIN_EXISTENTE";
+    public static final String ESPECIAL_LOCAL = "ESPECIAL_LOCAL";
+    public static final String ESPECIAL_CABECERA = "ESPECIAL_CABECERA";
+    public static final String BLOQUE_INCOMPATIBLE = "BLOQUE_INCOMPATIBLE";
+    public static final String BLOQUE_ESP_EN_USO = "BLOQUE_ESP_EN_USO"; 
+    public static final String ESPECIAL_REPETIDO = "ESPECIAL_REPETIDO";
+    public static final String REDUCCER_INVALIDO = "REDUCCER_INVALIDO";
+    public static final String REDUCCER_DEPENDENCIAS = "REDUCCER_DEPENDENCIAS";
 
     public Errores() {
         super("errores");

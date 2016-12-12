@@ -314,7 +314,7 @@ abrirBloque :																					{$$=set(new AbrirBloque());}
 listaFor	:																					{$$=set(new Lista());}
 			|	lista																			{$$=$1;}
 			
-bloque		:	'{' cuerpoNV '}'																		{$$=set(new BloqueVacio(addBefore(new AbrirBloque(),s($1)),s($1),s($2),s($3)));}
+bloque		:	'{' cuerpoNV '}'																		{$$=set(new BloqueSimple(addBefore(new AbrirBloque(),s($1)),s($1),s($2),s($3)));}
 			|	WHILE abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'							{$$=set(new BloqueWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
 			|	UNTIL abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'							{$$=set(new BloqueUntil(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9)));}
 			|	DO abrirBloque '{' cuerpo '}' WHILE abrirBloque '(' expresion ')' ';'					{$$=set(new BloqueDoWhile(s($1),s($2),s($3),s($4),s($5),s($6),s($7),s($8),s($9),s($10),s($11)));}

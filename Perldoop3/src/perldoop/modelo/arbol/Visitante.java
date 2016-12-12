@@ -383,7 +383,7 @@ public interface Visitante {
 
     void visitar(BloqueUnless s);
 
-    void visitar(BloqueVacio s);
+    void visitar(BloqueSimple s);
 
     void visitar(SubBloqueElse s);
 

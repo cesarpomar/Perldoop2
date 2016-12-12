@@ -10,7 +10,7 @@ import perldoop.modelo.arbol.bloque.BloqueDoUntil;
 import perldoop.modelo.arbol.bloque.BloqueDoWhile;
 import perldoop.modelo.arbol.bloque.BloqueIf;
 import perldoop.modelo.arbol.bloque.BloqueUnless;
-import perldoop.modelo.arbol.bloque.BloqueVacio;
+import perldoop.modelo.arbol.bloque.BloqueSimple;
 import perldoop.modelo.arbol.bloque.SubBloque;
 import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.flujo.*;
@@ -49,7 +49,7 @@ public class SemFlujo {
         Bloque bloque = Buscar.buscarPadre(s, Bloque.class);
         while (bloque != null) {
             //Ignoramos los bloques condicionales
-            if (bloque instanceof BloqueIf || bloque instanceof BloqueUnless || bloque instanceof BloqueVacio || bloque instanceof SubBloque) {
+            if (bloque instanceof BloqueIf || bloque instanceof BloqueUnless || bloque instanceof BloqueSimple || bloque instanceof SubBloque) {
                 bloque = Buscar.buscarPadre(bloque, Bloque.class);
             } else {
                 //Si encontramos un bucle retornamos
@@ -84,7 +84,7 @@ public class SemFlujo {
                 if (stc != sts.get(sts.size() - 1)) {
                     errorCodigoMuerto(((Bloque) padre).getCuerpo(), stc);
                 }
-                if (!(padre instanceof BloqueVacio) && !(padre instanceof BloqueDoUntil) && !(padre instanceof BloqueDoWhile)) {
+                if (!(padre instanceof BloqueSimple) && !(padre instanceof BloqueDoUntil) && !(padre instanceof BloqueDoWhile)) {
                     return;
                 }
             } else if (padre instanceof FuncionDef) {
@@ -111,7 +111,7 @@ public class SemFlujo {
                 for (int i = sts.indexOf(actual) + 1; i < sts.size(); i++) {
                     tabla.getGestorErrores().error(Errores.SENTENCIA_INALCANZABLE, Buscar.tokenInicio(sts.get(i)));
                 }
-            }else if(s instanceof Bloque && !(s instanceof BloqueVacio) && !(s instanceof BloqueDoUntil) && !(s instanceof BloqueDoWhile)){
+            }else if(s instanceof Bloque && !(s instanceof BloqueSimple) && !(s instanceof BloqueDoUntil) && !(s instanceof BloqueDoWhile)){
                 break;
             }
             actual = s;

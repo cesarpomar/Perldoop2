@@ -140,6 +140,11 @@ public class SemFuncion {
                 return new SemFuncionDefined(tabla);
             case "undef":
                 return new SemFuncionUndef(tabla);
+            case "lc":
+            case "lcfirst":
+            case "uc":
+            case "ucfirst":
+                return new SemFuncionWordCase(tabla);
             default:
                 return null;
         }

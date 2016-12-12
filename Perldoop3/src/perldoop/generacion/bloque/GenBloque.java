@@ -35,7 +35,6 @@ public class GenBloque {
 
     public void visitar(BloqueWhile s) {
         StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append(s.getId());
         codigo.append(s.getParentesisI());
         codigo.append(genExpresion(s.getExpresion()));
@@ -44,13 +43,12 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
-        genDeclaracion(s);
         checkSpecial(s);
+        genDeclaracion(s);
     }
 
     public void visitar(BloqueUntil s) {
         StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append("while").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
         codigo.append("!(");
@@ -61,13 +59,12 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
-        genDeclaracion(s);
         checkSpecial(s);
+        genDeclaracion(s);
     }
 
     public void visitar(BloqueDoWhile s) {
         StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append(s.getId());
         codigo.append(s.getLlaveI());
         codigo.append(s.getCuerpo());
@@ -78,13 +75,12 @@ public class GenBloque {
         codigo.append(s.getParentesisD());
         codigo.append(s.getPuntoComa());
         s.setCodigoGenerado(codigo);
-        genDeclaracion(s);
         checkSpecial(s);
+        genDeclaracion(s);
     }
 
     public void visitar(BloqueDoUntil s) {
         StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append(s.getId());
         codigo.append(s.getLlaveI());
         codigo.append(s.getCuerpo());
@@ -97,13 +93,12 @@ public class GenBloque {
         codigo.append(s.getParentesisD());
         codigo.append(s.getPuntoComa());
         s.setCodigoGenerado(codigo);
-        genDeclaracion(s);
         checkSpecial(s);
+        genDeclaracion(s);
     }
 
     public void visitar(BloqueFor s) {
         StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append("for").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
         Iterator<Terminal> itt;
@@ -151,8 +146,8 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
-        genDeclaracion(s);
         checkSpecial(s);
+        genDeclaracion(s);
     }
 
     public void visitar(BloqueForeachVar s) {
@@ -184,13 +179,12 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
-        genDeclaracion(s);
         checkSpecial(s);
+        genDeclaracion(s);
     }
 
     public void visitar(BloqueForeach s) {
         StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         String aux = tabla.getGestorReservas().getAux();
         Tipo t = new Tipo(Tipo.INTEGER);
         codigo.append("for").append(s.getId().getComentario());
@@ -203,13 +197,12 @@ public class GenBloque {
         codigo.append(s.getCuerpo());
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
-        genDeclaracion(s);
         checkSpecial(s);
+        genDeclaracion(s);
     }
 
     public void visitar(BloqueIf s) {
         StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append(s.getId());
         codigo.append(s.getParentesisI());
         codigo.append(genExpresion(s.getExpresion()));
@@ -219,13 +212,12 @@ public class GenBloque {
         codigo.append(s.getLlaveD());
         codigo.append(s.getSubBloque());
         s.setCodigoGenerado(codigo);
-        genDeclaracion(s);
         checkSpecial(s);
+        genDeclaracion(s);
     }
 
     public void visitar(BloqueUnless s) {
         StringBuilder codigo = new StringBuilder(1000);
-        codigo.append(GenSentencia.genDeclaraciones(s, tabla));
         codigo.append("if").append(s.getId().getComentario());
         codigo.append(s.getParentesisI());
         codigo.append("!(");
@@ -237,11 +229,11 @@ public class GenBloque {
         codigo.append(s.getLlaveD());
         codigo.append(s.getSubBloque());
         s.setCodigoGenerado(codigo);
-        genDeclaracion(s);
         checkSpecial(s);
+        genDeclaracion(s);
     }
 
-    public void visitar(BloqueVacio s) {
+    public void visitar(BloqueSimple s) {
         //TODO actualizar
         StringBuilder codigo = new StringBuilder(1000);
         codigo.append(s.getLlaveI());
@@ -291,8 +283,11 @@ public class GenBloque {
                 case "<main>":
                     new GenEspMain(tabla).visitar(s);
                     break;
-                case "<hadoop>":
-                    //Bloqueado en sematica por ahora
+                case "<mapper>":
+                    new GenEspMapper(tabla).visitar(s);
+                    break;
+                case "<reduccer>":
+                    new GenEspReduccer(tabla).visitar(s);
                     break;
                 case "<function>":
                     new GenEspFuncion(tabla).visitar(s);

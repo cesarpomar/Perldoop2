@@ -11,7 +11,7 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
  *
  * @author César Pomar
  */
-public final class BloqueVacio extends Bloque {
+public final class BloqueSimple extends Bloque {
 
     /**
      * Único contructor de la clase
@@ -21,7 +21,7 @@ public final class BloqueVacio extends Bloque {
      * @param cuerpo Cuerpo
      * @param llaveD Llave derecha
      */
-    public BloqueVacio(AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
+    public BloqueSimple(AbrirBloque contextoBloque, Terminal llaveI, Cuerpo cuerpo, Terminal llaveD) {
         super(contextoBloque, llaveI, cuerpo, llaveD);
     }
 

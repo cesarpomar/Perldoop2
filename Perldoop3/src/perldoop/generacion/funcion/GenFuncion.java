@@ -7,6 +7,8 @@ import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.semantica.EntradaFuncion;
 import perldoop.modelo.semantica.EntradaFuncionNoDeclarada;
 import perldoop.generacion.funcion.nativa.*;
+import perldoop.modelo.preprocesador.hadoop.TagsHadoopApi;
+import perldoop.util.Buscar;
 
 /**
  * Clase generadora de funcion
@@ -28,7 +30,7 @@ public final class GenFuncion {
 
     public void visitar(FuncionBasica s) {
         if (s.getPadre() instanceof ExpFuncion) {
-            GenFuncionNativa fn = getGenNativa(s.getIdentificador().getValor());
+            GenFuncionNativa fn = getGenNativa(s);
             if (fn != null) {
                 fn.visitar(s);
                 return;
@@ -46,11 +48,11 @@ public final class GenFuncion {
     }
 
     public void visitar(FuncionHandle s) {
-        getGenNativa(s.getIdentificador().getValor()).visitar(s);
+        getGenNativa(s).visitar(s);
     }
 
     public void visitar(FuncionBloque s) {
-        getGenNativa(s.getIdentificador().getValor()).visitar(s);
+        getGenNativa(s).visitar(s);
     }
 
     /**
@@ -89,12 +91,15 @@ public final class GenFuncion {
     /**
      * Obtiene la semantica nativa de una funcion
      *
-     * @param id Nombre de la funcion
+     * @param f Funcion
      * @return Semantica nativa
      */
-    private GenFuncionNativa getGenNativa(String id) {
-        switch (id) {
+    private GenFuncionNativa getGenNativa(Funcion f) {
+        switch (f.getIdentificador().getValor()) {
             case "print":
+                if (Buscar.getSpecial(f, TagsHadoopApi.class) != null && Buscar.getExpresiones(f.getColeccion()).size() == 4) {
+                    return new GenFuncionEspPrint(tabla);
+                }
                 return new GenFuncionPrint(tabla);
             case "printf":
                 return new GenFuncionPrintf(tabla);
@@ -134,6 +139,11 @@ public final class GenFuncion {
                 return new GenFuncionDefined(tabla);
             case "undef":
                 return new GenFuncionUndef(tabla);
+            case "lc":
+            case "lcfirst":
+            case "uc":
+            case "ucfirst":
+                return new GenFuncionWordCase(tabla);
             default:
                 return null;
         }

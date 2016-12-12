@@ -1,6 +1,5 @@
 package perldoop.generacion.modificador;
 
-import perldoop.generacion.bloque.GenBloque;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.modificador.ModFor;

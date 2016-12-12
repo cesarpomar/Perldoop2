@@ -868,7 +868,7 @@ public class Semantica implements Visitante {
     }
 
     @Override
-    public void visitar(BloqueVacio s) {
+    public void visitar(BloqueSimple s) {
         fachada.getSemBloque().visitar(s);
     }
 

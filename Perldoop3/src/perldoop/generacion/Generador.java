@@ -909,7 +909,7 @@ public class Generador implements Visitante {
     }
 
     @Override
-    public void visitar(BloqueVacio s) {
+    public void visitar(BloqueSimple s) {
         fachada.getGenBloque().visitar(s);
     }
 

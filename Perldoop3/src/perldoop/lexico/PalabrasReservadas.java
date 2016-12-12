@@ -157,7 +157,6 @@ public final class PalabrasReservadas {
                     return Preprocesador.PD_REF;
                 case "<main>":
                 case "<function>":
-                case "<hadoop>":
                 case "<combine>":
                 case "<reduction>":
                     return Preprocesador.PD_BLOQUE;

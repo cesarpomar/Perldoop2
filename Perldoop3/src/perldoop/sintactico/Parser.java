@@ -4604,7 +4604,7 @@ case 198:
 break;
 case 199:
 //#line 317 "parser.y"
-{yyval=set(new BloqueVacio(addBefore(new AbrirBloque(),s(val_peek(2))),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
+{yyval=set(new BloqueSimple(addBefore(new AbrirBloque(),s(val_peek(2))),s(val_peek(2)),s(val_peek(1)),s(val_peek(0))));}
 break;
 case 200:
 //#line 318 "parser.y"

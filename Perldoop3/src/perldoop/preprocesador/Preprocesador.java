@@ -172,14 +172,15 @@ public final class Preprocesador {
                         case Parser.OUR:
                             terminales.add(terminal(token, tipo));
                             break;
-                        case ';':
-                            tipo = null;
                         case '{':
                             if (bloque != null && bloque.getEtiqueta().getLinea() + 1 != token.getLinea()) {
                                 bloque = null;
                             }
                             terminales.add(terminal(token, bloque));
+                            bloque = null;
                             break;
+                        case ';':
+                            tipo = null;
                         default:
                             terminales.add(terminal(token));
                     }
@@ -340,7 +341,7 @@ public final class Preprocesador {
                             estado = ESTADO_MAPPER_VALUE;
                             break;
                         default:
-                            mapper = aceptar(mapper, terminales);
+                            bloque = aceptar(mapper, terminales);
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -349,11 +350,11 @@ public final class Preprocesador {
                     switch (token.getTipo()) {
                         case PD_TIPO:
                             mapper.setValueOut(token);
-                            mapper = aceptar(mapper, terminales);
+                            bloque = aceptar(mapper, terminales);
                             estado = ESTADO_INICIAL;
                             break;
                         default:
-                            gestorErrores.error(Errores.MAPPER_INCOMPLETO, token);
+                            gestorErrores.error(Errores.MAPPER_INCOMPLETO, mapper.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -365,7 +366,7 @@ public final class Preprocesador {
                             estado = ESTADO_REDUCCER_VAR_VALUE;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_VARS, token);
+                            gestorErrores.error(Errores.REDUCCER_VARS, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -377,56 +378,56 @@ public final class Preprocesador {
                             estado = ESTADO_REDUCCER_KEY_IN;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_VARS, token);
+                            gestorErrores.error(Errores.REDUCCER_VARS, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
                     break;
                 case ESTADO_REDUCCER_KEY_IN:
                     switch (token.getTipo()) {
-                        case PD_VAR:
+                        case PD_TIPO:
                             reduccer.setKeyIn(token);
                             estado = ESTADO_REDUCCER_VALUE_IN;
                             break;
                         default:
-                            reduccer = aceptar(reduccer, terminales);
+                            bloque = aceptar(reduccer, terminales);
                             estado = ESTADO_INICIAL;
                             index--;
                     }
                     break;
                 case ESTADO_REDUCCER_VALUE_IN:
                     switch (token.getTipo()) {
-                        case PD_VAR:
+                        case PD_TIPO:
                             reduccer.setValueIn(token);
                             estado = ESTADO_REDUCCER_KEY_OUT;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, token);
+                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
                     break;
                 case ESTADO_REDUCCER_KEY_OUT:
                     switch (token.getTipo()) {
-                        case PD_VAR:
+                        case PD_TIPO:
                             reduccer.setKeyOut(token);
                             estado = ESTADO_REDUCCER_VALUE_OUT;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, token);
+                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
                     break;
                 case ESTADO_REDUCCER_VALUE_OUT:
                     switch (token.getTipo()) {
-                        case PD_VAR:
+                        case PD_TIPO:
                             reduccer.setValueOut(token);
-                            reduccer = aceptar(reduccer, terminales);
+                            bloque = aceptar(reduccer, terminales);
                             estado = ESTADO_INICIAL;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, token);
+                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }

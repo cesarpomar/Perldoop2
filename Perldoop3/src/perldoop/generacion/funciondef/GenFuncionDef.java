@@ -8,7 +8,7 @@ import perldoop.modelo.arbol.bloque.BloqueDoUntil;
 import perldoop.modelo.arbol.bloque.BloqueDoWhile;
 import perldoop.modelo.arbol.bloque.BloqueIf;
 import perldoop.modelo.arbol.bloque.BloqueUnless;
-import perldoop.modelo.arbol.bloque.BloqueVacio;
+import perldoop.modelo.arbol.bloque.BloqueSimple;
 import perldoop.modelo.arbol.bloque.SubBloqueElse;
 import perldoop.modelo.arbol.bloque.SubBloqueElsif;
 import perldoop.modelo.arbol.flujo.Return;
@@ -73,7 +73,7 @@ public class GenFuncionDef {
                         condicion = padre.getPadre();
                     }
                     //Si el bloque depende de una condicion, se asume que no se ejecutara
-                    if (padre instanceof Bloque && !(padre instanceof BloqueVacio) && !(padre instanceof BloqueDoUntil) && !(padre instanceof BloqueDoWhile)) {
+                    if (padre instanceof Bloque && !(padre instanceof BloqueSimple) && !(padre instanceof BloqueDoUntil) && !(padre instanceof BloqueDoWhile)) {
                         continue WHILE;
                     }
                     padre = padre.getPadre();

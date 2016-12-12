@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.bloque.Bloque;
-import perldoop.modelo.arbol.bloque.BloqueVacio;
+import perldoop.modelo.arbol.bloque.BloqueSimple;
 import perldoop.modelo.arbol.bloque.SubBloque;
 import perldoop.modelo.arbol.bloque.SubBloqueVacio;
 import perldoop.modelo.arbol.variable.Variable;
@@ -63,7 +63,7 @@ public final class GenEspFuncion extends GenEspecial {
         s.setCodigoGenerado(codigo);
         //Generamos la nueva funcion
         funcion.append("private static Object[] ").append(nombre).append("(").append(String.join(",", args)).append(")");
-        if (s instanceof BloqueVacio || (s instanceof SubBloque && !(s instanceof SubBloqueVacio))) {
+        if (s instanceof BloqueSimple || (s instanceof SubBloque && !(s instanceof SubBloqueVacio))) {
             funcion.append(s.getLlaveI());
             funcion.append(s.getCuerpo());
             funcion.append("return new Object[]{").append(String.join(",", vars)).append("};");

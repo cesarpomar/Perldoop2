@@ -55,7 +55,9 @@ public final class CodeWriter {
             repr.append("; ");
         }
         //Imports
-        repr.append(String.join("", java.getImports()));
+        for(String i:java.getImports()){
+            repr.append("import ").append(i).append(';');
+        }
         //Clase
         repr.append("public class ").append(java.getNombre()).append(" ");
         //Clase Padre
