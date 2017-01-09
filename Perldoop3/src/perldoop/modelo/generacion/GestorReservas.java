@@ -128,6 +128,8 @@ public final class GestorReservas {
      */
     private static boolean isReservada(String id) {
         switch (id) {
+            //Clases
+            case "IOException":
             //Perldoop
             case "Box":
             case "Casting":
@@ -139,6 +141,10 @@ public final class GestorReservas {
             case "Ref":
             case "Regex":
             case "__":
+            //Hadoop
+            case "Text":
+            case "Mapper":
+            case "Reducer":
                 return true;
             default:
                 return id.startsWith(PREF) || isReservadaJava(id);

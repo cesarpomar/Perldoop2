@@ -7,7 +7,6 @@ import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.preprocesador.hadoop.TagsHadoopApi;
-import perldoop.modelo.preprocesador.hadoop.TagsMapper;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
 import perldoop.util.ParserEtiquetas;
@@ -31,11 +30,7 @@ public class GenFuncionEspPrint extends GenFuncionNativa {
         Tipo tKey = tags.getKeyOut() == null ? new Tipo(Tipo.STRING) : ParserEtiquetas.parseTipo(Arrays.asList(tags.getKeyOut()));
         Tipo tValue = tags.getValueOut() == null ? new Tipo(Tipo.STRING) : ParserEtiquetas.parseTipo(Arrays.asList(tags.getValueOut()));
         codigo.append(f.getIdentificador().getComentario());
-        if (tags instanceof TagsMapper) {
-            codigo.append("pd_context.write(");
-        } else {
-            codigo.append("pd_collector.collect(");
-        }
+        codigo.append("pd_context.write(");
         ColIterator it = new ColIterator(f.getColeccion());
         codigo.append(it.getComentario());
         codigo.append(Hadoop.casting(it.next(), tKey));

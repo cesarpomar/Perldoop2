@@ -82,12 +82,10 @@ public final class GenEspReduccer extends GenEspecial {
         String valueIn = Hadoop.hadoop(tags.getValueOut());
         String keyOut = Hadoop.hadoop(tags.getKeyOut());
         String valueOut = Hadoop.hadoop(tags.getValueOut());
-        tabla.getClase().setClasePadre("Reduccer<" + keyIn + ", " + valueIn + ", " + keyOut + ", " + valueOut + ">");
+        tabla.getClase().setClasePadre("Reducer<" + keyIn + ", " + valueIn + ", " + keyOut + ", " + valueOut + ">");
         codigo.append("@Override ");
-        codigo.append("public void reducce(").append(keyIn).append(" pd_key, Iterator<").append(valueIn);
-        codigo.append("> pd_values, OutputCollector<").append(keyOut).append(", ").append(valueOut);
-        codigo.append("> pd_collector, Reporter pd_reporter)");
-        codigo.append("throws IOException, InterruptedException {");
+        codigo.append("public void reduce(").append(keyIn).append(" pd_key, Iterator<").append(valueIn);
+        codigo.append("> pd_values, Context pd_context) throws IOException, InterruptedException {");
         codigo.append(GenSentencia.genDeclaraciones(b, tabla));
         //Dependencias
         tabla.getClase().getImports().add("org.apache.hadoop.io." + keyIn);

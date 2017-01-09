@@ -60,12 +60,12 @@ public class SemModulo {
     public void visitar(ModuloDo s) {
         List<Simbolo> elems = s.getCadena().getTexto().getElementos();
         if (elems.size() != 1 || !(elems.get(0) instanceof Terminal)) {
-            //Error path dinamico
+            //Error TODO path dinamico
             throw new ExcepcionSemantica(null);
         }
         File file = new File(((Terminal) elems.get(0)).getValor());
         if (file.isAbsolute()) {
-            //Error path absoluto
+            //Error TODO path absoluto
             throw new ExcepcionSemantica(null);
         }
         List<String> ruta = new ArrayList<>();
