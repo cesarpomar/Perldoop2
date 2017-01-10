@@ -12,7 +12,7 @@ import perldoop.modelo.arbol.variable.VarMy;
 import perldoop.modelo.arbol.variable.VarOur;
 import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.preprocesador.TagsBloque;
-import perldoop.modelo.preprocesador.hadoop.TagsReduccer;
+import perldoop.modelo.preprocesador.hadoop.TagsReducer;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.util.Buscar;
 import perldoop.util.Utiles;
@@ -22,14 +22,14 @@ import perldoop.util.Utiles;
  *
  * @author César Pomar
  */
-public final class SemEspReduccer extends SemEspecial {
+public final class SemEspReducer extends SemEspecial {
 
     /**
      * Contruye la semantica
      *
      * @param tabla Tabla de simbolos
      */
-    public SemEspReduccer(TablaSemantica tabla) {
+    public SemEspReducer(TablaSemantica tabla) {
         super(tabla);
     }
 
@@ -39,7 +39,7 @@ public final class SemEspReduccer extends SemEspecial {
             tabla.getGestorErrores().error(Errores.BLOQUE_ESP_EN_USO, ((TagsBloque) s.getLlaveI().getEtiquetas()).getEtiqueta(), tabla.getClaseAttr().getPadre());
             throw new ExcepcionSemantica(Errores.BLOQUE_ESP_EN_USO);
         }
-        tabla.getClaseAttr().setPadre("Hadoop_Reduccer");
+        tabla.getClaseAttr().setPadre("Hadoop_Reducer");
         List<Bloque> bloques = Buscar.buscarClases(s, Bloque.class);
         Bloque combine = null;
         Bloque reduction = null;
@@ -64,10 +64,10 @@ public final class SemEspReduccer extends SemEspecial {
             }
         }
         if (combine == null || reduction == null) {
-            tabla.getGestorErrores().error(Errores.REDUCCER_INVALIDO, ((TagsBloque) s.getLlaveI().getEtiquetas()).getEtiqueta());
-            throw new ExcepcionSemantica(Errores.REDUCCER_INVALIDO);
+            tabla.getGestorErrores().error(Errores.REDUCER_INVALIDO, ((TagsBloque) s.getLlaveI().getEtiquetas()).getEtiqueta());
+            throw new ExcepcionSemantica(Errores.REDUCER_INVALIDO);
         }
-        TagsReduccer tags = (TagsReduccer) s.getLlaveI().getEtiquetas();
+        TagsReducer tags = (TagsReducer) s.getLlaveI().getEtiquetas();
         String var = Utiles.substring(tags.getVarKey().getValor(), 2, -1);
         if (tabla.getTablaSimbolos().buscarVariable(var, '$') == null) {
             tabla.getGestorErrores().error(Errores.VARIABLE_NO_EXISTE, tags.getVarKey(), tags.getVarKey().getValor(), '$');
@@ -94,8 +94,8 @@ public final class SemEspReduccer extends SemEspecial {
                         List<Variable> vars = Buscar.buscarClases(stc, Variable.class);
                         for (Variable v : vars) {
                             if ((v instanceof VarMy || v instanceof VarOur) && locales.contains(Buscar.getContexto(v) + v.getVar().getValor())) {
-                                tabla.getGestorErrores().error(Errores.REDUCCER_DEPENDENCIAS, v.getContexto().getToken());
-                                throw new ExcepcionSemantica(Errores.REDUCCER_DEPENDENCIAS);
+                                tabla.getGestorErrores().error(Errores.REDUCER_DEPENDENCIAS, v.getContexto().getToken());
+                                throw new ExcepcionSemantica(Errores.REDUCER_DEPENDENCIAS);
                             }
                         }
                     }
@@ -110,8 +110,8 @@ public final class SemEspReduccer extends SemEspecial {
             char c = Buscar.getContexto(v);
             String id = v.getVar().getValor();
             if (tabla.getTablaSimbolos().buscarVariable(id, c) == null && !locales.contains(c + id)) {
-                tabla.getGestorErrores().error(Errores.REDUCCER_DEPENDENCIAS, v.getContexto().getToken());
-                throw new ExcepcionSemantica(Errores.REDUCCER_DEPENDENCIAS);
+                tabla.getGestorErrores().error(Errores.REDUCER_DEPENDENCIAS, v.getContexto().getToken());
+                throw new ExcepcionSemantica(Errores.REDUCER_DEPENDENCIAS);
             }
         }
     }

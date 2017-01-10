@@ -35,8 +35,8 @@ public class Errores extends Internacionalizacion {
     public static final String REF_SIZE = "REF_SIZE";
     public static final String REF_INCOMPLETA = "REF_INCOMPLETA";
     public static final String MAPPER_INCOMPLETO = "MAPPER_INCOMPLETO";
-    public static final String REDUCCER_INCOMPLETO = "REDUCCER_INCOMPLETO";
-    public static final String REDUCCER_VARS = "REDUCCER_VARS";
+    public static final String REDUCER_INCOMPLETO = "REDUCER_INCOMPLETO";
+    public static final String REDUCER_VARS = "REDUCER_VARS";
     //Sintacticos
     public static final String FALLOS_SINTACTICOS = "FALLOS_SINTACTICOS";
     public static final String ERROR_SINTACTICO = "ERROR_SINTACTICO";
@@ -57,7 +57,6 @@ public class Errores extends Internacionalizacion {
     public static final String PAQUETE_NO_EXISTE = "PAQUETE_NO_EXISTE";
     public static final String ETIQUETA_SIN_USO = "ETIQUETA_SIN_USO";
     public static final String TIPO_INCORRECTO = "TIPO_INCORRECTO";
-    public static final String VARIABLE_ENMASCARADA = "VARIABLE_ENMASCARADA";
     public static final String ERROR_CASTING = "ERROR_CASTING";
     public static final String UNBOXING_SIN_TIPO = "UNBOXING_SIN_TIPO";
     public static final String ACCESO_NO_COLECCION = "ACCESO_NO_COLECCION";
@@ -100,8 +99,10 @@ public class Errores extends Internacionalizacion {
     public static final String BLOQUE_INCOMPATIBLE = "BLOQUE_INCOMPATIBLE";
     public static final String BLOQUE_ESP_EN_USO = "BLOQUE_ESP_EN_USO"; 
     public static final String ESPECIAL_REPETIDO = "ESPECIAL_REPETIDO";
-    public static final String REDUCCER_INVALIDO = "REDUCCER_INVALIDO";
-    public static final String REDUCCER_DEPENDENCIAS = "REDUCCER_DEPENDENCIAS";
+    public static final String REDUCER_INVALIDO = "REDUCER_INVALIDO";
+    public static final String REDUCER_DEPENDENCIAS = "REDUCER_DEPENDENCIAS";
+    public static final String IMPORT_ABSOLUTO = "IMPORT_ABSOLUTO";
+    public static final String IMPORT_DINAMICO = "IMPORT_DINAMICO";
 
     public Errores() {
         super("errores");

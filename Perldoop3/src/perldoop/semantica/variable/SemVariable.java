@@ -98,11 +98,11 @@ public class SemVariable {
         if (obtenerTipo(s, etiquetas)) {
             validarTipo(s);
             if (tabla.getTablaSimbolos().buscarVariable(s.getVar().getValor(), Buscar.getContexto(s)) != null) {
-                tabla.getGestorErrores().error(Errores.AVISO, Errores.VARIABLE_YA_DECLARADA, s.getVar().getToken(), s.getVar().getValor());
+                tabla.getGestorErrores().error(Errores.AVISO, Errores.VARIABLE_YA_DECLARADA, s.getVar().getToken(), Buscar.getContexto(s), s.getVar().getValor());
             }
             EntradaVariable entrada = new EntradaVariable(s.getVar().getValor(), s.getTipo(), publica);
             if (tabla.getTablaSimbolos().addVariable(entrada) != null) {
-                tabla.getGestorErrores().error(Errores.AVISO, Errores.VARIABLE_SOBREESCRITA, s.getVar().getToken(), s.getVar().getValor());
+                tabla.getGestorErrores().error(Errores.AVISO, Errores.VARIABLE_SOBREESCRITA, s.getVar().getToken(), Buscar.getContexto(s), s.getVar().getValor());
             }
 
         }

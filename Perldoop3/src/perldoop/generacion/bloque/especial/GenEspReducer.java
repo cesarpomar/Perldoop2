@@ -6,7 +6,7 @@ import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.arbol.sentencia.Sentencia;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.preprocesador.TagsBloque;
-import perldoop.modelo.preprocesador.hadoop.TagsReduccer;
+import perldoop.modelo.preprocesador.hadoop.TagsReducer;
 import perldoop.util.Buscar;
 import perldoop.util.Utiles;
 
@@ -15,14 +15,14 @@ import perldoop.util.Utiles;
  *
  * @author César Pomar
  */
-public final class GenEspReduccer extends GenEspecial {
+public final class GenEspReducer extends GenEspecial {
 
     /**
      * Construye el generador
      *
      * @param tabla Tabla
      */
-    public GenEspReduccer(TablaGenerador tabla) {
+    public GenEspReducer(TablaGenerador tabla) {
         super(tabla);
     }
 
@@ -54,16 +54,16 @@ public final class GenEspReduccer extends GenEspecial {
             }
         }
         //Combinacion
-        TagsReduccer tags = (TagsReduccer) s.getLlaveI().getEtiquetas();
+        TagsReducer tags = (TagsReducer) s.getLlaveI().getEtiquetas();
         String var = Utiles.substring(tags.getVarKey().getValor(), 2, -1);
         codigo.append(var).append("= pd_key;");
         codigo.append("while(pd_values.hashNext()){");
-        tags = (TagsReduccer) s.getLlaveI().getEtiquetas();
+        tags = (TagsReducer) s.getLlaveI().getEtiquetas();
         var = Utiles.substring(tags.getVarKey().getValor(), 2, -1);
         codigo.append(var).append("= pd_values.next();");
         codigo.append(combine.getCuerpo());
         codigo.append('}');
-        //reduccion
+        //reducion
         codigo.append(reduction.getCuerpo());
         codigo.append('}');
         tabla.getClase().getFunciones().add(codigo);
@@ -71,13 +71,13 @@ public final class GenEspReduccer extends GenEspecial {
     }
 
     /**
-     * Genera la cabecera del reduccer
+     * Genera la cabecera del reducer
      *
      * @param b Bloque
      * @param codigo Codigo
      */
     private void cabecera(Bloque b, StringBuilder codigo) {
-        TagsReduccer tags = (TagsReduccer) b.getLlaveI().getEtiquetas();
+        TagsReducer tags = (TagsReducer) b.getLlaveI().getEtiquetas();
         String keyIn = Hadoop.hadoop(tags.getKeyOut());
         String valueIn = Hadoop.hadoop(tags.getValueOut());
         String keyOut = Hadoop.hadoop(tags.getKeyOut());
@@ -92,7 +92,7 @@ public final class GenEspReduccer extends GenEspecial {
         tabla.getClase().getImports().add("org.apache.hadoop.io." + valueIn);
         tabla.getClase().getImports().add("org.apache.hadoop.io." + keyOut);
         tabla.getClase().getImports().add("org.apache.hadoop.io." + valueOut);
-        tabla.getClase().getImports().add("org.apache.hadoop.mapreduce.Reduccer");
+        tabla.getClase().getImports().add("org.apache.hadoop.mapreduce.Reducer");
         tabla.getClase().getImports().add("java.io.IOException");
         tabla.getClase().getImports().add("java.util.Iterator");
     }

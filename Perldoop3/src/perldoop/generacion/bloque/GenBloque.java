@@ -234,7 +234,6 @@ public class GenBloque {
     }
 
     public void visitar(BloqueSimple s) {
-        //TODO actualizar
         StringBuilder codigo = new StringBuilder(1000);
         codigo.append(s.getLlaveI());
         codigo.append(s.getCuerpo());
@@ -287,7 +286,7 @@ public class GenBloque {
                     new GenEspMapper(tabla).visitar(s);
                     break;
                 case "<reduccer>":
-                    new GenEspReduccer(tabla).visitar(s);
+                    new GenEspReducer(tabla).visitar(s);
                     break;
                 case "<function>":
                     new GenEspFuncion(tabla).visitar(s);

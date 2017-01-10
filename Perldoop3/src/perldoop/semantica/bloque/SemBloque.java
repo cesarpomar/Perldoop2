@@ -119,7 +119,7 @@ public class SemBloque {
                     new SemEspMapper(tabla).visitar(s);
                     break;
                 case "<reduccer>":
-                    new SemEspReduccer(tabla).visitar(s);
+                    new SemEspReducer(tabla).visitar(s);
                     break;
 
             }

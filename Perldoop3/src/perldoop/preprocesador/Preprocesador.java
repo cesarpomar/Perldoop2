@@ -14,7 +14,7 @@ import perldoop.sintactico.Parser;
 import perldoop.modelo.preprocesador.Tags;
 import perldoop.modelo.preprocesador.TagsBloque;
 import perldoop.modelo.preprocesador.hadoop.TagsMapper;
-import perldoop.modelo.preprocesador.hadoop.TagsReduccer;
+import perldoop.modelo.preprocesador.hadoop.TagsReducer;
 
 /**
  * Clase para preprocesar y eliminar los tokens referentes a etiquetas del codigo fuente
@@ -117,7 +117,7 @@ public final class Preprocesador {
         TagsTipo tipo = null;
         TagsBloque bloque = null;
         TagsMapper mapper = null;
-        TagsReduccer reduccer = null;
+        TagsReducer reduccer = null;
         int estado = 0;
         for (index = 0; index < tokens.size(); index++) {
             Token token = tokens.get(index);
@@ -162,7 +162,7 @@ public final class Preprocesador {
                             estado = ESTADO_MAPPER_KEY;
                             break;
                         case PD_REDUCCER:
-                            reduccer = new TagsReduccer(token);
+                            reduccer = new TagsReducer(token);
                             estado = ESTADO_REDUCCER_VAR_KEY;
                             break;
                         case '=':
@@ -366,7 +366,7 @@ public final class Preprocesador {
                             estado = ESTADO_REDUCCER_VAR_VALUE;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_VARS, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_VARS, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -378,7 +378,7 @@ public final class Preprocesador {
                             estado = ESTADO_REDUCCER_KEY_IN;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_VARS, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_VARS, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -402,7 +402,7 @@ public final class Preprocesador {
                             estado = ESTADO_REDUCCER_KEY_OUT;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -414,7 +414,7 @@ public final class Preprocesador {
                             estado = ESTADO_REDUCCER_VALUE_OUT;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -427,7 +427,7 @@ public final class Preprocesador {
                             estado = ESTADO_INICIAL;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCCER_INCOMPLETO, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, reduccer.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }

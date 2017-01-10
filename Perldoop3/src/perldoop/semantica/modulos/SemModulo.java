@@ -13,6 +13,7 @@ import perldoop.modelo.arbol.modulos.ModuloPackage;
 import perldoop.modelo.arbol.modulos.ModuloUse;
 import perldoop.modelo.semantica.Paquete;
 import perldoop.modelo.semantica.TablaSemantica;
+import perldoop.util.Buscar;
 
 /**
  * Clase para la semantica de modulos
@@ -60,13 +61,13 @@ public class SemModulo {
     public void visitar(ModuloDo s) {
         List<Simbolo> elems = s.getCadena().getTexto().getElementos();
         if (elems.size() != 1 || !(elems.get(0) instanceof Terminal)) {
-            //Error TODO path dinamico
-            throw new ExcepcionSemantica(null);
+            tabla.getGestorErrores().error(Errores.IMPORT_DINAMICO, Buscar.tokenInicio(elems.get(1)));
+            throw new ExcepcionSemantica(Errores.IMPORT_DINAMICO);
         }
         File file = new File(((Terminal) elems.get(0)).getValor());
         if (file.isAbsolute()) {
-            //Error TODO path absoluto
-            throw new ExcepcionSemantica(null);
+            tabla.getGestorErrores().error(Errores.IMPORT_ABSOLUTO, Buscar.tokenInicio(elems.get(0)));
+            throw new ExcepcionSemantica(Errores.IMPORT_ABSOLUTO);
         }
         List<String> ruta = new ArrayList<>();
         int subirDirectorio = 0;

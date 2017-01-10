@@ -7,7 +7,7 @@ import perldoop.modelo.lexico.Token;
  *
  * @author César Pomar
  */
-public final class TagsReduccer extends TagsHadoopApi {
+public final class TagsReducer extends TagsHadoopApi {
 
     private Token varKey;
     private Token varValue;
@@ -19,7 +19,7 @@ public final class TagsReduccer extends TagsHadoopApi {
      *
      * @param etiqueta Etiqueta de bloque
      */
-    public TagsReduccer(Token etiqueta) {
+    public TagsReducer(Token etiqueta) {
         super(etiqueta);
     }
 
