@@ -59,7 +59,7 @@ public final class GenEspReducer extends GenEspecial {
         codigo.append(var).append("= pd_key;");
         codigo.append("while(pd_values.hashNext()){");
         tags = (TagsReducer) s.getLlaveI().getEtiquetas();
-        var = Utiles.substring(tags.getVarKey().getValor(), 2, -1);
+        var = Utiles.substring(tags.getVarValue().getValor(), 2, -1);
         codigo.append(var).append("= pd_values.next();");
         codigo.append(combine.getCuerpo());
         codigo.append('}');
