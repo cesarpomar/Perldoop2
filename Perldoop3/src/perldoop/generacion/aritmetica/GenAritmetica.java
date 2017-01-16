@@ -145,11 +145,17 @@ public class GenAritmetica {
 
     public void visitar(AritMod s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("Pd.mod(").append(s.getOperador().getComentario());
-        codigo.append(genExpresionNum(s.getIzquierda(), s.getTipo()));
-        codigo.append(',').append(s.getOperador().getComentario());
-        codigo.append(genExpresionNum(s.getDerecha(), s.getTipo()));
-        codigo.append(")");
+        if (tabla.getOpciones().isOptModulo()) {
+            codigo.append(genExpresionNum(s.getIzquierda(), s.getTipo()));
+            codigo.append('%').append(s.getOperador().getComentario());
+            codigo.append(genExpresionNum(s.getDerecha(), s.getTipo()));
+        } else {
+            codigo.append("Pd.mod(").append(s.getOperador().getComentario());
+            codigo.append(genExpresionNum(s.getIzquierda(), s.getTipo()));
+            codigo.append(',').append(s.getOperador().getComentario());
+            codigo.append(genExpresionNum(s.getDerecha(), s.getTipo()));
+            codigo.append(")");
+        }
         s.setCodigoGenerado(codigo);
     }
 

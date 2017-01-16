@@ -106,6 +106,7 @@ public final class Consola {
         optimizacion.addArgument("-oi", "--optimize-instance").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_INSTANCIAS));
         optimizacion.addArgument("-ol", "--optimize-diamond").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_DIAMANTE));
         optimizacion.addArgument("-os", "--optimize-statements").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_SENTENCIAS));
+        optimizacion.addArgument("-om", "--optimize-modulus").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.OPTIMIZAR_SENTENCIAS));
         //Depuracion
         ArgumentGroup depuracion = parser.addArgumentGroup(interfaz.get(Interfaz.ARGS_DEPURACION));
         depuracion.addArgument("-dtk", "--debug-tokens").action(new StoreTrueArgumentAction()).help(interfaz.get(Interfaz.DEPURACION_TOKENS));
@@ -164,6 +165,7 @@ public final class Consola {
         opciones.setOptIntancias(comandos.getBoolean("optimize_instance"));
         opciones.setOptDiamante(comandos.getBoolean("optimize_diamond"));
         opciones.setOptSentencias(comandos.getBoolean("optimize_statements"));
+        opciones.setOptModulo(comandos.getBoolean("optimize_modulus"));
         opciones.setDepTokens(comandos.getBoolean("debug_tokens"));
         opciones.setDepTerminales(comandos.getBoolean("debug_terminal"));
         opciones.setDepTree(comandos.getBoolean("debug_tree"));

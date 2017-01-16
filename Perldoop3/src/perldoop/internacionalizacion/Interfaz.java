@@ -34,6 +34,7 @@ public class Interfaz extends Internacionalizacion {
     public static final String OPTIMIZAR_INSTANCIAS = "OPTIMIZAR_INSTANCIAS";
     public static final String OPTIMIZAR_DIAMANTE = "OPTIMIZAR_DIAMANTE";
     public static final String OPTIMIZAR_SENTENCIAS = "OPTIMIZAR_SENTENCIAS";
+    public static final String OPTIMIZAR_MODULOS = "OPTIMIZAR_MODULOS";
 
     //Argumentos depuración
     public static final String ARGS_DEPURACION = "ARGS_DEPURACION";

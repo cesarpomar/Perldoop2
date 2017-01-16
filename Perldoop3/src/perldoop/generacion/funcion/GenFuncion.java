@@ -135,6 +135,8 @@ public final class GenFuncion {
                 return new GenFuncionExit(tabla);
             case "open":
                 return new GenFuncionOpen(tabla);
+            case "close":
+                return new GenFuncionClose(tabla);
             case "defined":
                 return new GenFuncionDefined(tabla);
             case "undef":

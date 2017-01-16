@@ -24,6 +24,7 @@ public class Opciones {
     private boolean optIntancias;
     private boolean optDiamante;
     private boolean optSentencias;
+    private boolean optModulo;
     //Argumentos depuración
     private boolean depTokens;
     private boolean depTerminales;
@@ -293,12 +294,30 @@ public class Opciones {
     }
 
     /**
-     * Establece optimizar
+     * Establece optimizar nulos
      *
      * @param optNulos Optimizar nulos
      */
     public void setOptNulos(boolean optNulos) {
         this.optNulos = optNulos;
+    }
+
+    /**
+     * Establece optimizar modulos
+     *
+     * @return Optimizar modulos
+     */
+    public boolean isOptModulo() {
+        return optModulo;
+    }
+
+    /**
+     * Obtiene ptimizar modulos
+     *
+     * @param optModulo Otimizar modulos
+     */
+    public void setOptModulo(boolean optModulo) {
+        this.optModulo = optModulo;
     }
 
     /**

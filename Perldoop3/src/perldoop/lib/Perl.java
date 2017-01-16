@@ -529,7 +529,20 @@ public final class Perl {
      * @return 1 si tuvo existo, 0 en otro caso
      */
     public static Integer open(PerlFile file, String mode, String path) {
-        return file.open(mode, path);
+        return file.open(path, mode);
+    }
+
+    /**
+     * Cierra un fichero
+     *
+     * @param file Descriptor del fichero
+     * @return 1 si tuvo existo, 0 en otro caso
+     */
+    public static Integer close(PerlFile file) {
+        if (file != null) {
+            return file.close();
+        }
+        return 0;
     }
 
     /**

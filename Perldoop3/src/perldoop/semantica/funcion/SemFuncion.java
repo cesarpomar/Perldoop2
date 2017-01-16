@@ -136,6 +136,8 @@ public class SemFuncion {
                 return new SemFuncionExit(tabla);
             case "open":
                 return new SemFuncionOpen(tabla);
+            case "close":
+                return new SemFuncionClose(tabla);
             case "defined":
                 return new SemFuncionDefined(tabla);
             case "undef":
