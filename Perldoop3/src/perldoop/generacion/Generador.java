@@ -52,10 +52,10 @@ public class Generador implements Visitante {
      *
      * @param tablaSimbolos Tabla de símbolos
      * @param opciones opciones
-     * @param gestorErrores Gestor de errores
+     * @param fichero Fichero Perl
      */
-    public Generador(TablaSimbolos tablaSimbolos, Opciones opciones, GestorErrores gestorErrores) {
-        tabla = new TablaGenerador(tablaSimbolos, opciones, gestorErrores);
+    public Generador(TablaSimbolos tablaSimbolos, Opciones opciones, String fichero) {
+        tabla = new TablaGenerador(tablaSimbolos, opciones, fichero);
         fachada = new FachadaGeneradores(tabla);
     }
 
@@ -96,21 +96,21 @@ public class Generador implements Visitante {
     }
 
     /**
-     * Obtiene el gestor de errores
+     * Obtiene el fichero Perl
      *
-     * @return Gestor de errores
+     * @return Fichero Perl
      */
-    public GestorErrores getGestorErrores() {
-        return tabla.getGestorErrores();
+    public String getFichero() {
+        return tabla.getFichero();
     }
 
     /**
-     * Establece el gestor de errores
+     * Establece el fichero Perl
      *
-     * @param gestorErrores Gestor de errores
+     * @param fichero Fichero Perl
      */
-    public void setGestorErrores(GestorErrores gestorErrores) {
-        tabla.setGestorErrores(gestorErrores);
+    public void setFichero(String fichero) {
+        tabla.setFichero(fichero);
     }
 
     /**

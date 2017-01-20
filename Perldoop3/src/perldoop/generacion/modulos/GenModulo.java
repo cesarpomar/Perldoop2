@@ -36,7 +36,7 @@ public class GenModulo {
         nombreClase = tabla.getGestorReservas().getAlias(nombreClase, false);
         tabla.getClase().setNombre(nombreClase);
         tabla.getTablaSimbolos().getPaquete().setAlias(nombreClase);
-        List<String> paquete = Arrays.asList(tabla.getTablaSimbolos().getArbolPaquete().getDirectorios(tabla.getGestorErrores().getFichero()));
+        List<String> paquete = Arrays.asList(tabla.getTablaSimbolos().getArbolPaquete().getDirectorios(tabla.getFichero()));
         tabla.getClase().getPaquetes().addAll(paquete);
     }
 
@@ -46,7 +46,7 @@ public class GenModulo {
             //Si solo hay un identificador estan en el mismo paquete y pude omitirse la sentencia import
             return;
         }
-        String fichero = tabla.getGestorErrores().getFichero();
+        String fichero = tabla.getFichero();
         String[] paquetes = s.getPaquetes().getArrayString();
         Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, paquetes, 0);
         StringBuilder codigo = new StringBuilder(100);
@@ -62,7 +62,7 @@ public class GenModulo {
         File file = new File(((Terminal) s.getCadena().getTexto().getElementos().get(0)).getValor());
         List<String> ruta = new ArrayList<>();
         int subirDirectorio = 0;
-        String fichero = tabla.getGestorErrores().getFichero();
+        String fichero = tabla.getFichero();
         String clase = file.getName().substring(0, file.getName().lastIndexOf("."));
         ruta.add(clase);
         while ((file = file.getParentFile()) != null) {

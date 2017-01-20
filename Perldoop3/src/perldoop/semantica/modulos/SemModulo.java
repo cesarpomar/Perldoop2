@@ -43,6 +43,7 @@ public class SemModulo {
             throw new ExcepcionSemantica(Errores.MODULO_YA_CREADO);
         }
         tabla.getTablaSimbolos().crearPaquete(tabla.getGestorErrores().getFichero());
+        tabla.getTablaSimbolos().getPaquete().setIdentificador(s.getPaquetes().getClaseJava());
     }
 
     public void visitar(ModuloUse s) {
@@ -52,6 +53,9 @@ public class SemModulo {
         String[] paquetes = s.getPaquetes().getArrayString();
         Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, paquetes, 0);
         if (paquete == null) {
+            if (tabla.getAcciones().detenerTraductor()) {
+                return;
+            }
             tabla.getGestorErrores().error(Errores.MODULO_NO_EXISTE, s.getPuntoComa().getToken());
             throw new ExcepcionSemantica(Errores.MODULO_NO_EXISTE);
         }
@@ -87,10 +91,13 @@ public class SemModulo {
         Collections.reverse(ruta);
         Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, ruta.toArray(new String[ruta.size()]), subirDirectorio);
         if (paquete == null) {
+            if (tabla.getAcciones().detenerTraductor()) {
+                return;
+            }
             tabla.getGestorErrores().error(Errores.MODULO_NO_EXISTE, s.getPuntoComa().getToken());
             throw new ExcepcionSemantica(Errores.MODULO_NO_EXISTE);
         }
-        tabla.getTablaSimbolos().getImports().put(clase, paquete);
+        tabla.getTablaSimbolos().getImports().put(paquete.getIdentificador(), paquete);
     }
 
 }

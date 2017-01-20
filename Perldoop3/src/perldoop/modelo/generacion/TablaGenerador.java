@@ -16,7 +16,7 @@ public final class TablaGenerador {
     private TablaSimbolos tablaSimbolos;
     private GestorReservas gestorReservas;
     private Opciones opciones;
-    private GestorErrores gestorErrores;
+    private String fichero;
     private ClaseJava clase;
     private List<Declaracion> declaraciones;
 
@@ -25,13 +25,13 @@ public final class TablaGenerador {
      *
      * @param tablaSimbolos Tabla de símbolos
      * @param opciones Opciones
-     * @param gestorErrores Gestor de errores
+     * @param fichero Fichero
      */
-    public TablaGenerador(TablaSimbolos tablaSimbolos, Opciones opciones, GestorErrores gestorErrores) {
+    public TablaGenerador(TablaSimbolos tablaSimbolos, Opciones opciones, String fichero) {
         this.tablaSimbolos = tablaSimbolos;
         this.gestorReservas = new GestorReservas();
         this.opciones = opciones;
-        this.gestorErrores = gestorErrores;
+        this.fichero = fichero;
         declaraciones = new ArrayList<>(10);
         clase = new ClaseJava();
     }
@@ -73,21 +73,21 @@ public final class TablaGenerador {
     }
 
     /**
-     * Obtiene el gestor de errores
+     * Obtiene el fichero Perl
      *
-     * @return Gestión de errores
+     * @return Fichero Perl
      */
-    public GestorErrores getGestorErrores() {
-        return gestorErrores;
+    public String getFichero() {
+        return fichero;
     }
 
     /**
-     * Establce el gestor de errores
+     * Establece el fichero Perl
      *
-     * @param gestorErrores Gestor de errores
+     * @param fichero Fichero Perl
      */
-    public void setGestorErrores(GestorErrores gestorErrores) {
-        this.gestorErrores = gestorErrores;
+    public void setFichero(String fichero) {
+        this.fichero = fichero;
     }
 
     /**

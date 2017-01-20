@@ -16,7 +16,7 @@ import perldoop.util.Utiles;
  */
 public final class ArbolPaquetes {
 
-    private List<String> ficheros;
+    private List<File> ficheros;
     private Map<String, Paquete> paquetes;
     private Map<String, String> clases;
     private Map<String, String[]> directorios;
@@ -28,7 +28,7 @@ public final class ArbolPaquetes {
      * @param ficheros Lista de ficheros a analizar
      * @param paquetesUsuario Paquetes definidos por el usuario
      */
-    public ArbolPaquetes(List<String> ficheros,String[] paquetesUsuario) {
+    public ArbolPaquetes(List<File> ficheros,String[] paquetesUsuario) {
         this.ficheros = ficheros;
         this.paquetesUsuario = paquetesUsuario;
         directorios = new HashMap<>(ficheros.size());
@@ -46,9 +46,9 @@ public final class ArbolPaquetes {
         int root = 0;
         int min = -1;
         //partir ruta en carpetas
-        for (String fichero : ficheros) {
-            File ruta = new File(fichero).getAbsoluteFile();
-            clases.put(fichero, ruta.getName().substring(0, ruta.getName().lastIndexOf(".")));
+        for (File fichero : ficheros) {
+            File ruta = fichero.getAbsoluteFile();
+            clases.put(fichero.getPath(), ruta.getName().substring(0, ruta.getName().lastIndexOf(".")));
             Path path = ruta.getParentFile().toPath();
             List<String> carpetas = new ArrayList<>(20);
             //Renombramos el root(/ o x:) con un valor valido
@@ -91,7 +91,7 @@ public final class ArbolPaquetes {
                 carpetas.remove(0);
                 carpetas.addAll(0, Arrays.asList(paquetesUsuario));
             }
-            directorios.put(ficheros.get(i), carpetas.toArray(new String[carpetas.size()]));
+            directorios.put(ficheros.get(i).getPath(), carpetas.toArray(new String[carpetas.size()]));
         }
     }
 

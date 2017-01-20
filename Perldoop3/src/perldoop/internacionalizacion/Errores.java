@@ -12,6 +12,7 @@ public class Errores extends Internacionalizacion {
     public static final String AVISO = "AVISO";
     //Consola
     public static final String FICHERO_NO_EXISTE = "FICHERO_NO_EXISTE";
+    public static final String FICHERO_INVALIDO = "FICHERO_INVALIDO";
     public static final String ERROR_LECTURA = "ERROR_LECTURA";
     public static final String ERROR_ESCRITURA = "ERROR_ESCRITURA";
     public static final String ERROR_CODIFICACION = "ERROR_CODIFICACION";
@@ -54,7 +55,7 @@ public class Errores extends Internacionalizacion {
     public static final String VARIABLE_SIN_TIPO = "VARIABLE_SIN_TIPO";
     public static final String VARIABLE_NO_EXISTE = "VARIABLE_NO_EXISTE";
     public static final String FUNCION_NO_EXISTE = "FUNCION_NO_EXISTE";
-    public static final String PAQUETE_NO_EXISTE = "PAQUETE_NO_EXISTE";
+    public static final String PAQUETE_NO_IMPORTADO = "PAQUETE_NO_IMPORTADO";
     public static final String ETIQUETA_SIN_USO = "ETIQUETA_SIN_USO";
     public static final String TIPO_INCORRECTO = "TIPO_INCORRECTO";
     public static final String ERROR_CASTING = "ERROR_CASTING";

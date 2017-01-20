@@ -121,9 +121,9 @@ public class SemVariable {
             //Busca dentro de los paquetes la clase con la variable
             Paquete clase = tabla.getTablaSimbolos().getImports().get(paquetes.getClaseJava());
             if (clase == null) {
-                tabla.getGestorErrores().error(Errores.PAQUETE_NO_EXISTE, paquetes.getIdentificadores().get(0).getToken(),
+                tabla.getGestorErrores().error(Errores.PAQUETE_NO_IMPORTADO, paquetes.getIdentificadores().get(0).getToken(),
                         paquetes.getIdentificadores().get(0).getToken());
-                throw new ExcepcionSemantica(Errores.PAQUETE_NO_EXISTE);
+                throw new ExcepcionSemantica(Errores.PAQUETE_NO_IMPORTADO);
             }
             //Buscar entrada
             e = clase.buscarVariable(var.getVar().toString(), contexto);

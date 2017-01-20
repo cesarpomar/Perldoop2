@@ -25,6 +25,8 @@ public final class Traductor implements Acciones {
     private Generador generador;
     private int errores;
     private boolean generar;
+    private boolean detener;//Detiene el traductor
+    private boolean reanudable;//Comprueba si el traductor puede detenerse
 
     /**
      * Construye el traductor
@@ -37,6 +39,7 @@ public final class Traductor implements Acciones {
     public Traductor(List<Simbolo> simbolos, Semantica semantica, Generador generador, Opciones opciones) {
         errores = 0;
         index = 0;
+        reanudable = true;
         this.simbolos = simbolos;
         this.semantica = semantica;
         this.generador = generador;
@@ -63,13 +66,77 @@ public final class Traductor implements Acciones {
     }
 
     /**
+     * Obtiene los simbolos
+     *
+     * @return Lista de simbolos
+     */
+    public List<Simbolo> getSimbolos() {
+        return simbolos;
+    }
+
+    /**
+     * Obtiene la semantica
+     *
+     * @return Semantica
+     */
+    public Semantica getSemantica() {
+        return semantica;
+    }
+
+    /**
+     * Obtiene el generador
+     *
+     * @return Generador
+     */
+    public Generador getGenerador() {
+        return generador;
+    }
+
+    /**
+     * Comprueba si el traductor ha finalizado la traducción
+     *
+     * @return Traduccion finalizada
+     */
+    public boolean isFinalizado() {
+        return index == simbolos.size();
+    }
+
+    /**
+     * Comprueba si el traductor puede ser detenido
+     *
+     * @return El traductor puede ser detenido
+     */
+    public boolean isReanudable() {
+        return reanudable;
+    }
+
+    /**
+     * Establece si el traductor puede ser detenido
+     *
+     * @param reanudable El traductor puede ser detenido
+     */
+    public void setReanudable(boolean reanudable) {
+        this.reanudable = reanudable;
+    }
+
+    /**
+     * Obtiene el progreso del traductor, calculado como el numero de simbolos analizados
+     *
+     * @return Progreso
+     */
+    public int getProgreso() {
+        return index;
+    }
+
+    /**
      * Inicia la verificacion y generacion del codigo.
      *
      * @return Número de errores
      */
     public int traducir() {
         boolean error = false;
-        for (; index < simbolos.size(); index++) {
+        detener = false;
+        for (; !detener && index < simbolos.size(); index++) {
             if (!error) {
                 try {
                     analizar(simbolos.get(index));
@@ -123,6 +190,16 @@ public final class Traductor implements Acciones {
     @Override
     public void saltarGenerador() {
         generar = false;
+    }
+
+    @Override
+    public boolean detenerTraductor() {
+        if (reanudable) {
+            detener = true;
+            generar = false;
+            index--;
+        }
+        return reanudable;
     }
 
 }

@@ -81,9 +81,9 @@ public class SemFuncion {
     private void comprobarFuncionPaquete(Funcion f, Paquetes paquetes) {
         Paquete paquete = tabla.getTablaSimbolos().getImports().get(paquetes.getClaseJava());
         if (paquete == null) {
-            tabla.getGestorErrores().error(Errores.PAQUETE_NO_EXISTE, paquetes.getIdentificadores().get(0).getToken(),
+            tabla.getGestorErrores().error(Errores.PAQUETE_NO_IMPORTADO, paquetes.getIdentificadores().get(0).getToken(),
                     paquetes.getIdentificadores().get(0).getToken());
-            throw new ExcepcionSemantica(Errores.PAQUETE_NO_EXISTE);
+            throw new ExcepcionSemantica(Errores.PAQUETE_NO_IMPORTADO);
         }
         if (paquete.buscarFuncion(f.getIdentificador().getToken().getValor()) == null) {
             tabla.getGestorErrores().error(Errores.FUNCION_NO_EXISTE, f.getIdentificador().getToken(), f.getIdentificador().getValor());

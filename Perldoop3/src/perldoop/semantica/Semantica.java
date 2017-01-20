@@ -77,6 +77,42 @@ public class Semantica implements Visitante {
         tabla.setAcciones(acciones);
     }
 
+    /**
+     * Obtiene la tabla semantica
+     *
+     * @return Tabla semantica
+     */
+    public TablaSemantica getTabla() {
+        return tabla;
+    }
+
+    /**
+     * Establece la tabla semantica
+     *
+     * @param tabla Tabla semantica
+     */
+    public void setTabla(TablaSemantica tabla) {
+        this.tabla = tabla;
+    }
+
+    /**
+     * Obtiene el gestor de errores
+     *
+     * @return Gestor de errores
+     */
+    public GestorErrores getGestorErrores() {
+        return tabla.getGestorErrores();
+    }
+
+    /**
+     * Establece el gestor de errores
+     *
+     * @param gestorErrores Gestor de errores
+     */
+    public void setGestorErrores(GestorErrores gestorErrores) {
+        tabla.setGestorErrores(gestorErrores);
+    }
+
     @Override
     public void visitar(Raiz s) {
         fachada.getSemRaiz().visitar(s);
