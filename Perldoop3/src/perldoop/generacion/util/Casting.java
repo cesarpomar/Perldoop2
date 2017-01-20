@@ -568,7 +568,7 @@ public final class Casting {
             case Tipo.NUMBER:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.STRING:
-                return cst.append("Casting.parseDouble(").append(s.getCodigoGenerado()).append(")");
+                return cst.append("Casting.toDouble(").append(s.getCodigoGenerado()).append(")");
             case Tipo.FILE:
                 return cst.append("(").append(s.getCodigoGenerado()).append(" != null").append(" ? 1 : 0)");
             case Tipo.BOX:

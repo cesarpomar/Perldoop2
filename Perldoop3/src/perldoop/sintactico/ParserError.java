@@ -9,17 +9,15 @@ import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.sintactico.ParserVal;
 
 /**
- * Clase auxiliar para gestionar los errores sintacticos fuera del fichero de
- * definición del analizador.
+ * Clase auxiliar para gestionar los errores sintacticos fuera del fichero de definición del analizador.
  *
  * @author César Pomar
  */
 public class ParserError {
 
     /**
-     * Metodo invocado por el analizador en caso de error, en este metodo se
-     * recolecta y prepara la información a mostrar para luego invocar al
-     * sistema de errores.
+     * Metodo invocado por el analizador en caso de error, en este metodo se recolecta y prepara la información a
+     * mostrar para luego invocar al sistema de errores.
      *
      * @param parser Parser
      * @param tiposEsperados Lista de tokens esperados

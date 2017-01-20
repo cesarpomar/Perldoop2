@@ -181,6 +181,8 @@ public final class Preprocesador {
                             break;
                         case ';':
                             tipo = null;
+                            inicializacion = null;
+                            predeclaracion = null;
                         default:
                             terminales.add(terminal(token));
                     }
