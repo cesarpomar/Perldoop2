@@ -1,6 +1,5 @@
 package perldoop.modelo.arbol;
 
-import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.arbol.abrirbloque.*;
 import perldoop.modelo.arbol.acceso.*;
 import perldoop.modelo.arbol.aritmetica.*;
@@ -26,6 +25,7 @@ import perldoop.modelo.arbol.modificador.*;
 import perldoop.modelo.arbol.modulos.*;
 import perldoop.modelo.arbol.numero.*;
 import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.sentencia.*;
 import perldoop.modelo.arbol.std.*;

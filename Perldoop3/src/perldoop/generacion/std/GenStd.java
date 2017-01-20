@@ -1,8 +1,8 @@
 package perldoop.generacion.std;
 
-import perldoop.modelo.arbol.std.StdOut;
 import perldoop.modelo.arbol.std.StdErr;
 import perldoop.modelo.arbol.std.StdIn;
+import perldoop.modelo.arbol.std.StdOut;
 import perldoop.modelo.generacion.TablaGenerador;
 
 /**

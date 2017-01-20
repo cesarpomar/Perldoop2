@@ -1,7 +1,5 @@
 package perldoop.generacion;
 
-import perldoop.modelo.arbol.std.*;
-import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
 import perldoop.modelo.arbol.abrirbloque.*;
@@ -32,6 +30,7 @@ import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.sentencia.*;
+import perldoop.modelo.arbol.std.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.generacion.ClaseJava;
 import perldoop.modelo.generacion.TablaGenerador;

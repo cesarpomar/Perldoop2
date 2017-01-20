@@ -1,7 +1,5 @@
 package perldoop.semantica;
 
-import perldoop.modelo.arbol.rango.Rango;
-import perldoop.modelo.arbol.std.*;
 import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
@@ -30,8 +28,10 @@ import perldoop.modelo.arbol.modificador.*;
 import perldoop.modelo.arbol.modulos.*;
 import perldoop.modelo.arbol.numero.*;
 import perldoop.modelo.arbol.paquete.*;
+import perldoop.modelo.arbol.rango.Rango;
 import perldoop.modelo.arbol.regulares.*;
 import perldoop.modelo.arbol.sentencia.*;
+import perldoop.modelo.arbol.std.*;
 import perldoop.modelo.arbol.variable.*;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.TablaSimbolos;

@@ -2,7 +2,6 @@ package perldoop.modelo.generacion;
 
 import java.util.ArrayList;
 import java.util.List;
-import perldoop.error.GestorErrores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.semantica.TablaSimbolos;
 

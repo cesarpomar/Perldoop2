@@ -2,12 +2,8 @@ package perldoop.generacion.funcion.nativa;
 
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.ColIterator;
-import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.SimboloAux;
-import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.generacion.TablaGenerador;
-import perldoop.modelo.semantica.Tipo;
 
 /**
  * Generador de la funcion chop

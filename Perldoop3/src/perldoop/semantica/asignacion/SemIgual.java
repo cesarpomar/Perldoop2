@@ -12,6 +12,7 @@ import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.ExpVariable;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.lexico.Token;
+import perldoop.modelo.preprocesador.Tags;
 import perldoop.modelo.preprocesador.TagsInicializacion;
 import perldoop.modelo.preprocesador.TagsTipo;
 import perldoop.modelo.semantica.EntradaVariable;
@@ -20,7 +21,6 @@ import perldoop.modelo.semantica.Tipo;
 import perldoop.semantica.coleccion.SemColeccion;
 import perldoop.semantica.util.Tipos;
 import perldoop.util.Buscar;
-import perldoop.modelo.preprocesador.Tags;
 
 /**
  * Clase para la semantica de igual

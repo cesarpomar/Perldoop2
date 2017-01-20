@@ -12,7 +12,6 @@ import perldoop.semantica.cadenatexto.SemCadenaTexto;
 import perldoop.semantica.coleccion.*;
 import perldoop.semantica.comparacion.*;
 import perldoop.semantica.cuerpo.*;
-import perldoop.semantica.std.SemStd;
 import perldoop.semantica.expresion.*;
 import perldoop.semantica.flujo.*;
 import perldoop.semantica.funcion.*;
@@ -30,6 +29,7 @@ import perldoop.semantica.raiz.SemRaiz;
 import perldoop.semantica.rango.SemRango;
 import perldoop.semantica.regulares.*;
 import perldoop.semantica.sentencia.*;
+import perldoop.semantica.std.SemStd;
 import perldoop.semantica.variable.*;
 
 /**

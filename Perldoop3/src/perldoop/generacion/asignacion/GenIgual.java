@@ -6,11 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 import perldoop.generacion.coleccion.GenColeccion;
 import perldoop.generacion.util.Casting;
+import perldoop.generacion.util.ColIterator;
 import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.acceso.Acceso;
+import perldoop.modelo.arbol.acceso.AccesoCol;
+import perldoop.modelo.arbol.acceso.AccesoColRef;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColParentesis;
 import perldoop.modelo.arbol.coleccion.Coleccion;
@@ -20,18 +23,15 @@ import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lista.Lista;
 import perldoop.modelo.arbol.sentencia.StcLista;
 import perldoop.modelo.arbol.variable.Variable;
+import perldoop.modelo.generacion.Declaracion;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.lexico.Token;
+import perldoop.modelo.preprocesador.Tags;
 import perldoop.modelo.preprocesador.TagsInicializacion;
 import perldoop.modelo.preprocesador.TagsTipo;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Tipo;
-import perldoop.generacion.util.ColIterator;
-import perldoop.modelo.arbol.acceso.AccesoCol;
-import perldoop.modelo.arbol.acceso.AccesoColRef;
-import perldoop.modelo.generacion.Declaracion;
 import perldoop.util.Buscar;
-import perldoop.modelo.preprocesador.Tags;
 
 /**
  * Clase para la semantica de igual

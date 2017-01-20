@@ -7,14 +7,14 @@ import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.lexico.Token;
+import perldoop.modelo.preprocesador.Tags;
+import perldoop.modelo.preprocesador.TagsBloque;
 import perldoop.modelo.preprocesador.TagsInicializacion;
 import perldoop.modelo.preprocesador.TagsPredeclaracion;
 import perldoop.modelo.preprocesador.TagsTipo;
-import perldoop.sintactico.Parser;
-import perldoop.modelo.preprocesador.Tags;
-import perldoop.modelo.preprocesador.TagsBloque;
 import perldoop.modelo.preprocesador.hadoop.TagsMapper;
 import perldoop.modelo.preprocesador.hadoop.TagsReducer;
+import perldoop.sintactico.Parser;
 
 /**
  * Clase para preprocesar y eliminar los tokens referentes a etiquetas del codigo fuente

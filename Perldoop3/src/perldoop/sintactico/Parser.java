@@ -18,44 +18,42 @@ package perldoop.sintactico;
 
 
 //#line 2 "parser.y"
-import java.util.List;
 import java.util.ArrayList;
-import perldoop.modelo.Opciones;
+import java.util.List;
 import perldoop.error.GestorErrores;
-import perldoop.modelo.sintactico.ParserVal;
+import perldoop.modelo.Opciones;
 import perldoop.modelo.arbol.*;
+import perldoop.modelo.arbol.abrirbloque.*;
+import perldoop.modelo.arbol.acceso.*;
+import perldoop.modelo.arbol.aritmetica.*;
+import perldoop.modelo.arbol.asignacion.*;
+import perldoop.modelo.arbol.binario.*;
+import perldoop.modelo.arbol.bloque.*;
+import perldoop.modelo.arbol.cadena.*;
+import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
+import perldoop.modelo.arbol.coleccion.*;
+import perldoop.modelo.arbol.comparacion.*;
+import perldoop.modelo.arbol.cuerpo.*;
+import perldoop.modelo.arbol.expresion.*;
+import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.*;
+import perldoop.modelo.arbol.funcion.*;
 import perldoop.modelo.arbol.funciondef.*;
 import perldoop.modelo.arbol.funcionsub.*;
-import perldoop.modelo.arbol.cuerpo.*;
-import perldoop.modelo.arbol.sentencia.*;
-import perldoop.modelo.arbol.expresion.*;
-import perldoop.modelo.arbol.lista.*;
-import perldoop.modelo.arbol.modificador.*;
-import perldoop.modelo.arbol.flujo.*;
-import perldoop.modelo.arbol.asignacion.*;
-import perldoop.modelo.arbol.numero.*;
-import perldoop.modelo.arbol.cadena.*;
-import perldoop.modelo.arbol.variable.*;
-import perldoop.modelo.arbol.paquete.*;
-import perldoop.modelo.arbol.coleccion.*;
-import perldoop.modelo.arbol.acceso.*;
-import perldoop.modelo.arbol.funcion.*;
-import perldoop.modelo.arbol.abrirbloque.*;
-import perldoop.modelo.arbol.bloque.*;
-import perldoop.modelo.arbol.regulares.*;
-import perldoop.modelo.arbol.binario.*;
-import perldoop.modelo.arbol.logico.*;
-import perldoop.modelo.arbol.comparacion.*;
-import perldoop.modelo.arbol.aritmetica.*;
-import perldoop.modelo.arbol.std.*;
-import perldoop.modelo.arbol.lectura.*;
 import perldoop.modelo.arbol.handle.*;
+import perldoop.modelo.arbol.lectura.*;
+import perldoop.modelo.arbol.lista.*;
+import perldoop.modelo.arbol.logico.*;
+import perldoop.modelo.arbol.modificador.*;
 import perldoop.modelo.arbol.modulos.*;
-import perldoop.modelo.arbol.cadenatexto.CadenaTexto;
+import perldoop.modelo.arbol.numero.*;
+import perldoop.modelo.arbol.paquete.*;
 import perldoop.modelo.arbol.rango.Rango;
-//#line 54 "Parser.java"
-
+import perldoop.modelo.arbol.regulares.*;
+import perldoop.modelo.arbol.sentencia.*;
+import perldoop.modelo.arbol.std.*;
+import perldoop.modelo.arbol.variable.*;
+import perldoop.modelo.sintactico.ParserVal;
 
 
 
