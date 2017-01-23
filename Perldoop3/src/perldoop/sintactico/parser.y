@@ -52,7 +52,7 @@ import perldoop.modelo.arbol.rango.Rango;
 %left LLAND
 %left LLNOT
 %left ',' 
-%right '=' MULTI_IGUAL DIV_IGUAL MOD_IGUAL SUMA_IGUAL MAS_IGUAL MENOS_IGUAL DESP_I_IGUAL DESP_D_IGUAL AND_IGUAL OR_IGUAL XOR_IGUAL POW_IGUAL LAND_IGUAL LOR_IGUAL DLOR_IGUAL CONCAT_IGUAL X_IGUAL
+%right '=' MULTI_IGUAL DIV_IGUAL MOD_IGUAL MAS_IGUAL MENOS_IGUAL DESP_I_IGUAL DESP_D_IGUAL AND_IGUAL OR_IGUAL XOR_IGUAL POW_IGUAL LAND_IGUAL LOR_IGUAL DLOR_IGUAL CONCAT_IGUAL X_IGUAL
 %left ID
 %right ':' '?'
 %nonassoc DOS_PUNTOS
@@ -106,7 +106,6 @@ sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)
 			|	DECLARACION_TIPO						{$$=set(new StcTipado(s($1)));}
 			|	error	';'								{$$=set(new StcError());}
 			|	error	'}'								{$$=set(new StcError());}
-			|	error	'{'								{$$=set(new StcError());}
 			
 modulos		:	USE paqueteID ID ';'					{$$=set(new ModuloUse(s($1),Paquetes.addId(s($2),s($3)),s($4)));}
 			|	USE ID ';'								{$$=set(new ModuloUse(s($1),add(new Paquetes().addId(s($2))),s($3)));}

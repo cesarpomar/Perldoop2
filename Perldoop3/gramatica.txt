@@ -1,187 +1,291 @@
-raiz        : fuente
 
-fuente      : cuerpo masFuente
+/*Tokens sintacticos*/
+%token COMENTARIO DECLARACION_TIPO IMPORT_JAVA LINEA_JAVA
+%token VAR FILE
+%token ENTERO DECIMAL M_REX S_REX Y_REX TEXTO EXP_SEP REX_MOD SEP STDIN STDOUT STDERR STDOUT_H STDERR_H
 
-masFuente   :
-            | funcionDef fuente
+/*Palabras reservadas*/
+%token MY SUB OUR PACKAGE WHILE DO FOR UNTIL USE
+%token IF ELSIF ELSE UNLESS LAST NEXT RETURN
+%token Q QQ QR QW QX 
 
-funcionDef  : funcionSub '{' cuerpo '}'
+/*Prioridades*/
+%left LLOR LLXOR
+%left LLAND
+%left LLNOT
+%left ',' 
+%right '=' MULTI_IGUAL DIV_IGUAL MOD_IGUAL SUMA_IGUAL MAS_IGUAL MENOS_IGUAL DESP_I_IGUAL DESP_D_IGUAL AND_IGUAL OR_IGUAL XOR_IGUAL POW_IGUAL LAND_IGUAL LOR_IGUAL DLOR_IGUAL CONCAT_IGUAL X_IGUAL
+%left ID
+%right ':' '?'
+%nonassoc DOS_PUNTOS
+%left LOR DLOR
+%left LAND
+%left '|' '^'
+%left '&'
+%nonassoc NUM_EQ NUM_NE STR_EQ STR_NE CMP CMP_NUM SMART_EQ
+%nonassoc '<' NUM_LE '>' NUM_GE STR_LT STR_LE STR_GT STR_GE
+%left DESP_I DESP_D
+%left '+' '-' '.'
+%left '*' '/' '%' X
+%left STR_REX STR_NO_REX
+%left '!' '~' UNITARIO 
+%right POW
+%nonassoc MAS_MAS MENOS_MENOS
+%left FLECHA
+%right '(' ')' '[' ']' '{' '}' ID_P ID_L
+%left AMBITO CONTEXTO
 
-funcionSub  : SUB ID
 
-cuerpo      :
-            | cuerpo sentencia
+raiz		:	fuente									
 
-sentencia   : lista modificador ';'
-            | bloque
-            | flujo
-            | PACKAGE ID ';'
-            | COMENTARIO
-            | DECLARACION_TIPO
-            | error ';'
+fuente		:	masFuente cuerpo						
 
-expresion   : constante
-            | variable
-            | asignacion
-            | binario
-            | aritmetica
-            | logico
-            | comparacion
-            | coleccion
-            | acceso
-            | funcion
-            | '&' funcion
-            | regulares
+masFuente	:											
+			|	fuente funcionDef						
 
-lista       : expresion ',' lista
-            | expresion ','
-            | expresion
+funcionDef	:	funcionSub '{' cuerpo '}'				
 
-modificador :
-            | IF expresion
-            | UNLESS expresion
-            | WHILE expresion
-            | UNTIL expresion
-            | FOR expresion
+funcionSub	:	SUB ID_L								
+			|	SUB ID									
 
-flujo       : NEXT ';'
-            | LAST ';'
-            | RETURN ';'
-            | RETURN lista ';'
+cuerpoR		:	sentencia								
+			|	cuerpoR	sentencia				        
+			
+cuerpoNV	:	cuerpoR									
 
-asignacion  : expresion '=' expresion
-            | expresion MAS_IGUAL expresion
-            | expresion MENOS_IGUAL expresion
-            | expresion MULTI_IGUAL expresion
-            | expresion DIV_IGUAL expresion
-            | expresion MOD_IGUAL expresion
-            | expresion POW_IGUAL expresion
-            | expresion AND_IGUAL expresion
-            | expresion OR_IGUAL expresion
-            | expresion XOR_IGUAL expresion
-            | expresion DESP_D_IGUAL expresion
-            | expresion DESP_I_IGUAL expresion
-            | expresion LAND_IGUAL expresion
-            | expresion LOR_IGUAL expresion
-            | expresion X_IGUAL expresion
-            | expresion CONCAT_IGUAL expresion
+cuerpo		:											
+			|	cuerpoNV								
 
-constante   : ENTERO
-            | DECIMAL
-            | CADENA_SIMPLE
-            | CADENA_DOBLE
-            | CADENA_COMANDO
+sentencia   :	lista modificador ';'					
+			|	';'										
+			|	bloque									
+			|	flujo									
+			|	modulos									
+			|	IMPORT_JAVA								
+			|	LINEA_JAVA								
+			|	COMENTARIO								
+			|	DECLARACION_TIPO						
+			|	error	';'								
+			|	error	'}'								
+			
+modulos		:	USE paqueteID ID ';'					
+			|	USE ID ';'								
+			|	DO cadena ';'							
+			|	PACKAGE paqueteID ID ';'				
+			|	PACKAGE ID ';'							
 
-variable    : '$' Var
-            | '@' Var
-            | '%' Var
-            | '$' paqueteVar Var
-            | '@' paqueteVar Var
-            | '%' paqueteVar Var 
-            | MY '$' Var
-            | MY '@' Var
-            | MY '%' Var
-            | OUR '$' Var 
-            | OUR '@' Var
-            | OUR '%' Var
+expresion	:	numero									
+			|	cadena									
+			|	variable								
+			|	asignacion								
+			|	binario									
+			|	aritmetica								
+			|	logico									
+			|	comparacion								
+			|	coleccion								
+			|	acceso									
+			|	funcion									
+			|	'&' funcion %prec CONTEXTO				
+			|	lectura									
+			|	std										
+			|	regulares								
+			|	rango									
 
-paqueteVar  : paqueteVar VAR AMBITO
-            | VAR AMBITO
+rango		:	expresion DOS_PUNTOS expresion			
+			
+lista		:	listaR									
+			|	listaR ','								
 
-paqueteID   : paqueteID ID AMBITO
-            | ID AMBITO
+listaR		:	listaR ',' expresion					
+			|	expresion								
 
-coleccion   : '(' lista ')'
-            | '(' ')'
-            | '[' lista ']'
-            | '[' ']'
-            | '{' lista '}'
-            | '{' '}'
-            | expresion DOS_PUNTOS expresion
-            | MY '(' lista ')'
-            | OUR '(' lista ')'
+modificador :											
+			|	IF expresion							
+			|	UNLESS expresion						
+			|	WHILE expresion							
+			|	UNTIL expresion							
+			|	FOR expresion							
 
-acceso      : expresion '{' lista '}'
-            | expresion '[' lista ']'
-            | expresion FLECHA '{' lista '}'
-            | expresion FLECHA '[' lista ']'
-            | '$' expresion
-            | '@' expresion
-            | '%' expresion
+flujo		:	NEXT ';'								
+			|	LAST ';'								
+			|	RETURN ';'								
+			|	RETURN expresion ';'					
 
-funcion     : paqueteID ID expresion
-            | paqueteID ID
-            | ID expresion
-            | ID
+asignacion	:   expresion '=' expresion					
+			|	expresion MAS_IGUAL expresion			
+			|	expresion MENOS_IGUAL expresion			
+			|	expresion MULTI_IGUAL expresion			
+			|	expresion DIV_IGUAL expresion			
+			|	expresion MOD_IGUAL expresion			
+			|	expresion POW_IGUAL expresion			
+			|	expresion AND_IGUAL expresion			
+			|	expresion OR_IGUAL expresion			
+			|	expresion XOR_IGUAL expresion			
+			|	expresion DESP_D_IGUAL expresion		
+			|	expresion DESP_I_IGUAL expresion		
+			|	expresion LAND_IGUAL expresion			
+			|	expresion LOR_IGUAL expresion			
+			|	expresion DLOR_IGUAL expresion			
+			|	expresion X_IGUAL expresion				
+			|	expresion CONCAT_IGUAL expresion		
 
-regulares   : expresion STR_NO_REX M_REGEX
-            | expresion STR_REX M_REGEX
-            | expresion STR_REX S_REGEX
-            | expresion STR_REX Y_REGEX
+numero		:	ENTERO									
+			|	DECIMAL									
+			
+cadena		:	'\'' cadenaTexto '\''					
+			|	'"' cadenaTexto '"'						
+			|	'`' cadenaTexto '`'						
+			|	Q SEP cadenaTexto SEP					
+			|	QW SEP cadenaTexto SEP					
+			|	QQ SEP cadenaTexto SEP					
+			|	QR SEP cadenaTexto SEP					
+			|	QX SEP cadenaTexto SEP					
 
-binario     : expresion '|' expresion
-            | expresion '&' expresion
-            | expresion '~' expresion
-            | expresion '^' expresion
-            | expresion DESP_I expresion
-            | expresion DESP_D expresion
+cadenaTexto :	cadenaTextoR							
+			
+cadenaTextoR:											
+			|	cadenaTextoR EXP_SEP expresion EXP_SEP	
+			|	cadenaTextoR TEXTO						
 
-logico      : expresion LOR expresion
-            | expresion LAND expresion
-            | '!' expresion
-            | expresion LLOR expresion
-            | expresion LLAND expresion
-            | LLNOT expresion
-            | expresion LLXOR expresion
-            | expresion '?' expresion ':' expresion
+variable	:	'$' VAR									
+			|	'@' VAR									
+			|	'%' VAR									
+			|	'$' paqueteVar VAR						
+			|	'@' paqueteVar VAR						
+			|	'%' paqueteVar VAR						
+			|	'$' '#' VAR 							
+			|	'$' '#' paqueteVar VAR 					
+			|	MY '$' VAR								
+			|	MY '@' VAR								
+			|	MY '%' VAR								
+			|	OUR '$' VAR								
+			|	OUR '@' VAR								
+			|	OUR '%' VAR								
 
-comparacion : expresion NUM_EQ expresion
-            | expresion NUM_NE expresion
-            | expresion '<' expresion
-            | expresion NUM_LE expresion
-            | expresion '>' expresion
-            | expresion NUM_GE expresion
-            | expresion CMP_NUM expresion
-            | expresion STR_EQ expresion
-            | expresion STR_NE expresion
-            | expresion STR_LT expresion
-            | expresion STR_LE expresion
-            | expresion STR_GT expresion
-            | expresion STR_GE expresion
-            | expresion CMP expresion
-            | expresion SMART_EQ expresion
+paqueteVar	:	paqueteVar VAR AMBITO					
+			|	VAR AMBITO								
 
-aritmetica  : expresion '+' expresion
-            | expresion '-' expresion
-            | expresion '*' expresion
-            | expresion '/' expresion
-            | expresion POW expresion
-            | expresion X expresion
-            | expresion '.' expresion
-            | expresion '%' expresion
-            | '+' expresion
-            | '-' expresion
-            | MAS_MAS expresion
-            | MENOS_MENOS expresion
-            | expresion MAS_MAS
-            | expresion MENOS_MENOS
+paqueteID	:	paqueteID ID AMBITO						
+			|	ID AMBITO								
 
-abrirBloque :
+colParen	:	'(' lista ')'							
+			|	'('  ')'								
+			
+colRef		:	'[' lista ']'							
+			|	'[' ']'									
+			|	'{' lista '}'							
+			|	'{' '}'									
+			
+colDec		:	MY '(' lista ')'						
+			|	OUR '(' lista ')'						
+			
+coleccion	:	colParen								
+			|	colRef									
+			|	colDec									
+			
+acceso		:	expresion colRef						
+			|	expresion FLECHA colRef					
+			|	'$' expresion %prec CONTEXTO			
+			|	'@' expresion %prec CONTEXTO			
+			|	'%' expresion %prec CONTEXTO			
+			|	'\\' expresion %prec CONTEXTO			
 
-bloque      : condicional elsif
-            | WHILE abrirBloque '(' expresion ')' '{' cuerpo '}'
-            | UNTIL abrirBloque '(' expresion ')' '{' cuerpo '}'
-            | DO abrirBloque '{' cuerpo '}' WHILE '(' expresion ')' ';'
-            | DO abrirBloque '{' cuerpo '}' UNTIL '(' expresion ')' ';'
-            | FOR abrirBloque '(' expresion ';' expresion ';' expresion ')' '{' cuerpo '}'
-            | FOR abrirBloque expresion '(' expresion ')' '{' cuerpo '}'
-            | FOR abrirBloque '(' lista ')' '{' cuerpo '}'
+funcion		:	ID expresion							
+			|	ID_P colParen							
+			|	ID										
+			|	paqueteID ID expresion					
+			|	paqueteID ID_P colParen					
+			|	paqueteID ID							
+			|	ID handle expresion						
+			|	ID_P '(' handle expresion ')'			
+			|	ID_L '{' expresion '}' expresion		
 
-condicional : IF abrirBloque '(' expresion ')' '{' cuerpo '}'
-            | UNLESS abrirBloque '(' expresion ')' '{' cuerpo '}'
+handle		:	STDOUT_H								
+			|	STDERR_H								
+			|	FILE VAR								
+			
+std			:	STDIN									
+			|	STDOUT									
+			|	STDERR									
+			
+lectura		:	'<' expresion '>'						
+			|	'<' '>'									
 
-elsif       :
-            | bloqueElsif elsif
-            | ELSE abrirBloque '{' cuerpo '}'
+binario		:	expresion '|' expresion					
+			|	expresion '&' expresion					
+			|	'~' expresion							
+			|	expresion '^' expresion					
+			|	expresion DESP_I expresion				
+			|	expresion DESP_D expresion				
 
-bloqueElsif : ELSIF abrirBloque '(' expresion ')' '{' cuerpo '}'
+logico		:	expresion LOR expresion					
+			|	expresion DLOR expresion				
+			|	expresion LAND expresion				
+			|	'!' expresion							
+			|	expresion LLOR expresion				
+			|	expresion LLAND expresion				
+			|	LLNOT expresion							
+			|	expresion LLXOR expresion				
+			|	expresion '?' expresion ':' expresion	
+
+comparacion	:	expresion NUM_EQ expresion				
+			|	expresion NUM_NE expresion				
+			|	expresion '<' expresion					
+			|	expresion NUM_LE expresion				
+			|	expresion '>' expresion					
+			|	expresion NUM_GE expresion				
+			|	expresion CMP_NUM expresion				
+			|	expresion STR_EQ expresion				
+			|	expresion STR_NE expresion				
+			|	expresion STR_LT expresion				
+			|	expresion STR_LE expresion				
+			|	expresion STR_GT expresion				
+			|	expresion STR_GE expresion				
+			|	expresion CMP expresion					
+			|	expresion SMART_EQ expresion			
+
+aritmetica	:	expresion '+' expresion					
+			|	expresion '-' expresion					
+			|	expresion '*' expresion					
+			|	expresion '/' expresion					
+			|	expresion POW expresion					
+			|	expresion X expresion					
+			|	expresion '.' expresion					
+			|	expresion '%' expresion					
+			|	'+' expresion %prec UNITARIO			
+			|	'-' expresion %prec UNITARIO			
+			|	MAS_MAS expresion						
+			|	MENOS_MENOS expresion					
+			|	expresion MAS_MAS						
+			|	expresion MENOS_MENOS					
+			
+regulares	:	expresion STR_REX M_REX SEP cadenaTexto SEP rexMod								
+			|	expresion STR_REX SEP cadenaTexto SEP rexMod									
+			|	expresion STR_NO_REX M_REX SEP cadenaTexto SEP rexMod							
+			|	expresion STR_NO_REX SEP cadenaTexto SEP rexMod									
+			|	expresion STR_REX S_REX SEP cadenaTexto SEP cadenaTexto SEP rexMod				
+			|	expresion STR_REX Y_REX SEP cadenaTexto SEP cadenaTexto SEP rexMod				
+			
+rexMod		:																					
+			|	REX_MOD																			
+
+abrirBloque :																					
+			
+listaFor	:																					
+			|	lista																			
+			
+bloque		:	'{' cuerpoNV '}'																		
+			|	WHILE abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'							
+			|	UNTIL abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'							
+			|	DO abrirBloque '{' cuerpo '}' WHILE abrirBloque '(' expresion ')' ';'					
+			|	DO abrirBloque '{' cuerpo '}' UNTIL abrirBloque '(' expresion ')' ';'					
+			|	FOR abrirBloque '(' listaFor ';' listaFor ';' listaFor ')' abrirBloque '{' cuerpo '}'	
+			|	FOR abrirBloque variable colParen abrirBloque '{' cuerpo '}'							
+			|	FOR abrirBloque colParen abrirBloque '{' cuerpo '}'										
+			|	IF abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'	condicional					
+			|	UNLESS abrirBloque '(' expresion ')' abrirBloque '{' cuerpo '}'	condicional				
+			
+condicional	:																							
+			|	ELSIF '(' expresion ')' abrirBloque '{' cuerpo '}' condicional							
+			|	ELSE abrirBloque '{' cuerpo '}'															
+			
