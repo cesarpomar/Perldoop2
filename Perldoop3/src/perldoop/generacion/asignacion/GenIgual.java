@@ -103,11 +103,11 @@ public class GenIgual {
         //No hay ninguna coleccion a la derecha
         comentarios.add(new StringBuilder(s.getOperador().getComentario()));
         ColIterator varIt = new ColIterator((Coleccion) s.getIzquierda().getValor());
-        //Comprobamos intercambios de variables
-        atomicidad(s, atomicidad, variables, valores, sentencia);
         int i;
         String nValores = null;
         if (sentencia && (valores.size() > 1 || !valores.get(0).getTipo().isColeccion())) {
+            //Comprobamos intercambios de variables
+            atomicidad(s, atomicidad, variables, valores, sentencia);
             ColIterator valIt = valores.size() > 1 ? new ColIterator((Coleccion) s.getDerecha().getValor()) : new ColIterator();
             //Variables que no serian inicializadas
             checkValores(s, variables, valores);

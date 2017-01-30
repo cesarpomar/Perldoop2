@@ -1,6 +1,7 @@
 package perldoop.lib;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import perldoop.lib.file.Fread;
 import perldoop.lib.file.Fwrite;
 
@@ -43,44 +44,73 @@ public final class PerlFile {
     }
 
     /**
+     * Obtiene la codificacion
+     *
+     * @param str Cadena que contiene la codificación
+     * @return Codificación
+     */
+    private String getEncode(String str) {
+        if (str.indexOf(':') > -1) {
+            String encode = str.substring(str.indexOf(':') + 1);
+            if (encode.startsWith("encoding")) {
+                encode = encode.substring(9, encode.length() - 1);
+            }
+            return encode;
+        }
+        return null;
+    }
+
+    /**
+     * Abre un fichero
      *
      * @param path Ruta del fichero
      * @param mode Modo de apertura del fichero
      * @return 1 si tuvo existo, 0 en otro caso
      */
     public Integer open(String path, String mode) {
+        String encode = getEncode(mode);
+        read = null;
+        write = null;
         try {
-            if (mode.indexOf(':') > 0) {
-                String[] split = mode.split(":");
-                String encode = split[1];
-                if (encode.startsWith("encoding")) {
-                    encode = encode.substring(9, encode.length());
+            if (mode.startsWith("<")) {
+                if (encode == null) {
+                    read = new Fread(path);
+                } else {
+                    read = new Fread(path, encode);
                 }
-                switch (split[0]) {
-                    case "<":
-                        read = new Fread(path, encode);
-                        break;
-                    case ">":
-                        write = new Fwrite(path, false, encode);
-                        break;
-                    case ">>":
-                        write = new Fwrite(path, true, encode);
-                        break;
-                }
-            } else {
-                switch (mode) {
-                    case "<":
-                        read = new Fread(path);
-                        break;
-                    case ">":
-                        write = new Fwrite(path, false);
-                        break;
-                    case ">>":
-                        write = new Fwrite(path, true);
-                        break;
+            } else if (mode.startsWith(">")) {
+                boolean append = mode.startsWith(">>");
+                if (encode == null) {
+                    write = new Fwrite(path, append);
+                } else {
+                    write = new Fwrite(path, append, encode);
                 }
             }
         } catch (IOException ex) {
+            return 0;
+        }
+        return 1;
+    }
+
+    /**
+     * Cambia la codificación del fichero
+     *
+     * @param encode Codificación
+     * @return 1 si tuvo existe, 0 en otro caso
+     */
+    public Integer setEnconde(String encode) {
+        String encode2 = getEncode(encode);
+        if (encode2 == null) {
+            encode2 = encode;
+        }
+        try {
+            if (read != null) {
+                read.setEnconde(encode2);
+            }
+            if (write != null) {
+                write.setEnconde(encode2);
+            }
+        } catch (UnsupportedEncodingException ex) {
             return 0;
         }
         return 1;

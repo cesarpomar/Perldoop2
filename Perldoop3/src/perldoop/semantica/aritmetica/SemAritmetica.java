@@ -81,12 +81,16 @@ public class SemAritmetica {
     public void visitar(AritDiv s) {
         tipoMinimo(s);
         if (s.getTipo().isInteger() || s.getTipo().isLong()) {
+            boolean entera = false;
             Simbolo uso = Buscar.getUso((Expresion) s.getPadre());
             if (uso instanceof Igual) {
                 Tipo t = ((Igual) uso).getIzquierda().getTipo();
                 if (t != null && (t.isInteger() || t.isLong())) {
-                    s.setTipo(t);
+                    entera = true;
                 }
+            }
+            if (!entera) {
+                s.setTipo(new Tipo(Tipo.DOUBLE));
             }
         }
     }

@@ -10,9 +10,9 @@ import perldoop.modelo.generacion.TablaGenerador;
  *
  * @author César Pomar
  */
-public class GenFuncionWordCase extends GenFuncionNativa {
+public class GenFuncionLog extends GenFuncionNativa {
 
-    public GenFuncionWordCase(TablaGenerador tabla) {
+    public GenFuncionLog(TablaGenerador tabla) {
         super(tabla);
     }
 
@@ -22,7 +22,7 @@ public class GenFuncionWordCase extends GenFuncionNativa {
         codigo.append("Perl.").append(f.getIdentificador()).append("(");
         ColIterator it = new ColIterator(f.getColeccion());
         codigo.append(it.getComentario());
-        codigo.append(Casting.toString(it.next()));
+        codigo.append(Casting.toNumber(it.next()));
         codigo.append(it.getComentario());
         codigo.append(")");
         f.setCodigoGenerado(codigo);

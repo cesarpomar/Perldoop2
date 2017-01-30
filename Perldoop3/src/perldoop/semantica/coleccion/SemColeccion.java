@@ -213,7 +213,7 @@ public class SemColeccion {
                     }
                 }
                 //Dentro de una coleccion una ref es como una coleccion
-                if(subT.getTipo().size()==1 && !subT.isBox() && texp.isRef()){
+                if (subT.getTipo().size() == 1 && !subT.isBox() && texp.isRef()) {
                     Tipos.error(expresiones.get(i), expresiones.get(i).getTipo(), t, tabla.getGestorErrores());
                 }
                 Tipos.casting(expresiones.get(i), texp, subT, tabla.getGestorErrores());
@@ -271,7 +271,9 @@ public class SemColeccion {
         if (s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) {
             return;
         }
-        s.getTipo().add(0, Tipo.REF);
+        if (s.getTipo().isColeccion()) {
+            s.getTipo().add(0, Tipo.REF);
+        }
     }
 
     public void visitar(ColLlave s) {
@@ -282,7 +284,9 @@ public class SemColeccion {
         if (s.getPadre() instanceof AccesoCol || s.getPadre() instanceof AccesoColRef) {
             return;
         }
-        s.getTipo().add(0, Tipo.REF);
+        if (s.getTipo().isColeccion()) {
+            s.getTipo().add(0, Tipo.REF);
+        }
     }
 
 }

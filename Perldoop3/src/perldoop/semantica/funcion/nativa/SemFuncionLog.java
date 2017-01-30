@@ -5,20 +5,20 @@ import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
 
 /**
- * Semantica función chop
+ * Semantica función log
  *
  * @author César Pomar
  */
-public final class SemFuncionWordCase extends SemFuncionNativa {
+public final class SemFuncionLog extends SemFuncionNativa {
 
-    public SemFuncionWordCase(TablaSemantica tabla) {
+    public SemFuncionLog(TablaSemantica tabla) {
         super(tabla);
     }
 
     @Override
     public void visitar(FuncionBasica f) {
         checkArgumentos(f, 1, 1);
-        f.setTipo(new Tipo(Tipo.STRING));
+        f.setTipo(new Tipo(Tipo.DOUBLE));
     }
 
 }

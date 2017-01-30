@@ -371,10 +371,11 @@ public final class Pd {
      *
      * @param str1 Cadena 1
      * @param str2 Cadena 2
-     * @return 0 si str1 == str2, 1 si str1 '-&gt;' str2, -1 si str1 '-&lt;' str1
+     * @return 0 si str1 == str2, 1 si str1 '-&gt;' str2, -1 si str1 '-&lt;' str2
      */
     public static int compare(String str1, String str2) {
-        return str1.compareTo(str2) % 2;
+        int cmp = str1.compareTo(str2);
+        return cmp == 0 ? cmp : cmp < 0 ? -1 : 1;
     }
 
     /**
@@ -382,10 +383,11 @@ public final class Pd {
      *
      * @param n1 Numero 1
      * @param n2 Numero 2
-     * @return 0 si n1 == n2, 1 si n1 '-&gt;' n2, -1 si n1 '-&lt;' n1
+     * @return 0 si n1 == n2, 1 si n1 '-&gt;' n2, -1 si n1 '-&lt;' n2
      */
     public static int compare(Number n1, Number n2) {
-        return Double.compare(n1.doubleValue(), n2.doubleValue()) % 2;
+        int cmp = Double.compare(n1.doubleValue(), n2.doubleValue()) % 2;
+        return cmp == 0 ? cmp : cmp < 0 ? -1 : 1;
     }
 
     /**
@@ -610,5 +612,5 @@ public final class Pd {
     public static <T> T rn(Object f, Ref<T> rn) {
         return rn.get();
     }
-    
+
 }

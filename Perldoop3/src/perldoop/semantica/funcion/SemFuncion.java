@@ -147,6 +147,10 @@ public class SemFuncion {
             case "uc":
             case "ucfirst":
                 return new SemFuncionWordCase(tabla);
+            case "log":
+                return new SemFuncionLog(tabla);
+            case "binmode":
+                return new SemFuncionBinmode(tabla);
             default:
                 return null;
         }

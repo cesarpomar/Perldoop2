@@ -1,14 +1,12 @@
 package perldoop.lib.file;
 
-import java.io.BufferedWriter;
+import java.io.BufferedOutputStream;
 import java.io.Closeable;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 
 /**
  * Clase para almacenar un fichero de escritura.
@@ -17,12 +15,11 @@ import java.io.Writer;
  */
 public final class Fwrite implements Closeable {
 
-    public static final boolean STDOUT = false;
-    public static final boolean STDERR = true;
+    public static final boolean STDOUT = true;
+    public static final boolean STDERR = false;
 
-    private OutputStream output;
-    private Writer escritura;
-    private BufferedWriter buffer;
+    private OutputStream stream;//Stream que representa el dispositivo de escritura
+    private PrintStream out;//Encargado de realizar las escrituras
 
     /**
      * Escribe por pantalla
@@ -30,10 +27,10 @@ public final class Fwrite implements Closeable {
      * @param flag STDOUT || STDERR
      */
     public Fwrite(boolean flag) {
-        if (flag == STDOUT) {
-            buffer = new BufferedWriter(new OutputStreamWriter(System.out));
+        if (flag) {
+            stream = out = System.out;
         } else {
-            buffer = new BufferedWriter(new OutputStreamWriter(System.err));
+            stream = out = System.err;
         }
     }
 
@@ -45,9 +42,7 @@ public final class Fwrite implements Closeable {
      * @throws IOException Error al abrir el fichero
      */
     public Fwrite(String path, boolean append) throws IOException {
-        escritura = new FileWriter(path, append);
-        buffer = new BufferedWriter(escritura);
-
+        out = new PrintStream(stream = new BufferedOutputStream(new FileOutputStream(path, append)));
     }
 
     /**
@@ -60,9 +55,17 @@ public final class Fwrite implements Closeable {
      * @throws IOException Error al abrir el fichero
      */
     public Fwrite(String path, boolean append, String encode) throws UnsupportedEncodingException, IOException {
-        output = new FileOutputStream(path);
-        escritura = new OutputStreamWriter(output, encode);
-        buffer = new BufferedWriter(escritura);
+        out = new PrintStream(stream = new BufferedOutputStream(new FileOutputStream(path, append)), false, encode);
+    }
+
+    /**
+     * Cambia la codificación del fichero
+     *
+     * @param encode Codificación
+     * @throws UnsupportedEncodingException Codificación no soportada
+     */
+    public void setEnconde(String encode) throws UnsupportedEncodingException {
+        out = new PrintStream(stream, false, encode);
     }
 
     /**
@@ -70,11 +73,7 @@ public final class Fwrite implements Closeable {
      */
     @Override
     public void close() throws IOException {
-        buffer.close();
-        escritura.close();
-        if (output != null) {
-            output.close();
-        }
+        out.close();
     }
 
     /**
@@ -84,12 +83,8 @@ public final class Fwrite implements Closeable {
      * @return 1 si tiene exito, 0 en caso contrario
      */
     public int print(Object... values) {
-        try {
-            for (Object value : values) {
-                buffer.write(value.toString());
-            }
-        } catch (IOException ex) {
-            return 0;
+        for (Object value : values) {
+            out.print(value);
         }
         return 1;
     }
@@ -101,14 +96,10 @@ public final class Fwrite implements Closeable {
      * @return 1 si tiene exito, 0 en caso contrario
      */
     public int println(Object... values) {
-        try {
-            for (Object value : values) {
-                buffer.write(value.toString());
-                buffer.newLine();
-            }
-        } catch (IOException ex) {
-            return 0;
+        for (Object value : values) {
+            out.print(value);
         }
+        out.println();
         return 1;
     }
 
@@ -120,13 +111,7 @@ public final class Fwrite implements Closeable {
      * @return 1 si tiene exito, 0 en caso contrario
      */
     public int printf(String format, Object... values) {
-        try {
-            for (Object value : values) {
-                buffer.write(String.format(format, values));
-            }
-        } catch (IOException ex) {
-            return 0;
-        }
+        out.printf(format, values);
         return 1;
     }
 

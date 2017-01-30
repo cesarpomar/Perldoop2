@@ -2,7 +2,6 @@ package perldoop.generacion.aritmetica;
 
 import perldoop.generacion.acceso.GenAcceso;
 import perldoop.generacion.util.Casting;
-import perldoop.generacion.util.Tipos;
 import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.aritmetica.AritConcat;
 import perldoop.modelo.arbol.aritmetica.AritDiv;
@@ -96,9 +95,7 @@ public class GenAritmetica {
         genOpBasica(s);
         if (s.getTipo().isDecimal()
                 && !s.getTipo().equals(s.getIzquierda().getTipo()) && !s.getTipo().equals(s.getDerecha().getTipo())) {
-            StringBuilder codigo = new StringBuilder(100);
-            codigo.append("(").append(Tipos.declaracion(s.getTipo())).append(")");
-            s.getCodigoGenerado().insert(0, codigo);
+            s.getCodigoGenerado().insert(0, "(1.0*").append(")");
         }
     }
 

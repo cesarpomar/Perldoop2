@@ -80,7 +80,7 @@ public abstract class Casting {
      * @return Boolean
      */
     public static Boolean toBoolean(String s) {
-        return s == null ? null : !s.isEmpty() && !s.contains("0");
+        return s == null ? null : !s.isEmpty() && !s.equals("0");
     }
 
     /**

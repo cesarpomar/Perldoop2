@@ -5,10 +5,12 @@ import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
 import perldoop.modelo.arbol.acceso.*;
+import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.coleccion.ColCorchete;
 import perldoop.modelo.arbol.coleccion.ColLlave;
 import perldoop.modelo.arbol.coleccion.Coleccion;
 import perldoop.modelo.arbol.expresion.ExpAcceso;
+import perldoop.modelo.arbol.expresion.ExpColeccion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
@@ -55,15 +57,26 @@ public class SemAcceso {
     private void checkAccesoColRef(AccesoDesRef s) {
         char c = s.getContexto().getValor().charAt(0);
         Tipo t = s.getExpresion().getTipo();
-        Tipo st = t.getSubtipo(1);
         if (t.isBox()) {
-            tabla.getGestorErrores().error(Errores.UNBOXING_SIN_TIPO, s.getContexto().getToken(), String.join("", ParserEtiquetas.parseTipo(t)));
-            throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
+            Simbolo uso = Buscar.getPadre(s, 1);
+            if (uso instanceof Igual && Buscar.isHijo(s, ((Igual) uso).getDerecha())) {
+                Igual igual = (Igual) uso;
+                Expresion izq = igual.getIzquierda();
+                if (!(izq instanceof ExpColeccion) && izq.getTipo() != null && izq.getTipo().isColeccion()) {
+                    t = new Tipo(izq.getTipo()).add(0, Tipo.REF);
+                }
+
+            }
+            if (t.isBox()) {
+                tabla.getGestorErrores().error(Errores.UNBOXING_SIN_TIPO, s.getContexto().getToken(), String.join("", ParserEtiquetas.parseTipo(t)));
+                throw new ExcepcionSemantica(Errores.ACCESO_NO_COLECCION);
+            }
         }
         if (!t.isRef()) {
             tabla.getGestorErrores().error(Errores.ACCESO_NO_REF, s.getContexto().getToken(), String.join("", ParserEtiquetas.parseTipo(t)));
             throw new ExcepcionSemantica(Errores.ACCESO_NO_REF);
         }
+        Tipo st = t.getSubtipo(1);
         if (!(Buscar.getUso((Expresion) s.getPadre()) instanceof Acceso)) {
             if (c == '$') {
                 tabla.getGestorErrores().error(Errores.ACCESO_REF_ESCALAR, s.getContexto().getToken());

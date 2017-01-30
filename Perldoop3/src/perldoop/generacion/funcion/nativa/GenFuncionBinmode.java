@@ -6,13 +6,13 @@ import perldoop.modelo.arbol.funcion.FuncionBasica;
 import perldoop.modelo.generacion.TablaGenerador;
 
 /**
- * Generador de la funcion chop
+ * Generador de la funcion binmode
  *
  * @author César Pomar
  */
-public class GenFuncionWordCase extends GenFuncionNativa {
+public class GenFuncionBinmode extends GenFuncionNativa {
 
-    public GenFuncionWordCase(TablaGenerador tabla) {
+    public GenFuncionBinmode(TablaGenerador tabla) {
         super(tabla);
     }
 
@@ -22,6 +22,10 @@ public class GenFuncionWordCase extends GenFuncionNativa {
         codigo.append("Perl.").append(f.getIdentificador()).append("(");
         ColIterator it = new ColIterator(f.getColeccion());
         codigo.append(it.getComentario());
+        //Fichero
+        codigo.append(it.next());
+        codigo.append(it.getComentario());
+        //Modo
         codigo.append(Casting.toString(it.next()));
         codigo.append(it.getComentario());
         codigo.append(")");

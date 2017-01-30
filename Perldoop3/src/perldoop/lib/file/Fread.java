@@ -4,11 +4,9 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -18,15 +16,14 @@ import java.io.UnsupportedEncodingException;
  */
 public final class Fread implements Closeable {
 
-    private InputStream input;
-    private Reader lectura;
-    private BufferedReader buffer;
+    private InputStream stream;
+    private BufferedReader in;
 
     /**
      * Usa la entrada estandar para la lectura
      */
     public Fread() {
-        buffer = new BufferedReader(new InputStreamReader(System.in));
+        in = new BufferedReader(new InputStreamReader(stream = System.in));
     }
 
     /**
@@ -36,8 +33,7 @@ public final class Fread implements Closeable {
      * @throws FileNotFoundException Si el fichero no existe
      */
     public Fread(String path) throws FileNotFoundException {
-        lectura = new FileReader(path);
-        buffer = new BufferedReader(lectura);
+        in = new BufferedReader(new InputStreamReader(stream = new FileInputStream(path)));
     }
 
     /**
@@ -49,9 +45,17 @@ public final class Fread implements Closeable {
      * @throws UnsupportedEncodingException Codificación no soportada
      */
     public Fread(String path, String encode) throws FileNotFoundException, UnsupportedEncodingException {
-        input = new FileInputStream(path);
-        lectura = new InputStreamReader(input, encode);
-        buffer = new BufferedReader(lectura);
+        in = new BufferedReader(new InputStreamReader(stream = new FileInputStream(path), encode));
+    }
+
+    /**
+     * Cambia la codificación del fichero
+     *
+     * @param encode Codificación
+     * @throws UnsupportedEncodingException Codificación no soportada
+     */
+    public void setEnconde(String encode) throws UnsupportedEncodingException {
+        in = new BufferedReader(new InputStreamReader(stream, encode));
     }
 
     /**
@@ -59,11 +63,7 @@ public final class Fread implements Closeable {
      */
     @Override
     public void close() throws IOException {
-        buffer.close();
-        lectura.close();
-        if (input != null) {
-            input.close();
-        }
+        in.close();
     }
 
     /**
@@ -73,7 +73,7 @@ public final class Fread implements Closeable {
      */
     public String read() {
         try {
-            String line = buffer.readLine();
+            String line = in.readLine();
             if (line != null) {
                 return line + "\n";
             } else {
@@ -90,7 +90,7 @@ public final class Fread implements Closeable {
      * @return array de lineas
      */
     public String[] readLines() {
-        return buffer.lines().map(line -> line + "\n").toArray(String[]::new);
+        return in.lines().map(line -> line + "\n").toArray(String[]::new);
     }
 
 }

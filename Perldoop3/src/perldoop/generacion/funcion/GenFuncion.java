@@ -146,6 +146,10 @@ public final class GenFuncion {
             case "uc":
             case "ucfirst":
                 return new GenFuncionWordCase(tabla);
+            case "log":
+                return new GenFuncionLog(tabla);
+            case "binmode":
+                return new GenFuncionBinmode(tabla);
             default:
                 return null;
         }

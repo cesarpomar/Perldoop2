@@ -242,11 +242,11 @@ public class GenAcceso {
      */
     private static String genDesRef(Acceso a) {
         Expresion exp = Buscar.getExpresion(a.getExpresion());
-        //Si esta entre llaves cogemos el contenido
+        //Coger elemento entre llaves
         if (exp.getValor() instanceof ColLlave) {
-            exp = Buscar.getExpresion(((ColLlave) exp.getValor()).getLista().getExpresiones().get(0));
+            exp = ((ColLlave) exp.getValor()).getLista().getExpresiones().get(0);
         }
-        //Acceso apra escirtura
+        //Acceso para escirtura
         if (a instanceof AccesoDesRef) {
             Simbolo uso = Buscar.getUsoCol((Expresion) a.getPadre());
             if (uso instanceof Igual && Buscar.isHijo(exp, ((Igual) uso).getIzquierda()) && exp.getValor() instanceof VarExistente) {
@@ -265,13 +265,18 @@ public class GenAcceso {
      * Accede a una referencia
      *
      * @param s Simbolo del Acceso a referencia
-     * @param comenrarioSimbolo Comentario del simbolo que indica la desreferenciación
+     * @param comentarioSimbolo Comentario del simbolo que indica la desreferenciación
      */
-    private void AccesoReferencia(Acceso s, String comenrarioSimbolo) {
+    private void AccesoReferencia(Acceso s, String comentarioSimbolo) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append(comenrarioSimbolo);
-        codigo.append(s.getExpresion());
-        codigo.append(genDesRef(s));
+        codigo.append(comentarioSimbolo);
+        if (s.getExpresion().getTipo().isBox()) {
+            Tipo ref = new Tipo(s.getTipo()).add(0, Tipo.REF);
+            codigo.append("((").append(Tipos.declaracion(ref)).append(")").append(s.getExpresion()).append(").get()");
+        } else {
+            codigo.append(s.getExpresion());
+            codigo.append(genDesRef(s));
+        }
         s.setCodigoGenerado(codigo);
     }
 

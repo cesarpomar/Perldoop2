@@ -88,8 +88,12 @@ public class SemLogico {
     }
 
     public void visitar(LogTernario s) {
-        setTipo(s.getCierta(), s, s.getFalsa());
-        Tipos.casting(s.getCierta(), s.getTipo(), tabla.getGestorErrores());
-        Tipos.casting(s.getFalsa(), s.getTipo(), tabla.getGestorErrores());
+        if (s.getCierta().getTipo().equals(s.getFalsa().getTipo())) {
+            s.setTipo(s.getCierta().getTipo());
+        } else {
+            s.setTipo(new Tipo(Tipo.BOX));
+            Tipos.casting(s.getCierta(), s.getTipo(), tabla.getGestorErrores());
+            Tipos.casting(s.getFalsa(), s.getTipo(), tabla.getGestorErrores());
+        }
     }
 }

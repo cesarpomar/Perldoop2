@@ -23,28 +23,28 @@ public final class Regex {
     /**
      * Comprueba si una cadena comple la expresión regular
      *
-     * @param srt Cadena
+     * @param str Cadena
      * @param regex Expresión regular
      * @param mods Modificadores
      * @param global Busca todas las coincidencias
      * @return Evaluacion de la expresion regular sobre la cadena
      */
-    public static boolean match(String srt, String regex, String mods, boolean global) {
-        return new Pattern(regex, mods).matches(srt);
+    public static boolean match(String str, String regex, String mods, boolean global) {
+        return new Pattern(regex, mods).matcher(str).find();
     }
 
     /**
-     * Comprueba si una cadena comple la expresión regular
+     * Obtiene las expresiones entre parentesis dentro de una expresion regular
      *
-     * @param srt Cadena
+     * @param str Cadena
      * @param regex Expresión regular
      * @param mods Modificadores
      * @param global Busca todas las coincidencias
      * @return Coincidencias de las expresiones entre parentesis
      */
-    public static String[] matcher(String srt, String regex, String mods, boolean global) {
+    public static String[] matcher(String str, String regex, String mods, boolean global) {
         Pattern pattern = new Pattern(regex, mods);
-        Matcher matcher = pattern.matcher(srt);
+        Matcher matcher = pattern.matcher(str);
         if (global) {
             List<String> list = new ArrayList<>(100);
             while (matcher.find()) {
@@ -62,34 +62,34 @@ public final class Regex {
     /**
      * Realiza una substitucion de todas las coincidencias en una cadena
      *
-     * @param srt Cadena
+     * @param str Cadena
      * @param regex Expresión regular
      * @param subs Cadena de remplazo
      * @param mods Modificadores
      * @param global Busca todas las coincidencias
      * @return Cadena actualizada
      */
-    public static String substitution(String srt, String regex, String subs, String mods, boolean global) {
+    public static String substitution(String str, String regex, String subs, String mods, boolean global) {
         Pattern pattern = new Pattern(regex, mods);
         if (global) {
             Replacer replacer = pattern.replacer(subs);
-            return replacer.replace(srt);
+            return replacer.replace(str);
         } else {
-            Replacer replacer = pattern.replacer(new FirstPerlSubstitution(srt));
-            return replacer.replace(srt);
+            Replacer replacer = pattern.replacer(new FirstPerlSubstitution(str));
+            return replacer.replace(str);
         }
     }
 
     /**
      * Realiza una translacion de caracteres por un remplazo
      *
-     * @param srt Cadena
+     * @param str Cadena
      * @param source Caracteres originales
      * @param dest Caracteres de remplazo
      * @param mods Modificadores
      * @return Cadena actualizada
      */
-    public static String translation(String srt, String source, String dest, String mods) {
+    public static String translation(String str, String source, String dest, String mods) {
         try {
             CharacterReplacer replacer = new CharacterReplacer(source, dest);
             int flags = 0;
@@ -107,7 +107,7 @@ public final class Regex {
                 }
             }
             replacer.setFlags(flags);
-            return replacer.doReplacement(srt);
+            return replacer.doReplacement(str);
         } catch (CharacterParseException ex) {
             return "";
         }

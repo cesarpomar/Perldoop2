@@ -60,7 +60,7 @@ public final class Perl {
         if (f == null) {
             return 0;
         }
-        return f.print(format, args);
+        return f.printf(format, args);
     }
 
     /**
@@ -377,7 +377,7 @@ public final class Perl {
      */
     public static <T> T[] shift(T[] array, Ref<T>... rn) {
         if (rn.length > 0) {
-            rn[0].set(array[array.length - 1]);
+            rn[0].set(array[0]);
         }
         if (array.length == 0) {
             return array;
@@ -632,6 +632,27 @@ public final class Perl {
             return str;
         }
         return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    /**
+     * Logaritmo natural
+     *
+     * @param n Numero
+     * @return Logaritmo de n
+     */
+    public static Double log(Number n) {
+        return Math.log(n.doubleValue());
+    }
+
+    /**
+     * Cambia la codificación de un fichero
+     *
+     * @param file Fichero
+     * @param encode Codificación
+     * @return
+     */
+    public static Integer binmode(PerlFile file, String encode) {
+        return file.setEnconde(encode);
     }
 
 }

@@ -1,5 +1,6 @@
 package perldoop.generacion.funcion.nativa;
 
+import perldoop.generacion.sentencia.GenSentencia;
 import perldoop.generacion.util.Casting;
 import perldoop.generacion.util.ColIterator;
 import perldoop.generacion.util.Tipos;
@@ -28,7 +29,7 @@ public class GenFuncionSort extends GenFuncionNativa {
      * @param f Funcion
      * @param comparator Comparador
      */
-    public void genSort(Funcion f, StringBuilder comparator) {
+    private void genSort(Funcion f, StringBuilder comparator) {
         StringBuilder codigo = new StringBuilder(100);
         codigo.append("Perl.").append(f.getIdentificador()).append("(");
         if (Buscar.getExpresiones(f.getColeccion()).size() > 1) {
@@ -63,8 +64,15 @@ public class GenFuncionSort extends GenFuncionNativa {
     public void visitar(FuncionBloque f) {
         StringBuilder comparador = new StringBuilder(100);
         comparador.append(",").append(f.getLlaveI().getComentario());
-        comparador.append("(a,b)->");        
-        comparador.append(Casting.toInteger(f.getExpresion()));
+        comparador.append("(a,b)->");  
+        //Si hay declaraciones deben ser generadas dentro del bloque
+        StringBuilder declaraciones = GenSentencia.genDeclaraciones(f.getExpresion(), tabla);
+        if(declaraciones.length()==0){
+            comparador.append(Casting.toInteger(f.getExpresion()));
+        }else{
+            comparador.append("{").append(declaraciones);
+            comparador.append("return ").append(Casting.toInteger(f.getExpresion())).append(";}");
+        }
         if (!f.getColeccion().getLista().getSeparadores().isEmpty()) {
             comparador.append(f.getColeccion().getLista().getSeparadores().get(0).getComentario());
         }

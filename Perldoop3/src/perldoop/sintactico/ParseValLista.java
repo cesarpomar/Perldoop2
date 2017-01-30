@@ -49,7 +49,7 @@ public final class ParseValLista extends ParserVal {
             lista.args.add(coma, exp);
             lista.dependencias();
         }
-        if (args != null) {
+        if (args[0] != null) {
             lista.args = args[0];
         }
         return lista;
