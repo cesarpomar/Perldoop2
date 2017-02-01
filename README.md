@@ -1,6 +1,6 @@
 # What's Perldoop3 about? #
 
-**Perldoop3** is a total reimplementation of "[Perldoop](https://github.com/citiususc/perldoop)" which was designed to automatically translates Hadoop-ready Perl scripts into its Java counterparts, these could be directly executed on Hadoop while improving their performance. This new version is designed to be able to translate any Perl script within a bounded syntax and without any human intervention but retaining all the features of its first version.
+**Perldoop3** is a total reimplementation of [Perldoop](https://github.com/citiususc/perldoop) which was designed to automatically translates Hadoop-ready Perl scripts into its Java counterparts, these could be directly executed on Hadoop while improving their performance. This new version is designed to be able to translate any Perl script within a bounded syntax and without any human intervention but retaining all the features of its first version.
 This tool takes as input a Perl script, which must comply with the normal syntax and tagging required by Perldoop, and generates an indented and normalized java code that can be read by a person and compiled with the java compiler.
 
 # Release content #
