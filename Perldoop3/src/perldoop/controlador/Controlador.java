@@ -3,19 +3,14 @@ package perldoop.controlador;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.tools.ant.DirectoryScanner;
 import perldoop.depurador.Depurador;
 import perldoop.error.GestorErrores;
 import perldoop.generacion.Generador;
@@ -167,48 +162,42 @@ public final class Controlador {
      * Obtiene y verifica los ficheros
      */
     private void ficheros() {
-        FileSystem fs = FileSystems.getDefault();
+        DirectoryScanner ds = new DirectoryScanner();
+        FICHEROS:
         for (String ruta : rutas) {
-            File fichero = new File(ruta);
-            if (fichero.isAbsolute()) {
-                ficheros.add(fichero);
-            } else {
-                PathMatcher matcher = fs.getPathMatcher("glob:./" + ruta);
-                try {
-                    Files.walkFileTree(Paths.get("."), new SimpleFileVisitor<Path>() {
-                        @Override
-                        public FileVisitResult visitFile(Path path,
-                                BasicFileAttributes attrs) throws IOException {
-                            if (matcher.matches(path)) {
-                                ficheros.add(path.normalize().toFile());
-                            }
-                            return FileVisitResult.CONTINUE;
-                        }
-
-                        @Override
-                        public FileVisitResult visitFileFailed(Path file, IOException exc)
-                                throws IOException {
-                            return FileVisitResult.CONTINUE;
-                        }
-                    });
-                } catch (IOException ex) {
-                    //Nunca sera lanzado
+            List<String> path = new ArrayList<>();
+            File dir = new File(".");
+            File file = new File(ruta);
+            File aux = file;
+            //Separamos el fichero en rutas con independencia de la plataforma
+            while (aux != null) {
+                path.add(aux.getName());
+                aux = aux.getParentFile();
+            }
+            Collections.reverse(path);
+            //La ruta relativa se ajusta al directorio superior
+            int n = 0;
+            for (String name: path) {
+                if(!name.equals("..")){
+                    break;
                 }
+                dir = dir.getAbsoluteFile().getParentFile();
+                if (dir == null) {
+                    continue FICHEROS;
+                }
+                n++;
             }
-        }
-        boolean error = false;
-        for (File f : ficheros) {
-            if (!f.exists()) {
-                error = true;
-                GestorErrores ge = new GestorErrores(f.getPath(), opciones);
-                ge.error(Errores.FICHERO_NO_EXISTE);
-            } else if (!f.isFile()) {
-                error = true;
-                GestorErrores ge = new GestorErrores(f.getPath(), opciones);
-                ge.error(Errores.FICHERO_INVALIDO);
+            if (n > 0) {
+                file = new File(String.join("/", path.subList(n, path.size())));
             }
+            ds.setBasedir(dir);
+            ds.setIncludes(new String[]{file.toString()});
+            ds.scan();
+
+            Arrays.stream(ds.getIncludedFiles()).map(p->Paths.get(p).normalize().toFile()).forEach(f->ficheros.add(f));         
         }
-        if (error) {
+        if(ficheros.isEmpty()){
+            System.err.println(new Errores().get(Errores.NO_FICHEROS));
             System.exit(0);
         }
     }

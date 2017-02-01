@@ -11,8 +11,7 @@ public class Errores extends Internacionalizacion {
     public static final String ERROR = "ERROR";
     public static final String AVISO = "AVISO";
     //Consola
-    public static final String FICHERO_NO_EXISTE = "FICHERO_NO_EXISTE";
-    public static final String FICHERO_INVALIDO = "FICHERO_INVALIDO";
+    public static final String NO_FICHEROS = "NO_FICHEROS";
     public static final String ERROR_LECTURA = "ERROR_LECTURA";
     public static final String ERROR_ESCRITURA = "ERROR_ESCRITURA";
     public static final String ERROR_CODIFICACION = "ERROR_CODIFICACION";
