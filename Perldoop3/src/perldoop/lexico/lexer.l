@@ -257,7 +257,7 @@ PD_NUM			=	<{ENTERO}>
 	">="				{return token(Parser.NUM_GE);}
 	"=="				{return token(Parser.NUM_EQ);}
 	"!="				{return token(Parser.NUM_NE);}
-	"<=>"				{return token(Parser.CMP);}        //Comparador
+	"<=>"				{return token(Parser.NUM_CMP);}    //Comparador
 	"~~"				{return token(Parser.SMART_EQ);}   //Operador smart
 
 		/*----Asignaciones----*/

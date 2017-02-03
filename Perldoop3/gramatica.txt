@@ -58,8 +58,8 @@ cuerpo		:
 
 sentencia   :	lista modificador ';'					
 			|	';'										
+			|	flujo modificador ';'									
 			|	bloque									
-			|	flujo									
 			|	modulos									
 			|	IMPORT_JAVA								
 			|	LINEA_JAVA								
@@ -68,11 +68,11 @@ sentencia   :	lista modificador ';'
 			|	error	';'								
 			|	error	'}'								
 			
-modulos		:	USE paqueteID ID ';'					
-			|	USE ID ';'								
-			|	DO cadena ';'							
-			|	PACKAGE paqueteID ID ';'				
-			|	PACKAGE ID ';'							
+modulos		:	USE paqueteID ID					
+			|	USE ID								
+			|	DO cadena							
+			|	PACKAGE paqueteID ID				
+			|	PACKAGE ID							
 
 expresion	:	numero									
 			|	cadena									
@@ -106,10 +106,10 @@ modificador :
 			|	UNTIL expresion							
 			|	FOR expresion							
 
-flujo		:	NEXT ';'								
-			|	LAST ';'								
-			|	RETURN ';'								
-			|	RETURN expresion ';'					
+flujo		:	NEXT								
+			|	LAST								
+			|	RETURN								
+			|	RETURN expresion					
 
 asignacion	:   expresion '=' expresion					
 			|	expresion MAS_IGUAL expresion			

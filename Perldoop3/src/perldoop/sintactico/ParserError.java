@@ -122,8 +122,8 @@ public class ParserError {
                 case Parser.NUM_NE:
                 case Parser.STR_EQ:
                 case Parser.STR_NE:
-                case Parser.CMP:
-                case Parser.CMP_NUM:
+                case Parser.STR_CMP:
+                case Parser.NUM_CMP:
                 case Parser.SMART_EQ:
                 case Parser.NUM_LE:
                 case Parser.NUM_GE:
@@ -294,9 +294,9 @@ public class ParserError {
                 return "eq";
             case Parser.STR_NE:
                 return "ne";
-            case Parser.CMP:
+            case Parser.STR_CMP:
                 return "cmp";
-            case Parser.CMP_NUM:
+            case Parser.NUM_CMP:
                 return "<=>";
             case Parser.SMART_EQ:
                 return "~~";

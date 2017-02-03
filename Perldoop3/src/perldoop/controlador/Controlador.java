@@ -3,7 +3,7 @@ package perldoop.controlador;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -171,14 +171,22 @@ public final class Controlador {
             File aux = file;
             //Separamos el fichero en rutas con independencia de la plataforma
             while (aux != null) {
-                path.add(aux.getName());
+                String name = aux.getName();
+                if (name.equals("")) {//Si es absoluta termina con el root
+                    Path p = aux.toPath();
+                    if (p.equals(p.getRoot())) {
+                        dir = p.getRoot().toFile();
+                        break;
+                    }
+                }
+                path.add(name);
                 aux = aux.getParentFile();
             }
             Collections.reverse(path);
             //La ruta relativa se ajusta al directorio superior
             int n = 0;
-            for (String name: path) {
-                if(!name.equals("..")){
+            for (String name : path) {
+                if (!name.equals("..")) {
                     break;
                 }
                 dir = dir.getAbsoluteFile().getParentFile();
@@ -187,16 +195,14 @@ public final class Controlador {
                 }
                 n++;
             }
-            if (n > 0) {
-                file = new File(String.join("/", path.subList(n, path.size())));
-            }
+            file = new File(String.join("/", path.subList(n, path.size())));
             ds.setBasedir(dir);
             ds.setIncludes(new String[]{file.toString()});
             ds.scan();
 
-            Arrays.stream(ds.getIncludedFiles()).map(p->Paths.get(p).normalize().toFile()).forEach(f->ficheros.add(f));         
+            Arrays.stream(ds.getIncludedFiles()).map(p -> new File(ds.getBasedir(),p).toPath().normalize().toFile()).forEach(f -> ficheros.add(f));
         }
-        if(ficheros.isEmpty()){
+        if (ficheros.isEmpty()) {
             System.err.println(new Errores().get(Errores.NO_FICHEROS));
             System.exit(0);
         }

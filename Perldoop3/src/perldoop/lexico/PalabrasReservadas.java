@@ -75,7 +75,7 @@ public final class PalabrasReservadas {
                 case "ne":
                     return Parser.STR_NE;
                 case "cmp":
-                    return Parser.CMP;
+                    return Parser.STR_CMP;
                 case "STDIN":
                     return Parser.STDIN;
                 case "STDOUT":

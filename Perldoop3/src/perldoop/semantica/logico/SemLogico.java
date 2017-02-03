@@ -1,10 +1,17 @@
 package perldoop.semantica.logico;
 
+import perldoop.modelo.arbol.Simbolo;
+import perldoop.modelo.arbol.bloque.Bloque;
+import perldoop.modelo.arbol.bloque.BloqueControlBasico;
+import perldoop.modelo.arbol.bloque.BloqueFor;
+import perldoop.modelo.arbol.bloque.SubBloqueElsif;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.logico.*;
+import perldoop.modelo.arbol.regulares.RegularMatch;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.semantica.util.Tipos;
+import perldoop.util.Buscar;
 
 /**
  * Clase para la semantica de logico
@@ -25,6 +32,35 @@ public class SemLogico {
     }
 
     /**
+     * Comprueba si la operacion logica debe ser una condicion booleana
+     *
+     * @param s Logico
+     * @return Es una condicion
+     */
+    public boolean checkCondicion(Logico s) {
+        //Contiene una expresion regular match
+        for(Simbolo hijo:s.getHijos()){
+            if(hijo instanceof Expresion){
+                Expresion exp = Buscar.getExpresion((Expresion)hijo);
+                if(exp.getValor() instanceof RegularMatch){
+                    return true;
+                }
+            }
+        }        
+        //Uso como condicion en bloque condicional
+        Bloque bloque = Buscar.buscarPadre(s, Bloque.class);
+        Simbolo head = null;
+        if (bloque instanceof BloqueControlBasico) {
+            head = ((BloqueControlBasico) bloque).getExpresion();
+        }else if (bloque instanceof SubBloqueElsif) {
+            head = ((SubBloqueElsif) bloque).getExpresion();
+        }else if (bloque instanceof BloqueFor) {
+            head = ((BloqueFor) bloque).getLista2();
+        }
+        return head != null && Buscar.isHijo(s, head);
+    }
+
+    /**
      * Calcula el tipo de la operacion logica
      *
      * @param izq Expresion izquierda
@@ -32,12 +68,12 @@ public class SemLogico {
      * @param der Expresion derecha
      */
     private void setTipo(Expresion izq, Logico s, Expresion der) {
-        if (izq.getTipo().isBoolean() || der.getTipo().isBoolean()) {
+        if (izq.getTipo().isBoolean() || der.getTipo().isBoolean() || checkCondicion(s)) {
             s.setTipo(new Tipo(Tipo.BOOLEAN));
         } else if (izq.getTipo().equals(der.getTipo())) {
             s.setTipo(izq.getTipo());
         } else if (izq.getTipo().isNumberType() && der.getTipo().isNumberType()) {
-            s.setTipo(new Tipo(Tipo.NUMBER));
+            s.setTipo(new Tipo(Tipo.DOUBLE));
         } else if (!izq.getTipo().isColeccion() || !der.getTipo().isColeccion()) {
             s.setTipo(new Tipo(Tipo.BOX));
         } else {

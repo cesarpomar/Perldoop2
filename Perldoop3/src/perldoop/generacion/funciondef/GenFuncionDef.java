@@ -13,7 +13,9 @@ import perldoop.modelo.arbol.bloque.SubBloqueElse;
 import perldoop.modelo.arbol.bloque.SubBloqueElsif;
 import perldoop.modelo.arbol.flujo.Return;
 import perldoop.modelo.arbol.funciondef.FuncionDef;
+import perldoop.modelo.arbol.modificador.ModNada;
 import perldoop.modelo.arbol.sentencia.Sentencia;
+import perldoop.modelo.arbol.sentencia.StcFlujo;
 import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.util.Buscar;
 
@@ -62,6 +64,10 @@ public class GenFuncionDef {
             while (it.hasPrevious()) {
                 Return r = it.previous();
                 Simbolo padre = r.getPadre();
+                //Si tiene un modificador ya no es seguro su ejecución
+                if (!(((StcFlujo) padre).getModificador() instanceof ModNada)) {
+                    continue;
+                }
                 while (padre != f) {
                     //Si el padre es el bloque condicional, podemos ascender
                     if (padre.getPadre() == condicion) {

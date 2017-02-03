@@ -178,7 +178,7 @@ public class GenAcceso {
         if (lectura == null) {//Si no se necesita lectura obviamos esta comporbacion
             lectura = new SimboloAux(null, new StringBuilder());
             escritura.getCodigoGenerado().append(acceso.getExpresion());
-        } else if (!Buscar.isRepetible(acceso.getExpresion())) {//Comporbar que la expresion es repetible
+        } else if (!Buscar.isRepetible(acceso.getExpresion())) {//Comprobar que la expresion es repetible
             Tipo te = acceso.getExpresion().getTipo().getSubtipo(1);//Quitar el ref de acceso anidado
             //Declarar variable aux
             String aux = tabla.getGestorReservas().getAux();
@@ -212,6 +212,10 @@ public class GenAcceso {
                 lectura.setCodigoGenerado(exp.getCodigoGenerado());
             }
             return;
+        }else if (acceso instanceof AccesoColRef){
+            String get = genDesRef(acceso);
+            lectura.getCodigoGenerado().append(get);
+            escritura.getCodigoGenerado().append(get);
         }
         //Acceso a coleccion
         Simbolo colL;

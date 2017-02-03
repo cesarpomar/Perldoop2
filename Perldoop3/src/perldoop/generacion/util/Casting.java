@@ -100,7 +100,7 @@ public final class Casting {
                     return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
                 }
             case Tipo.REF:
-                return cst.append("(").append(s.getCodigoGenerado()).append("!=null)");
+                return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
             case Tipo.BOOLEAN:
                 return cst.append(s.getCodigoGenerado());
             case Tipo.INTEGER:
@@ -850,7 +850,7 @@ public final class Casting {
      */
     public static StringBuilder castingNotNull(Simbolo origen, Tipo destino) {
         StringBuilder codigo = casting(origen, destino);
-        if ((destino.isNumberType() || destino.isString()) && !Buscar.isNotNull(origen)) {
+        if ((destino.isNumberType() || destino.isString() || destino.isBoolean()) && !Buscar.isNotNull(origen)) {
             return new StringBuilder(100).append("Pd.checkNull(").append(codigo).append(")");
         }
         return codigo;

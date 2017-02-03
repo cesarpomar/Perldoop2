@@ -86,11 +86,21 @@ public abstract class Casting {
     /**
      * Convierte el argumento a boolean
      *
+     * @param f Referencia
+     * @return Boolean
+     */
+    public static Boolean toBoolean(Ref f) {
+        return f != null && f.get() != null;
+    }
+
+    /**
+     * Convierte el argumento a boolean
+     *
      * @param box Box
      * @return Boolean
      */
     public static Boolean toBoolean(Box box) {
-        return box == null ? null : toBoolean(box.stringValue());
+        return box == null ? null : box.booleanValue();
     }
 
     /**

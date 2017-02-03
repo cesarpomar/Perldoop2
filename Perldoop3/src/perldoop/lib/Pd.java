@@ -280,7 +280,10 @@ public final class Pd {
      * @return Ultimo elemento
      */
     public static <T> T last(T[] array) {
-        return array[array.length - 1];
+        if (array.length > 0) {
+            return array[array.length - 1];
+        }
+        return null;
     }
 
     /**
@@ -291,7 +294,10 @@ public final class Pd {
      * @return Ultimo elemento
      */
     public static <T> T last(PerlList<T> list) {
-        return list.get(list.size() - 1);
+        if (!list.isEmpty()) {
+            return list.get(list.size() - 1);
+        }
+        return null;
     }
 
     /**
@@ -302,7 +308,10 @@ public final class Pd {
      * @return Primer elemento
      */
     public static <T> T first(T[] array) {
-        return array[0];
+        if (array.length > 0) {
+            return array[0];
+        }
+        return null;
     }
 
     /**
@@ -313,7 +322,10 @@ public final class Pd {
      * @return Primer elemento
      */
     public static <T> T first(PerlList<T> list) {
-        return list.get(0);
+        if (!list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
     }
 
     /**

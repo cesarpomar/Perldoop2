@@ -60,7 +60,7 @@ import perldoop.modelo.arbol.rango.Rango;
 %left LAND
 %left '|' '^'
 %left '&'
-%nonassoc NUM_EQ NUM_NE STR_EQ STR_NE CMP CMP_NUM SMART_EQ
+%nonassoc NUM_EQ NUM_NE STR_EQ STR_NE NUM_CMP STR_CMP SMART_EQ
 %nonassoc '<' NUM_LE '>' NUM_GE STR_LT STR_LE STR_GT STR_GE
 %left DESP_I DESP_D
 %left '+' '-' '.'
@@ -97,9 +97,9 @@ cuerpo		:											{$$=set(new Cuerpo());}
 
 sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)));}
 			|	';'										{$$=set(new StcLista(new Lista(), add(new ModNada()), s($1)));}
+			|	flujo modificador ';'					{$$=set(new StcFlujo(s($1), s($2), s($3)));}
 			|	bloque									{$$=set(new StcBloque(s($1)));}
-			|	flujo									{$$=set(new StcFlujo(s($1)));}
-			|	modulos									{$$=set(new StcModulos(s($1)));}
+			|	modulos ';'								{$$=set(new StcModulos(s($1), s($2)));}
 			|	IMPORT_JAVA								{$$=set(new StcImport(s($1)));}
 			|	LINEA_JAVA								{$$=set(new StcLineaJava(s($1)));}
 			|	COMENTARIO								{$$=set(new StcComentario(s($1)));}
@@ -107,11 +107,11 @@ sentencia   :	lista modificador ';'					{$$=set(new StcLista(s($1), s($2), s($3)
 			|	error	';'								{$$=set(new StcError());}
 			|	error	'}'								{$$=set(new StcError());}
 			
-modulos		:	USE paqueteID ID ';'					{$$=set(new ModuloUse(s($1),Paquetes.addId(s($2),s($3)),s($4)));}
-			|	USE ID ';'								{$$=set(new ModuloUse(s($1),add(new Paquetes().addId(s($2))),s($3)));}
-			|	DO cadena ';'							{$$=set(new ModuloDo(s($1),s($2),s($3)));}
-			|	PACKAGE paqueteID ID ';'				{$$=set(new ModuloPackage(s($1),Paquetes.addId(s($2),s($3)),s($4)));}
-			|	PACKAGE ID ';'							{$$=set(new ModuloPackage(s($1),add(new Paquetes().addId(s($2))),s($3)));}
+modulos		:	USE paqueteID ID						{$$=set(new ModuloUse(s($1),Paquetes.addId(s($2),s($3))));}
+			|	USE ID									{$$=set(new ModuloUse(s($1),add(new Paquetes().addId(s($2)))));}
+			|	DO cadena								{$$=set(new ModuloDo(s($1),s($2)));}
+			|	PACKAGE paqueteID ID					{$$=set(new ModuloPackage(s($1),Paquetes.addId(s($2),s($3))));}
+			|	PACKAGE ID								{$$=set(new ModuloPackage(s($1),add(new Paquetes().addId(s($2)))));}
 
 expresion	:	numero									{$$=set(new ExpNumero(s($1)));} 
 			|	cadena									{$$=set(new ExpCadena(s($1)));} 
@@ -145,10 +145,10 @@ modificador :											{$$=set(new ModNada());}
 			|	UNTIL expresion							{$$=set(new ModUntil(s($1), s($2)));}
 			|	FOR expresion							{$$=set(new ModFor(s($1), s($2)));}
 
-flujo		:	NEXT ';'								{$$=set(new Next(s($1), s($2)));}
-			|	LAST ';'								{$$=set(new Last(s($1), s($2)));}
-			|	RETURN ';'								{$$=set(new Return(s($1), s($2)));}
-			|	RETURN expresion ';'					{$$=set(new Return(s($1), s($2), s($3)));}
+flujo		:	NEXT									{$$=set(new Next(s($1)));}
+			|	LAST									{$$=set(new Last(s($1)));}
+			|	RETURN									{$$=set(new Return(s($1)));}
+			|	RETURN expresion						{$$=set(new Return(s($1), s($2)));}
 
 asignacion	:   expresion '=' expresion					{$$=set(new Igual(s($1),s($2),s($3)));}
 			|	expresion MAS_IGUAL expresion			{$$=set(new MasIgual(s($1),s($2),s($3)));}
@@ -273,14 +273,14 @@ comparacion	:	expresion NUM_EQ expresion				{$$=set(new CompNumEq(s($1),s($2),s(
 			|	expresion NUM_LE expresion				{$$=set(new CompNumLe(s($1),s($2),s($3)));}
 			|	expresion '>' expresion					{$$=set(new CompNumGt(s($1),s($2),s($3)));}
 			|	expresion NUM_GE expresion				{$$=set(new CompNumGe(s($1),s($2),s($3)));}
-			|	expresion CMP_NUM expresion				{$$=set(new CompNumCmp(s($1),s($2),s($3)));}
+			|	expresion NUM_CMP expresion				{$$=set(new CompNumCmp(s($1),s($2),s($3)));}
 			|	expresion STR_EQ expresion				{$$=set(new CompStrEq(s($1),s($2),s($3)));}
 			|	expresion STR_NE expresion				{$$=set(new CompStrNe(s($1),s($2),s($3)));}
 			|	expresion STR_LT expresion				{$$=set(new CompStrLt(s($1),s($2),s($3)));}
 			|	expresion STR_LE expresion				{$$=set(new CompStrLe(s($1),s($2),s($3)));}
 			|	expresion STR_GT expresion				{$$=set(new CompStrGt(s($1),s($2),s($3)));}
 			|	expresion STR_GE expresion				{$$=set(new CompStrGe(s($1),s($2),s($3)));}
-			|	expresion CMP expresion					{$$=set(new CompStrCmp(s($1),s($2),s($3)));}
+			|	expresion STR_CMP expresion				{$$=set(new CompStrCmp(s($1),s($2),s($3)));}
 			|	expresion SMART_EQ expresion			{$$=set(new CompSmart(s($1),s($2),s($3)));}
 
 aritmetica	:	expresion '+' expresion					{$$=set(new AritSuma(s($1),s($2),s($3)));}

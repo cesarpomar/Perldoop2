@@ -55,7 +55,7 @@ public abstract class SemEspecial {
         FOR:
         for (Flujo f : lista) {
             if (f instanceof Return) {
-                error = ((Return) f).getPuntoComa().getToken();
+                error = f.getId().getToken();
                 break;
             }
             Bloque bloque = Buscar.buscarPadre(b, Bloque.class);

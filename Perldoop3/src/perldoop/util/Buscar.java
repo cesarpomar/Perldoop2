@@ -50,6 +50,7 @@ import perldoop.modelo.arbol.variable.VarSigil;
 import perldoop.modelo.arbol.variable.Variable;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.preprocesador.TagsBloque;
+import perldoop.modelo.semantica.Tipo;
 
 /**
  * Clase para hacer busquedas en el arbol
@@ -693,7 +694,18 @@ public final class Buscar {
      */
     public static boolean isArrayOrVar(Expresion exp) {
         Expresion aux = Buscar.getExpresion(exp);
-        return aux instanceof ExpVariable || (aux instanceof ExpAcceso && ((ExpAcceso) aux).getAcceso().getExpresion().getTipo().isArray());
+        if (aux instanceof ExpVariable) {
+            return true;
+        }
+        if (aux instanceof ExpAcceso) {
+            Tipo t = ((ExpAcceso) aux).getAcceso().getExpresion().getTipo();
+            if (t.isRef()) {
+                t = t.getSubtipo(1);
+            }
+            return t.isArray();
+
+        }
+        return false;
     }
 
     /**

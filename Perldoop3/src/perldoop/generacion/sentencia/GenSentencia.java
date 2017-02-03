@@ -98,7 +98,16 @@ public class GenSentencia {
     }
 
     public void visitar(StcFlujo s) {
-        s.setCodigoGenerado(genDeclaraciones(s, tabla).append(s.getFlujo()));
+        StringBuilder codigo = genDeclaraciones(s, tabla);
+        boolean mod = !(s.getModificador() instanceof ModNada);
+        if (mod) {
+            codigo.append(s.getModificador()).append("{");
+        }
+        codigo.append(s.getFlujo()).append(s.getPuntoComa());
+        if (mod) {
+            codigo.append("}");
+        }
+        s.setCodigoGenerado(codigo);
     }
 
     public void visitar(StcComentario s) {
@@ -114,7 +123,7 @@ public class GenSentencia {
     }
 
     public void visitar(StcModulos s) {
-        s.setCodigoGenerado(genDeclaraciones(s, tabla).append(s.getModulos().getCodigoGenerado()));
+        s.setCodigoGenerado(genDeclaraciones(s, tabla).append(s.getModulos().getCodigoGenerado()).append(s.getPuntoComa().getComentario()));
     }
 
     public void visitar(StcImport s) {

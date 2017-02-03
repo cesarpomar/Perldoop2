@@ -27,15 +27,13 @@ public class GenFlujo {
 
     public void visitar(Next s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("continue").append(s.getNext().getComentario());
-        codigo.append(s.getPuntoComa());
+        codigo.append("continue").append(s.getId().getComentario());
         s.setCodigoGenerado(codigo);
     }
 
     public void visitar(Last s) {
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("break").append(s.getLast().getComentario());
-        codigo.append(s.getPuntoComa());
+        codigo.append("break").append(s.getId().getComentario());
         s.setCodigoGenerado(codigo);
     }
 
@@ -51,7 +49,6 @@ public class GenFlujo {
                 codigo.append("}");
             }
         }
-        codigo.append(s.getPuntoComa());
         s.setCodigoGenerado(codigo);
     }
 

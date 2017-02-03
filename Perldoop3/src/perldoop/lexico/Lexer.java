@@ -1605,7 +1605,7 @@ public class Lexer {
             }
           case 207: break;
           case 98: 
-            { return token(Parser.CMP);
+            { return token(Parser.NUM_CMP);
             }
           case 208: break;
           case 99: 

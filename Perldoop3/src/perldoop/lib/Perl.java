@@ -589,6 +589,16 @@ public final class Perl {
     }
 
     /**
+     * Comprueba si la expresion esta definida(Accesos que generan referencia)
+     *
+     * @param f Referencia
+     * @return Expresion no es nula
+     */
+    public static Boolean defined(Ref f) {
+        return Casting.toBoolean(f);
+    }
+
+    /**
      * Convierte la cadena a minusculas
      *
      * @param str Cadena

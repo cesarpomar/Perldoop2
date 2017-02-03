@@ -6,46 +6,23 @@ import perldoop.modelo.arbol.Visitante;
 import perldoop.modelo.arbol.paquete.Paquetes;
 
 /**
- * Clase que representa la reduccion -&gt; modulos : PACKAGE paqueteID ID ';'
+ * Clase que representa la reduccion -&gt; modulos : PACKAGE paqueteID ID
  *
  * @author César Pomar
  */
 public final class ModuloPackage extends Modulo {
 
-    private Terminal idPackage;
     private Paquetes paquetes;
-    private Terminal puntoComa;
 
     /**
      * Constructor unico de la clase
      *
-     * @param idPackage idPackage
+     * @param id Id Package
      * @param paquetes Paquetes
-     * @param puntoComa PuntoComa
      */
-    public ModuloPackage(Terminal idPackage, Paquetes paquetes, Terminal puntoComa) {
-        setIdPackage(idPackage);
+    public ModuloPackage(Terminal id, Paquetes paquetes) {
+        super(id);
         setPaquetes(paquetes);
-        setPuntoComa(puntoComa);
-    }
-
-    /**
-     * Obtiene el idPackage
-     *
-     * @return IdPackage
-     */
-    public Terminal getIdPackage() {
-        return idPackage;
-    }
-
-    /**
-     * Establece el idPackage
-     *
-     * @param idPackage IdPackage
-     */
-    public void setIdPackage(Terminal idPackage) {
-        idPackage.setPadre(this);
-        this.idPackage = idPackage;
     }
 
     /**
@@ -67,25 +44,6 @@ public final class ModuloPackage extends Modulo {
         this.paquetes = paquetes;
     }
 
-    /**
-     * Obtiene el punto y coma ';'
-     *
-     * @return PuntoComa
-     */
-    public Terminal getPuntoComa() {
-        return puntoComa;
-    }
-
-    /**
-     * Establece el punto y coma ';'
-     *
-     * @param puntoComa PuntoComa
-     */
-    public void setPuntoComa(Terminal puntoComa) {
-        puntoComa.setPadre(this);
-        this.puntoComa = puntoComa;
-    }
-
     @Override
     public void aceptar(Visitante v) {
         v.visitar(this);
@@ -93,7 +51,7 @@ public final class ModuloPackage extends Modulo {
 
     @Override
     public Simbolo[] getHijos() {
-        return new Simbolo[]{idPackage, paquetes, puntoComa};
+        return new Simbolo[]{id, paquetes};
     }
 
 }

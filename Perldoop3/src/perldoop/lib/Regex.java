@@ -75,7 +75,7 @@ public final class Regex {
             Replacer replacer = pattern.replacer(subs);
             return replacer.replace(str);
         } else {
-            Replacer replacer = pattern.replacer(new FirstPerlSubstitution(str));
+            Replacer replacer = pattern.replacer(new FirstPerlSubstitution(subs));
             return replacer.replace(str);
         }
     }

@@ -50,10 +50,9 @@ public class GenModulo {
         String[] paquetes = s.getPaquetes().getArrayString();
         Paquete paquete = tabla.getTablaSimbolos().getPaquete(fichero, paquetes, 0);
         StringBuilder codigo = new StringBuilder(100);
-        codigo.append("import ").append(s.getIdUse().getComentario());
+        codigo.append("import ").append(s.getId().getComentario());
         codigo.append(String.join(".", tabla.getTablaSimbolos().getArbolPaquete().getDirectorios(paquete.getFichero())));
         codigo.append('.').append(codigo).append(paquete.getAlias());
-        codigo.append(s.getPuntoComa());
         tabla.getClase().getImports().add(codigo.toString());
     }
 
@@ -85,7 +84,6 @@ public class GenModulo {
         codigo.append("import ").append(s.getId().getComentario());
         codigo.append(String.join(".", tabla.getTablaSimbolos().getArbolPaquete().getDirectorios(paquete.getFichero())));
         codigo.append('.').append(paquete.getAlias());
-        codigo.append(s.getPuntoComa());
         tabla.getClase().getImports().add(codigo.toString());
     }
 

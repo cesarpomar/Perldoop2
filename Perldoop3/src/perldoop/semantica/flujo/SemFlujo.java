@@ -4,7 +4,6 @@ import java.util.List;
 import perldoop.excepciones.ExcepcionSemantica;
 import perldoop.internacionalizacion.Errores;
 import perldoop.modelo.arbol.Simbolo;
-import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.bloque.Bloque;
 import perldoop.modelo.arbol.bloque.BloqueDoUntil;
 import perldoop.modelo.arbol.bloque.BloqueDoWhile;
@@ -16,7 +15,9 @@ import perldoop.modelo.arbol.cuerpo.Cuerpo;
 import perldoop.modelo.arbol.flujo.*;
 import perldoop.modelo.arbol.fuente.Fuente;
 import perldoop.modelo.arbol.funciondef.FuncionDef;
+import perldoop.modelo.arbol.modificador.ModNada;
 import perldoop.modelo.arbol.sentencia.Sentencia;
+import perldoop.modelo.arbol.sentencia.StcFlujo;
 import perldoop.modelo.semantica.TablaSemantica;
 import perldoop.util.Buscar;
 
@@ -42,10 +43,9 @@ public class SemFlujo {
      * Comprueba si el simbolo esta dentro de un bucle
      *
      * @param s Simbolo
-     * @param t Terminal para error
      * @return Bloque encontrado
      */
-    private Bloque isBucle(Flujo s, Terminal t) {
+    private Bloque isBucle(Flujo s) {
         Bloque bloque = Buscar.buscarPadre(s, Bloque.class);
         while (bloque != null) {
             //Ignoramos los bloques condicionales
@@ -57,7 +57,7 @@ public class SemFlujo {
             }
 
         }
-        tabla.getGestorErrores().error(Errores.NEXT_LAST_SIN_BUCLE, t.getToken());
+        tabla.getGestorErrores().error(Errores.NEXT_LAST_SIN_BUCLE, s.getId().getToken());
         throw new ExcepcionSemantica(Errores.NEXT_LAST_SIN_BUCLE);
     }
 
@@ -67,12 +67,15 @@ public class SemFlujo {
      * @param s Simbolo
      */
     private void codigoMuerto(Flujo s) {
+        if (!(((StcFlujo) s.getPadre()).getModificador() instanceof ModNada)) {
+            return;
+        }
         Simbolo fin;
         //Buscamos el simbolo que delimitara la busqueda
         if (s instanceof Return) {
             fin = Buscar.buscarPadre(s, FuncionDef.class);
         } else {
-            fin = isBucle(s, null);
+            fin = isBucle(s);
         }
         Simbolo padre = s.getPadre().getPadre();
         Simbolo stc = s;
@@ -111,7 +114,7 @@ public class SemFlujo {
                 for (int i = sts.indexOf(actual) + 1; i < sts.size(); i++) {
                     tabla.getGestorErrores().error(Errores.SENTENCIA_INALCANZABLE, Buscar.tokenInicio(sts.get(i)));
                 }
-            }else if(s instanceof Bloque && !(s instanceof BloqueSimple) && !(s instanceof BloqueDoUntil) && !(s instanceof BloqueDoWhile)){
+            } else if (s instanceof Bloque && !(s instanceof BloqueSimple) && !(s instanceof BloqueDoUntil) && !(s instanceof BloqueDoWhile)) {
                 break;
             }
             actual = s;
@@ -121,12 +124,12 @@ public class SemFlujo {
     }
 
     public void visitar(Next s) {
-        isBucle(s, s.getNext());
+        isBucle(s);
         codigoMuerto(s);
     }
 
     public void visitar(Last s) {
-        isBucle(s, s.getLast());
+        isBucle(s);
         codigoMuerto(s);
     }
 
