@@ -69,6 +69,46 @@ public abstract class Casting {
      * @param n Numero
      * @return Boolean
      */
+    public static Boolean toBoolean(Integer n) {
+        return n == null ? null : n != 0;
+    }
+
+    /**
+     * Convierte el argumento a boolean
+     *
+     * @param n Numero
+     * @return Boolean
+     */
+    public static Boolean toBoolean(Long n) {
+        return n == null ? null : n != 0l;
+    }
+
+    /**
+     * Convierte el argumento a boolean
+     *
+     * @param n Numero
+     * @return Boolean
+     */
+    public static Boolean toBoolean(Float n) {
+        return n == null ? null : n != 0.0f;
+    }
+
+    /**
+     * Convierte el argumento a boolean
+     *
+     * @param n Numero
+     * @return Boolean
+     */
+    public static Boolean toBoolean(Double n) {
+        return n == null ? null : n != 0.0;
+    }
+
+    /**
+     * Convierte el argumento a boolean
+     *
+     * @param n Numero
+     * @return Boolean
+     */
     public static Boolean toBoolean(Number n) {
         return n == null ? null : n.intValue() != 0;
     }

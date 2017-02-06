@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Function;
+import perldoop.lib.box.EmptyBox;
 import perldoop.lib.util.Union;
 
 /**
@@ -413,24 +414,73 @@ public final class Pd {
     }
 
     /**
-     * Comprueba que el Boolean no sea null y si lo es retorna el valor por defecto
+     * Comprueba que el Numero no sea null y si lo es retorna el valor por defecto
      *
-     * @param <T> Tipo de numero
      * @param n Numero
      * @return Numero no nulo
      */
-    public static <T extends Number> T checkNull(T n) {
-        return (T) (n == null ? 0 : n);
+    public static Integer checkNull(Integer n) {
+        return n == null ? 0 : n;
     }
 
     /**
-     * Comprueba que el Boolean no sea null y si lo es retorna el valor por defecto
+     * Comprueba que el Numero no sea null y si lo es retorna el valor por defecto
+     *
+     * @param n Numero
+     * @return Numero no nulo
+     */
+    public static Long checkNull(Long n) {
+        return n == null ? 0 : n;
+    }
+
+    /**
+     * Comprueba que el Numero no sea null y si lo es retorna el valor por defecto
+     *
+     * @param n Numero
+     * @return Numero no nulo
+     */
+    public static Float checkNull(Float n) {
+        return n == null ? 0 : n;
+    }
+
+    /**
+     * Comprueba que el Numero no sea null y si lo es retorna el valor por defecto
+     *
+     * @param n Numero
+     * @return Numero no nulo
+     */
+    public static Double checkNull(Double n) {
+        return n == null ? 0 : n;
+    }
+
+    /**
+     * Comprueba que el Numero no sea null y si lo es retorna el valor por defecto
+     *
+     * @param n Numero
+     * @return Numero no nulo
+     */
+    public static Number checkNull(Number n) {
+        return n == null ? 0.0 : n;
+    }
+
+    /**
+     * Comprueba que la Cadena no sea null y si lo es retorna el valor por defecto
      *
      * @param str String
      * @return String no nulo
      */
     public static String checkNull(String str) {
         return str == null ? "" : str;
+    }
+
+    /**
+     * Comprueba que el box no sea null y si lo es retorna el valor por defecto
+     *
+     * @param b Box
+     * @return String no nulo
+     */
+    public static Box checkNull(Box b) {
+        return b == null ? new EmptyBox() : b;
     }
 
     /**

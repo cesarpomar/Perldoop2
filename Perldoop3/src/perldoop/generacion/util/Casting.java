@@ -5,8 +5,8 @@ import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
-import perldoop.modelo.arbol.expresion.ExpRegulares;
 import perldoop.modelo.arbol.expresion.Expresion;
+import perldoop.modelo.arbol.lectura.Lectura;
 import perldoop.modelo.arbol.regulares.RegularMatch;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;
@@ -29,7 +29,10 @@ public final class Casting {
         if (escalar == null || !escalar.getTipo().isColeccion()) {
             if (col.getTipo().isArrayOrList() && col instanceof Expresion) {
                 Expresion exp = Buscar.getExpresion((Expresion) col);
-                if (!Buscar.isVariable(exp) && !(Buscar.getExpresion(exp) instanceof ExpRegulares)) {
+                if (exp.getValor() instanceof Lectura) {
+                    return new SimboloAux(new Tipo(Tipo.STRING),
+                            new StringBuilder(col.getCodigoGenerado()).replace(0, "Pd.readLines".length(), "Pd.read"));
+                } else if (!Buscar.isVariable(exp)) {
                     StringBuilder codigo = new StringBuilder(100);
                     char contexto = '@';
                     if (escalar != null && escalar instanceof Expresion) {
@@ -48,7 +51,7 @@ public final class Casting {
                     return new SimboloAux(t, codigo);
                 } else if (exp.getValor() instanceof Igual && ((Igual) exp.getValor()).getIzquierda() instanceof ExpColeccion) {
                     //Cambiar valores multiasignacion por su numero
-                    return new SimboloAux(new Tipo(Tipo.INTEGER), new StringBuilder("Pd.s").append(col.getCodigoGenerado().substring(3)));
+                    return new SimboloAux(new Tipo(Tipo.INTEGER), new StringBuilder(col.getCodigoGenerado()).replace(0, 3, "Pd.s"));
                 }
             }
         }
@@ -75,14 +78,15 @@ public final class Casting {
         if (Buscar.isUndef(s)) {
             return s.getCodigoGenerado();
         }
+        if (s.getTipo().isArray() && Buscar.getExpresion((Expresion) s).getValor() instanceof RegularMatch) {
+            //Optimizacion para expresiones regulares, en caso de boolean usamos un match rapido
+            return new StringBuilder(s.getCodigoGenerado()).replace(0, "Regex.matcher".length(), "Regex.match");
+        }
         s = colToScalar(s);
         StringBuilder cst = new StringBuilder(100);
         switch (s.getTipo().getTipo().get(0)) {
             case Tipo.ARRAY:
-                if (s instanceof Expresion && Buscar.getExpresion((Expresion) s).getValor() instanceof RegularMatch) {
-                    //Optimizacion para expresiones regulares, en caso de boolean usamos un match rapido
-                    return cst.append(s.getCodigoGenerado().toString().replaceFirst("Regex.matcher", "Regex.match"));
-                } else if (Buscar.isNotNull(s)) {
+                if (Buscar.isNotNull(s)) {
                     return cst.append("(").append(s.getCodigoGenerado()).append(".length > 0)");
                 } else {
                     return cst.append("Casting.toBoolean(").append(s.getCodigoGenerado()).append(")");
@@ -850,7 +854,7 @@ public final class Casting {
      */
     public static StringBuilder castingNotNull(Simbolo origen, Tipo destino) {
         StringBuilder codigo = casting(origen, destino);
-        if ((destino.isNumberType() || destino.isString() || destino.isBoolean()) && !Buscar.isNotNull(origen)) {
+        if ((destino.isSimple() && !destino.isFile()) && !Buscar.isNotNull(origen)) {
             return new StringBuilder(100).append("Pd.checkNull(").append(codigo).append(")");
         }
         return codigo;

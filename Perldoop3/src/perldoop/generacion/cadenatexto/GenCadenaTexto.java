@@ -177,6 +177,7 @@ public class GenCadenaTexto {
      */
     private boolean isCharRereg(char c) {
         switch (c) {
+            //Simbolos
             case '^':
             case '$':
             case '.':
@@ -190,6 +191,17 @@ public class GenCadenaTexto {
             case ']':
             case '{':
             case '}':
+            //letras
+            case 'd':
+            case 'w':
+            case 's':
+            case 'D':
+            case 'W':
+            case 'S':
+            case 'A':
+            case 'Z':
+            case 'b':
+            case 'B':
                 return true;
             default:
                 return false;
