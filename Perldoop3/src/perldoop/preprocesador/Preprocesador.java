@@ -29,9 +29,10 @@ public final class Preprocesador {
     public final static int PD_TIPO = -12;
     public final static int PD_NUM = -13;
     public final static int PD_VAR = -14;
-    public final static int PD_BLOQUE = -15;
-    public final static int PD_MAPPER = -18;
-    public final static int PD_REDUCCER = -19;
+    public final static int PD_SMART = -15;
+    public final static int PD_BLOQUE = -16;
+    public final static int PD_MAPPER = -17;
+    public final static int PD_REDUCCER = -18;
 
     //Estados
     private final static int ESTADO_INICIAL = 0;
@@ -133,7 +134,7 @@ public final class Preprocesador {
                             tipo = aceptar(tipo, terminales);
                             break;
                         case PD_COL:
-                            tipo = new TagsTipo();
+                            tipo = new TagsTipo(inicializacion = new TagsInicializacion(token.getLinea()));
                             tipo.addTipo(token);
                             estado = ESTADO_COLECCION;
                             break;
@@ -143,12 +144,16 @@ public final class Preprocesador {
                             estado = ESTADO_REF;
                             break;
                         case PD_NUM:
-                            inicializacion = new TagsInicializacion();
+                            inicializacion = new TagsInicializacion(token.getLinea());
                             inicializacion.addSize(token);
                             estado = ESTADO_INICIALIZACION;
                             break;
+                        case PD_SMART:
+                            inicializacion = new TagsInicializacion(token);
+                            estado = ESTADO_INICIALIZACION;
+                            break;
                         case PD_VAR:
-                            inicializacion = new TagsInicializacion();
+                            inicializacion = new TagsInicializacion(token.getLinea());
                             predeclaracion = new TagsPredeclaracion();
                             inicializacion.addSize(token);
                             predeclaracion.addVariable(token);
@@ -195,6 +200,9 @@ public final class Preprocesador {
                         case PD_TIPO:
                             tipo.addTipo(token);
                             if (predeclaracion == null) {
+                                if (inicializacion != null) {
+                                    aceptar(inicializacion, terminales);
+                                }
                                 tipo = aceptar(tipo, terminales);
                             } else {
                                 aceptar(predeclaracion, terminales);
@@ -213,6 +221,10 @@ public final class Preprocesador {
                             tipo.setSize(token);
                             estado = ESTADO_SIZE;
                             break;
+                        case PD_SMART:
+                            gestorErrores.error(Errores.DEMASIADAS_ETIQUETAS_SIZE, token);
+                            estado = ESTADO_INICIAL;
+                            break;
                         default:
                             gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, token);
                             estado = ESTADO_INICIAL;
@@ -227,6 +239,9 @@ public final class Preprocesador {
                         case PD_TIPO:
                             tipo.addTipo(token);
                             if (predeclaracion == null) {
+                                if (inicializacion != null) {
+                                    aceptar(inicializacion, terminales);
+                                }
                                 tipo = aceptar(tipo, terminales);
                             } else {
                                 aceptar(predeclaracion, terminales);
@@ -243,6 +258,7 @@ public final class Preprocesador {
                             break;
                         case PD_NUM:
                         case PD_VAR:
+                        case PD_SMART:
                             gestorErrores.error(Errores.DEMASIADAS_ETIQUETAS_SIZE, token);
                             estado = ESTADO_INICIAL;
                             break;
@@ -280,6 +296,10 @@ public final class Preprocesador {
                         case PD_VAR:
                             predeclaracion.addVariable(token);
                             break;
+                        case PD_SMART:
+                            gestorErrores.error(Errores.DEMASIADAS_ETIQUETAS_SIZE, token);
+                            estado = ESTADO_INICIAL;
+                            break;
                         default:
                             inicializacion = aceptar(inicializacion, terminales);
                             estado = ESTADO_INICIAL;
@@ -294,6 +314,7 @@ public final class Preprocesador {
                         case PD_TIPO:
                         case PD_COL:
                         case PD_REF:
+                        case PD_SMART:
                             gestorErrores.error(Errores.ETIQUETAS_COLECCION_INCOMPLETAS, token);
                             estado = ESTADO_INICIAL;
                             break;
@@ -326,6 +347,7 @@ public final class Preprocesador {
                             break;
                         case PD_NUM:
                         case PD_VAR:
+                        case PD_SMART:
                             gestorErrores.error(Errores.REF_SIZE, token);
                             estado = ESTADO_INICIAL;
                             break;
@@ -488,7 +510,7 @@ public final class Preprocesador {
      * @return Etiqueta de inicialización
      */
     private TagsInicializacion aceptar(TagsInicializacion etiqueta, List<Terminal> terminales) {
-        int linea = etiqueta.getSizes().get(0).getLinea();
+        int linea = etiqueta.getLinea();
         if (!terminales.isEmpty() && linea == terminales.get(terminales.size() - 1).getToken().getLinea()) {
             for (int i = terminales.size() - 1; i > -1; i--) {
                 Terminal t = terminales.get(i);
@@ -532,14 +554,13 @@ public final class Preprocesador {
      * @return Etiquetas tipo
      */
     private TagsTipo aceptar(TagsTipo etiqueta, List<Terminal> terminales) {
-        int linea = etiqueta.getTipos().get(0).getLinea();
+        int linea = etiqueta.getLinea();
         if (!terminales.isEmpty() && linea == terminales.get(terminales.size() - 1).getToken().getLinea()) {
             for (int i = terminales.size() - 1; i > -1; i--) {
                 Terminal t = terminales.get(i);
                 switch (t.getToken().getTipo()) {
                     case Parser.MY:
                     case Parser.OUR:
-                    case '=':
                         t.setEtiquetas(etiqueta);
                 }
                 if (t.getToken().getLinea() != linea) {
@@ -560,7 +581,7 @@ public final class Preprocesador {
      * @return Etiqueta de comportamiento
      */
     private <T extends TagsBloque> T aceptar(T etiqueta, List<Terminal> terminales) {
-        int linea = etiqueta.getEtiqueta().getLinea();
+        int linea = etiqueta.getLinea();
         if (!terminales.isEmpty()) {
             Terminal t = terminales.get(terminales.size() - 1);
             if (linea == t.getToken().getLinea() && t.getToken().getTipo() == '{') {

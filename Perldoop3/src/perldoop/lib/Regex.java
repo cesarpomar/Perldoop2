@@ -30,6 +30,9 @@ public final class Regex {
      * @return Evaluacion de la expresion regular sobre la cadena
      */
     public static boolean match(String str, String regex, String mods, boolean global) {
+        if(str==null){
+            return false;
+        }
         return new Pattern(regex, mods).matcher(str).find();
     }
 

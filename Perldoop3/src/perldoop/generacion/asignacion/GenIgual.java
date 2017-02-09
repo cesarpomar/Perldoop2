@@ -212,15 +212,16 @@ public class GenIgual {
      */
     private void inicializacion(Igual s) {
         List<Token> sizes = null;
+        boolean smart;
         Tags etiquetas = s.getOperador().getEtiquetas();
         int accesos = Buscar.accesos(s.getIzquierda());
         //Obtenemos las etiquetas de tamaño
         if (etiquetas == null) {
             sizes = new ArrayList<>();
-        } else if (etiquetas instanceof TagsInicializacion) {
+            smart = false;
+        } else {
             sizes = ((TagsInicializacion) etiquetas).getSizes();
-        } else if (etiquetas instanceof TagsTipo) {
-            sizes = ((TagsTipo) etiquetas).getSizes();
+            smart = ((TagsInicializacion) etiquetas).getSmart() != null;
             //Por cada acceso a la coleccion eliminamos un tamaño    
             if (accesos < sizes.size()) {
                 sizes = sizes.subList(accesos, sizes.size());
@@ -251,10 +252,10 @@ public class GenIgual {
         StringBuilder ini = new StringBuilder(100);
         if (t.isRef()) {
             ini.append(Tipos.inicializacion(t)).append("(");
-            ini.append(Tipos.inicializacion(t.getSubtipo(1), tams.toArray(new String[tams.size()])));
+            ini.append(Tipos.inicializacion(t.getSubtipo(1), smart, tams.toArray(new String[tams.size()])));
             ini.append(")");
         } else {
-            ini.append(Tipos.inicializacion(t, tams.toArray(new String[tams.size()])));
+            ini.append(Tipos.inicializacion(t, smart, tams.toArray(new String[tams.size()])));
         }
         //Generamos un simbolo y lo asignamos
         Simbolo aux = new SimboloAux(new Tipo(s.getIzquierda().getTipo()), ini);

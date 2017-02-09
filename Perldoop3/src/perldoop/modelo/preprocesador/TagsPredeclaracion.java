@@ -53,4 +53,9 @@ public final class TagsPredeclaracion implements Tags {
     public String toString() {
         return "EtiquetasPredeclaracion( variables(" + variables + "), " + tipo + ')';
     }
+
+    @Override
+    public int getLinea() {
+        return variables.get(0).getLinea();
+    }
 }

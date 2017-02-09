@@ -103,6 +103,7 @@ public class Errores extends Internacionalizacion {
     public static final String REDUCER_DEPENDENCIAS = "REDUCER_DEPENDENCIAS";
     public static final String IMPORT_ABSOLUTO = "IMPORT_ABSOLUTO";
     public static final String IMPORT_DINAMICO = "IMPORT_DINAMICO";
+    public static final String SMART_INCOMPATIBLE = "SMART_INCOMPATIBLE";
 
     public Errores() {
         super("errores");

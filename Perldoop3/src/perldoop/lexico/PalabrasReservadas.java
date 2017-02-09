@@ -164,6 +164,8 @@ public final class PalabrasReservadas {
                     return Preprocesador.PD_MAPPER;
                 case "<reduccer>":
                     return Preprocesador.PD_REDUCCER;
+                case "<smart>":
+                    return Preprocesador.PD_SMART;
             }
         }
         return null;

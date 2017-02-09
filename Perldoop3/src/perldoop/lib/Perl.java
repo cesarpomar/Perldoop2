@@ -159,7 +159,7 @@ public final class Perl {
         if (regex.equals(" ")) {
             return str.split("(\\s)+", lt);
         }
-        return str.split("(" + regex + ")+", lt);
+        return Arrays.stream(str.split("(" + regex + ")+", lt)).filter(s->!s.isEmpty()).toArray(String[]::new);
     }
 
     /**
@@ -175,7 +175,7 @@ public final class Perl {
         if (limit.length > 0) {
             lt = limit[0];
         }
-        return str.split("(" + regex + ")+", lt);
+        return Arrays.stream(str.split("(" + regex + ")+", lt)).filter(s->!s.isEmpty()).toArray(String[]::new);
     }
 
     /**

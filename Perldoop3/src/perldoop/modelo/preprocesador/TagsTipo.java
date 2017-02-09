@@ -12,14 +12,23 @@ import perldoop.modelo.lexico.Token;
 public final class TagsTipo implements Tags {
 
     private List<Token> tipos;
-    private List<Token> sizes;
+    private TagsInicializacion inicializacion;
 
     /**
      * Constructor por defecto
      */
     public TagsTipo() {
         tipos = new ArrayList<>(5);
-        sizes = new ArrayList<>(5);
+    }
+
+    /**
+     * Constructor con inicializacion
+     *
+     * @param inicializacion Tags Inicializacion
+     */
+    public TagsTipo(TagsInicializacion inicializacion) {
+        tipos = new ArrayList<>(5);
+        this.inicializacion = inicializacion;
     }
 
     /**
@@ -29,7 +38,9 @@ public final class TagsTipo implements Tags {
      */
     public void addTipo(Token tipo) {
         tipos.add(tipo);
-        sizes.add(null);
+        if (inicializacion != null) {
+            inicializacion.addSize(null);
+        }
     }
 
     /**
@@ -38,6 +49,7 @@ public final class TagsTipo implements Tags {
      * @param size Tamaño
      */
     public void setSize(Token size) {
+        List<Token> sizes = inicializacion.getSizes();
         sizes.set(sizes.size() - 1, size);
     }
 
@@ -50,27 +62,20 @@ public final class TagsTipo implements Tags {
         return tipos;
     }
 
-    /**
-     * Obtiene todos los tamaños
-     *
-     * @return Tamaños
-     */
-    public List<Token> getSizes() {
-        return sizes;
-    }
-
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder(100);
         str.append("EtiquetasTipo(");
         for (int i = 0; i < tipos.size(); i++) {
             str.append(tipos.get(i));
-            if (sizes.get(i) != null) {
-                str.append(sizes.get(i));
-            }
         }
         str.append(")");
         return str.toString();
+    }
+
+    @Override
+    public int getLinea() {
+        return tipos.get(0).getLinea();
     }
 
 }

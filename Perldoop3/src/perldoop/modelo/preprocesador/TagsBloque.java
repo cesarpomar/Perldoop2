@@ -38,4 +38,9 @@ public class TagsBloque implements Tags {
         this.etiqueta = etiqueta;
     }
 
+    @Override
+    public int getLinea() {
+        return etiqueta.getLinea();
+    }
+
 }

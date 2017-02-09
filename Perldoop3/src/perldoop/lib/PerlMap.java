@@ -10,7 +10,7 @@ import java.util.Map;
  * @author César Pomar
  * @param <T> Tipo del valor
  */
-public final class PerlMap<T> extends HashMap<String, T> {
+public class PerlMap<T> extends HashMap<String, T> {
 
     /**
      * Crea un mapa vacio

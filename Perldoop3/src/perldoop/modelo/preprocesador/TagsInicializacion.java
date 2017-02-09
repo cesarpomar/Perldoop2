@@ -11,13 +11,29 @@ import perldoop.modelo.lexico.Token;
  */
 public final class TagsInicializacion implements Tags {
 
+    private Token smart;
+    private int linea;
     private List<Token> sizes;
 
     /**
      * Constructor por defecto
+     *
+     * @param linea Linea de la inicializacion
      */
-    public TagsInicializacion() {
+    public TagsInicializacion(int linea) {
         sizes = new ArrayList<>(5);
+        this.linea = linea;
+    }
+
+    /**
+     * Constructor de inicializacion smart
+     *
+     * @param smart Token smart
+     */
+    public TagsInicializacion(Token smart) {
+        sizes = new ArrayList<>(5);
+        this.smart = smart;
+        this.linea = smart.getLinea();
     }
 
     /**
@@ -37,8 +53,25 @@ public final class TagsInicializacion implements Tags {
         return sizes;
     }
 
+    /**
+     * Obtiene el token smart
+     *
+     * @return Token smart
+     */
+    public Token getSmart() {
+        return smart;
+    }
+
     @Override
     public String toString() {
-        return "EtiquetasInicializacion(" + sizes + ')';
+        if (smart == null) {
+            return "EtiquetasInicializacion(" + sizes + ')';
+        }
+        return "EtiquetasInicializacion(" + smart + ", " + sizes + ')';
+    }
+
+    @Override
+    public int getLinea() {
+        return linea;
     }
 }

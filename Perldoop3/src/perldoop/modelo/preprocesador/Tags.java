@@ -7,4 +7,10 @@ package perldoop.modelo.preprocesador;
  */
 public interface Tags {
 
+    /**
+     * Obtiene la linea de la etiqueta
+     *
+     * @return Linea
+     */
+    public int getLinea();
 }

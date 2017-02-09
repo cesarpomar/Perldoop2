@@ -18,6 +18,18 @@ public final class Tipos {
      * @return Inicializacion
      */
     public static StringBuilder inicializacion(Tipo t, String... tams) {
+        return inicializacion(t, false, tams);
+    }
+
+    /**
+     * Crea la inicializacion de un tipo
+     *
+     * @param t Tipo
+     * @param smart Etiqueta smart
+     * @param tams Tamaño
+     * @return Inicializacion
+     */
+    public static StringBuilder inicializacion(Tipo t, boolean smart, String... tams) {
         StringBuilder dec;
         List<Byte> subtipos = t.getTipo();
         int tam = 0;
@@ -45,13 +57,24 @@ public final class Tipos {
                 }
             }
         }
-        dec = declaracion(t).insert(0, "new ");
+        dec = declaracion(t);
+        String extendido = "";
+        if (smart) {
+            dec.insert(0, "new Smart");
+            if (!get(tams, 0).isEmpty()) {
+                extendido = subtipos.size()-1 + ",";
+            } else {
+                extendido = subtipos.size()-1 + "";
+            }
+        } else {
+            dec.insert(0, "new ");
+        }
         switch (t.getTipo().get(0)) {
             case Tipo.LIST:
-                dec.append("(").append(get(tams, tam++)).append(")");
+                dec.append("(").append(extendido).append(get(tams, 0)).append(")");
                 break;
             case Tipo.MAP:
-                dec.append("(").append(get(tams, tam++)).append(")");
+                dec.append("(").append(extendido).append(get(tams, 0)).append(")");
                 break;
         }
         return dec;
@@ -65,7 +88,7 @@ public final class Tipos {
      * @return Valor del array o la cadena vacia
      */
     private static String get(String[] array, int pos) {
-        if (pos >= array.length) {
+        if (pos >= array.length || array[pos] == null) {
             return "";
         }
         return array[pos];

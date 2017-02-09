@@ -9,7 +9,7 @@ import java.util.Collection;
  * @author César Pomar
  * @param <T> Tipo de los elementos
  */
-public final class PerlList<T> extends ArrayList<T> {
+public class PerlList<T> extends ArrayList<T> {
 
     /**
      * Crea una lista vacia
@@ -33,7 +33,7 @@ public final class PerlList<T> extends ArrayList<T> {
      * @param array Crea una lista con los elementos del array
      */
     public PerlList(T... array) {
-        super(array.length*2);
+        super(array.length * 2);
         for (T e : array) {
             this.add(e);
         }
@@ -50,12 +50,23 @@ public final class PerlList<T> extends ArrayList<T> {
 
     @Override
     public T set(int index, T element) {
-        if(index == size()){
+        if (index == size()) {
             super.add(element);
-        }else{
+        } else {
             super.set(index, element);
         }
         return element;
+    }
+
+    @Override
+    public T get(int index) {
+        if (index < 0) {
+            index = size() + index;
+        }
+        if(index < 0 || index > size()-1){
+            return null;
+        }
+        return super.get(index);
     }
 
 }

@@ -43,11 +43,11 @@ public class SemIgual {
     public void visitar(Igual s) {
         Expresion izq = s.getIzquierda();
         Expresion der = s.getDerecha();
-        if(izq.getValor() instanceof ColParentesis){
+        if (izq.getValor() instanceof ColParentesis) {
             multiple(s);
-        }else if(der instanceof ExpColeccion && ((ExpColeccion)der).getColeccion().getLista().getExpresiones().isEmpty()){
+        } else if (der instanceof ExpColeccion && ((ExpColeccion) der).getColeccion().getLista().getExpresiones().isEmpty()) {
             inicializacion(s);
-        }else{
+        } else {
             simple(s);
         }
     }
@@ -59,7 +59,7 @@ public class SemIgual {
      */
     private void simple(Igual s) {
         s.setTipo(s.getIzquierda().getTipo());
-        checkAsignacion(s.getIzquierda(), s.getOperador(), s.getDerecha());    
+        checkAsignacion(s.getIzquierda(), s.getOperador(), s.getDerecha());
     }
 
     /**
@@ -121,15 +121,16 @@ public class SemIgual {
         int accesos = Buscar.accesos(s.getIzquierda());
         s.setTipo(new Tipo(t));
         List<Token> sizes = null;
+        boolean smart;
         Tags etiquetas = s.getOperador().getEtiquetas();
         //Obtenemos las etiquetas de tamaño
         if (etiquetas == null) {
             sizes = new ArrayList<>();
-        } else if (etiquetas instanceof TagsInicializacion) {
+            smart = false;
+        } else {
             sizes = ((TagsInicializacion) etiquetas).getSizes();
-        } else if (etiquetas instanceof TagsTipo) {
-            sizes = ((TagsTipo) etiquetas).getSizes();
-            //Por cada acceso a la coleccion eliminamos un tamaño       
+            smart = ((TagsInicializacion) etiquetas).getSmart() != null;
+            //Por cada acceso a la coleccion eliminamos un tamaño    
             if (accesos < sizes.size()) {
                 sizes = sizes.subList(accesos, sizes.size());
             } else {
@@ -140,7 +141,10 @@ public class SemIgual {
         int tams = 0;
         for (Token token : sizes) {
             if (token == null) {
-                continue;//Aunque no se usen comprobamos todos
+                if (tams == 0) {
+                    tams = -sizes.size();//Si el primer tamaño es nulo, es como si no huviera ninguno
+                }
+                continue;//Aunque no se usen comprobamos todos        
             }
             tams++;
             String valor = token.getValor();
@@ -154,13 +158,21 @@ public class SemIgual {
                 }
             }
         }
-        if (!t.isColeccion() && accesos == 0 && !(t.isRef() && s.getIzquierda() instanceof ExpVariable)) {
-            tabla.getGestorErrores().error(Errores.INICIALIZACION_SOLO_COLECIONES, Buscar.tokenInicio(s.getDerecha()));
+        if (t.isRef()) {
+            t = t.getSubtipo(1);
+        }
+        if (!t.isColeccion() || !Buscar.isVariable(s.getIzquierda())) {
+            tabla.getGestorErrores().error(Errores.INICIALIZACION_SOLO_COLECIONES, s.getOperador().getToken());
             throw new ExcepcionSemantica(Errores.INICIALIZACION_SOLO_COLECIONES);
         }
-        if ((t.isArray() || t.isRef() && t.getSubtipo(1).isArray()) && tams == 0) {
-            tabla.getGestorErrores().error(Errores.ARRAY_INICIALIZACION_TAM, Buscar.tokenInicio(s.getIzquierda()));
+        if (t.isArray() && tams < 1) {
+            tabla.getGestorErrores().error(Errores.ARRAY_INICIALIZACION_TAM, s.getOperador().getToken());
             throw new ExcepcionSemantica(Errores.ARRAY_INICIALIZACION_TAM);
+        }
+        List<Byte> sl = t.getTipo();
+        if (smart && (t.isArray() || !sl.subList(0, sl.size() - 1).stream().allMatch(b -> b.equals(s.getTipo().getTipo(0))))) {
+            tabla.getGestorErrores().error(Errores.SMART_INCOMPATIBLE, s.getOperador().getToken());
+            throw new ExcepcionSemantica(Errores.SMART_INCOMPATIBLE);
         }
         s.setTipo(s.getIzquierda().getTipo());
     }
@@ -178,7 +190,7 @@ public class SemIgual {
             throw new ExcepcionSemantica(Errores.MODIFICAR_CONSTANTE);
         }
         Tipo t = izq.getTipo();
-        if(t.isColeccion() && !der.getTipo().isColeccion()){
+        if (t.isColeccion() && !der.getTipo().isColeccion()) {
             t = t.getSubtipo(1);
         }
         Tipos.casting(der, t, tabla.getGestorErrores());
