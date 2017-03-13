@@ -24,7 +24,7 @@ public final class LibJar {
     //Clases que representan a las librerias a copiar
     private static final Class[] LIBRERIAS = {perldoop.lib.Box.class, jregex.Pattern.class, org.jtr.transliterate.Perl5Parser.class};
     //Nombre de la libreria
-    private static final String NOMBRE = "Perldoop3-lib.jar";
+    private static final String NOMBRE = "Perldoop2-lib.jar";
 
     /**
      * Comprueba si la entrada pertenece a un paquete que es necesario copiar
