@@ -1,10 +1,11 @@
 package perldoop.lib;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.function.Function;
 import perldoop.lib.box.EmptyBox;
 import perldoop.lib.util.Union;
@@ -372,11 +373,30 @@ public final class Pd {
         try {
             Process exec = Runtime.getRuntime().exec(cmd);
             exec.waitFor();
-            Scanner s = new Scanner(exec.getInputStream()).useDelimiter("\\A");
-            return s.hasNext() ? s.next() : "";
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+            StringBuilder sb = new StringBuilder(10000);
+            String line;
+            while((line=buffer.readLine())!=null){
+                sb.append(line);                
+            }
+            return sb.toString();
         } catch (IOException | InterruptedException ex) {
             return "";
         }
+    }
+    
+    /**
+     * Ejecuta un comando en el shell del sistema
+     * @param cmd Comando
+     * @return Exit status
+     */
+    public static int system(String cmd){
+        try {
+            Process exec = Runtime.getRuntime().exec(cmd);
+            return exec.waitFor();
+        }catch (IOException | InterruptedException ex) {
+            return -1;
+        } 
     }
 
     /**

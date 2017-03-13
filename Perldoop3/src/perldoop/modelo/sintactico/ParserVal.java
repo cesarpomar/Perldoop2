@@ -7,7 +7,7 @@ import perldoop.modelo.arbol.Simbolo;
  *
  * @author César Pomar
  */
-public class ParserVal {
+public final class ParserVal {
 
     private Simbolo s;
 
@@ -31,7 +31,7 @@ public class ParserVal {
      *
      * @return Símbolo
      */
-    public final Simbolo get() {
+    public Simbolo get() {
         return s;
     }
 
@@ -40,7 +40,7 @@ public class ParserVal {
      *
      * @param s Símbolo
      */
-    public final void set(Simbolo s) {
+    public void set(Simbolo s) {
         this.s = s;
     }
 

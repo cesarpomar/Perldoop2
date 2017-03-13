@@ -39,24 +39,33 @@ public class GenFuncionPush extends GenFuncionNativa {
             escritura = new SimboloAux(lectura);
             genVariable(coleccion, lectura, escritura);
             codigo.append(lectura);
-        }else{
+        } else {
             codigo.append(coleccion);
         }
         Tipo st = coleccion.getTipo().getSubtipo(1);
-        if(st.isColeccion()){
+        if (st.isColeccion()) {
             st.add(0, Tipo.REF);
         }
         codigo.append(",");
         codigo.append(it.getComentario());
         //Metodo simple, dos
         if (Buscar.getExpresiones(f.getColeccion()).size() == 2) {
-            Expresion exp = it.next();
+            Simbolo exp = it.next();
+            if (exp.getTipo().isBox()) {
+                exp = new SimboloAux(st, Casting.casting(exp, st));
+            }
+            if (exp.getTipo().isRef()) {
+                exp = new SimboloAux(exp);
+                exp.getCodigoGenerado().append(".get()");
+                Tipo np = exp.getTipo().getSubtipo(1).add(0, Tipo.LIST);
+                exp.getCodigoGenerado().insert(0, "new PerlList<>(").append(")");
+            }
             if (!exp.getTipo().isColeccion()) {
                 codigo.append(Casting.casting(exp, st));
             } else if (exp.getTipo().isArray() && st.equals(exp.getTipo().getSubtipo(1))) {
                 codigo.append("Pd.tList(").append(exp).append(")");
             } else {
-                codigo.append(Casting.casting(exp, st.add(0, Tipo.LIST)));
+                codigo.append(Casting.casting(exp, coleccion.getTipo()));
             }
             codigo.append(it.getComentario());
         } else {
@@ -74,7 +83,7 @@ public class GenFuncionPush extends GenFuncionNativa {
             String varAux = genReturnVar(f, codigo);
             codigo = updateVariable(coleccion, escritura, new SimboloAux(coleccion.getTipo(), codigo));
             genReturn(varAux, codigo);
-        }else{
+        } else {
             codigo.append(")");
         }
         f.setCodigoGenerado(codigo);

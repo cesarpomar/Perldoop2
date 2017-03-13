@@ -416,8 +416,8 @@ public abstract class Casting {
         char[] chars = s.toCharArray();
         StringBuilder str = new StringBuilder(s.length());
         int i = 0;
-        boolean punto = false;
-        boolean exp = false;
+        int punto = -10;
+        int exp = -10;
         //Eliminar ceros
         for (; i < chars.length; i++) {
             if (chars[i] != 0) {
@@ -441,18 +441,25 @@ public abstract class Casting {
                     str.append(chars[i]);
                     break;
                 case '.':
-                    if (punto || exp) {
+                    if (punto > 0 || exp > 0) {
                         break FOR;
                     }
-                    punto = true;
+                    punto = i;
                     str.append(chars[i]);
                     break;
                 case 'e':
                 case 'E':
-                    if (exp) {
+                    if (exp > 0 || i == chars.length - 1) {
                         break FOR;
                     }
-                    exp = true;
+                    exp = i;
+                    str.append(chars[i]);
+                    break;
+                case '+':
+                case '-':
+                    if (i != 0 && exp != i - 1 && i != chars.length - 1) {
+                        break FOR;
+                    }
                     str.append(chars[i]);
                     break;
                 default:

@@ -182,6 +182,9 @@ public class SemVariable {
                 return false;
             } else {
                 v.setTipo(foreach.getColeccion().getTipo().getSubtipo(1));
+                if(v.getTipo().isColeccion()){
+                    v.getTipo().add(0, Tipo.REF);
+                }
             }
             if (predeclaracion != null || tipoLinea != null) {
                 tabla.getGestorErrores().error(Errores.AVISO, Errores.TIPO_FOREACH, v.getVar().getToken());

@@ -108,9 +108,10 @@ public abstract class SemFuncionNativa {
      * @param max Argumentos maximos
      */
     protected void checkArgumentos(Funcion f, Integer min, Integer max) {
-        int cn = Buscar.getExpresiones(f.getColeccion()).size();
+        List<Expresion> lista = Buscar.getExpresiones(f.getColeccion());
+        int cn = lista.size();
         if (max != null && cn > max) {
-            tabla.getGestorErrores().error(Errores.FUNCION_NUM_ARGS, f.getColeccion().getLista().getSeparadores().get(cn).getToken(),
+            tabla.getGestorErrores().error(Errores.FUNCION_NUM_ARGS, Buscar.tokenInicio(lista.get(max)),
                     f.getIdentificador().getValor(), max, cn);
             throw new ExcepcionSemantica(Errores.FUNCION_NUM_ARGS);
         }

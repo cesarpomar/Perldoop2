@@ -28,7 +28,6 @@ import perldoop.modelo.generacion.TablaGenerador;
 import perldoop.modelo.lexico.Token;
 import perldoop.modelo.preprocesador.Tags;
 import perldoop.modelo.preprocesador.TagsInicializacion;
-import perldoop.modelo.preprocesador.TagsTipo;
 import perldoop.modelo.semantica.EntradaVariable;
 import perldoop.modelo.semantica.Tipo;
 import perldoop.util.Buscar;

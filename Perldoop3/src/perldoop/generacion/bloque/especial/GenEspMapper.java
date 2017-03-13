@@ -33,7 +33,7 @@ public final class GenEspMapper extends GenEspecial {
     public void visitar(Bloque s) {
         StringBuilder codigo = new StringBuilder(1000);
         cabecera(s, codigo);
-        Simbolo key = Hadoop.casting("pd_key", new Tipo(Tipo.STRING));
+        Simbolo key = Hadoop.casting("pd_value", new Tipo(Tipo.STRING));
         Simbolo var;
         if (s instanceof BloqueForeachVar) {
             var = ((BloqueForeachVar) s).getVariable();

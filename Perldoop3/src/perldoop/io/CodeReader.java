@@ -4,12 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Clase para la lectura de ficheros fuente
@@ -28,20 +29,26 @@ public class CodeReader extends Reader {
      * Abre un fichero de codigo fuente
      *
      * @param ruta Ruta del fichero
+     * @param encode Codificación
+     * @throws FileNotFoundException Fichero no existe
+     */
+    private CodeReader(File ruta, Charset encode) throws FileNotFoundException {
+        input = new FileInputStream(ruta);
+        lectura = new InputStreamReader(input, encode);
+        buffer = new BufferedReader(lectura);
+        codigo = new StringBuilder((int) ruta.length() + 10);
+    }
+
+    /**
+     * Abre un fichero de codigo fuente
+     *
+     * @param ruta Ruta del fichero
      * @param encode Codificacion
      * @throws FileNotFoundException Fichero no existe
      * @throws java.io.UnsupportedEncodingException Codificación erronea
      */
     public CodeReader(File ruta, String encode) throws FileNotFoundException, UnsupportedEncodingException {
-        this.ruta = ruta;
-        if (encode == null) {
-            lectura = new FileReader(ruta);
-        } else {
-            input = new FileInputStream(ruta);
-            lectura = new InputStreamReader(input, encode);
-        }
-        buffer = new BufferedReader(lectura);
-        codigo = new StringBuilder((int) ruta.length());
+        this(ruta, encode != null ? Charset.forName(encode) : StandardCharsets.UTF_8);
     }
 
     /**
@@ -51,10 +58,7 @@ public class CodeReader extends Reader {
      * @throws FileNotFoundException Fichero no existe
      */
     public CodeReader(File ruta) throws FileNotFoundException {
-        this.ruta = ruta;
-        lectura = new FileReader(ruta);
-        buffer = new BufferedReader(lectura);
-        codigo = new StringBuilder((int) ruta.length());
+        this(ruta, StandardCharsets.UTF_8);
     }
 
     @Override

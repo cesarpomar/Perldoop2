@@ -157,7 +157,7 @@ public final class Perl {
             lt = limit[0];
         }
         if (regex.equals(" ")) {
-            return str.split("(\\s)+", lt);
+            regex = "\\s";
         }
         return Arrays.stream(str.split("(" + regex + ")+", lt)).filter(s->!s.isEmpty()).toArray(String[]::new);
     }

@@ -155,7 +155,7 @@ public class GenBloque {
         StringBuilder asignacion = new StringBuilder(0);
         codigo.append("for").append(s.getId().getComentario());
         codigo.append("(");
-        if (s.getVariable() instanceof VarMy) {
+        if (s.getVariable() instanceof VarMy && !s.getColeccion().getTipo().getSubtipo(1).isColeccion()) {
             codigo.append(s.getVariable());
         } else {
             SimboloAux aux = new SimboloAux(s.getColeccion().getTipo().getSubtipo(1));
@@ -165,7 +165,11 @@ public class GenBloque {
             codigo.append(" ").append(var);
             asignacion = new StringBuilder(100);
             asignacion.append(s.getVariable()).append("=");
-            asignacion.append(Casting.casting(aux, s.getVariable().getTipo())).append(";");
+            if(s.getVariable().getTipo().isRef()){
+                asignacion.append(" new Ref<>(").append(aux).append(")").append(";");
+            }else{
+                asignacion.append(Casting.casting(aux, s.getVariable().getTipo())).append(";");
+            }
         }
         codigo.append(":");
         if (s.getColeccion().getTipo().isMap()) {

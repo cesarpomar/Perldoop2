@@ -53,10 +53,10 @@ import perldoop.modelo.arbol.rango.Rango;
 %left LLNOT
 %left ',' 
 %right '=' MULTI_IGUAL DIV_IGUAL MOD_IGUAL MAS_IGUAL MENOS_IGUAL DESP_I_IGUAL DESP_D_IGUAL AND_IGUAL OR_IGUAL XOR_IGUAL POW_IGUAL LAND_IGUAL LOR_IGUAL DLOR_IGUAL CONCAT_IGUAL X_IGUAL
-%left ID
 %right ':' '?'
 %nonassoc DOS_PUNTOS
 %left LOR DLOR
+%left ID
 %left LAND
 %left '|' '^'
 %left '&'
@@ -75,7 +75,7 @@ import perldoop.modelo.arbol.rango.Rango;
 
 
 %%
-raiz		:	fuente									{$$=set(new Raiz(add(s($1))));}
+raiz		:	fuente									{$$=set(new Raiz(add(s($1))));funParser.parse();}
 
 fuente		:	masFuente cuerpo						{$$=set(Fuente.addCuerpo(s($1), s($2)), false);}
 
@@ -90,7 +90,7 @@ funcionSub	:	SUB ID_L								{$$=set(new FuncionSub(s($1), s($2)));}
 cuerpoR		:	sentencia								{$$=set(new Cuerpo(s($1)),false);}
 			|	cuerpoR	sentencia				        {$$=set(Cuerpo.add(s($1), s($2)), false);}
 			
-cuerpoNV	:	cuerpoR									{$$=set(s($1));}
+cuerpoNV	:	cuerpoR									{$$=set(s($1));funParser.parse();}
 
 cuerpo		:											{$$=set(new Cuerpo());}
 			|	cuerpoNV								{$$=$1;}
@@ -132,11 +132,11 @@ expresion	:	numero									{$$=set(new ExpNumero(s($1)));}
 
 rango		:	expresion DOS_PUNTOS expresion			{$$=set(new Rango(s($1),s($2),s($3)));}			
 			
-lista		:	listaR									{$$=set(s($1));}
-			|	listaR ','								{$$=set(s(ParseValLista.add($1, s($2))));}
+lista		:	listaR									{$$=set(s($1),false);}
+			|	listaR ','								{$$=set(Lista.add((Lista)s($1), s($2)),false);}
 
-listaR		:	listaR ',' expresion					{$$=ParseValLista.add($1, s($2), s($3), args);args[0]=null;}
-			|	expresion								{$$=new ParseValLista(new Lista(), s($1), args, simbolos);args[0]=null;}			
+listaR		:	listaR ',' expresion					{$$=set(Lista.add((Lista)s($1), s($2), s($3)));}
+			|	expresion								{$$=set(new Lista(s($1)));}
 
 modificador :											{$$=set(new ModNada());}
 			|	IF expresion							{$$=set(new ModIf(s($1), s($2)));}
@@ -229,15 +229,15 @@ acceso		:	expresion colRef						{$$=set(new AccesoCol(s($1),s($2)));}
 			|	'%' expresion %prec CONTEXTO			{$$=set(new AccesoDesRef(s($1),s($2)));} 			
 			|	'\\' expresion %prec CONTEXTO			{$$=set(new AccesoRef(s($1),s($2)));} 
 
-funcion		:	ID expresion							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(ParseValLista.args(add(new Lista(s($2))),args)))));}
+funcion		:	ID expresion							{$$=set(funParser.add(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(add(new Lista(s($2))))))));}
 			|	ID_P colParen							{$$=set(new FuncionBasica(add(new Paquetes()),s($1),s($2)));}
 			|	ID										{$$=set(new FuncionBasica(add(new Paquetes()),s($1),add(new ColParentesis(add(new Lista())))));}
-			|	paqueteID ID expresion					{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(ParseValLista.args(add(new Lista(s($3))),args)))));}
+			|	paqueteID ID expresion					{$$=set(funParser.add(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(new Lista(s($3))))))));}
 			|	paqueteID ID_P colParen					{$$=set(new FuncionBasica(s($1),s($2),s($3)));}
 			|	paqueteID ID							{$$=set(new FuncionBasica(s($1),s($2),add(new ColParentesis(add(new Lista())))));}	
-			|	ID handle expresion						{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($2),add(new ColParentesis(ParseValLista.args(add(new Lista(s($3))),args)))));}
+			|	ID handle expresion						{$$=set(funParser.add(new FuncionHandle(add(new Paquetes()),s($1),s($2),add(new ColParentesis(add(new Lista(s($3))))))));}
 			|	ID_P '(' handle expresion ')'			{$$=set(new FuncionHandle(add(new Paquetes()),s($1),s($3),add(new ColParentesis(s($2),add(new Lista(s($4))),s($5)))));}
-			|	ID_L '{' expresion '}' expresion		{$$=set(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(ParseValLista.args(add(new Lista(s($5))),args)))));}
+			|	ID_L '{' expresion '}' expresion		{$$=set(funParser.add(new FuncionBloque(add(new Paquetes()),s($1),s($2),s($3),s($4),add(new ColParentesis(add(new Lista(s($5))))))));}
 
 handle		:	STDOUT_H								{$$=set(new HandleOut(s($1)));}
 			|	STDERR_H								{$$=set(new HandleErr(s($1)));}
@@ -334,9 +334,9 @@ condicional	:																							{$$=set(new SubBloqueVacio());}
 
 	private List<Simbolo> simbolos;
 	private PreParser preParser;
+	private FunctionParser funParser;
 	private Opciones opciones;
 	private GestorErrores gestorErrores;
-	private Lista[] args;
 	
 	/**
 	 * Constructor del analizador sintactico
@@ -347,9 +347,9 @@ condicional	:																							{$$=set(new SubBloqueVacio());}
 	public Parser(List<Terminal> terminales, Opciones opciones,GestorErrores gestorErrores) {
 		preParser = new PreParser(terminales);
 		simbolos = new ArrayList<>(terminales.size()*10);
+		funParser = new FunctionParser(simbolos);
 		this.opciones = opciones;
 		this.gestorErrores = gestorErrores;
-		args= new Lista[1];//Para usar el valor por referencia
 	}
 
 	/**

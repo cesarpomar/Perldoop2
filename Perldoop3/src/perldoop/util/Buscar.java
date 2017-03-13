@@ -351,6 +351,9 @@ public final class Buscar {
         if (exp instanceof ExpVariable) {
             return false;
         }
+        if (exp.getValor() instanceof Funcion) {
+            return false;
+        }
         if (exp.getValor() instanceof Igual) {
             return isNotNull(((Igual) exp.getValor()).getDerecha());
         }

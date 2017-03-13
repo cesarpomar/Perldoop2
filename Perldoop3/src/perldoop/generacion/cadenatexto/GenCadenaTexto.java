@@ -35,18 +35,19 @@ public class GenCadenaTexto {
 
     /**
      * La cadena es usada como expresion regular en split
+     *
      * @param s Cadena Texto
      * @return Uso en split
      */
-    public boolean isSplit(CadenaTexto s){
+    public boolean isSplit(CadenaTexto s) {
         Funcion f = Buscar.buscarPadre(s, Funcion.class);
-        if(f!=null && f.getPaquetes().isVacio() && f.getIdentificador().getValor().equals("split")){
+        if (f != null && f.getPaquetes().isVacio() && f.getIdentificador().getValor().equals("split")) {
             List<Expresion> args = Buscar.getExpresiones(f.getColeccion());
             return !args.isEmpty() && Buscar.isHijo(s, args.get(0));
         }
         return false;
     }
-    
+
     public void visitar(CadenaTexto s) {
         StringBuilder codigo = new StringBuilder(300);
         if (s.getElementos().isEmpty()) {
@@ -128,6 +129,11 @@ public class GenCadenaTexto {
         boolean escape = false;
         for (char c : t.getValor().toCharArray()) {
             if (c == '\\') {
+                if (escape) {
+                    analizada.append("\\\\\\\\");
+                    escape = false;
+                    continue;
+                }
                 escape = true;
             } else if (escape) {
                 if (isCharRereg(c)) {
@@ -154,14 +160,14 @@ public class GenCadenaTexto {
         StringBuilder analizada = new StringBuilder(100);
         boolean escape = false;
         for (char c : t.getValor().toCharArray()) {
-            if (c == '\\') {
-                escape = true;
-            } else if (escape) {
+            if (escape) {
                 if (isCharEspecial(c)) {
                     analizada.append("\\");
                 }
                 analizada.append(c);
                 escape = false;
+            } else if (c == '\\') {
+                escape = true;
             } else {
                 analizada.append(c);
             }
@@ -183,6 +189,7 @@ public class GenCadenaTexto {
             case '.':
             case '*':
             case '+':
+            case '-':
             case '?':
             case '|':
             case '(':

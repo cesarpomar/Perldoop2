@@ -3,11 +3,12 @@ package perldoop.lib;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import jregex.MatchResult;
 import jregex.Matcher;
 import jregex.Pattern;
 import jregex.PerlSubstitution;
-import jregex.Replacer;
 import jregex.TextBuffer;
 import org.jtr.transliterate.CharacterParseException;
 import org.jtr.transliterate.CharacterParser;
@@ -20,6 +21,9 @@ import org.jtr.transliterate.CharacterReplacer;
  */
 public final class Regex {
 
+    private static Map<String, Pattern> regexCache = new ConcurrentHashMap<>(1000);
+    private static Map<String, PerlSubstitution> substCache = new ConcurrentHashMap<>(1000);
+
     /**
      * Comprueba si una cadena comple la expresión regular
      *
@@ -30,10 +34,16 @@ public final class Regex {
      * @return Evaluacion de la expresion regular sobre la cadena
      */
     public static boolean match(String str, String regex, String mods, boolean global) {
-        if(str==null){
+        if (str == null) {
             return false;
         }
-        return new Pattern(regex, mods).matcher(str).find();
+        String key = regex + "_" + mods;
+        Pattern pattern = regexCache.get(key);
+        if (pattern == null) {
+            pattern = new Pattern(regex, mods);
+            regexCache.put(key, pattern);
+        }
+        return pattern.matcher(str).find();
     }
 
     /**
@@ -46,7 +56,12 @@ public final class Regex {
      * @return Coincidencias de las expresiones entre parentesis
      */
     public static String[] matcher(String str, String regex, String mods, boolean global) {
-        Pattern pattern = new Pattern(regex, mods);
+        String key = regex + "_" + mods;
+        Pattern pattern = regexCache.get(key);
+        if (pattern == null) {
+            pattern = new Pattern(regex, mods);
+            regexCache.put(key, pattern);
+        }
         Matcher matcher = pattern.matcher(str);
         if (global) {
             List<String> list = new ArrayList<>(100);
@@ -73,14 +88,23 @@ public final class Regex {
      * @return Cadena actualizada
      */
     public static String substitution(String str, String regex, String subs, String mods, boolean global) {
-        Pattern pattern = new Pattern(regex, mods);
-        if (global) {
-            Replacer replacer = pattern.replacer(subs);
-            return replacer.replace(str);
-        } else {
-            Replacer replacer = pattern.replacer(new FirstPerlSubstitution(subs));
-            return replacer.replace(str);
+        String key = regex + "_" + mods;
+        Pattern pattern = regexCache.get(key);
+        if (pattern == null) {
+            pattern = new Pattern(regex, mods);
+            regexCache.put(key, pattern);
         }
+        key = subs + "_" + global;
+        PerlSubstitution subst = substCache.get(key);
+        if(subst==null){
+            if(global){
+                subst = new PerlSubstitution(subs);
+            }else{
+                subst = new FirstPerlSubstitution(subs);
+            }
+            substCache.put(key, subst);            
+        }
+        return pattern.replacer(subst).replace(str);
     }
 
     /**

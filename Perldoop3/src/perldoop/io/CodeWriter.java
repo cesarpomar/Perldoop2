@@ -5,11 +5,12 @@ import com.google.googlejavaformat.java.FormatterException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import perldoop.error.GestorErrores;
 import perldoop.internacionalizacion.Errores;
@@ -27,6 +28,7 @@ public final class CodeWriter {
     private File directorio;
     private Opciones opciones;
     private Optimizaciones optimizaciones;
+    private Charset encode;
 
     /**
      * Crea un directorio para escribir el codigo fuente
@@ -37,6 +39,11 @@ public final class CodeWriter {
         this.opciones = opciones;
         this.directorio = opciones.getDirectorioSalida();
         this.optimizaciones = new Optimizaciones(opciones);
+        if (opciones.getCodificacion() == null) {
+            encode = StandardCharsets.UTF_8;
+        } else {
+            encode = Charset.forName(opciones.getCodificacion());
+        }
     }
 
     /**
@@ -55,7 +62,7 @@ public final class CodeWriter {
             repr.append("; ");
         }
         //Imports
-        for(String i:java.getImports()){
+        for (String i : java.getImports()) {
             repr.append("import ").append(i).append(';');
         }
         //Clase
@@ -98,18 +105,11 @@ public final class CodeWriter {
         }
         ruta.mkdirs();
         File archivo = new File(ruta, fichero + ".java");
-        if (opciones.getCodificacion() == null) {
-            try (FileWriter escritura = new FileWriter(archivo);
-                    BufferedWriter buffer = new BufferedWriter(escritura);) {
-                buffer.append(codigo);
-            }
-        } else {
             try (OutputStream out = new FileOutputStream(archivo);
-                    Writer escritura = new OutputStreamWriter(out, opciones.getCodificacion());
+                    Writer escritura = new OutputStreamWriter(out, encode);
                     BufferedWriter buffer = new BufferedWriter(escritura);) {
                 buffer.append(codigo);
             }
-        }
     }
 
 }

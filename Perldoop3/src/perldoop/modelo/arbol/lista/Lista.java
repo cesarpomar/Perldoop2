@@ -128,24 +128,6 @@ public final class Lista extends Simbolo {
         return l.add(coma);
     }
 
-    /**
-     * Añade el ultimo elemento de otra lista
-     *
-     * @param l Lista
-     * @return Esta lista
-     */
-    public Lista addLast(Lista l) {
-        Expresion exp;
-        add(exp = l.expresiones.remove(l.expresiones.size() - 1));
-        if (exp == l.elementos.get(l.elementos.size() - 1)) {
-            add((Expresion) l.elementos.get(l.elementos.size() - 1));
-        } else {
-            add((Terminal) l.elementos.get(l.elementos.size() - 1));
-            add((Expresion) l.elementos.get(l.elementos.size() - 1));
-        }
-        return this;
-    }
-
     @Override
     public void aceptar(Visitante v) {
         v.visitar(this);
