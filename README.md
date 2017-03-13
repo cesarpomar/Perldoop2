@@ -18,10 +18,10 @@ To run Perldoop2 you need to run at least java 8.
 
 The correct syntax to execute **Perldoop2** is:
 
-`java Perldoop2.jar [options] file [file ...]`
+`java perldoop2.jar [options] file [file ...]`
 
 If you have java included in the path, you can also include Perldoop2 folder and invoke it as follows:
 
-`Perldoop2 [options] infile [infile ...]`
+`perldoop2 [options] infile [infile ...]`
 
-You can use Perldoop2 -h to see all available options.
+You can use perldoop2 -h to see all available options.
