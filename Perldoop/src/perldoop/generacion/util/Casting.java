@@ -5,6 +5,7 @@ import perldoop.modelo.arbol.SimboloAux;
 import perldoop.modelo.arbol.Terminal;
 import perldoop.modelo.arbol.asignacion.Igual;
 import perldoop.modelo.arbol.expresion.ExpColeccion;
+import perldoop.modelo.arbol.expresion.ExpFuncion;
 import perldoop.modelo.arbol.expresion.Expresion;
 import perldoop.modelo.arbol.lectura.Lectura;
 import perldoop.modelo.arbol.regulares.RegularMatch;
@@ -39,7 +40,12 @@ public final class Casting {
                         contexto = Buscar.getContexto(Buscar.getExpresion((Expresion) escalar).getValor());
                     }
                     if (contexto == '$') {
-                        codigo.append("Pd.last(").append(col).append(")");
+                        Expresion expTest = Buscar.getExpresion((Expresion) col);
+                        if (expTest instanceof ExpFuncion || expTest instanceof ExpFuncion) {
+                            return new SimboloAux(new Tipo(Tipo.INTEGER), Casting.toInteger(new SimboloAux(col)));
+                        } else {
+                            codigo.append("Pd.last(").append(col).append(")");
+                        }
                     } else {
                         codigo.append("Pd.first(").append(col).append(")");
                     }
