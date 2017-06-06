@@ -8,7 +8,7 @@ This tool takes as input a Perl script, which must comply with the normal syntax
 The latest version can be downloaded in release section. The zip file contains:
 
 * *perldoop2.jar* The main file of *Perldoop2* tool.
-* *lib/* The folder contains all the dependencies of *Perldoop2* together with their respective licenses.
+* *LICENSE* Project license.
 * *Perldoop2* Script for executing *Perldoop2* on Unix systems
 * *Perldoop2.bat* Script for executing *Perldoop2* on Windows
 
