@@ -1,5 +1,6 @@
 /Perldoop/build/*
 /Perldoop/dist/*
+/Perldoop/zip-build/*
 /Perldoop/perldoop2.bat
 /Perldoop/nbproject/private/*
 
