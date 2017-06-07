@@ -17,7 +17,9 @@ import perldoop.modelo.arbol.modificador.ModNada;
 import perldoop.modelo.arbol.sentencia.Sentencia;
 import perldoop.modelo.arbol.sentencia.StcFlujo;
 import perldoop.modelo.generacion.TablaGenerador;
+import perldoop.modelo.preprocesador.storm.TagsStorm;
 import perldoop.util.Buscar;
+import perldoop.util.Utiles;
 
 /**
  * Clase generadora de funcionDef
@@ -45,6 +47,9 @@ public class GenFuncionDef {
         codigo.append(genReturn(s));
         codigo.append(s.getLlaveD());
         s.setCodigoGenerado(codigo);
+        if (s.getLlaveI().getEtiquetas() != null && s.getLlaveI().getEtiquetas() instanceof TagsStorm) {
+            stormBolt(s);
+        }
     }
 
     /**
@@ -88,6 +93,61 @@ public class GenFuncionDef {
             }
         }
         return "return new Box[0];";
+    }
+
+    /**
+     * Genera una clase bolt con la funcion si contiene las etiquetas de storm
+     *
+     * @param f Funcion
+     */
+    private void stormBolt(FuncionDef f) {
+        TagsStorm ts = (TagsStorm) f.getLlaveI().getEtiquetas();
+        String input = Utiles.substring(ts.getInput().getValor(), 2, -1);
+        String output = Utiles.substring(ts.getOutput().getValor(), 2, -1);
+        String name = f.getFuncionSub().getId().getValor();
+        tabla.getClase().getImports().add("org.apache.storm.topology.base.BaseBasicBolt");
+        tabla.getClase().getImports().add("backtype.storm.topology.OutputFieldsDeclarer");
+        tabla.getClase().getImports().add("org.apache.storm.topology.BasicOutputCollector");
+        tabla.getClase().getImports().add("backtype.storm.tuple.Fields");
+        tabla.getClase().getImports().add("backtype.storm.tuple.Tuple");
+        tabla.getClase().getImports().add("backtype.storm.tuple.Values");
+        tabla.getClase().getImports().add("java.util.Map");
+        tabla.getClase().getImports().add("java.util.List");
+        tabla.getClase().getImports().add("org.apache.storm.task.TopologyContext");
+        tabla.getClase().setClasePadre("BaseBasicBolt");
+
+        StringBuilder metodo = new StringBuilder(100);
+        metodo.append("@Override ");
+        metodo.append("public void prepare(Map stormConf, TopologyContext context){");
+        metodo.append("/*Empty, put your code here*/");
+        metodo.append("}");
+        tabla.getClase().getFunciones().add(metodo);
+
+        metodo = new StringBuilder(100);
+        metodo.append("@Override ");
+        metodo.append("public void cleanup(){");
+        metodo.append("/*Empty, put your code here*/");
+        metodo.append("}");
+        tabla.getClase().getFunciones().add(metodo);
+
+        metodo = new StringBuilder(100);
+        metodo.append("@Override ");
+        metodo.append("public void declareOutputFields(OutputFieldsDeclarer ofd) {");
+        metodo.append("ofd.declareStream(").append('"').append(output).append('"').append(',');
+        metodo.append("new Fields(").append('"').append(output).append('"').append("));");
+        metodo.append("}");
+        tabla.getClase().getFunciones().add(metodo);
+
+        metodo = new StringBuilder(100);
+        metodo.append("@Override ");
+        metodo.append("public void execute(Tuple tuple, BasicOutputCollector boc) {");
+        metodo.append("List<String> input=(List)tuple.getValueByField(").append('"').append(input).append('"').append(");");
+        metodo.append("input = new PerlList<>(input);");
+        metodo.append("List<String> output=(List)");
+        metodo.append(name).append("(new Box[]{Casting.box(new Ref(input))})[0].refValue().get();");
+        metodo.append("boc.emit(").append('"').append(output).append('"').append(", new Values(output));");
+        metodo.append("}");
+        tabla.getClase().getFunciones().add(metodo);
     }
 
 }

@@ -14,6 +14,7 @@ import perldoop.modelo.preprocesador.TagsPredeclaracion;
 import perldoop.modelo.preprocesador.TagsTipo;
 import perldoop.modelo.preprocesador.hadoop.TagsMapper;
 import perldoop.modelo.preprocesador.hadoop.TagsReducer;
+import perldoop.modelo.preprocesador.storm.TagsStorm;
 import perldoop.sintactico.Parser;
 
 /**
@@ -33,6 +34,7 @@ public final class Preprocesador {
     public final static int PD_BLOQUE = -16;
     public final static int PD_MAPPER = -17;
     public final static int PD_REDUCCER = -18;
+    public final static int PD_STORM = -19;
 
     //Estados
     private final static int ESTADO_INICIAL = 0;
@@ -50,6 +52,9 @@ public final class Preprocesador {
     private final static int ESTADO_REDUCCER_VALUE_IN = 105;
     private final static int ESTADO_REDUCCER_KEY_OUT = 106;
     private final static int ESTADO_REDUCCER_VALUE_OUT = 107;
+    //Estados storm
+    private final static int ESTADO_STORM_INPUT = 120;
+    private final static int ESTADO_STORM_OUTPUT = 121;
 
     private List<Token> tokens;
     private Opciones opciones;
@@ -117,8 +122,6 @@ public final class Preprocesador {
         TagsPredeclaracion predeclaracion = null;
         TagsTipo tipo = null;
         TagsBloque bloque = null;
-        TagsMapper mapper = null;
-        TagsReducer reduccer = null;
         int estado = 0;
         for (index = 0; index < tokens.size(); index++) {
             Token token = tokens.get(index);
@@ -163,12 +166,16 @@ public final class Preprocesador {
                             bloque = aceptar(bloque = new TagsBloque(token), terminales);
                             break;
                         case PD_MAPPER:
-                            mapper = new TagsMapper(token);
+                            bloque = new TagsMapper(token);
                             estado = ESTADO_MAPPER_KEY;
                             break;
                         case PD_REDUCCER:
-                            reduccer = new TagsReducer(token);
+                            bloque = new TagsReducer(token);
                             estado = ESTADO_REDUCCER_VAR_KEY;
+                            break;
+                        case PD_STORM:
+                            bloque = new TagsStorm(token);
+                            estado = ESTADO_STORM_INPUT;
                             break;
                         case '=':
                             terminales.add(terminal(token, inicializacion));
@@ -361,11 +368,11 @@ public final class Preprocesador {
                 case ESTADO_MAPPER_KEY:
                     switch (token.getTipo()) {
                         case PD_TIPO:
-                            mapper.setKeyOut(token);
+                            bloque.to(TagsMapper.class).setKeyOut(token);
                             estado = ESTADO_MAPPER_VALUE;
                             break;
                         default:
-                            bloque = aceptar(mapper, terminales);
+                            bloque = aceptar(bloque, terminales);
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -373,12 +380,12 @@ public final class Preprocesador {
                 case ESTADO_MAPPER_VALUE:
                     switch (token.getTipo()) {
                         case PD_TIPO:
-                            mapper.setValueOut(token);
-                            bloque = aceptar(mapper, terminales);
+                            bloque.to(TagsMapper.class).setValueOut(token);
+                            bloque = aceptar(bloque, terminales);
                             estado = ESTADO_INICIAL;
                             break;
                         default:
-                            gestorErrores.error(Errores.MAPPER_INCOMPLETO, mapper.getEtiqueta());
+                            gestorErrores.error(Errores.MAPPER_INCOMPLETO, bloque.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -386,11 +393,11 @@ public final class Preprocesador {
                 case ESTADO_REDUCCER_VAR_KEY:
                     switch (token.getTipo()) {
                         case PD_VAR:
-                            reduccer.setVarKey(token);
+                            bloque.to(TagsReducer.class).setVarKey(token);
                             estado = ESTADO_REDUCCER_VAR_VALUE;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCER_VARS, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_VARS, bloque.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -398,11 +405,11 @@ public final class Preprocesador {
                 case ESTADO_REDUCCER_VAR_VALUE:
                     switch (token.getTipo()) {
                         case PD_VAR:
-                            reduccer.setVarValue(token);
+                            bloque.to(TagsReducer.class).setVarValue(token);
                             estado = ESTADO_REDUCCER_KEY_IN;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCER_VARS, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_VARS, bloque.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -410,11 +417,11 @@ public final class Preprocesador {
                 case ESTADO_REDUCCER_KEY_IN:
                     switch (token.getTipo()) {
                         case PD_TIPO:
-                            reduccer.setKeyIn(token);
+                            bloque.to(TagsReducer.class).setKeyIn(token);
                             estado = ESTADO_REDUCCER_VALUE_IN;
                             break;
                         default:
-                            bloque = aceptar(reduccer, terminales);
+                            bloque = aceptar(bloque, terminales);
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -422,11 +429,11 @@ public final class Preprocesador {
                 case ESTADO_REDUCCER_VALUE_IN:
                     switch (token.getTipo()) {
                         case PD_TIPO:
-                            reduccer.setValueIn(token);
+                            bloque.to(TagsReducer.class).setValueIn(token);
                             estado = ESTADO_REDUCCER_KEY_OUT;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, bloque.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -434,11 +441,11 @@ public final class Preprocesador {
                 case ESTADO_REDUCCER_KEY_OUT:
                     switch (token.getTipo()) {
                         case PD_TIPO:
-                            reduccer.setKeyOut(token);
+                            bloque.to(TagsReducer.class).setKeyOut(token);
                             estado = ESTADO_REDUCCER_VALUE_OUT;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, bloque.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }
@@ -446,12 +453,37 @@ public final class Preprocesador {
                 case ESTADO_REDUCCER_VALUE_OUT:
                     switch (token.getTipo()) {
                         case PD_TIPO:
-                            reduccer.setValueOut(token);
-                            bloque = aceptar(reduccer, terminales);
+                            bloque.to(TagsReducer.class).setValueOut(token);
+                            bloque = aceptar(bloque, terminales);
                             estado = ESTADO_INICIAL;
                             break;
                         default:
-                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, reduccer.getEtiqueta());
+                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, bloque.getEtiqueta());
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
+                //----------------------------------------------Estados Storm-------------------------------------
+                case ESTADO_STORM_INPUT:
+                    switch (token.getTipo()) {
+                        case PD_VAR:
+                            bloque.to(TagsStorm.class).setInput(token);
+                            estado = ESTADO_STORM_OUTPUT;
+                            break;
+                        default:
+                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, bloque.getEtiqueta());
+                            estado = ESTADO_INICIAL;
+                            index--;
+                    }
+                    break;
+                case ESTADO_STORM_OUTPUT:
+                    switch (token.getTipo()) {
+                        case PD_VAR:
+                            bloque.to(TagsStorm.class).setOutput(token);
+                            estado = ESTADO_INICIAL;
+                            break;
+                        default:
+                            gestorErrores.error(Errores.REDUCER_INCOMPLETO, bloque.getEtiqueta());
                             estado = ESTADO_INICIAL;
                             index--;
                     }

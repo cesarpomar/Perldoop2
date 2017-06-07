@@ -493,7 +493,7 @@ PD_NUM			=	<{ENTERO}>
 
 <YYINITIAL>{
 		/*----Caracteres ignorados----*/
-	[\s]				{}
+	[ \t\r\n\s]			{}
 
 		/*----Error----*/
 	[^]					{error();}

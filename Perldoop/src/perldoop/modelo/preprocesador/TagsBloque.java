@@ -38,6 +38,17 @@ public class TagsBloque implements Tags {
         this.etiqueta = etiqueta;
     }
 
+    /**
+     * Convierte la estancia a un hijo de la clase TagsBloque
+     *
+     * @param <T> Tipo del hijo
+     * @param t Clase hijo
+     * @return Instancia del hijo
+     */
+    public final <T extends TagsBloque> T to(Class<T> t) {
+        return (T) this;
+    }
+
     @Override
     public int getLinea() {
         return etiqueta.getLinea();

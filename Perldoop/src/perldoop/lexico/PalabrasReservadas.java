@@ -155,6 +155,8 @@ public final class PalabrasReservadas {
                     return Preprocesador.PD_COL;
                 case "<ref>":
                     return Preprocesador.PD_REF;
+                case "<smart>":
+                    return Preprocesador.PD_SMART;
                 case "<main>":
                 case "<function>":
                 case "<combine>":
@@ -164,8 +166,8 @@ public final class PalabrasReservadas {
                     return Preprocesador.PD_MAPPER;
                 case "<reduccer>":
                     return Preprocesador.PD_REDUCCER;
-                case "<smart>":
-                    return Preprocesador.PD_SMART;
+                case "<storm>":
+                    return Preprocesador.PD_STORM;
             }
         }
         return null;
