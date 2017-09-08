@@ -1,20 +1,19 @@
 # What's Perldoop2 about? #
 
-**Perldoop2** is a total reimplementation of [Perldoop](https://github.com/citiususc/perldoop) which was designed to automatically translates Hadoop-ready Perl scripts into its Java counterparts, these could be directly executed on Hadoop while improving their performance. This new version is designed to be able to translate any Perl script within a bounded syntax and without any human intervention but retaining all the features of its first version.
-This tool takes as input a Perl script, which must comply with the normal syntax and tagging required by Perldoop, and generates an indented and normalized java code that can be read by a person and compiled with the java compiler.
+Perl is one of the most important programming languages in many research areas. However, the most relevant Big Data frameworks, Apache Hadoop, Apache Spark and Apache Storm, do not support natively this language. To take advantage of these Big Data engines Perl programmers should port their applications to Java or Scala, which requires a huge effort, or use utilities as Hadoop Streaming with the corresponding degradation in the performance. For this reason we introduce **Perldoop2**, a Big Data-oriented Perl-Java source-to-source compiler. The compiler is able to generate Java code from Perl applications for sequential execution, but also for running on clusters taking advantage of Hadoop, Spark and Storm engines. Perl programmers only need to tag the source code in order to use the compiler.
 
 # Release content #
 
-The latest version can be downloaded in release section. The zip file contains:
+The latest version can be downloaded from the release section. The zip file contains:
 
-* *perldoop2.jar* The main file of *Perldoop2* tool.
-* *LICENSE* Project license.
-* *Perldoop2* Script for executing *Perldoop2* on Unix systems
-* *Perldoop2.bat* Script for executing *Perldoop2* on Windows
+* *perldoop2.jar* -- The main file of *Perldoop2* tool.
+* *LICENSE* -- Project license.
+* *Perldoop2* -- Script for executing *Perldoop2* on Unix/Linux systems
+* *Perldoop2.bat* -- Script for executing *Perldoop2* on Windows
 
 # How to use #
 
-To run Perldoop2 you need to run at least java 8.
+To run Perldoop2 you need at least java 8.
 
 The correct syntax to execute **Perldoop2** is:
 
