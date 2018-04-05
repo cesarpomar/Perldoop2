@@ -5,7 +5,7 @@ Perl is one of the most important programming languages in many research areas. 
 If you use **Perldoop2**, please cite:
 
 [*Perldoop2: a Big Data-oriented source-to-source Perl-Java compiler*]( https://doi.org/10.1109/DASC-PICom-DataCom-CyberSciTec.2017.156)  
-César Piñeiro, José M. Abuín and Juan C. Pichel.
+César Piñeiro, José M. Abuín and Juan C. Pichel.  
 IEEE Int. Conference on Big Data Intelligence and Computing (DataCom), pages 933-940, 2017.
 
 # Release content #
